@@ -1,4 +1,1 @@
-import { redirect } from 'next/navigation';
-export default function Home() {
-  redirect('/app.html');
-}
+export default function Home() { return null; }

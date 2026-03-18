@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Adonis — Life Protocol OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Outfit:wght@200;300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#050507;--tx:#E8E4E0;--txd:#5A5856;--gold:#E8D5B7;--gold2:#C0B8A0;--fn:'Outfit',sans-serif;--fd:'Cormorant Garamond',serif;--fm:'JetBrains Mono',monospace}
+html{background:var(--bg);scroll-behavior:smooth}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden}
+
+/* Desktop: custom cursor. Mobile: normal */
+@media(hover:hover){body{cursor:none}}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(232,213,183,.15);color:var(--gold)}
+
+/* Cursor — desktop only */
+.cur,.cur-d{display:none}
+@media(hover:hover){
+  .cur{display:block;position:fixed;width:14px;height:14px;border:1.5px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;mix-blend-mode:difference;transform:translate(-50%,-50%);transition:width .3s,height .3s,background .3s}
+  .cur.h{width:48px;height:48px;background:rgba(232,213,183,.05)}
+  .cur-d{display:block;position:fixed;width:4px;height:4px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+}
+
+/* Preloader */
+.pre{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s}
+.pre.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre span{display:inline-block;font-family:var(--fd);font-size:clamp(44px,12vw,130px);font-weight:300;font-style:italic;color:var(--gold);opacity:0;transform:translateY(50px) rotateX(70deg);animation:lin .7s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes lin{to{opacity:1;transform:none}}
+
+/* Canvas + Grain */
+#c{position:fixed;inset:0;z-index:0;pointer-events:none}
+.gr{position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px}
+
+/* All content above canvas */
+.page{position:relative;z-index:1}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;mix-blend-mode:difference}
+nav .logo{font-family:var(--fd);font-size:15px;font-style:italic;color:var(--gold);letter-spacing:.1em}
+nav .links{display:flex;gap:18px}
+nav .links a{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txd);transition:color .3s}
+nav .links a:hover{color:var(--gold)}
+
+/* Shared */
+.grad{background:linear-gradient(135deg,var(--gold),var(--gold2),#B8C4D0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.mag{display:inline-block;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+
+/* GSAP targets — visible by default, GSAP animates from hidden */
+.anim{will-change:transform,opacity}
+
+/* Hero children hidden until GSAP entrance — prevents flash before animation */
+.hero>*{opacity:0}
+.hero.entered>*{opacity:1}
+
+/* ═══ HERO ═══ */
+.hero-wrap{height:500vh;position:relative}
+.hero{height:100vh;height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px;position:sticky;top:0}
+.hero h1{font-family:var(--fd);font-size:clamp(46px,12vw,130px);font-weight:300;line-height:.9;letter-spacing:-2px}
+.hero h1 em{font-style:italic;font-weight:400}
+.hero .sub{font-size:12px;color:var(--txd);margin-top:18px;font-weight:300;letter-spacing:.4px;line-height:1.6}
+.hero .btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:14px 34px;border:1px solid rgba(232,213,183,.15);border-radius:10px;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.6px;transition:border-color .3s,transform .3s;min-height:48px}
+.hero .btn:hover{border-color:rgba(232,213,183,.35);transform:translateY(-2px)}
+.hero .scr{position:absolute;bottom:16px;font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--txd);display:flex;flex-direction:column;align-items:center;gap:6px}
+.hero .scr::after{content:'';width:1px;height:20px;background:linear-gradient(to bottom,rgba(232,213,183,.3),transparent);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(8px)}}
+@keyframes morphIn{0%{opacity:0;transform:translateY(12px) scale(.97);filter:blur(3px)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+.hero-inner{position:relative;z-index:1}
+
+/* ═══ MARQUEE ═══ */
+.marquee{padding:12px 0;border-top:1px solid rgba(232,213,183,.04);border-bottom:1px solid rgba(232,213,183,.04);overflow:hidden;white-space:nowrap}
+.marquee-inner{display:inline-flex;animation:scr 22s linear infinite}
+.marquee-inner span{font-family:var(--fd);font-size:12px;font-weight:300;font-style:italic;color:var(--txd);padding:0 20px}
+.marquee-inner span em{color:var(--gold);font-style:normal;font-weight:400}
+@keyframes scr{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ SPLIT ═══ */
+.split{display:grid;grid-template-columns:1fr 1fr}
+.split-l{display:flex;flex-direction:column;justify-content:center;padding:36px clamp(20px,4vw,60px);border-right:1px solid rgba(232,213,183,.04)}
+.split-r{display:flex;align-items:center;justify-content:center;padding:36px 20px;position:relative;overflow:hidden}
+.split .bgn{font-family:var(--fd);font-size:clamp(80px,14vw,180px);font-weight:300;font-style:italic;color:rgba(232,213,183,.03);position:absolute;right:-5%;bottom:-5%;line-height:.8;pointer-events:none}
+.split .lbl{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.split h2{font-family:var(--fd);font-size:clamp(26px,4.5vw,44px);font-weight:300;line-height:1.08;letter-spacing:-1px;margin-bottom:10px}
+.split h2 em{font-style:italic;font-weight:400}
+.split .body{font-size:12px;color:var(--txd);line-height:1.8;font-weight:300;max-width:340px}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;width:100%;max-width:300px}
+.step{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(232,213,183,.04)}
+.step .sn{font-family:var(--fd);font-size:22px;font-weight:300;font-style:italic;color:rgba(232,213,183,.1);min-width:26px}
+.step .st{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.step .sd{font-size:10px;color:var(--txd);line-height:1.5;font-weight:300}
+
+/* ═══ DOMAINS ═══ */
+.doms{padding:28px 0;overflow:hidden}
+.doms .lbl{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:14px}
+.dt{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:0 20px 8px;scrollbar-width:none}
+.dt::-webkit-scrollbar{display:none}
+.dom{scroll-snap-align:start;flex:0 0 200px;padding:18px 14px;border-radius:12px;background:rgba(14,16,22,.6);border:1px solid rgba(232,213,183,.04);position:relative;overflow:hidden;transition:transform .4s,border-color .3s}
+.dom:hover{transform:translateY(-3px);border-color:rgba(232,213,183,.08)}
+.dom .gl{position:absolute;top:-14px;right:-6px;font-family:var(--fd);font-size:80px;font-weight:300;font-style:italic;line-height:1;pointer-events:none;user-select:none;opacity:.04}
+.dom .ic{font-size:22px;margin-bottom:6px}
+.dom .nm{font-family:var(--fd);font-size:17px;font-weight:300;font-style:italic;margin-bottom:4px}
+.dom .ds{font-size:10px;color:var(--txd);line-height:1.6;font-weight:300}
+
+/* ═══ STATS ═══ */
+.stats{display:flex;justify-content:space-around;padding:20px 12px;border-top:1px solid rgba(232,213,183,.04);border-bottom:1px solid rgba(232,213,183,.04)}
+.stats .s{text-align:center}
+.stats .sv{font-family:var(--fm);font-size:clamp(18px,3vw,28px);font-weight:700;color:var(--gold);letter-spacing:-1px}
+.stats .sl{font-size:6px;color:var(--txd);text-transform:uppercase;letter-spacing:2px;margin-top:2px;font-weight:600}
+
+/* ═══ QUOTE ═══ */
+.qt{text-align:center;max-width:320px;margin:0 auto}
+.qt .qm{font-family:var(--fd);font-size:32px;font-weight:300;font-style:italic;color:rgba(232,213,183,.08);line-height:1}
+.qt .qx{font-size:11px;color:var(--txd);line-height:1.9;font-weight:300;font-style:italic;padding:10px 0}
+
+/* ═══ FINAL CTA ═══ */
+.cta-f{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 20px}
+.cta-f h2{font-family:var(--fd);font-size:clamp(30px,6vw,56px);font-weight:300;line-height:1;letter-spacing:-1px;margin-bottom:12px}
+.cta-f h2 em{font-style:italic;font-weight:400}
+.cta-f .sub{font-size:11px;color:var(--txd);margin-bottom:20px;font-weight:300}
+.cta-f .btn{display:inline-flex;align-items:center;gap:8px;padding:16px 44px;border:1px solid rgba(232,213,183,.15);border-radius:10px;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.6px;transition:border-color .3s,transform .3s;min-height:48px}
+.cta-f .btn:hover{border-color:rgba(232,213,183,.35);transform:translateY(-2px)}
+.cta-f .ics{display:flex;gap:14px;margin-top:24px;opacity:.25}
+.cta-f .ics div{text-align:center;font-size:16px}
+.cta-f .ics span{display:block;font-size:6px;color:var(--txd);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+
+/* Footer */
+footer{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-size:9px;color:var(--txd);border-top:1px solid rgba(232,213,183,.04)}
+footer .fl{font-family:var(--fd);font-size:13px;font-style:italic;color:var(--gold)}
+
+/* ═══ MOBILE ═══ */
+@media(max-width:768px){
+  .split{grid-template-columns:1fr}
+  .split-l{padding:24px 20px 12px;border-right:none;border-bottom:1px solid rgba(232,213,183,.04)}
+  .split-r{padding:12px 20px 24px}
+  .split .bgn{font-size:70px;right:0;bottom:auto;top:-2%}
+  .split.rev .split-l{order:1}
+  .split.rev .split-r{order:0;border-bottom:1px solid rgba(232,213,183,.04)}
+  .dom{flex:0 0 170px;padding:16px 12px}
+  .stats{flex-wrap:wrap;gap:2px}
+  .stats .s{flex:0 0 33%;margin-bottom:6px}
+  footer{flex-direction:column;gap:4px;text-align:center}
+  .hero h1{font-size:clamp(42px,11vw,80px)}
+}
+</style>
+</head>
+<body>
+<div class="gr"></div>
+<div class="cur" id="cur"></div>
+<div class="cur-d" id="curd"></div>
+
+<!-- Preloader -->
+<div class="pre" id="pre"><div>
+  <span style="animation-delay:.08s">A</span><span style="animation-delay:.16s">D</span><span style="animation-delay:.24s">O</span><span style="animation-delay:.32s">N</span><span style="animation-delay:.4s">I</span><span style="animation-delay:.48s">S</span>
+</div></div>
+
+<canvas id="c"></canvas>
+
+<!-- All page content wrapped for z-index -->
+<div class="page">
+
+<nav>
+  <div class="logo">Adonis</div>
+  <div class="links"><a href="#how" data-h>System</a><a href="#doms" data-h>Domains</a><a href="#go" data-h>Start</a></div>
+</nav>
+
+<!-- HERO — STICKY MORPH (300vh wrapper, hero sticks while words cycle) -->
+<div class="hero-wrap" id="hero-wrap">
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="anim"><em>Your</em> <span id="morph" style="display:inline-block;color:#E8D5B7;font-style:italic;font-weight:400;transition:color .4s">Body.</span><br><span class="grad" style="font-style:italic">Optimized.</span></h1>
+    <div class="sub anim">10 domains. One adaptive protocol. Every day, personalized.</div>
+    <div class="mag anim"><a class="btn" href="#go" data-h>Build My Protocol <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
+  </div>
+  <div class="scr anim">Scroll</div>
+  <div id="morph-dots" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:2"></div>
+</section>
+</div><!-- /hero-wrap -->
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-inner">
+  <span><em>Body</em> · Training · Nutrition · 114 Peptides</span>
+  <span><em>Money</em> · Credit Cards · Disputes · Score Repair</span>
+  <span><em>Mind</em> · Focus · Meditation · Nootropics</span>
+  <span><em>Income</em> · Pipeline · Referrals · Commissions</span>
+  <span><em>Citizenship</em> · Passports · Descent · Docs</span>
+  <span><em>Image</em> · Skincare · Grooming · Wardrobe</span>
+  <span><em>Career</em> · Skills · Networking · Growth</span>
+  <span><em>Community</em> · Partners · Accountability</span>
+  <span><em>Space</em> · Ergonomics · Sleep · Environment</span>
+  <span><em>Purpose</em> · Bucket List · Goals · Meaning</span>
+  <span><em>Body</em> · Training · Nutrition · 114 Peptides</span>
+  <span><em>Money</em> · Credit Cards · Disputes · Score Repair</span>
+  <span><em>Mind</em> · Focus · Meditation · Nootropics</span>
+  <span><em>Income</em> · Pipeline · Referrals · Commissions</span>
+  <span><em>Citizenship</em> · Passports · Descent · Docs</span>
+  <span><em>Image</em> · Skincare · Grooming · Wardrobe</span>
+  <span><em>Career</em> · Skills · Networking · Growth</span>
+  <span><em>Community</em> · Partners · Accountability</span>
+  <span><em>Space</em> · Ergonomics · Sleep · Environment</span>
+  <span><em>Purpose</em> · Bucket List · Goals · Meaning</span>
+</div></div>
+
+<!-- THE SYSTEM — SPLIT -->
+<section class="split" id="how">
+  <div class="split-l">
+    <div class="lbl anim">The System</div>
+    <h2 class="anim">Goal. Deadline.<br><em class="grad">Adaptation.</em></h2>
+    <div class="body anim">Tell it what you want, when you need it, and your work schedule. It builds a protocol across every domain — then rewrites it daily as you log data.</div>
+  </div>
+  <div class="split-r">
+    <div class="bgn">01</div>
+    <div class="steps">
+      <div class="step anim"><div class="sn">01</div><div><div class="st">Pick your domains</div><div class="sd">Body, money, mind, image, career — activate what matters to you.</div></div></div>
+      <div class="step anim"><div class="sn">02</div><div><div class="st">Set your schedule</div><div class="sd">Work hours, off days, wake time. The routine wraps around your real life.</div></div></div>
+      <div class="step anim"><div class="sn">03</div><div><div class="st">Follow the protocol</div><div class="sd">Every meal, workout, injection, task — timed and sequenced. Just check things off.</div></div></div>
+      <div class="step anim"><div class="sn">04</div><div><div class="st">Watch it adapt</div><div class="sd">Log data → routine rewrites itself. Behind? Harder. Ahead? Recovery. Stalled? New strategy.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DOMAINS -->
+<section class="doms" id="doms">
+  <div class="lbl anim">10 Domains</div>
+  <div class="dt">
+    <div class="dom anim" data-h><div class="gl">B</div><div class="ic">🏋️</div><div class="nm">Body</div><div class="ds">Training, nutrition, 131 peptides, body recomp, progressive overload.</div></div>
+    <div class="dom anim" data-h><div class="gl">M</div><div class="ic">💰</div><div class="nm">Money</div><div class="ds">Credit card stacking, 13 cards, dispute engine, score repair.</div></div>
+    <div class="dom anim" data-h><div class="gl">M</div><div class="ic">🧠</div><div class="nm">Mind</div><div class="ds">Focus blocks, meditation, nootropic stacks, stress protocols.</div></div>
+    <div class="dom anim" data-h><div class="gl">I</div><div class="ic">💵</div><div class="nm">Income</div><div class="ds">Referral pipeline, commissions, revenue growth engine.</div></div>
+    <div class="dom anim" data-h><div class="gl">C</div><div class="ic">🌍</div><div class="nm">Citizenship</div><div class="ds">Passport power, dual citizenship, ancestry, doc tracking.</div></div>
+    <div class="dom anim" data-h><div class="gl">I</div><div class="ic">✨</div><div class="nm">Image</div><div class="ds">Skincare protocols, grooming, capsule wardrobe, fragrance.</div></div>
+    <div class="dom anim" data-h><div class="gl">C</div><div class="ic">💼</div><div class="nm">Career</div><div class="ds">Skills, networking, resume, compensation, job intelligence.</div></div>
+    <div class="dom anim" data-h><div class="gl">S</div><div class="ic">🏠</div><div class="nm">Space</div><div class="ds">Sleep environment, ergonomics, air quality, daily reset.</div></div>
+    <div class="dom anim" data-h><div class="gl">C</div><div class="ic">🤝</div><div class="nm">Community</div><div class="ds">Accountability partners, matching, shared goals, streaks.</div></div>
+    <div class="dom anim" data-h><div class="gl">P</div><div class="ic">🧭</div><div class="nm">Purpose</div><div class="ds">Bucket list, life goals, values, travel, experiences.</div></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="s"><div class="sv" data-c="10">10</div><div class="sl">Domains</div></div>
+  <div class="s"><div class="sv" data-c="62">62</div><div class="sl">Peptides</div></div>
+  <div class="s"><div class="sv" data-c="76">76</div><div class="sl">Exercises</div></div>
+  <div class="s"><div class="sv" data-c="13">13</div><div class="sl">Credit Cards</div></div>
+  <div class="s"><div class="sv" data-c="4">4</div><div class="sl">Suppliers</div></div>
+</div>
+
+<!-- PHILOSOPHY — SPLIT REVERSED -->
+<section class="split rev">
+  <div class="split-l">
+    <div class="lbl anim">Philosophy</div>
+    <h2 class="anim">Not a tracker.<br><em class="grad">A protocol engine.</em></h2>
+    <div class="body anim">Other apps give dashboards. Adonis builds your entire day — every meal, workout, peptide injection, credit card play, grooming task, and career action — then rewrites it when your data changes. 131 peptides with form guides. 76 exercises with coaching cues. 10 life domains in one routine.</div>
+  </div>
+  <div class="split-r">
+    <div class="bgn">02</div>
+    <div class="qt">
+      <div class="qm">"</div>
+      <div class="qx">Your morning peptide injection is timed to your wake-up. Your workout adapts to last session's weights. Your credit card application is timed to your 5/24 window. Your skincare rotates by day. Nothing is random.</div>
+      <div class="qm">"</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-f" id="go">
+  <h2 class="anim">Ready?<br><em class="grad">Build your protocol.</em></h2>
+  <div class="sub anim">10 domains. 131 peptides. 76 exercises with form guides. One daily routine that adapts to you.</div>
+  <div class="mag anim"><a class="btn" href="./app.html" data-h>Get Started <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></a></div>
+  <div class="ics anim"><div>🏋️<span>Body</span></div><div>💰<span>Money</span></div><div>🧠<span>Mind</span></div><div>✨<span>Image</span></div><div>💼<span>Career</span></div><div>🏠<span>Space</span></div><div>🤝<span>Community</span></div><div>🌍<span>Passport</span></div><div>🧭<span>Purpose</span></div><div>💵<span>Income</span></div></div>
+</section>
+
+<footer><div class="fl">Adonis</div><div>© 2026</div></footer>
+
+</div><!-- /.page -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  // ═══ PRELOADER ═══
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      document.getElementById('pre').classList.add('done');
+      setTimeout(startAnimations, 400);
+    }, 1400);
+  });
+  // Failsafe: if load never fires within 4s, force dismiss
+  setTimeout(function(){ document.getElementById('pre').classList.add('done'); document.querySelector('.hero').classList.add('entered'); }, 4000);
+
+  // ═══ CURSOR ═══
+  var cur = document.getElementById('cur');
+  var curd = document.getElementById('curd');
+  var cx = -100, cy = -100, lx = -100, ly = -100;
+  document.addEventListener('mousemove', function(e){ cx = e.clientX; cy = e.clientY; });
+  (function loop(){
+    lx += (cx - lx) * 0.12; ly += (cy - ly) * 0.12;
+    if(cur){ cur.style.transform = 'translate(' + (lx - 7) + 'px,' + (ly - 7) + 'px)'; }
+    if(curd){ curd.style.transform = 'translate(' + (cx - 2) + 'px,' + (cy - 2) + 'px)'; }
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('[data-h]').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ if(cur) cur.classList.add('h'); });
+    el.addEventListener('mouseleave', function(){ if(cur) cur.classList.remove('h'); });
+  });
+
+  // ═══ MAGNETIC ═══
+  document.querySelectorAll('.mag').forEach(function(el){
+    el.addEventListener('mousemove', function(e){
+      var r = el.getBoundingClientRect();
+      var x = (e.clientX - r.left - r.width/2) * 0.2;
+      var y = (e.clientY - r.top - r.height/2) * 0.2;
+      el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    });
+    el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+  });
+
+  // ═══ MORPH TEXT ON SCROLL ═══
+  var morphEl = document.getElementById('morph');
+  var morphDots = document.getElementById('morph-dots');
+  var morphWords = ['Body', 'Money', 'Mind', 'Image', 'Career', 'Space', 'Life'];
+  var morphColors = ['#E8D5B7', '#34D399', '#8B5CF6', '#EC4899', '#60A5FA', '#22C55E', '#E8D5B7'];
+  var lastMorphIdx = -1;
+
+  // Create dots
+  morphWords.forEach(function(w, i) {
+    var dot = document.createElement('div');
+    dot.style.cssText = 'width:6px;height:' + (i === 0 ? '20px' : '6px') + ';border-radius:3px;background:' + (i === 0 ? morphColors[0] : 'rgba(232,213,183,.1)') + ';transition:all .4s;box-shadow:' + (i === 0 ? '0 0 10px ' + morphColors[0] + '33' : 'none');
+    morphDots.appendChild(dot);
+  });
+
+  function updateMorph() {
+    var sy = window.scrollY || 0;
+    var wrap = document.getElementById('hero-wrap');
+    if (!wrap || !morphEl) return;
+    var wrapTop = wrap.offsetTop;
+    var wrapH = wrap.offsetHeight;
+    var vh = window.innerHeight;
+    var scrollRange = wrapH - vh; // 200vh of scroll travel
+    var progress = Math.max(0, Math.min(1, (sy - wrapTop) / (scrollRange || 1)));
+    var mi = Math.max(0, Math.min(morphWords.length - 1, Math.floor(progress * morphWords.length)));
+    if (mi !== lastMorphIdx) {
+      lastMorphIdx = mi;
+      morphEl.textContent = morphWords[mi] + '.';
+      morphEl.style.color = morphColors[mi];
+      morphEl.style.animation = 'none';
+      void morphEl.offsetHeight;
+      morphEl.style.animation = 'morphIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards';
+      // Update dots
+      var dots = morphDots.children;
+      for (var i = 0; i < dots.length; i++) {
+        var active = i === mi;
+        dots[i].style.height = active ? '20px' : '6px';
+        dots[i].style.background = active ? morphColors[i] : 'rgba(232,213,183,.1)';
+        dots[i].style.boxShadow = active ? '0 0 10px ' + morphColors[i] + '33' : 'none';
+      }
+    }
+  }
+  window.addEventListener('scroll', updateMorph, { passive: true });
+
+  // ═══ CANVAS — BODY → MIND → MONEY PARALLAX ═══
+  var cv = document.getElementById('c');
+  var ctx = cv.getContext('2d');
+  var W, H, isMob = window.innerWidth < 600;
+  function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; isMob = W < 600; }
+  resize(); addEventListener('resize', resize);
+
+  var f = 0;
+  var TAU = Math.PI * 2;
+
+  // ── BODY particles ──
+  var bodyParts = [];
+  var bCount = isMob ? 50 : 100;
+  for(var i = 0; i < bCount; i++) bodyParts.push({
+    cx: 0.2 + Math.random() * 0.6, cy: 0.15 + Math.random() * 0.7,
+    orbit: 20 + Math.random() * (isMob ? 130 : 220),
+    angle: Math.random() * TAU,
+    speed: (Math.random() * 0.01 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
+    r: Math.random() * 2.2 + 0.3,
+    br: Math.random() * 0.35 + 0.1
+  });
+
+  // ── MIND nodes ──
+  var mindNodes = [];
+  var mCount = isMob ? 35 : 65;
+  for(var i = 0; i < mCount; i++) mindNodes.push({
+    x: Math.random() * 1.2 - 0.1, y: Math.random() * 1.2 - 0.1,
+    vx: (Math.random() - 0.5) * 0.0005,
+    vy: (Math.random() - 0.5) * 0.0005,
+    r: Math.random() * 2.5 + 0.4,
+    pulse: Math.random() * TAU
+  });
+
+  // ── MONEY particles ──
+  var moneyParts = [];
+  var moCount = isMob ? 40 : 70;
+  for(var i = 0; i < moCount; i++) moneyParts.push({
+    x: Math.random(), baseY: Math.random(),
+    speed: Math.random() * 0.003 + 0.001,
+    r: Math.random() * 2 + 0.3,
+    phase: Math.random() * TAU,
+    drift: Math.random() * 0.25 - 0.125
+  });
+
+  function zoneWeight(scroll, center, width) {
+    return Math.max(0, 1 - Math.abs(scroll - center) / width);
+  }
+
+  function draw(){
+    f++;
+    var sy = scrollY || 0;
+    var maxS = Math.max(1, document.body.scrollHeight - H);
+    var sp = Math.min(1, sy / maxS);
+    ctx.clearRect(0, 0, W, H);
+
+    var wBody = zoneWeight(sp, 0.0, 0.45);
+    var wMind = zoneWeight(sp, 0.45, 0.35);
+    var wMoney = zoneWeight(sp, 0.85, 0.35);
+
+    // ════════════════════════════════════════
+    // BODY: Gold, anatomical, pulsing life
+    // ════════════════════════════════════════
+    if(wBody > 0.01){
+      var ba = wBody;
+      var cx0 = W * 0.5, cy0 = H * 0.42;
+
+      // Massive pulsing core with multiple layers
+      for(var layer = 0; layer < 3; layer++){
+        var pulseR = (isMob ? 70 : 130) + layer * (isMob ? 50 : 80) + Math.sin(f * 0.012 + layer * 0.8) * 25;
+        var g = ctx.createRadialGradient(cx0, cy0, 0, cx0, cy0, pulseR);
+        var coreA = (0.05 - layer * 0.012) * ba;
+        g.addColorStop(0, 'rgba(232,213,183,' + coreA + ')');
+        g.addColorStop(0.3, 'rgba(245,158,11,' + (coreA * 0.5) + ')');
+        g.addColorStop(0.6, 'rgba(232,180,130,' + (coreA * 0.2) + ')');
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(cx0, cy0, pulseR, 0, TAU); ctx.fill();
+      }
+
+      // Expanding pulse rings — like sonar
+      for(var r = 0; r < 5; r++){
+        var ringR = ((f * 0.5 + r * 60) % 350) + 20;
+        var ringA = Math.max(0, 1 - ringR / 370) * 0.08 * ba;
+        ctx.beginPath(); ctx.arc(cx0, cy0, ringR, 0, TAU);
+        ctx.strokeStyle = 'rgba(232,213,183,' + ringA + ')';
+        ctx.lineWidth = 1.2; ctx.stroke();
+      }
+
+      // DNA double helix — thick and detailed
+      var helixW = isMob ? 50 : 90;
+      for(var strand = 0; strand < 2; strand++){
+        var flip = strand === 0 ? 1 : -1;
+        ctx.beginPath();
+        for(var y = -30; y <= H + 30; y += 2){
+          var wave = Math.sin(y * 0.01 + f * 0.007 * flip) * helixW;
+          var depth = Math.cos(y * 0.01 + f * 0.007 * flip); // z-depth for thickness
+          var px = cx0 + wave * flip;
+          y === -30 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+        }
+        ctx.strokeStyle = 'rgba(232,200,160,' + (0.06 * ba) + ')';
+        ctx.lineWidth = 1.5 + Math.abs(Math.sin(f * 0.01)) * 0.5;
+        ctx.stroke();
+      }
+      // Helix rungs with depth
+      for(var y = 0; y < H; y += (isMob ? 28 : 20)){
+        var w1 = Math.sin(y * 0.01 + f * 0.007) * helixW;
+        var w2 = Math.sin(y * 0.01 - f * 0.007) * helixW;
+        var rungDepth = Math.abs(Math.cos(y * 0.01 + f * 0.007));
+        ctx.beginPath();
+        ctx.moveTo(cx0 + w1, y);
+        ctx.lineTo(cx0 - w2, y);
+        ctx.strokeStyle = 'rgba(245,158,11,' + (0.03 * rungDepth * ba) + ')';
+        ctx.lineWidth = rungDepth * 1.5;
+        ctx.stroke();
+        // Base pair dots at rung centers
+        var midX = cx0 + (w1 - w2) * 0.5;
+        ctx.beginPath(); ctx.arc(midX, y, 1.5 * rungDepth, 0, TAU);
+        ctx.fillStyle = 'rgba(245,158,11,' + (0.08 * rungDepth * ba) + ')';
+        ctx.fill();
+      }
+
+      // Orbiting molecular particles — with trails
+      for(var i = 0; i < bodyParts.length; i++){
+        var p = bodyParts[i];
+        p.angle += p.speed;
+        var px = p.cx * W + Math.cos(p.angle) * p.orbit;
+        var py = p.cy * H + Math.sin(p.angle) * p.orbit * 0.55;
+        // Trail
+        var tx = p.cx * W + Math.cos(p.angle - p.speed * 8) * p.orbit;
+        var ty = p.cy * H + Math.sin(p.angle - p.speed * 8) * p.orbit * 0.55;
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(px, py);
+        ctx.strokeStyle = 'rgba(232,213,183,' + (p.br * 0.15 * ba) + ')';
+        ctx.lineWidth = p.r * 0.6; ctx.stroke();
+        // Dot
+        ctx.beginPath(); ctx.arc(px, py, p.r, 0, TAU);
+        ctx.fillStyle = 'rgba(232,213,183,' + (p.br * ba) + ')';
+        ctx.fill();
+      }
+
+      // Heartbeat ECG — larger, bolder
+      ctx.beginPath();
+      var hbY = H * 0.78;
+      for(var px = 0; px <= W; px += 1.5){
+        var t = (px / W) * TAU * 3 + f * 0.04;
+        var beat = 0;
+        var beatPhase = t % TAU;
+        if(beatPhase < 0.4) beat = Math.sin(beatPhase * TAU * 2.5) * (isMob ? 25 : 45);
+        else if(beatPhase < 0.7) beat = -Math.sin((beatPhase - 0.4) * TAU * 3.3) * (isMob ? 14 : 22);
+        else if(beatPhase < 0.85) beat = Math.sin((beatPhase - 0.7) * TAU * 6) * (isMob ? 6 : 10);
+        hbY + beat;
+        px === 0 ? ctx.moveTo(px, hbY + beat) : ctx.lineTo(px, hbY + beat);
+      }
+      ctx.strokeStyle = 'rgba(245,158,11,' + (0.12 * ba) + ')';
+      ctx.lineWidth = 2; ctx.stroke();
+      // ECG glow
+      ctx.strokeStyle = 'rgba(245,158,11,' + (0.03 * ba) + ')';
+      ctx.lineWidth = 8; ctx.stroke();
+
+      // Floating red blood cells (small circles with inner ring)
+      for(var i = 0; i < (isMob ? 8 : 15); i++){
+        var bx = ((i * 197 + f * 0.3) % (W + 100)) - 50;
+        var by = H * 0.3 + Math.sin(f * 0.006 + i * 2.1) * H * 0.2;
+        var sz = isMob ? 4 : 7;
+        ctx.beginPath(); ctx.arc(bx, by, sz, 0, TAU);
+        ctx.strokeStyle = 'rgba(220,80,60,' + (0.06 * ba) + ')';
+        ctx.lineWidth = 1; ctx.stroke();
+        ctx.beginPath(); ctx.arc(bx, by, sz * 0.4, 0, TAU);
+        ctx.strokeStyle = 'rgba(220,80,60,' + (0.03 * ba) + ')';
+        ctx.lineWidth = 0.5; ctx.stroke();
+      }
+    }
+
+    // ════════════════════════════════════════
+    // MIND: Purple neural constellation
+    // ════════════════════════════════════════
+    if(wMind > 0.01){
+      var ma = wMind;
+      var mcx = W * 0.5, mcy = H * 0.4;
+
+      // Deep purple nebula — multi-layered
+      for(var layer = 0; layer < 3; layer++){
+        var offX = Math.sin(f * 0.003 + layer * 2) * 30;
+        var offY = Math.cos(f * 0.004 + layer * 1.5) * 20;
+        var mr = (isMob ? 100 : 180) + layer * (isMob ? 40 : 60);
+        var g = ctx.createRadialGradient(mcx + offX, mcy + offY, 0, mcx + offX, mcy + offY, mr);
+        var colors = [[139,92,246],[96,165,250],[167,139,250]];
+        var c = colors[layer];
+        g.addColorStop(0, 'rgba(' + c + ',' + (0.05 * ma) + ')');
+        g.addColorStop(0.4, 'rgba(' + c + ',' + (0.02 * ma) + ')');
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(mcx + offX, mcy + offY, mr, 0, TAU); ctx.fill();
+      }
+
+      // Concentric thought rings — more, animated rotation
+      for(var r = 0; r < 6; r++){
+        var ringR = 30 + r * (isMob ? 30 : 45) + Math.sin(f * 0.008 + r * 0.7) * 10;
+        ctx.beginPath();
+        // Dashed circles using arc segments
+        var segments = 8 + r * 2;
+        for(var s = 0; s < segments; s++){
+          var a1 = (s / segments) * TAU + f * 0.001 * (r % 2 === 0 ? 1 : -1);
+          var a2 = a1 + (TAU / segments) * 0.6;
+          ctx.beginPath();
+          ctx.arc(mcx, mcy, ringR, a1, a2);
+          ctx.strokeStyle = 'rgba(139,92,246,' + (0.035 * (1 - r * 0.12) * ma) + ')';
+          ctx.lineWidth = 0.7; ctx.stroke();
+        }
+      }
+
+      // Neural network — nodes + connections + firing pulses
+      for(var i = 0; i < mindNodes.length; i++){
+        var n = mindNodes[i];
+        n.x += n.vx; n.y += n.vy;
+        if(n.x < -0.1 || n.x > 1.1) n.vx *= -1;
+        if(n.y < -0.1 || n.y > 1.1) n.vy *= -1;
+        n.pulse += 0.025;
+        var nx = n.x * W, ny = n.y * H;
+        var pulseBr = 0.5 + Math.sin(n.pulse) * 0.4;
+
+        // Connections to nearby
+        for(var j = i + 1; j < mindNodes.length; j++){
+          var m = mindNodes[j];
+          var dx = n.x - m.x, dy = n.y - m.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var maxDist = isMob ? 0.22 : 0.16;
+          if(dist < maxDist){
+            var lineA = (1 - dist / maxDist) * 0.06 * ma;
+            // Synaptic pulse traveling along connection
+            var pulsePos = (Math.sin(f * 0.02 + i + j) * 0.5 + 0.5);
+            var px = nx + (m.x * W - nx) * pulsePos;
+            var py = ny + (m.y * H - ny) * pulsePos;
+
+            ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(m.x * W, m.y * H);
+            ctx.strokeStyle = 'rgba(139,92,246,' + lineA + ')';
+            ctx.lineWidth = 0.6; ctx.stroke();
+
+            // Pulse dot traveling along the synapse
+            if(dist < maxDist * 0.7){
+              ctx.beginPath(); ctx.arc(px, py, 1.2, 0, TAU);
+              ctx.fillStyle = 'rgba(167,139,250,' + (0.3 * ma) + ')';
+              ctx.fill();
+            }
+          }
+        }
+
+        // Node with glow
+        ctx.beginPath(); ctx.arc(nx, ny, n.r * pulseBr, 0, TAU);
+        ctx.fillStyle = 'rgba(139,92,246,' + (0.25 * pulseBr * ma) + ')';
+        ctx.fill();
+        // Outer glow
+        if(n.r > 1.2){
+          var ng = ctx.createRadialGradient(nx, ny, 0, nx, ny, n.r * 8);
+          ng.addColorStop(0, 'rgba(96,165,250,' + (0.04 * pulseBr * ma) + ')');
+          ng.addColorStop(1, 'transparent');
+          ctx.fillStyle = ng;
+          ctx.beginPath(); ctx.arc(nx, ny, n.r * 8, 0, TAU); ctx.fill();
+        }
+      }
+
+      // Branching dendrites — more branches, longer
+      for(var b = 0; b < 8; b++){
+        var angle = (b / 8) * TAU + f * 0.0015;
+        ctx.beginPath();
+        var bx = mcx, by = mcy;
+        var segCount = isMob ? 8 : 14;
+        for(var seg = 0; seg < segCount; seg++){
+          var len = 15 + seg * (isMob ? 10 : 14);
+          var wobble = Math.sin(f * 0.008 + b * 2.5 + seg * 0.8) * 0.2;
+          bx += Math.cos(angle + wobble) * len / segCount;
+          by += Math.sin(angle + wobble) * len / segCount;
+          seg === 0 ? ctx.moveTo(bx, by) : ctx.lineTo(bx, by);
+        }
+        ctx.strokeStyle = 'rgba(139,92,246,' + (0.05 * ma) + ')';
+        ctx.lineWidth = 1; ctx.stroke();
+        // Sub-branches
+        if(!isMob && b % 2 === 0){
+          for(var sb = 0; sb < 2; sb++){
+            ctx.beginPath();
+            var sbx = bx, sby = by;
+            var subAngle = angle + (sb === 0 ? 0.4 : -0.4);
+            for(var ss = 0; ss < 5; ss++){
+              sbx += Math.cos(subAngle + Math.sin(f * 0.01 + sb) * 0.1) * 8;
+              sby += Math.sin(subAngle + Math.sin(f * 0.01 + sb) * 0.1) * 8;
+              ss === 0 ? ctx.moveTo(sbx, sby) : ctx.lineTo(sbx, sby);
+            }
+            ctx.strokeStyle = 'rgba(167,139,250,' + (0.03 * ma) + ')';
+            ctx.lineWidth = 0.5; ctx.stroke();
+          }
+        }
+      }
+
+      // Brain wave EEG across bottom
+      for(var wave = 0; wave < 3; wave++){
+        ctx.beginPath();
+        var waveY = H * (0.7 + wave * 0.08);
+        var freq = 0.008 + wave * 0.004;
+        var amp = (isMob ? 8 : 14) - wave * 2;
+        for(var px = 0; px <= W; px += 2){
+          var val = Math.sin(px * freq + f * 0.02 + wave * 2) * amp
+                  + Math.sin(px * freq * 2.7 + f * 0.035 + wave) * amp * 0.4;
+          px === 0 ? ctx.moveTo(px, waveY + val) : ctx.lineTo(px, waveY + val);
+        }
+        ctx.strokeStyle = 'rgba(139,92,246,' + (0.06 * (1 - wave * 0.25) * ma) + ')';
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
+
+    // ════════════════════════════════════════
+    // MONEY: Green/gold, ascending wealth
+    // ════════════════════════════════════════
+    if(wMoney > 0.01){
+      var moa = wMoney;
+
+      // Massive green glow
+      var mogx = W * 0.55, mogy = H * 0.5;
+      var mogr = isMob ? 160 : 260;
+      var g = ctx.createRadialGradient(mogx, mogy, 0, mogx, mogy, mogr);
+      g.addColorStop(0, 'rgba(52,211,153,' + (0.05 * moa) + ')');
+      g.addColorStop(0.3, 'rgba(34,197,94,' + (0.025 * moa) + ')');
+      g.addColorStop(0.6, 'rgba(232,213,183,' + (0.012 * moa) + ')');
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(mogx, mogy, mogr, 0, TAU); ctx.fill();
+
+      // Bar chart columns — dramatic, many
+      var barCount = isMob ? 12 : 22;
+      for(var i = 0; i < barCount; i++){
+        var bx = (i + 0.5) / barCount * W;
+        var maxH = (0.08 + (i / barCount) * 0.5) * H;
+        var barH = maxH * (0.5 + Math.sin(f * 0.006 + i * 0.4) * 0.35);
+        var by = H;
+        var bw = W / barCount * 0.35;
+        var g2 = ctx.createLinearGradient(0, by, 0, by - barH);
+        g2.addColorStop(0, 'rgba(52,211,153,' + (0.02 * moa) + ')');
+        g2.addColorStop(0.3, 'rgba(52,211,153,' + (0.06 * moa) + ')');
+        g2.addColorStop(0.7, 'rgba(34,197,94,' + (0.03 * moa) + ')');
+        g2.addColorStop(1, 'transparent');
+        ctx.fillStyle = g2;
+        ctx.fillRect(bx - bw / 2, by - barH, bw, barH);
+        // Bar cap glow
+        ctx.beginPath(); ctx.arc(bx, by - barH, bw * 0.6, 0, TAU);
+        ctx.fillStyle = 'rgba(52,211,153,' + (0.04 * moa) + ')';
+        ctx.fill();
+      }
+
+      // Growth trend line — bold with fill
+      ctx.beginPath();
+      var tStart = H * 0.85;
+      ctx.moveTo(0, tStart);
+      for(var px = 0; px <= W; px += 2){
+        var prog = px / W;
+        var trendY = tStart - prog * H * 0.55 + Math.sin(prog * 10 + f * 0.01) * (isMob ? 8 : 15);
+        ctx.lineTo(px, trendY);
+      }
+      ctx.strokeStyle = 'rgba(52,211,153,' + (0.1 * moa) + ')';
+      ctx.lineWidth = 2; ctx.stroke();
+      // Fill under the curve
+      ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+      ctx.fillStyle = 'rgba(52,211,153,' + (0.012 * moa) + ')';
+      ctx.fill();
+
+      // Ascending particles — brighter, with trails
+      for(var i = 0; i < moneyParts.length; i++){
+        var p = moneyParts[i];
+        p.baseY -= p.speed;
+        if(p.baseY < -0.1) p.baseY = 1.1;
+        var px = (p.x + Math.sin(f * 0.004 + p.phase) * p.drift) * W;
+        var py = p.baseY * H;
+        // Trail
+        var trailLen = 12;
+        var g3 = ctx.createLinearGradient(px, py + trailLen, px, py);
+        g3.addColorStop(0, 'transparent');
+        g3.addColorStop(1, 'rgba(52,211,153,' + (0.2 * moa) + ')');
+        ctx.beginPath(); ctx.moveTo(px, py + trailLen); ctx.lineTo(px, py);
+        ctx.strokeStyle = g3; ctx.lineWidth = p.r; ctx.stroke();
+        // Dot
+        ctx.beginPath(); ctx.arc(px, py, p.r, 0, TAU);
+        ctx.fillStyle = 'rgba(52,211,153,' + (0.25 * moa) + ')';
+        ctx.fill();
+      }
+
+      // Rotating diamond — larger, more facets
+      var dcx = W * 0.5, dcy = H * 0.35;
+      var dSize = isMob ? 50 : 85;
+      var dRot = f * 0.003;
+      ctx.save(); ctx.translate(dcx, dcy); ctx.rotate(dRot);
+      // Outer diamond
+      ctx.beginPath();
+      ctx.moveTo(0, -dSize); ctx.lineTo(dSize * 0.65, 0);
+      ctx.lineTo(0, dSize * 0.85); ctx.lineTo(-dSize * 0.65, 0); ctx.closePath();
+      ctx.strokeStyle = 'rgba(232,213,183,' + (0.06 * moa) + ')';
+      ctx.lineWidth = 1; ctx.stroke();
+      // Inner facets
+      ctx.beginPath();
+      ctx.moveTo(0, -dSize); ctx.lineTo(dSize * 0.25, dSize * 0.2);
+      ctx.moveTo(0, -dSize); ctx.lineTo(-dSize * 0.25, dSize * 0.2);
+      ctx.moveTo(-dSize * 0.65, 0); ctx.lineTo(dSize * 0.65, 0);
+      ctx.moveTo(0, dSize * 0.85); ctx.lineTo(dSize * 0.25, dSize * 0.2);
+      ctx.moveTo(0, dSize * 0.85); ctx.lineTo(-dSize * 0.25, dSize * 0.2);
+      ctx.strokeStyle = 'rgba(232,213,183,' + (0.03 * moa) + ')';
+      ctx.lineWidth = 0.6; ctx.stroke();
+      // Diamond glow
+      var dg = ctx.createRadialGradient(0, 0, 0, 0, 0, dSize * 1.2);
+      dg.addColorStop(0, 'rgba(232,213,183,' + (0.03 * moa) + ')');
+      dg.addColorStop(1, 'transparent');
+      ctx.fillStyle = dg;
+      ctx.beginPath(); ctx.arc(0, 0, dSize * 1.2, 0, TAU); ctx.fill();
+      ctx.restore();
+
+      // Grid lines — fading perspective grid
+      for(var gy = 0; gy < 8; gy++){
+        var gridY = H * 0.6 + gy * (isMob ? 20 : 30);
+        ctx.beginPath(); ctx.moveTo(0, gridY); ctx.lineTo(W, gridY);
+        ctx.strokeStyle = 'rgba(52,211,153,' + (0.015 * (1 - gy * 0.1) * moa) + ')';
+        ctx.lineWidth = 0.5; ctx.stroke();
+      }
+    }
+
+    // ════════════════════════════════════════
+    // AMBIENT: Always-present subtle stars
+    // ════════════════════════════════════════
+    var starSeed = 42;
+    for(var i = 0; i < (isMob ? 25 : 50); i++){
+      starSeed = (starSeed * 16807) % 2147483647;
+      var sx = (starSeed / 2147483647) * W;
+      starSeed = (starSeed * 16807) % 2147483647;
+      var syi = (starSeed / 2147483647) * H;
+      starSeed = (starSeed * 16807) % 2147483647;
+      var sr = (starSeed / 2147483647) * 1 + 0.2;
+      var flicker = Math.sin(f * 0.013 + i * 1.7) * 0.3 + 0.5;
+      ctx.beginPath(); ctx.arc(sx, syi, sr, 0, TAU);
+      ctx.fillStyle = 'rgba(232,213,183,' + (flicker * 0.12) + ')';
+      ctx.fill();
+    }
+
+    // Vignette
+    var v = ctx.createRadialGradient(W/2, H*.4, H*.06, W/2, H*.4, H*.78);
+    v.addColorStop(0, 'transparent');
+    v.addColorStop(.5, 'rgba(5,5,7,.2)');
+    v.addColorStop(1, 'rgba(5,5,7,.9)');
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // ═══ GSAP (progressive enhancement — page works without it) ═══
+  function startAnimations(){
+    try {
+      if(typeof gsap === 'undefined') return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero entrance — elements start at opacity:0 via CSS, GSAP takes over
+      var heroEl = document.querySelector('.hero');
+      gsap.fromTo('.hero h1', {y:40, opacity:0}, {y:0, opacity:1, duration:1, ease:'power4.out', onStart:function(){ heroEl.classList.add('entered'); }});
+      gsap.fromTo('.hero .sub', {y:25, opacity:0}, {y:0, opacity:1, duration:.8, ease:'power3.out', delay:.15});
+      gsap.fromTo('.hero .mag', {y:25, opacity:0}, {y:0, opacity:1, duration:.8, ease:'power3.out', delay:.3});
+      gsap.fromTo('.hero .scr', {opacity:0}, {opacity:1, duration:1, delay:.6});
+
+      // Scroll reveals
+      gsap.utils.toArray('.split-l .anim, .split-l h2').forEach(function(el){
+        gsap.from(el, {scrollTrigger:{trigger:el,start:'top 92%'}, y:25, opacity:0, duration:.7, ease:'power3.out'});
+      });
+
+      // Steps stagger
+      gsap.from('.step', {
+        scrollTrigger:{trigger:'.steps',start:'top 90%'},
+        y:20, opacity:0, duration:.5, stagger:.08, ease:'power3.out'
+      });
+
+      // Domain cards
+      gsap.from('.dom', {
+        scrollTrigger:{trigger:'.dt',start:'top 92%'},
+        x:40, opacity:0, duration:.5, stagger:.07, ease:'power3.out'
+      });
+
+      // Counter animation
+      gsap.utils.toArray('[data-c]').forEach(function(el){
+        var target = parseInt(el.getAttribute('data-c'));
+        el.textContent = '0';
+        ScrollTrigger.create({
+          trigger:el, start:'top 92%', once:true,
+          onEnter:function(){
+            gsap.to({v:0}, {v:target, duration:1.5, ease:'power2.out',
+              onUpdate:function(){ el.textContent = Math.round(this.targets()[0].v); }
+            });
+          }
+        });
+      });
+
+      // Quote
+      gsap.from('.qt .qm, .qt .qx', {
+        scrollTrigger:{trigger:'.qt',start:'top 90%'},
+        y:15, opacity:0, duration:.6, stagger:.08, ease:'power3.out'
+      });
+
+      // CTA
+      gsap.from('.cta-f .anim', {
+        scrollTrigger:{trigger:'.cta-f',start:'top 90%'},
+        y:25, opacity:0, duration:.7, stagger:.1, ease:'power3.out'
+      });
+
+    } catch(e) {
+      // GSAP failed — force hero visible
+      document.querySelector('.hero').classList.add('entered');
+      console.log('GSAP unavailable, static mode');
+    }
+  }
+})();
+</script>
+</body>
+</html>
