@@ -4147,6 +4147,22 @@ function AppInner() {
   const discountAmt = Math.round(cartTotal * discountTier.pct);
   const cartFinal = cartTotal - discountAmt;
   const submitOrder = async () => {
+    try {
+      const items = pepCart.map((c) => {
+        const p = PEPTIDES.find((x) => x.id === c.pepId);
+        return { name: p?.name || c.name || "Peptide", qty: c.qty, price: c.price, size: p?.size || "", cat: p?.cat || "", sku: p?.vendorSku || "", vendor: p?.vendor || "" };
+      });
+      const res = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items, shipping: shippingInfo, discount: discountAmt, discountLabel: discountTier.label }) });
+      const data = await res.json();
+      if (data.url) {
+        const oid = "ORD-" + Date.now().toString(36).toUpperCase();
+        if (supa.current && user) { try { await supa.current.from("orders").insert({ id: oid, user_id: user.id, customer: shippingInfo.name || user.email, email: user.email, items: items, subtotal: cartTotal, discount: discountAmt, discount_label: discountTier.label, total: cartFinal, status: "confirmed", shipping: shippingInfo }); } catch(e){} }
+        fetch("/api/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: oid, customer: shippingInfo.name || user?.email || "Guest", email: user?.email, items, subtotal: cartTotal, discount: discountAmt, discountLabel: discountTier.label, total: cartFinal, shipping: shippingInfo }) }).catch(() => {});
+        window.location.href = data.url;
+        return;
+      } else { alert("Checkout error: " + (data.error || "Unknown")); }
+    } catch(e) { alert("Checkout error: " + e.message); }
+    return;
     const order = { id: Date.now(), items: pepCart.map((c) => {
       const p = PEPTIDES.find((x) => x.id === c.pepId);
       return { ...c, vendor: p?.vendor || "unknown", vendorSku: p?.vendorSku || "", name: p?.name || "" };

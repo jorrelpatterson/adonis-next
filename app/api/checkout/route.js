@@ -51,8 +51,8 @@ export async function POST(request) {
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: `${request.headers.get('origin')}/app/peptides?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${request.headers.get('origin')}/app/peptides?checkout=cancelled`,
+      success_url: `${request.headers.get('origin')}/app.html?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${request.headers.get('origin')}/app.html?checkout=cancelled`,
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
