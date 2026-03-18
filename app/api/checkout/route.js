@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 
 // POST /api/checkout
 // Creates a Stripe Checkout Session with dynamic pricing from cart items
 export async function POST(request) {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   
   try {
     const { items, shipping, discount, discountLabel } = await request.json();
