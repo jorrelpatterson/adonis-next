@@ -3016,6 +3016,8 @@ function AppInner() {
     });
     return () => listener?.subscription?.unsubscribe();
   }, []);
+  const [pricesLoaded, setPricesLoaded] = useState(false);
+  useEffect(() => { if (!supa.current) return; supa.current.from("products").select("*").then(({ data }) => { if (!data) return; data.forEach(p => { const match = PEPTIDES.find(pp => pp.name.toLowerCase() === p.name.toLowerCase()); if (match && p.retail) { match.price = Number(p.retail); } }); setPricesLoaded(true); }); }, []);
   const authSignUp = async () => {
     if (!supa.current) return;
     setAuthSending(true);
