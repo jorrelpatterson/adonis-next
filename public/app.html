@@ -3094,9 +3094,8 @@ function AppInner() {
   const ls = (key, fallback) => saved.current?.[key] ?? fallback;
   const [view, setView] = useState(() => {
     const saved2 = ls("view", "landing");
-    if (saved2 === "landing") return "landing";
-    if (saved2 === "onboard") {
-      const p = ls("prof", { domains: [] });
+    if (saved2 === "landing" || saved2 === "onboard") {
+    const p = ls("prof", { domains: [] });
       return p.name && p.domains?.length > 0 ? "app" : "onboard";
     }
     return saved2;
