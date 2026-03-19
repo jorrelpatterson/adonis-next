@@ -3017,7 +3017,7 @@ function AppInner() {
     return () => listener?.subscription?.unsubscribe();
   }, []);
   const [pricesLoaded, setPricesLoaded] = useState(false);
-  useEffect(() => { if (!supa.current) return; supa.current.from("products").select("*").then(({ data }) => { if (!data) return; data.forEach(p => { const fullName = (p.name + " " + (p.size || "")).trim().toLowerCase(); const match = PEPTIDES.find(pp => pp.name.toLowerCase() === fullName); if (match && p.retail) { match.price = Number(p.retail); } }); setPricesLoaded(true); }); }, []);
+  useEffect(() => { if (!supa.current) return; supa.current.from("products").select("*").then(({ data }) => { if (!data) return; const dbNames = new Set(); data.forEach(p => { const fullName = (p.name + " " + (p.size || "")).trim(); dbNames.add(fullName.toLowerCase()); const match = PEPTIDES.find(pp => pp.name.toLowerCase() === fullName.toLowerCase()); if (match) { if (p.retail) match.price = Number(p.retail); if (p.vendor) match.vendor = p.vendor; if (p.sku) match.vendorSku = p.sku; if (p.stock !== undefined) match._stock = Number(p.stock); match._active = true; } else { PEPTIDES.push({ id: 9000 + PEPTIDES.length, name: fullName, size: p.size || "", cat: p.cat || "Other", dose: "", timing: "", dur: "", cycleDays: 0, freq: "daily", tod: "morning", premium: false, price: Number(p.retail) || 0, margin: 0, desc: p.cat || "Research peptide", goals: [], vendor: p.vendor || "", vendorSku: p.sku || "", orderUrl: "#", _active: true, _stock: Number(p.stock) || 0 }); } }); PEPTIDES.forEach(p => { if (!dbNames.has(p.name.toLowerCase())) p._active = false; }); setPricesLoaded(true); }); }, []);
   const authSignUp = async () => {
     if (!supa.current) return;
     setAuthSending(true);
@@ -3951,7 +3951,7 @@ function AppInner() {
   const insights = useMemo(() => generateInsights(foodLogs, checkins), [foodLogs, checkins]);
   const activePeps = useMemo(() => {
     const ids = new Set(activeCycles.map((c) => c.pepId));
-    return PEPTIDES.filter((p) => ids.has(p.id));
+    return PEPTIDES.filter((p) => ids.has(p.id) && p._active !== false);
   }, [activeCycles]);
   const stackAdj = useMemo(() => activePeps.length > 0 ? getStackAdj(checkins, activePeps) : [], [checkins, activePeps]);
   const setCheckin = (field, val) => {
@@ -5792,7 +5792,7 @@ ${prof.name || "[Your Name]"}`
   const StackV = () => {
     const userGoals = new Set(prof.goals);
     const recIds = new Set(recPep.map((p) => p.id));
-    const scored = PEPTIDES.map((p) => {
+    const scored = PEPTIDES.filter(p => p._active !== false).map((p) => {
       const gm = (p.goals || []).filter((g) => userGoals.has(g)).length;
       return { ...p, goalMatch: gm, isRec: recIds.has(p.id) };
     }).sort((a, b) => (b.isRec ? 100 : 0) - (a.isRec ? 100 : 0) || b.goalMatch - a.goalMatch);
@@ -6150,7 +6150,7 @@ ${prof.name || "[Your Name]"}`
             SFX.celebrate();
           }, style: { ...s.btn, ...s.pri, width: "100%", justifyContent: "center", borderRadius: 10, fontSize: 12, padding: "14px", position: "relative" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 2 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 6 } }, stackPct > 0 && /* @__PURE__ */ React.createElement("span", { style: { textDecoration: "line-through", opacity: 0.5, fontSize: 11 } }, "$", total), /* @__PURE__ */ React.createElement("span", null, "Add Full Stack \xB7 $", stackFinal)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, opacity: 0.8 } }, "+ \u{1F381} ", bacNeeded, " FREE Bac Water (", bacNeeded * 10, "ml)"))));
         })()));
-      }), /* @__PURE__ */ React.createElement("div", { onClick: () => setPepTab("browse"), style: { ...s.card, padding: 20, marginBottom: 10, cursor: "pointer", borderStyle: "dashed", borderColor: "rgba(232,213,183,0.15)", display: "flex", alignItems: "center", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 44, height: 44, borderRadius: 12, background: "rgba(232,213,183,0.04)", border: "1px solid rgba(232,213,183,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 } }, "\u{1F9EA}"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, fontWeight: 700, color: P.gW } }, "Build Your Own"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: P.txD, marginTop: 2 } }, "None of these fit? Browse all ", PEPTIDES.filter((p) => p.cat !== "Supplies").length, "+ peptides and build a custom protocol.")), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12, color: P.txD } }, "\u2192")));
+      }), /* @__PURE__ */ React.createElement("div", { onClick: () => setPepTab("browse"), style: { ...s.card, padding: 20, marginBottom: 10, cursor: "pointer", borderStyle: "dashed", borderColor: "rgba(232,213,183,0.15)", display: "flex", alignItems: "center", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 44, height: 44, borderRadius: 12, background: "rgba(232,213,183,0.04)", border: "1px solid rgba(232,213,183,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 } }, "\u{1F9EA}"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, fontWeight: 700, color: P.gW } }, "Build Your Own"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: P.txD, marginTop: 2 } }, "None of these fit? Browse all ", PEPTIDES.filter((p) => p.cat !== "Supplies" && p._active !== false).length, "+ peptides and build a custom protocol.")), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12, color: P.txD } }, "\u2192")));
     })()), pepTab === "browse" && /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", paddingBottom: 2 } }, [{ id: "all", l: "All" }, { id: "recommended", l: "\u2605 For You" }].concat(cats2.map((c) => ({ id: c, l: c }))).map((f) => /* @__PURE__ */ React.createElement("button", { key: f.id, onClick: () => setShopFilter(f.id), style: { ...s.btn, padding: "8px 12px", fontSize: 10, whiteSpace: "nowrap", background: shopFilter === f.id ? "rgba(232,213,183,0.08)" : "transparent", border: "1px solid " + (shopFilter === f.id ? "rgba(232,213,183,0.2)" : "rgba(232,213,183,0.04)"), color: shopFilter === f.id ? P.gW : P.txD, flexShrink: 0, borderRadius: 100 } }, f.l))), grouped.map(({ bn, variants, sel }) => {
       const pp = sel;
       const cyc = getCyc(pp.id);
@@ -6205,7 +6205,7 @@ ${prof.name || "[Your Name]"}`
       return /* @__PURE__ */ React.createElement("div", { key: i, style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 7, color: P.txD, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2 } }, x[0]), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, fontWeight: 600, marginTop: 2, color: P.txS } }, x[1]));
     }))), (() => {
       const baseName2 = libPep.name.replace(/\s*\d+m[gG].*$/, "").replace(/\s*\d+iu.*$/i, "").replace(/\s*\d+ml.*$/i, "").trim();
-      const sizes = PEPTIDES.filter((p) => {
+      const sizes = PEPTIDES.filter((p) => p._active !== false).filter((p) => {
         const bn = p.name.replace(/\s*\d+m[gG].*$/, "").replace(/\s*\d+iu.*$/i, "").replace(/\s*\d+ml.*$/i, "").trim();
         return bn === baseName2;
       });
