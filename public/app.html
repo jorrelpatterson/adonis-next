@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Adonis"><meta name="theme-color" content="#060709"><link rel="manifest" href="./manifest.json"><link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon.svg"><title>Adonis — Life Protocol OS</title><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}html,body,#root{height:100%;width:100%;background:#060709}body{overflow:hidden;overscroll-behavior-y:none}input,select,textarea{font-size:16px!important}@media(min-width:420px){input,select,textarea{font-size:inherit!important}}@supports(padding-bottom:env(safe-area-inset-bottom)){.adn-safe-bottom{padding-bottom:calc(12px + env(safe-area-inset-bottom))!important}}@keyframes sp{0%,100%{opacity:.3}50%{opacity:1}}</style>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister()})})}if(typeof caches!=='undefined'){caches.keys().then(function(names){names.forEach(function(name){caches.delete(name)})})}</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script></head><body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="/lib/exercises.js"></script><script src="/lib/programs.js"></script></head><body>
 <div id="splash" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#060709;position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;transition:opacity 0.5s"><div style="width:48px;height:48px;border-radius:12px;background:rgba(14,16,22,0.6);border:1px solid rgba(232,213,183,0.06);display:flex;align-items:center;justify-content:center"><span style="font-family:Georgia,serif;font-size:24px;font-style:italic;background:linear-gradient(135deg,#E8D5B7,#B8C4D0);-webkit-background-clip:text;-webkit-text-fill-color:transparent">A</span></div><div style="font-size:18px;font-weight:300;font-style:italic;color:#E8D5B7;font-family:Georgia,serif">Adonis</div><div style="font-size:9px;color:rgba(232,213,183,0.3);letter-spacing:3px;text-transform:uppercase;margin-top:-8px">Loading your protocol</div><div style="display:flex;gap:6px;margin-top:8px"><div style="width:4px;height:4px;border-radius:2px;background:rgba(232,213,183,0.4);animation:sp 1.2s ease-in-out infinite"></div><div style="width:4px;height:4px;border-radius:2px;background:rgba(232,213,183,0.4);animation:sp 1.2s ease-in-out 0.2s infinite"></div><div style="width:4px;height:4px;border-radius:2px;background:rgba(232,213,183,0.4);animation:sp 1.2s ease-in-out 0.4s infinite"></div></div></div>
 <div id="root"></div><script>
 const { useState, useMemo, useEffect, useCallback, useRef } = React;
@@ -3017,7 +3017,7 @@ function AppInner() {
     return () => listener?.subscription?.unsubscribe();
   }, []);
   const [pricesLoaded, setPricesLoaded] = useState(false);
-  useEffect(() => { if (!supa.current) return; supa.current.from("products").select("*").then(({ data }) => { if (!data) return; const dbNames = new Set(); data.forEach(p => { const fullName = (p.name + " " + (p.size || "")).trim(); dbNames.add(fullName.toLowerCase()); const match = PEPTIDES.find(pp => pp.name.toLowerCase() === fullName.toLowerCase()); if (match) { if (p.retail) match.price = Number(p.retail); if (p.vendor) match.vendor = p.vendor; if (p.sku) match.vendorSku = p.sku; if (p.stock !== undefined) match._stock = Number(p.stock); match._active = true; } else { PEPTIDES.push({ id: 9000 + PEPTIDES.length, name: fullName, size: p.size || "", cat: p.cat || "Other", dose: "", timing: "", dur: "", cycleDays: 0, freq: "daily", tod: "morning", premium: false, price: Number(p.retail) || 0, margin: 0, desc: p.cat || "Research peptide", goals: [], vendor: p.vendor || "", vendorSku: p.sku || "", orderUrl: "#", _active: true, _stock: Number(p.stock) || 0 }); } }); PEPTIDES.forEach(p => { if (!dbNames.has(p.name.toLowerCase())) p._active = false; }); setPricesLoaded(true); }); }, []);
+  useEffect(() => { if (!supa.current) return; supa.current.from("products").select("*").then(({ data }) => { if (!data) return; const dbNames = new Set(); data.forEach(p => { const fullName = (p.name + " " + (p.size || "")).trim(); dbNames.add(fullName.toLowerCase()); const match = PEPTIDES.find(pp => pp.name.toLowerCase() === fullName.toLowerCase()); if (match) { if (p.retail) match.price = Number(p.retail); if (p.vendor) match.vendor = p.vendor; if (p.sku) match.vendorSku = p.sku; if (p.stock !== undefined) match._stock = Number(p.stock); if (p.mechanism) { const baseName = p.name.replace(/\s*\d+m[gG].*$/, "").replace(/\s*\d+iu.*$/i, "").replace(/\s*\d+ml.*$/i, "").trim(); if (!PEP_RESEARCH[baseName]) PEP_RESEARCH[baseName] = { mechanism: p.mechanism, studies: p.studies || [], safety: p.safety || "" }; } match._active = true; } else { PEPTIDES.push({ id: 9000 + PEPTIDES.length, name: fullName, size: p.size || "", cat: p.cat || "Other", dose: "", timing: "", dur: "", cycleDays: 0, freq: "daily", tod: "morning", premium: false, price: Number(p.retail) || 0, margin: 0, desc: p.cat || "Research peptide", goals: [], vendor: p.vendor || "", vendorSku: p.sku || "", orderUrl: "#", _active: true, _stock: Number(p.stock) || 0 }); if (p.mechanism) { const baseName2 = p.name.replace(/\s*\d+m[gG].*$/, "").replace(/\s*\d+iu.*$/i, "").replace(/\s*\d+ml.*$/i, "").trim(); if (!PEP_RESEARCH[baseName2]) PEP_RESEARCH[baseName2] = { mechanism: p.mechanism, studies: p.studies || [], safety: p.safety || "" }; } } }); PEPTIDES.forEach(p => { if (!dbNames.has(p.name.toLowerCase())) p._active = false; }); setPricesLoaded(true); }); }, []);
   const authSignUp = async () => {
     if (!supa.current) return;
     setAuthSending(true);
@@ -3216,6 +3216,13 @@ function AppInner() {
   });
   const sourceRoute = SOURCE_ROUTES[sourceTag] || null;
   const [stackTab, setStackTab] = useState("stack");
+  const [wkProgramId, setWkProgramId] = useState(() => ls("wkProgramId", "adonis-ppl"));
+  const [wkWeek, setWkWeek] = useState(() => ls("wkWeek", 1));
+  const [wkDay, setWkDay] = useState(() => { const d = new Date().getDay(); const m={0:"rest",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat"}; return ls("wkDay", m[d]||"mon"); });
+  const [wkLogs, setWkLogs] = useState(() => ls("wkLogs", {}));
+  const [wkPRs, setWkPRs] = useState(() => ls("wkPRs", {}));
+  const [wkExpanded, setWkExpanded] = useState({});
+  const [wkInstructions, setWkInstructions] = useState(null);
   const [creditScores, setCreditScores] = useState(() => ls("creditScores", []));
   const [scoreInput, setScoreInput] = useState("");
   const [scoreBureau, setScoreBureau] = useState("experian");
@@ -6301,6 +6308,218 @@ ${prof.name || "[Your Name]"}`
       }, style: { ...s.btn, ...s.pri, padding: "8px 16px", fontSize: 12, marginTop: 8, width: "100%", justifyContent: "center" } }, "Open in Calculator")));
     })), toolTab === "guide" && /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, marginBottom: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { ...s.lab, marginBottom: 12 } }, "SubQ Injection Steps"), [["1", "Wash hands. Clean site with alcohol pad."], ["2", "Draw BAC water into syringe. Inject slowly into vial, aim at glass wall \u2014 never directly at powder."], ["3", "Gently swirl until dissolved. Never shake. Solution should be clear."], ["4", "Flip vial. Pull plunger to dose. Tap out air bubbles. Push plunger to expel air."], ["5", "Pinch skin at site. Insert needle at 45\xB0. Push plunger slowly and steadily."], ["6", "Remove needle. Light pressure with alcohol pad if needed."]].map(([n, text]) => /* @__PURE__ */ React.createElement("div", { key: n, style: { display: "flex", gap: 12, marginBottom: 12 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 28, height: 28, borderRadius: 8, background: "rgba(232,213,183,0.08)", border: "1px solid rgba(232,213,183,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } }, /* @__PURE__ */ React.createElement(GradText, { style: { fontFamily: FM, fontSize: 12, fontWeight: 700 } }, n)), /* @__PURE__ */ React.createElement("p", { style: { margin: 0, fontSize: 13, color: P.txS, lineHeight: 1.6 } }, text)))), /* @__PURE__ */ React.createElement("div", { style: { ...s.card, marginBottom: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { ...s.lab, marginBottom: 12 } }, "Injection Sites"), [{ n: "Abdomen", d: "2 inches from navel, pinch skin", r: "Rotate quadrants", i: "\u{1F7E1}" }, { n: "Upper Thigh", d: "Front/outer thigh, middle third", r: "Alternate legs", i: "\u{1F7E0}" }, { n: "Upper Arm", d: "Outer arm, between shoulder and elbow", r: "Alternate arms", i: "\u{1F535}" }, { n: "Love Handles", d: "Pinch fat above hip bone", r: "Alternate sides", i: "\u{1F7E2}" }, { n: "Glute (IM only)", d: "Upper outer quadrant only", r: "Alternate sides. IM injections only.", i: "\u{1F7E3}" }].map((site, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { padding: 12, background: P.bgH, borderRadius: 10, marginBottom: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 4 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14 } }, site.i), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: P.tx } }, site.n)), /* @__PURE__ */ React.createElement("p", { style: { margin: 0, fontSize: 12, color: P.txM, lineHeight: 1.5 } }, site.d), /* @__PURE__ */ React.createElement("p", { style: { margin: "4px 0 0", fontSize: 11, color: P.txD, fontStyle: "italic" } }, site.r)))), /* @__PURE__ */ React.createElement("div", { style: { ...s.card } }, /* @__PURE__ */ React.createElement("div", { style: { ...s.lab, marginBottom: 12 } }, "Storage & Handling"), [["Unreconstituted (powder)", "Room temp or fridge. Stable months. Avoid heat/light.", P.ok], ["After reconstitution", "MUST refrigerate (36-46\xB0F). Use within 28 days.", P.warn], ["BAC water", "Room temperature. Bacteriostatic properties keep vial sterile.", P.info], ["Never freeze reconstituted", "Freezing destroys peptide structure.", P.err], ["Needles", "New needle each injection. 18g to draw, 29-31g to inject.", P.txM]].map(([t, d, c], i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { display: "flex", gap: 10, marginBottom: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 4, borderRadius: 2, background: c, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, fontWeight: 700, color: P.txS } }, t), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: P.txD, marginTop: 2, lineHeight: 1.5 } }, d)))))));
   };
+
+  // ─── WORKOUT ENGINE ─────────────────────────────────────────────────────────
+  const WorkoutV = () => {
+    const CE = React.createElement;
+    const ready = typeof PROGRAMS !== "undefined" && typeof EXERCISES !== "undefined";
+    if (!ready) return CE("div", {style:{...s.card,padding:32,textAlign:"center"}},
+      CE("div",{style:{fontSize:24,marginBottom:12}},"\uD83D\uDCAA"),
+      CE("div",{style:{fontSize:14,color:P.txS,fontWeight:600}},"Loading workout engine..."),
+      CE("div",{style:{fontSize:11,color:P.txD,marginTop:6}},"Upload /public/lib/exercises.js and programs.js then redeploy.")
+    );
+    const prog = PROGRAMS[wkProgramId];
+    if (!prog) return CE("div",null,"Program not found.");
+    const totalWeeks = prog.durationWeeks;
+    const phase = prog.phases.find(ph => ph.weeks.includes(wkWeek)) || prog.phases[0];
+    const dayConfig = prog.days[wkDay];
+
+    // log helpers
+    const lk = (exId,si) => wkProgramId+"|"+wkWeek+"|"+wkDay+"|"+exId+"|"+si;
+    const gl = (exId,si) => wkLogs[lk(exId,si)] || {wt:"",r:"",c:false};
+    const gpl = (exId,si) => { if(wkWeek<=1) return null; const k=wkProgramId+"|"+(wkWeek-1)+"|"+wkDay+"|"+exId+"|"+si; return wkLogs[k]||null; };
+    const ul = (exId,si,field,val) => {
+      const k=lk(exId,si);
+      const up={...wkLogs,[k]:{...gl(exId,si),[field]:val}};
+      setWkLogs(up); ss("wkLogs",up);
+      if(field==="wt"&&val){const n=parseFloat(val);if(!isNaN(n)){const pk=wkProgramId+"|"+exId;if(n>(wkPRs[pk]||0)){const np={...wkPRs,[pk]:n};setWkPRs(np);ss("wkPRs",np);}}}
+    };
+    const suggest = (exSlot) => {
+      if(wkWeek<=1) return null;
+      const sets=[];
+      for(let i=0;i<exSlot.sets;i++){const p=gpl(exSlot.exId,i);if(p&&p.c&&p.wt)sets.push(p);}
+      if(!sets.length) return null;
+      const maxWt=Math.max(...sets.map(s=>parseFloat(s.wt)||0));
+      const avgR=sets.reduce((a,s)=>a+(parseFloat(s.r)||0),0)/sets.length;
+      const tr=parseFloat(exSlot.targetReps)||10;
+      if(sets.length>=exSlot.sets&&avgR>=tr) return {wt:maxWt+(exSlot.increment||5),msg:"+"+(exSlot.increment||5)+"lbs \u2014 W"+(wkWeek-1)+" complete \u2713"};
+      return {wt:maxWt,msg:"Repeat "+maxWt+"lbs \u2014 solidify first"};
+    };
+    const isDone = (dk) => { const dc=prog.days[dk]; if(!dc) return false; return dc.exercises.some(ex=>{for(let i=0;i<ex.sets;i++){const k=wkProgramId+"|"+wkWeek+"|"+dk+"|"+ex.exId+"|"+i;if(wkLogs[k]&&wkLogs[k].c)return true;}return false;}); };
+
+    // styles
+    const tc = (t) => t==="compound"?"#F87171":t==="isolation"?"#60A5FA":"#C084FC";
+    const tb = (t) => t==="compound"?"rgba(248,113,113,0.08)":t==="isolation"?"rgba(96,165,250,0.08)":"rgba(192,132,252,0.08)";
+    const inpS = {background:P.bgH,border:"1px solid "+P.bd,borderRadius:5,padding:"6px 4px",color:P.tx,fontFamily:FN,fontSize:13,fontWeight:600,textAlign:"center",width:"100%",outline:"none"};
+    const sHdr = {display:"grid",gridTemplateColumns:"28px 1fr 80px 64px 30px",gap:4,padding:"6px 0 4px",fontSize:9,fontWeight:700,letterSpacing:"0.15em",textTransform:"uppercase",color:P.txD,borderBottom:"1px solid "+P.bd};
+    const sRow = (done) => ({display:"grid",gridTemplateColumns:"28px 1fr 80px 64px 30px",gap:4,alignItems:"center",padding:"5px 0",borderBottom:"1px solid "+P.bd+"44",background:done?"rgba(52,211,153,0.03)":"transparent"});
+    const SL = (lbl) => CE("div",{style:{display:"flex",alignItems:"center",gap:10,margin:"14px 0 8px"}},
+      CE("div",{style:{fontSize:9,fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",color:P.txD,whiteSpace:"nowrap"}},lbl),
+      CE("div",{style:{flex:1,height:1,background:P.bd}})
+    );
+
+    // day tab buttons
+    const dayBtns = Object.entries(prog.schedule).filter(([,v])=>v!=="rest").map(([,dk]) => {
+      const dc=prog.days[dk]; const active=wkDay===dk; const done=isDone(dk);
+      return CE("button",{key:dk,onClick:()=>{setWkDay(dk);ss("wkDay",dk);},style:{flexShrink:0,padding:"7px 12px",borderRadius:8,border:"1px solid "+(active?dc.color+"66":P.bd),background:active?dc.color+"15":P.bgH,color:active?dc.color:P.txM,fontFamily:FN,fontSize:11,fontWeight:active?700:500,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,position:"relative"}},
+        CE("span",{style:{fontSize:10,fontWeight:700}},dc.label),
+        CE("span",{style:{fontSize:9,color:active?dc.color+"aa":P.txD}},dc.name.slice(0,3)),
+        done ? CE("div",{style:{position:"absolute",top:4,right:4,width:6,height:6,borderRadius:3,background:P.ok}}) : null
+      );
+    });
+
+    // instruction modal
+    const modal = wkInstructions && CE("div",{onClick:()=>setWkInstructions(null),style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:200,overflowY:"auto",padding:20}},
+      CE("div",{onClick:e=>e.stopPropagation(),style:{...s.card,maxWidth:560,margin:"0 auto",padding:20}},
+        CE("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}},
+          CE("div",{style:{fontSize:15,fontWeight:700,color:P.txS}},wkInstructions.name),
+          CE("button",{onClick:()=>setWkInstructions(null),style:{background:"none",border:"none",color:P.txD,cursor:"pointer",fontSize:20,fontFamily:FN}},"\u00d7")
+        ),
+        wkInstructions.instr && wkInstructions.instr.stub
+          ? CE("p",{style:{fontSize:13,color:P.txM,lineHeight:1.7,margin:0}},wkInstructions.instr.stub)
+          : CE("div",null,
+              wkInstructions.instr && wkInstructions.instr.equipment && CE("div",{style:{marginBottom:10}},
+                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"EQUIPMENT"),
+                CE("p",{style:{fontSize:12,color:P.txM,lineHeight:1.6,margin:0}},wkInstructions.instr.equipment)
+              ),
+              wkInstructions.instr && wkInstructions.instr.setup && CE("div",{style:{marginBottom:10}},
+                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"SETUP"),
+                CE("p",{style:{fontSize:12,color:P.txM,lineHeight:1.6,margin:0}},wkInstructions.instr.setup)
+              ),
+              wkInstructions.instr && wkInstructions.instr.execution && wkInstructions.instr.execution.length > 0 && CE("div",{style:{marginBottom:10}},
+                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"EXECUTION"),
+                wkInstructions.instr.execution.map((st,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:5}},
+                  CE("span",{style:{fontSize:10,fontWeight:700,color:P.ok,flexShrink:0}},(i+1)+"."),
+                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},st)
+                ))
+              ),
+              wkInstructions.instr && wkInstructions.instr.cues && wkInstructions.instr.cues.length > 0 && CE("div",{style:{marginBottom:10}},
+                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:"#F59E0B",marginBottom:5}},"COACHING CUES"),
+                wkInstructions.instr.cues.map((cu,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
+                  CE("span",{style:{color:"#F59E0B",flexShrink:0}},"\u25b8"),
+                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},cu)
+                ))
+              ),
+              wkInstructions.instr && wkInstructions.instr.mistakes && wkInstructions.instr.mistakes.length > 0 && CE("div",null,
+                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.err,marginBottom:5}},"COMMON MISTAKES"),
+                wkInstructions.instr.mistakes.map((m,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
+                  CE("span",{style:{color:P.err,flexShrink:0}},"\u00d7"),
+                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},m)
+                ))
+              )
+            )
+      )
+    );
+
+    if (!dayConfig) return CE("div",null,
+      CE(H,{t:"Train",sub:prog.name}),
+      CE("div",{style:{display:"flex",gap:6,marginBottom:16,overflowX:"auto"}},dayBtns),
+      CE("div",{style:{...s.card,padding:32,textAlign:"center"}},
+        CE("div",{style:{fontSize:32,marginBottom:8}},"\uD83D\uDE34"),
+        CE("div",{style:{fontSize:14,fontWeight:600,color:P.txS}},"Rest Day"),
+        CE("div",{style:{fontSize:12,color:P.txD,marginTop:4}},"Recovery is part of the program.")
+      )
+    );
+
+    // exercise cards
+    const exCards = dayConfig.exercises.map((exSlot,exIdx) => {
+      const exData = EXERCISES[exSlot.exId];
+      const name = exData ? exData.name : exSlot.exId;
+      const muscles = exData ? exData.muscles : "";
+      const category = exData ? exData.category : "compound";
+      const sug = suggest(exSlot);
+      const prKey = wkProgramId+"|"+exSlot.exId;
+      const currentPR = wkPRs[prKey] || 0;
+      const logs = Array.from({length:exSlot.sets},(_,i)=>gl(exSlot.exId,i));
+      const done = logs.filter(l=>l.c).length;
+      const allDone = done === exSlot.sets;
+      return CE("div",{key:exSlot.exId+exIdx,style:{...s.card,marginBottom:8,overflow:"hidden",borderLeft:exSlot.superset?"3px solid rgba(192,132,252,0.5)":undefined}},
+        CE("div",{style:{padding:"12px 14px 10px"}},
+          CE("div",{style:{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:4}},
+            CE("div",{style:{flex:1}},
+              CE("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:3}},
+                CE("span",{style:{fontSize:14,fontWeight:700,color:allDone?P.ok:P.txS}},name),
+                CE("span",{style:{padding:"2px 6px",borderRadius:3,fontSize:8,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",background:tb(category),color:tc(category),flexShrink:0}},category)
+              ),
+              muscles ? CE("div",{style:{fontSize:10,color:P.txD}},muscles) : null,
+              exSlot.note ? CE("div",{style:{fontSize:11,color:P.txM,marginTop:4,lineHeight:1.5,fontStyle:"italic"}},exSlot.note) : null,
+              exSlot.superset ? CE("div",{style:{marginTop:5,display:"inline-flex",alignItems:"center",gap:3,padding:"2px 7px",background:"rgba(192,132,252,0.08)",border:"1px solid rgba(192,132,252,0.2)",borderRadius:3,fontSize:8,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#C084FC"}},"Superset "+exSlot.superset) : null
+            ),
+            CE("div",{style:{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}},
+              CE("div",{style:{fontSize:10,fontWeight:700,color:allDone?P.ok:P.txD}},done+"/"+exSlot.sets+" sets"),
+              currentPR > 0 ? CE("div",{style:{fontSize:9,color:"#F59E0B",fontWeight:700}},"PR: "+currentPR+"lb") : null,
+              exData && exData.instructions ? CE("button",{onClick:()=>setWkInstructions({name:name,instr:exData.instructions}),style:{fontSize:10,padding:"3px 8px",borderRadius:4,border:"1px solid "+P.bd,background:P.bgH,color:P.txD,cursor:"pointer",fontFamily:FN}},"How-To") : null
+            )
+          ),
+          sug ? CE("div",{style:{marginTop:6,padding:"5px 10px",borderRadius:6,background:"rgba(74,222,128,0.06)",border:"1px solid rgba(74,222,128,0.15)",fontSize:11,color:P.ok}},
+            "\uD83D\uDCA1 Suggested: ",CE("strong",null,sug.wt+" lbs")," \u2014 ",sug.msg
+          ) : null
+        ),
+        CE("div",{style:{padding:"0 12px 10px"}},
+          CE("div",{style:sHdr},
+            CE("span",{style:{textAlign:"center"}},"SET"),
+            CE("span",null,"LAST WK"),
+            CE("span",{style:{textAlign:"center"}},"WEIGHT"),
+            CE("span",{style:{textAlign:"center"}},"REPS"),
+            CE("span",{style:{textAlign:"center"}},"\u2713")
+          ),
+          Array.from({length:exSlot.sets},(_,si) => {
+            const log=gl(exSlot.exId,si); const prev=gpl(exSlot.exId,si);
+            return CE("div",{key:si,style:sRow(log.c)},
+              CE("span",{style:{fontSize:12,fontWeight:700,color:P.txD,textAlign:"center"}},(si+1)),
+              CE("span",{style:{fontSize:10,color:P.txD,textAlign:"center",lineHeight:1.4}},
+                prev && prev.c ? (prev.wt ? prev.wt+"lb" : "\u2014")+(prev.r ? " / "+prev.r+"r" : "") : "\u2014"
+              ),
+              CE("input",{type:"number",inputMode:"decimal",placeholder:sug?String(sug.wt):"lbs",value:log.wt,onChange:e=>ul(exSlot.exId,si,"wt",e.target.value),style:inpS}),
+              CE("input",{type:"text",inputMode:"numeric",placeholder:exSlot.targetReps,value:log.r,onChange:e=>ul(exSlot.exId,si,"r",e.target.value),style:inpS}),
+              CE("button",{onClick:()=>ul(exSlot.exId,si,"c",!log.c),style:{width:26,height:26,borderRadius:"50%",border:"2px solid "+(log.c?P.ok:P.bd),background:log.c?P.ok:"transparent",color:log.c?"#000":P.txD,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,margin:"0 auto",fontWeight:800,fontFamily:FN}},log.c?"\u2713":"")
+            );
+          })
+        )
+      );
+    });
+
+    return CE("div",null,
+      modal,
+      CE(H,{t:"Train",sub:prog.name+" \u00b7 Week "+wkWeek+" of "+totalWeeks}),
+      CE("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:12,...s.card,padding:"10px 14px"}},
+        CE("button",{onClick:()=>{const w=Math.max(1,wkWeek-1);setWkWeek(w);ss("wkWeek",w);},style:{width:32,height:32,background:P.bgH,border:"1px solid "+P.bd,color:P.txM,borderRadius:6,cursor:"pointer",fontSize:16,fontFamily:FN}},"\u2039"),
+        CE("div",{style:{flex:1,textAlign:"center"}},
+          CE("div",{style:{fontSize:22,fontWeight:800,color:P.txS,lineHeight:1}},"Week "+wkWeek),
+          CE("div",{style:{fontSize:10,color:P.txD,marginTop:2,letterSpacing:"0.08em"}},"of "+totalWeeks+" weeks")
+        ),
+        CE("button",{onClick:()=>{const w=Math.min(totalWeeks,wkWeek+1);setWkWeek(w);ss("wkWeek",w);},style:{width:32,height:32,background:P.bgH,border:"1px solid "+P.bd,color:P.txM,borderRadius:6,cursor:"pointer",fontSize:16,fontFamily:FN}},"\u203a")
+      ),
+      CE("div",{style:{padding:"8px 14px",borderRadius:8,background:phase.color+"15",border:"1px solid "+phase.color+"33",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}},
+        CE("div",null,
+          CE("span",{style:{fontSize:12,fontWeight:700,color:phase.color}},phase.name+" Phase"),
+          CE("span",{style:{fontSize:10,color:P.txD,marginLeft:8}},phase.rpe)
+        ),
+        CE("span",{style:{fontSize:10,color:P.txD,fontStyle:"italic",maxWidth:180,textAlign:"right"}},phase.note)
+      ),
+      CE("div",{style:{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}},dayBtns),
+      CE("div",{style:{fontSize:13,fontWeight:700,color:dayConfig.color,marginBottom:10}},dayConfig.label+" \u2014 "+dayConfig.muscles),
+      dayConfig.warmup && dayConfig.warmup.length > 0 ? CE("div",null,
+        SL("WARMUP"),
+        CE("div",{style:{...s.card,padding:12,marginBottom:8,background:"rgba(251,146,60,0.04)",border:"1px solid rgba(251,146,60,0.15)"}},
+          dayConfig.warmup.map((wu,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:i<dayConfig.warmup.length-1?4:0,fontSize:12,color:P.txM}},
+            CE("span",{style:{color:"#FB923C",flexShrink:0}},"\u2192"),wu
+          ))
+        )
+      ) : null,
+      SL("EXERCISES"),
+      exCards,
+      dayConfig.cardio ? CE("div",null,
+        SL("CARDIO"),
+        CE("div",{style:{...s.card,padding:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.15)"}},
+          CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:"#60A5FA",marginBottom:6}},"CARDIO PRESCRIPTION"),
+          CE("div",{style:{fontSize:12,color:P.txM,lineHeight:1.6}},dayConfig.cardio)
+        )
+      ) : null
+    );
+  };
+  // ─── END WORKOUT ENGINE ───────────────────────────────────────────────────────
+
   const RoutineV = () => {
     const daySched = workSchedule.enabled ? workSchedule.schedule?.[routineDay] : null;
     const workDayCount = workSchedule.enabled ? Object.values(workSchedule.schedule).filter(Boolean).length : 0;
@@ -7274,7 +7493,7 @@ Add as accountability partner?`)) {
   const PARENT_TABS = [
     { id: "home", l: "Home", em: "\u{1F3E0}" },
     { id: "routine", l: "Routine", em: "\u{1F4C5}" },
-    { id: "body", l: "Body", em: "\u{1F3CB}\uFE0F", domain: "body", subs: [{ id: "stack", l: "Peptides", em: "\u{1F9EC}" }, { id: "food", l: "Food", em: "\u{1F37D}\uFE0F" }, { id: "tools", l: "Tools", em: "\u{1F489}" }] },
+    { id: "body", l: "Body", em: "\u{1F3CB}\uFE0F", domain: "body", subs: [{ id: "stack", l: "Peptides", em: "\u{1F9EC}" }, { id: "workout", l: "Train", em: "\u{1F4AA}" }, { id: "food", l: "Food", em: "\u{1F37D}\uFE0F" }, { id: "tools", l: "Tools", em: "\u{1F489}" }] },
     { id: "money", l: "Money", em: "\u{1F4B0}", domain: "money", subs: [{ id: "cards", l: "Cards", em: "\u{1F4B3}", domain: "money" }, { id: "income", l: "Income", em: "\u{1F4B5}", domain: "income" }] },
     { id: "mind", l: "Mind", em: "\u{1F9E0}", domain: "mind" },
     { id: "purpose", l: "Purpose", em: "\u{1F9ED}", domain: "purpose" },
@@ -7325,7 +7544,7 @@ Add as accountability partner?`)) {
     const sel = tab === st.id;
     const vibe = TAB_VIBES[st.id] || TAB_VIBES.checkin;
     return /* @__PURE__ */ React.createElement("button", { key: st.id, onClick: () => switchTab(st.id), className: sel ? "adn-tab-indicator" : "", style: { flex: 1, padding: "10px 4px", border: "none", cursor: "pointer", background: "transparent", color: sel ? vibe.accent : P.txD, fontSize: 11, fontWeight: sel ? 700 : 500, transition: "all .3s", display: "flex", alignItems: "center", justifyContent: "center", gap: 4, position: "relative", letterSpacing: sel ? 0.5 : 0.2, "--tab-color": vibe.accent + "66", "--tab-glow": vibe.accent + "22" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12 } }, st.em), st.l);
-  }))), /* @__PURE__ */ React.createElement("div", { key: tabKey, className: tabPhase === "enter" ? "adn-tab-enter" : "adn-tab-exit", style: { maxWidth: 640, margin: "0 auto", padding: "12px 20px 120px", position: "relative", zIndex: 1 } }, tab === "checkin" && CheckinV(), tab === "routine" && RoutineV(), tab === "food" && FoodV(), tab === "insights" && InsightV(), tab === "cards" && CreditCardV(), tab === "income" && IncomeV(), tab === "citizenship" && CitizenshipV(), tab === "mind" && MindV(), tab === "purpose" && PurposeV(), tab === "stack" && StackV(), tab === "tools" && ToolsV(), tab === "image" && ImageV(), tab === "environment" && EnvironmentV(), tab === "social" && SocialV(), tab === "profile" && ProfV()), cartCount > 0 && !showCheckout && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 68, left: "50%", transform: "translateX(-50%)", zIndex: 140, width: "calc(100% - 24px)", maxWidth: 420 } }, /* @__PURE__ */ React.createElement("div", { onClick: () => {
+  }))), /* @__PURE__ */ React.createElement("div", { key: tabKey, className: tabPhase === "enter" ? "adn-tab-enter" : "adn-tab-exit", style: { maxWidth: 640, margin: "0 auto", padding: "12px 20px 120px", position: "relative", zIndex: 1 } }, tab === "checkin" && CheckinV(), tab === "routine" && RoutineV(), tab === "food" && FoodV(), tab === "insights" && InsightV(), tab === "cards" && CreditCardV(), tab === "income" && IncomeV(), tab === "citizenship" && CitizenshipV(), tab === "mind" && MindV(), tab === "purpose" && PurposeV(), tab === "stack" && StackV(), tab === "tools" && ToolsV(), tab === "workout" && WorkoutV(), tab === "image" && ImageV(), tab === "environment" && EnvironmentV(), tab === "social" && SocialV(), tab === "profile" && ProfV()), cartCount > 0 && !showCheckout && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 68, left: "50%", transform: "translateX(-50%)", zIndex: 140, width: "calc(100% - 24px)", maxWidth: 420 } }, /* @__PURE__ */ React.createElement("div", { onClick: () => {
     switchTab("stack");
     setPepTab("browse");
     setShowCheckout(true);
