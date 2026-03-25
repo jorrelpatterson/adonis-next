@@ -543,7 +543,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-push",
     equipment: "dumbbell",
-    instructions: { stub: "Set bench flat. Hold dumbbells at chest level, elbows at 45°. Press up and in, squeeze at top. Full stretch at the bottom." },
+    instructions: { equipment: "Dumbbells, flat bench", setup: "Sit on the end of the bench, dumbbells on thighs. Kick them up as you lie back. Hold them at chest level, elbows at 45 degrees, wrists straight.", execution: ["Press both dumbbells up in a slight arc until they nearly touch at the top", "Lower slowly with control — elbows at 45 degrees, not flared to 90", "Feel the full stretch at the bottom — dumbbells at chest level", "Drive up explosively and repeat"], cues: ["More ROM than barbell — use it", "Squeeze the dumbbells toward each other at the top without clanking them", "Keep shoulder blades pinched and pulled down throughout"], mistakes: ["Letting elbows flare to 90 degrees — shoulder injury risk", "Losing wrist alignment — keep wrists stacked over elbows", "Dumbbells too high near throat or too low — aim for mid-chest"] },
   },
   // Machine Chest Press
   "machine-chest-press": {
@@ -554,7 +554,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-push",
     equipment: "machine",
-    instructions: { stub: "Adjust seat so handles are at mid-chest. Press forward to full extension, control the return. Keep chest up throughout." },
+    instructions: { instructions: { equipment: "Chest press machine", setup: "Adjust seat height so handles align with mid-chest. Sit back fully, feet flat on floor. Grip handles with wrists straight — don't bend them back.", execution: ["Press handles forward to full extension — but don't lock elbows aggressively", "Control the return — don't let the stack crash", "Stop just before the weight stack touches on return for constant tension", "Repeat with controlled tempo — 2s press, 3s return"], cues: ["Keep chest up and shoulder blades retracted — don't let shoulders round forward", "The machine stabilizes — focus entirely on the squeeze", "Great for beginners and high-rep burnout sets"], mistakes: ["Seat too low — shifts load to shoulders", "Gripping too wide — reduces chest activation", "Using momentum — defeats the purpose of the machine"] } },
   },
   // Cable Flyes (low to high)
   "cable-flyes-low": {
@@ -565,7 +565,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "chest-fly",
     equipment: "cable",
-    instructions: { stub: "Set cables at lowest position. With slight elbow bend, sweep arms up and together in an arc. Squeeze at the top. Return slowly." },
+    instructions: { instructions: { equipment: "Cable machine, single-handle attachments (both sides)", setup: "Set both cables to the lowest position. Stand in the center, step one foot forward for balance. Hold handles with slight elbow bend — like you're hugging a tree.", execution: ["Start with arms low and out to sides", "Sweep arms up and together in an arc — meeting at chest height", "Squeeze at the top for 1-2 seconds", "Lower slowly back to start — resist the pull"], cues: ["The movement is a hugging arc — not a pressing motion", "Keep the same slight elbow bend throughout — don't straighten arms", "Squeeze your chest, not your arms — the arms are just hooks"], mistakes: ["Straightening the elbows — turns it into a press", "Not squeezing at the top — missing the peak contraction", "Too much weight — limits range of motion and form breaks down"] } },
   },
   // Cable Flyes (mid)
   "cable-flyes-mid": {
@@ -598,7 +598,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "dip",
     equipment: "bodyweight",
-    instructions: { stub: "Lean forward slightly for chest emphasis. Lower until elbows at 90°, drive back up. Add weight via belt or hold dumbbell between feet." },
+    instructions: { instructions: { equipment: "Parallel bars or dip station, dip belt or dumbbell", setup: "Attach weight via dip belt or hold a dumbbell between your feet. Grip bars shoulder-width, arms fully extended. Lean forward 15-30° for chest emphasis.", execution: ["Lower by bending elbows — keep the forward lean throughout", "Descend until upper arms are parallel to the floor", "Drive up through your palms back to full extension", "Don't lock out completely — keep tension on the muscle"], cues: ["Forward lean = chest. Upright = triceps. Pick your angle and stay there", "Elbows should track slightly back, not fully flared", "Control the descent — 2-3 seconds down"], mistakes: ["Not leaning forward — loads triceps only", "Descending too far — excessive shoulder stretch under load", "Swinging the weight — use the attachment properly"] } },
   },
   // Dips
   "dips": {
@@ -609,7 +609,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "dip",
     equipment: "bodyweight",
-    instructions: { stub: "Lean slightly forward to bias chest. Lower controlled until elbows reach 90°. Press back up without locking out fully." },
+    instructions: { instructions: { equipment: "Parallel bars or dip station", setup: "Grip bars shoulder-width with straight arms. Lean forward slightly for chest emphasis or stay upright for more triceps. Keep legs crossed behind you.", execution: ["Lower by bending elbows — control the descent", "Stop when upper arms are roughly parallel to the floor", "Press through palms back to the start", "Maintain your forward lean angle throughout"], cues: ["Think about pushing the bars down and apart rather than pushing yourself up", "Shoulder blades back and down — don't let them shrug up", "Look slightly forward, not straight down"], mistakes: ["Shrugging shoulders up — poor mechanics and injury risk", "Flaring elbows out wide — puts excessive strain on shoulder joint", "Bouncing at the bottom — remove tension and risk joint damage"] } },
   },
   // Push-ups
   "push-ups": {
@@ -620,7 +620,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-push",
     equipment: "bodyweight",
-    instructions: { stub: "Hands slightly wider than shoulders. Lower chest to floor with elbows at 45°. Press back up to full extension. Keep body in a rigid plank throughout." },
+    instructions: { instructions: { equipment: "Bodyweight only", setup: "Hands slightly wider than shoulder-width, fingers pointing forward or slightly out. Body in a rigid plank — head, hips, and heels aligned. Core braced throughout.", execution: ["Lower chest to the floor with elbows at 45° to your torso — not flared to 90°", "Keep your body rigid — no sagging hips or piking", "Touch or nearly touch chest to floor", "Press back up to full extension — squeeze chest at top"], cues: ["Think about trying to pull the floor apart with your hands — activates lats and keeps elbows in", "Squeeze glutes and abs — the whole body is one unit", "Look at a spot on the floor about 12 inches in front of you"], mistakes: ["Letting hips sag — turns into a spine compression exercise", "Elbows flaring to 90° — shoulder impingement risk", "Partial range of motion — full depth builds more strength"] } },
   },
   // Seated DB Press
   "seated-db-press": {
@@ -642,7 +642,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "overhead-press",
     equipment: "barbell",
-    instructions: { stub: "Grip just outside shoulder width. Brace core, press bar straight up, shrug at top. Lower to clavicle level. Keep ribs down." },
+    instructions: { instructions: { equipment: "Barbell, squat rack or power rack", setup: "Set bar at upper chest height. Grip just outside shoulder-width, thumbs wrapped. Unrack and step back. Stand with feet shoulder-width, slight knee bend. Brace core hard before every rep.", execution: ["Take a big breath and brace your core — think 360° pressure", "Press bar straight up, moving your head back slightly to let it pass your chin", "At full extension, shrug slightly and lock out — bar directly over your base", "Lower with control back to clavicle level"], cues: ["The bar path should be straight vertical — move your face, not the bar", "Squeeze your glutes as you press — stabilizes the entire body", "Keep ribs down — don't hyperextend your lower back to press"], mistakes: ["Excessive lower back lean — shifts stress to lumbar spine", "Bar path drifting forward — loses mechanical efficiency", "Not bracing core — the OHP taxes your core as much as your shoulders"] } },
   },
   // Standing DB OHP
   "standing-db-ohp": {
@@ -653,7 +653,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "overhead-press",
     equipment: "dumbbell",
-    instructions: { stub: "Stand feet shoulder-width. Press dumbbells overhead in a slight arc. Lower controlled to shoulder height." },
+    instructions: { instructions: { equipment: "Dumbbells", setup: "Hold dumbbells at shoulder height, palms facing forward or neutral. Feet shoulder-width. Brace core. Can be done seated for back support if needed.", execution: ["Press dumbbells overhead in a slight arc — they can meet at the top", "Full extension at the top without excessively shrugging", "Lower controlled back to shoulder height", "Keep elbows slightly in front of your body — not directly out to the sides"], cues: ["Neutral grip (palms facing each other) can reduce shoulder strain", "The arc is natural — let it happen, don't force the dumbbells together", "Brace before each rep — treat every rep like a max attempt on setup"], mistakes: ["Letting dumbbells drift forward — shifts to front delts too much", "Flaring elbows too wide — shoulder impingement risk", "Leaning back excessively — use lighter weight"] } },
   },
   // Arnold Press
   "arnold-press": {
@@ -686,7 +686,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "overhead-press",
     equipment: "barbell",
-    instructions: { stub: "Use slight knee dip to generate momentum. Drive bar overhead explosively. Lower controlled back to shoulders. Keep core braced." },
+    instructions: { instructions: { equipment: "Barbell, squat rack", setup: "Hold bar at shoulder height like OHP. Feet shoulder-width. This is a power movement — the legs drive the bar, not just your shoulders.", execution: ["Slight knee dip — about 3 inches, not a squat", "Explode up through your legs and hips", "Let the momentum drive the bar up — lock out overhead", "Lower controlled back to shoulders and reset"], cues: ["The dip and drive must be one fluid motion — don't pause at the bottom", "You can push more weight than strict OHP — use that to build overhead strength", "Think jump and press — the hip extension drives the bar"], mistakes: ["Too deep a dip — becomes a push jerk, loses the benefit", "No leg drive — just a strict press with a dip (defeats the purpose)", "Soft lockout at the top — always fully lock the arms overhead"] } },
   },
   // Lateral Raises
   "lateral-raises": {
@@ -741,7 +741,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "rear-delt",
     equipment: "machine",
-    instructions: { stub: "Set machine handles at shoulder height. With slight elbow bend, push handles back and out. Squeeze rear delts at full extension." },
+    instructions: { instructions: { equipment: "Pec deck or rear delt machine", setup: "Face the machine. Adjust height so handles are at shoulder level. Grip handles with slight elbow bend — arms extended in front of you.", execution: ["Push arms back and out in a wide arc — like opening your arms to hug someone from behind", "Squeeze rear delts at full extension", "Control the return — don't let the stack crash forward", "Keep chest against the pad throughout"], cues: ["Lead with your elbows — not your hands", "Squeeze the rear delts at the end — don't just go through the motion", "Light weight, high reps — rear delts respond best to volume"], mistakes: ["Too much weight — causes shoulders to hike up and traps to take over", "Arms going too far back — passes the rear delt range of motion", "Rushing reps — rear delts need time under tension to feel them"] } },
   },
   // Reverse Flyes
   "reverse-flyes": {
@@ -752,7 +752,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "rear-delt",
     equipment: "dumbbell",
-    instructions: { stub: "Hinge at hips, back flat. With slight elbow bend, raise arms out to sides. Lead with elbows, squeeze rear delts at top." },
+    instructions: { instructions: { equipment: "Dumbbells", setup: "Hinge at hips until torso is nearly parallel to floor, back flat. Hold dumbbells hanging straight down, palms facing each other. Slight bend in elbows.", execution: ["Raise arms out to sides in a wide arc — like a bird opening its wings", "Stop when arms are parallel to the floor", "Squeeze rear delts and squeeze shoulder blades together at top", "Lower with control — 3 seconds down"], cues: ["Lead with your elbows, not your hands", "Keep the movement in the shoulder joint — minimal elbow bend change", "Chest up even while hinged forward — prevents rounding"], mistakes: ["Standing too upright — hits side delts instead of rear delts", "Using momentum — swing means the rear delts aren't working", "Gripping too tight and engaging biceps — loose grip, focus on shoulder movement"] } },
   },
   // Reverse Pec Deck
   "reverse-pec-deck": {
@@ -763,7 +763,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "rear-delt",
     equipment: "machine",
-    instructions: { stub: "Face the machine, grab handles. Push arms out and back in an arc. Control the return — don't let weight slam." },
+    instructions: { instructions: { equipment: "Pec deck machine (used in reverse)", setup: "Face the machine (reverse of normal position). Grip the handles or pad your elbows on the arm rests. Arms out in front, machine handles at shoulder height.", execution: ["Push arms back and apart in a wide arc", "Squeeze the rear delts and upper back at full extension", "Control the return — don't let the weight pull you forward", "Maintain tall posture throughout"], cues: ["Same movement as reverse flyes — just machine-stabilized", "Great for higher reps and drop sets — easy to adjust weight", "Focus on the rear delt contraction, not just moving the handles"], mistakes: ["Shrugging the shoulders up — traps take over", "Arms not going back far enough — short range of motion", "Bouncing the weight — reduces rear delt activation"] } },
   },
   // Face Pulls
   "face-pulls": {
@@ -785,7 +785,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "upright-row",
     equipment: "cable",
-    instructions: { stub: "Grip cable narrow, pull up to chin with elbows leading. Keep bar close to body. Stop when elbows reach shoulder height." },
+    instructions: { instructions: { equipment: "Cable machine, straight bar or rope attachment", setup: "Set cable to lowest position. Stand close, grip bar narrow (about 6 inches apart). Stand upright with slight forward lean.", execution: ["Pull bar straight up — elbows lead and go wide, above shoulder height", "Bar should travel close to the body", "Stop when bar is at chin level and elbows are at or above ear height", "Lower with control — 3 seconds"], cues: ["The elbows drive the movement — they go high and wide", "Keep the bar close to the body throughout the pull", "Squeeze the side delts and upper traps at the top"], mistakes: ["Narrow grip causing internal shoulder rotation pain — go wider if it hurts", "Not raising elbows high enough — stops the side delt activation", "Jerking the weight up — slow and controlled"] } },
   },
   // Tricep Pushdowns
   "tricep-pushdowns": {
@@ -829,7 +829,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "tricep-overhead",
     equipment: "dumbbell",
-    instructions: { stub: "Hold dumbbell overhead with both hands. Lower behind head by bending elbows only. Drive back up to full extension." },
+    instructions: { instructions: { equipment: "Dumbbell (one or two hands) or EZ bar", setup: "Hold one dumbbell with both hands overhead, arms fully extended. Grip the dumbbell head — thumbs and forefingers forming a diamond. Elbows close to your head.", execution: ["Lower the dumbbell behind your head by bending only at the elbows", "Go until forearms are just past parallel to the floor — full stretch", "Drive back to full extension — squeeze triceps hard at the top", "Keep upper arms completely stationary — only the forearms move"], cues: ["This is the best long-head tricep exercise — it stretches the muscle fully", "Keep your elbows pointing forward — not flaring out to sides", "The stretch at the bottom is where the growth happens — go full range"], mistakes: ["Upper arms moving — means you're using shoulders to assist", "Short range of motion — not getting the full long-head stretch", "Going too heavy — causes elbow flare and shoulder strain"] } },
   },
   // Skull Crushers
   "skull-crushers": {
@@ -906,7 +906,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-pull",
     equipment: "cable",
-    instructions: { stub: "Use wide grip attachment. Pull to lower chest, flare elbows out to engage upper back. Squeeze shoulder blades at the end position." },
+    instructions: { instructions: { equipment: "Cable machine, wide bar attachment", setup: "Sit at cable row machine with wide bar. Feet flat on the platform, knees slightly bent. Sit tall — don't round your lower back to reach the handle.", execution: ["Pull the bar to your lower chest — elbows flare out wide", "Squeeze shoulder blades together at the end position", "Hold the squeeze for 1 second", "Return with control — let your shoulder blades protract fully"], cues: ["Wide grip = more upper back and rear delts. Narrow grip = more lats and mid back", "Think about trying to touch your elbows behind you", "Keep chest up and tall posture throughout"], mistakes: ["Rounding forward on the return — loses the stretch and stresses the spine", "Using lower back momentum — should be all pulling muscles", "Not squeezing at the end position — missing the most important part"] } },
   },
   // Single Arm DB Row
   "single-arm-db-row": {
@@ -939,7 +939,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-pull",
     equipment: "dumbbell",
-    instructions: { stub: "Set incline bench to 30-45°. Lie chest-down, let arms hang. Row dumbbells to hips, squeeze shoulder blades. Full stretch at bottom." },
+    instructions: { instructions: { equipment: "Incline bench (30-45°), dumbbells", setup: "Set bench to 30-45°. Lie face down — chest and stomach on the pad, head at the top. Let arms hang straight down. This removes all lower back and cheating from the movement.", execution: ["Row dumbbells up toward your hips — elbows back and slightly out", "Squeeze shoulder blades together at the top", "Hold for 1 second at the top", "Lower until arms are fully extended — full stretch at the bottom"], cues: ["This is pure upper back work — no way to cheat", "Row to your hips for more lat, row to your ribs for more mid-back", "Let your shoulder blades move — don't keep them pinched throughout"], mistakes: ["Bench angle too steep — starts to become a shrug", "Short range of motion — not getting the full stretch at the bottom", "Elbows flaring too wide — shifts to rear delts only"] } },
   },
   // Pull-ups
   "pull-ups": {
@@ -983,7 +983,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "vertical-pull",
     equipment: "machine",
-    instructions: { stub: "Use assisted pull-up machine or resistance band. Same form as standard pull-up. Reduce assistance as you get stronger." },
+    instructions: { instructions: { equipment: "Assisted pull-up machine or resistance band", setup: "For machine: set the counterweight (higher weight = more help). For band: loop band over the bar and place knee or foot in it. Grip the bar shoulder-width or slightly wider.", execution: ["Start from a dead hang — arms fully extended", "Pull down and back — drive elbows to your hips", "Get chin over the bar", "Lower with control back to full hang"], cues: ["Use only as much assistance as you need — challenge yourself", "The goal is to reduce assistance each week until you're doing bodyweight pull-ups", "Same form as full pull-ups — assistance just reduces the load"], mistakes: ["Using too much assistance — you won't build real strength", "Not going to full hang on each rep — reduces range of motion", "Kipping or swinging — build strict strength first"] } },
   },
   // Lat Pulldowns
   "lat-pulldowns": {
@@ -1027,7 +1027,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "lat-isolation",
     equipment: "cable",
-    instructions: { stub: "Keep arms straight. Pull bar from overhead to hips in an arc. Focus entirely on lat contraction — no elbow bend." },
+    instructions: { instructions: { equipment: "Cable machine, straight bar or rope attachment", setup: "Set cable to highest position. Stand back about 2-3 feet, arms straight overhead gripping the bar. Slight bend in elbows — this never changes.", execution: ["With arms straight, pull bar down in an arc from overhead to your thighs", "Focus entirely on squeezing your lats — the arms are just hooks", "Hold briefly at the bottom — maximum lat contraction", "Return slowly with control — full stretch overhead"], cues: ["Think about pulling your elbows to your hips, not your hands down", "This is a lat isolation exercise — if you feel it in your biceps, reduce weight", "Great for learning the lat contraction before pull-ups"], mistakes: ["Bending the elbows — turns it into a pulldown", "Too much weight — causes elbows to bend to compensate", "Short range of motion — not getting the full overhead stretch"] } },
   },
   // DB Shrugs
   "db-shrugs": {
@@ -1115,7 +1115,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "bicep-curl",
     equipment: "barbell",
-    instructions: { stub: "Use EZ bar to reduce wrist strain. Keep elbows pinned at sides. Curl to shoulder height, squeeze, lower controlled." },
+    instructions: { instructions: { equipment: "EZ curl bar", setup: "Grip the angled part of the EZ bar — reduces wrist supination strain. Stand with feet shoulder-width, elbows at sides. Don't grip the straight part — defeats the purpose of the EZ bar.", execution: ["Curl bar up to shoulder height — squeeze biceps at top", "Keep elbows completely pinned to your sides throughout", "Lower with 3-second count — don't let the weight drop", "Full extension at the bottom — don't cut the range"], cues: ["EZ bar reduces wrist strain vs straight bar — great for those with elbow or wrist issues", "The angled grip still effectively works both heads of the bicep", "Strict form — no swinging, no body momentum"], mistakes: ["Swinging body to get the weight up — go lighter", "Partial range of motion — not extending fully at the bottom", "Elbows drifting forward — reduces bicep tension"] } },
   },
   // Wrist Curls
   "wrist-curls": {
@@ -1192,7 +1192,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "squat",
     equipment: "dumbbell",
-    instructions: { stub: "Hold dumbbell at chest. Feet shoulder-width, toes slightly out. Squat deep — elbows track inside knees. Drive through heels to stand." },
+    instructions: { instructions: { equipment: "Dumbbell or kettlebell", setup: "Hold dumbbell vertically at chest level — grip the top end with both hands. Feet shoulder-width, toes turned out 15-30°. This is a teaching squat — great for mobility.", execution: ["Push knees out to track over toes as you descend", "Squat as deep as possible — the dumbbell counterbalances and allows greater depth", "Drive through mid-foot back to standing", "Keep elbows inside knees on the way down"], cues: ["The goblet hold naturally keeps your chest up and back straight", "Try to touch elbows to knees at the bottom — forces depth and mobility", "Great warmup for any leg day and for beginners learning squat mechanics"], mistakes: ["Heels rising off the floor — mobility issue, elevate heels slightly", "Chest collapsing forward — hold the weight higher", "Knees caving in — push them out actively"] } },
   },
   // Leg Extensions
   "leg-extensions": {
@@ -1214,7 +1214,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "lunge",
     equipment: "bodyweight",
-    instructions: { stub: "Step forward into lunge, back knee touches floor lightly. Drive through front heel into next step. Keep torso upright throughout." },
+    instructions: { instructions: { equipment: "Bodyweight (add dumbbells or barbell for load)", setup: "Stand tall, feet hip-width. Take a long step forward — longer stride works glutes more, shorter stride works quads more. This is a continuous movement forward.", execution: ["Step forward, lower the back knee toward the floor — don't let it slam down", "Front knee stays over the ankle — not caving inward", "Drive through the front heel to rise and step the rear foot forward into the next lunge", "Keep torso upright throughout — don't lean forward"], cues: ["Think tall spine the entire time — crown of head to ceiling", "Longer step = glute dominant. Shorter step = quad dominant", "The drive through the front heel is what activates the glute"], mistakes: ["Front knee caving inward — push it out actively", "Torso leaning too far forward — weakens the hip drive", "Short steps that don't challenge range of motion"] } },
   },
   // Walking Lunges (DB)
   "walking-lunges-db": {
@@ -1225,7 +1225,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "lunge",
     equipment: "dumbbell",
-    instructions: { stub: "Hold dumbbells at sides. Step into lunge, lower back knee near floor. Drive through front heel to step forward. Chest up." },
+    instructions: { instructions: { equipment: "Dumbbells", setup: "Hold dumbbells at sides, arms straight. Stand tall. Same mechanics as bodyweight walking lunges — the dumbbells add load without changing the movement pattern.", execution: ["Step forward into lunge — lower back knee toward floor", "Front knee tracks over second toe — not caving in", "Drive through front heel, step rear foot forward", "Maintain upright torso — dumbbells hang naturally at sides"], cues: ["Don't let dumbbells swing — keep them still", "The load increases the demand on hip stability — engage glutes throughout", "Focus on the stepping motion being smooth and controlled"], mistakes: ["Torso tilting to one side — use equal weight dumbbells", "Steps too short — limits glute activation", "Looking down — keep head up, eyes forward"] } },
   },
   // DB Lunges
   "db-lunges": {
@@ -1236,7 +1236,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "lunge",
     equipment: "dumbbell",
-    instructions: { stub: "Hold dumbbells at sides. Step forward into lunge. Lower back knee toward floor. Push back to start or alternate legs." },
+    instructions: { instructions: { equipment: "Dumbbells", setup: "Hold dumbbells at sides. Can be done in place (stationary lunge) or alternating. Stand with feet hip-width.", execution: ["Step forward into lunge position — lower back knee toward floor", "Hold position briefly at bottom — back knee just above floor", "Drive through front heel back to standing start position", "Alternate legs or complete all reps on one side"], cues: ["Stationary lunges are more controlled than walking — good for beginners or heavier loads", "Drive the front heel through the floor — activates glute", "Keep the torso vertical — don't lean into the front leg"], mistakes: ["Front knee drifting over toes too far — keep it stacked over ankle", "Back knee slamming the floor — lower with control", "Upper body rotation — keep shoulders square"] } },
   },
   // Step-ups (weighted)
   "step-ups-weighted": {
@@ -1247,7 +1247,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "single-leg",
     equipment: "dumbbell",
-    instructions: { stub: "Hold dumbbells at sides. Step onto box, drive through heel to stand. Lower back controlled. Complete all reps one side then switch." },
+    instructions: { instructions: { equipment: "Box or bench (knee height), dumbbells", setup: "Hold dumbbells at sides. Stand in front of box. Step height should be so your knee is at roughly 90° when your foot is on the box.", execution: ["Place entire foot on the box — not just the toe", "Drive through the heel of the elevated foot to stand up on the box", "Bring the other foot up — stand tall at the top", "Step back down with the same foot that led up — controlled descent"], cues: ["All the drive should come from the elevated leg — don't push off the floor leg", "This is a single-leg exercise — most of the work is on the leg on the box", "Stand fully tall at the top before stepping down"], mistakes: ["Pushing off the floor foot — defeats the purpose", "Knee caving in on the way up — drive it out", "Box too high — compromises form and knee alignment"] } },
   },
   // Balance Work (single leg)
   "balance-work": {
@@ -1258,7 +1258,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "single-leg",
     equipment: "bodyweight",
-    instructions: { stub: "Stand on one leg. Hold for time or perform small movements. Progress to eyes closed or unstable surface. Builds joint stability." },
+    instructions: { instructions: { equipment: "Bodyweight, optional balance board or foam pad", setup: "Stand on one leg. Slight bend in the standing knee — never lock it out. Arms out slightly for balance. Eyes forward.", execution: ["Hold position for time — start with 20-30 seconds", "Progress to eyes closed for greater proprioceptive challenge", "Progress to unstable surface (foam pad, balance board)", "Add small movements — reach forward, reach to side"], cues: ["The wobbling is the point — that's your stabilizers working", "Soft bend in the knee at all times — never lock out", "Stare at a fixed point to help balance"], mistakes: ["Fully locking the knee — reduces stabilizer activation", "Holding breath — breathe normally throughout", "Giving up too early — the challenge comes from duration"] } },
   },
   // Romanian Deadlifts
   "romanian-deadlifts": {
@@ -1280,7 +1280,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "hamstring-curl",
     equipment: "machine",
-    instructions: { stub: "Lie face down. Curl heels toward glutes, pause at top. Lower slowly. Keep hips pressed into pad — don't let them rise." },
+    instructions: { instructions: { equipment: "Lying leg curl machine", setup: "Lie face down on the machine. Position the pad just above your heels — not on your calves. Hips should be flat on the pad — not rising off.", execution: ["Curl heels toward glutes — full range of motion", "Squeeze hamstrings hard at the top for 1-2 seconds", "Lower with 3-4 second control — the eccentric is critical", "Don't let feet drop all the way — keep slight tension at the bottom"], cues: ["Point toes slightly to increase hamstring activation", "Hips pressed into the pad — if they rise, you're using momentum", "The eccentric (lowering) phase builds as much strength as the curl"], mistakes: ["Hips rising off the pad — reduces hamstring isolation", "Short range of motion — not getting full contraction or stretch", "Dropping the weight fast — missing the most important part of the rep"] } },
   },
   // Hip Thrusts (barbell)
   "hip-thrusts-barbell": {
@@ -1302,7 +1302,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "hip-thrust",
     equipment: "dumbbell",
-    instructions: { stub: "Upper back on bench. Drive hips up until body is flat, squeeze glutes hard at top. Lower controlled. Keep chin tucked." },
+    instructions: { instructions: { equipment: "Dumbbell or bodyweight", setup: "Sit on the floor with upper back against a bench. Place dumbbell across hip crease — hold with both hands. Feet flat, knees bent at 90°.", execution: ["Drive hips up by squeezing glutes — thrust up to full extension", "At the top your body should form a straight line from knees to shoulders", "Squeeze glutes as hard as possible at the top for 1-2 seconds", "Lower controlled back to the floor and repeat"], cues: ["This is the best glute exercise — focus on squeezing the glutes, not just moving the hips", "Keep chin tucked — looking at your lap, not the ceiling", "Drive through your heels — lifts the front of the foot slightly"], mistakes: ["Hyperextending the lower back at the top — squeeze glutes to prevent this", "Feet too far away — makes it more hamstring dominant", "Chin pointed up — leads to neck strain"] } },
   },
   // Glute Kickbacks (cable)
   "glute-kickbacks": {
@@ -1357,7 +1357,7 @@ const EXERCISES = {
     category: "isolation",
     swapGroup: "calf-raise",
     equipment: "bodyweight",
-    instructions: { stub: "Rise onto toes, pause at top, lower slowly below platform. Full range of motion. Add weight via dumbbell or machine." },
+    instructions: { instructions: { equipment: "Bodyweight, step or elevated surface", setup: "Stand on the edge of a step with just the front half of your feet. Heels hanging off. Arms against a wall for balance. This allows full range of motion.", execution: ["Lower heels as far as possible below the step level — maximum stretch", "Pause at the bottom stretch for 1 second", "Rise up on toes as high as possible — maximum contraction", "Hold at the top for 1-2 seconds — squeeze hard"], cues: ["Calves are stubborn — they need full range of motion and high reps to grow", "The pause at the bottom is critical — prevents bouncing and ensures full stretch", "Straight legs = more gastrocnemius. Bent knees = more soleus"], mistakes: ["Bouncing at the bottom — bypasses the stretch reflex benefit", "Short range of motion — most people never get full stretch or contraction", "Too fast — calves respond to slow controlled reps with pauses"] } },
   },
   // Hanging Leg Raises
   "hanging-leg-raises": {
@@ -1401,7 +1401,7 @@ const EXERCISES = {
     category: "core",
     swapGroup: "plank",
     equipment: "bodyweight",
-    instructions: { stub: "Start in forearm plank. Press up to push-up position one arm at a time. Lower back to forearms. Keep hips level — don't rotate." },
+    instructions: { instructions: { equipment: "Bodyweight", setup: "Start in forearm plank position — elbows under shoulders, body in a rigid straight line from head to heels. Core braced, glutes squeezed.", execution: ["Press up from left forearm to left hand, then right forearm to right hand — full push-up position", "Lower back down to left forearm, then right forearm — back to plank", "Alternate which arm leads each rep", "Keep hips as level as possible throughout — this is the challenge"], cues: ["The goal is zero hip rotation — brace your core hard before each transition", "Move deliberately — faster doesn't mean better here", "Place feet wider apart to make it easier to control hip rotation"], mistakes: ["Hips rocking side to side — reduce speed and brace harder", "Sagging hips — keep the rigid plank position throughout", "Only going one direction — alternate which arm leads"] } },
   },
   // Ab Wheel Rollouts
   "ab-wheel-rollouts": {
@@ -1445,7 +1445,7 @@ const EXERCISES = {
     category: "core",
     swapGroup: "rotational-core",
     equipment: "bodyweight",
-    instructions: { stub: "Sit with knees bent, lean back 45°. Rotate torso side to side. Add weight for more challenge. Keep feet elevated for harder variation." },
+    instructions: { instructions: { equipment: "Bodyweight, optional weight plate or dumbbell", setup: "Sit on the floor. Lean back to about 45°. Feet either on the floor (easier) or elevated (harder). Hold hands together or hold a weight at chest level.", execution: ["Rotate torso to one side — try to touch the floor with your hands", "Rotate to the other side — that's one rep", "Keep feet off the floor for greater core demand", "Maintain the 45° lean throughout"], cues: ["The rotation comes from the torso — not just the arms moving side to side", "Think about rotating your ribcage, not your hands", "Slow and controlled beats fast and sloppy every time"], mistakes: ["Letting the lower back round — maintain the 45° lean with a straight spine", "Only moving the arms — no torso rotation happening", "Moving so fast you're not controlling the obliques"] } },
   },
   // Oblique Crunches
   "oblique-crunches": {
@@ -1544,7 +1544,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "deadlift",
     equipment: "barbell",
-    instructions: { stub: "Stand inside hex bar, grip handles. Hinge and sit back like a squat-deadlift hybrid. Drive through floor, stand tall. Safer on lower back than conventional." },
+    instructions: { instructions: { equipment: "Trap bar (hex bar), weight plates", setup: "Stand inside the hex bar, handles on either side of your body. Feet hip-width. Hinge at the hips and bend knees until hands reach the handles. This is a hybrid squat-hinge movement.", execution: ["Grip handles, take a deep breath and brace your core hard", "Push the floor away — it's more of a leg drive than a pull", "Keep the bar close as you rise — stand completely tall at the top", "Lower with control — reverse the movement pattern"], cues: ["Easier on the lower back than conventional deadlift — great for beginners and high-volume work", "Think squat-deadlift hybrid — more upright torso than conventional", "The high handles allow more knee bend and less hinge angle"], mistakes: ["Rounding the lower back — same risk as conventional", "Bar drifting away from the body — stay close", "Not reaching full lockout — stand completely tall"] } },
   },
   // Renegade Rows
   "renegade-rows": {
@@ -1555,7 +1555,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "horizontal-pull",
     equipment: "dumbbell",
-    instructions: { stub: "In push-up position holding dumbbells. Row one dumbbell to hip while balancing. Keep hips square — don't rotate. Alternate sides." },
+    instructions: { instructions: { equipment: "Two dumbbells (hexagonal preferred — won't roll)", setup: "Start in push-up position with hands gripping two dumbbells directly under your shoulders. Feet wider than hip-width for stability. Wrists neutral.", execution: ["Keep hips square to the floor — this is the entire challenge", "Row one dumbbell to your hip — elbow skims past your side", "Lower it and row the other side", "Keep the non-rowing arm rigid — it's fighting the rotation"], cues: ["The harder you brace your core, the less your hips rotate", "Wider foot stance = more stable base = easier to control rotation", "This is a core anti-rotation exercise as much as a back exercise"], mistakes: ["Hips rotating and twisting — reduce weight or widen stance", "Short range of motion on the row — get full elbow height", "Sagging hips — maintain the push-up plank position throughout"] } },
   },
   // Thrusters
   "thrusters": {
@@ -1566,7 +1566,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "squat",
     equipment: "barbell",
-    instructions: { stub: "Hold bar at shoulders. Squat deep, use momentum from standing to press bar overhead. One fluid movement." },
+    instructions: { instructions: { equipment: "Barbell or dumbbells", setup: "Hold bar at shoulder height — front rack position. Feet shoulder-width, toes slightly out. This combines a front squat and push press into one fluid movement.", execution: ["Squat deep — hip crease below knees", "Drive up explosively through the legs", "Use the momentum from the leg drive to press the bar overhead", "Lock arms out fully overhead at the top — full extension"], cues: ["The power comes from the legs — if you're muscling it with your arms, you're doing it wrong", "One fluid movement — the press begins as soon as you come out of the squat", "This is a metabolic killer — pace yourself"], mistakes: ["Pausing between the squat and press — separate movements instead of one", "Not squatting deep enough — short squats reduce the power transferred to the press", "Arms pressing before the hips extend — sequence must be legs then arms"] } },
   },
   // Burpees
   "burpees": {
@@ -1577,7 +1577,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "bodyweight",
-    instructions: { stub: "Drop to floor, kick feet back, chest to ground, jump feet forward, explode up. Modify by stepping instead of jumping." },
+    instructions: { instructions: { equipment: "Bodyweight only", setup: "Stand tall. This is a high-intensity movement — establish your pace before starting. Scale by stepping instead of jumping if needed.", execution: ["Drop hands to the floor in front of feet", "Jump or step feet back to push-up position", "Perform a push-up (optional but adds intensity)", "Jump or step feet forward to hands", "Explode up — jump and clap overhead"], cues: ["Find a sustainable pace — too fast and form breaks down immediately", "Full extension at the top — stand tall and jump", "Step modifications still provide the same cardiovascular demand at lower intensity"], mistakes: ["Going out too fast — fade in the middle of the set", "Not fully extending at the top — half reps in the jump phase", "Sagging hips in the push-up position — maintain the plank"] } },
   },
   // KB Swings
   "kb-swings": {
@@ -1588,7 +1588,7 @@ const EXERCISES = {
     category: "compound",
     swapGroup: "conditioning",
     equipment: "other",
-    instructions: { stub: "Hinge at hips, swing KB back between legs. Drive hips forward explosively — hips drive the swing, not your arms. Float to chest height." },
+    instructions: { instructions: { equipment: "Kettlebell", setup: "Place KB about a foot in front of you. Hinge at hips — not a squat — and grip with both hands. Hike the KB back between your legs to create momentum.", execution: ["Hike the KB back between your legs — loading the hamstrings and glutes", "Explosively drive hips forward — stand up fast", "The KB floats up from the hip drive — your arms don't lift it", "Let the KB swing back down between your legs and repeat"], cues: ["This is a hip hinge, not a squat — the power comes from hip extension", "Your arms are a pendulum — they don't generate force", "The KB should feel weightless at the top — that's the hip power doing its job"], mistakes: ["Squatting instead of hinging — changes the whole movement pattern", "Using arms to pull the KB up — lower back takes over instead of glutes", "Rounding the lower back — keep a neutral spine throughout"] } },
   },
   // Mountain Climbers
   "mountain-climbers": {
@@ -1599,7 +1599,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "bodyweight",
-    instructions: { stub: "In push-up position. Drive knees to chest alternating fast. Keep hips level, core tight. Don't let hips pike up." },
+    instructions: { instructions: { equipment: "Bodyweight", setup: "Start in push-up position — hands under shoulders, body in rigid plank. This is a core movement with a conditioning demand. The faster you go, the harder it is.", execution: ["Drive one knee toward your chest — explosively", "Switch legs as fast as possible in a running motion", "Maintain the plank position throughout — hips don't rise or sag", "Keep a steady rhythm — find a pace you can sustain"], cues: ["Hips level with shoulders — not piked up in the air", "Drive the knee to the chest — not the foot to the hip", "Breathe rhythmically — don't hold your breath"], mistakes: ["Hips pike up — reduces core engagement", "Barely moving the knees — reduce speed and increase range", "Neck dropping or chin jutting — maintain neutral head position"] } },
   },
   // Box Jumps
   "box-jumps": {
@@ -1610,7 +1610,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "plyometric",
     equipment: "other",
-    instructions: { stub: "Load into quarter squat, explode up onto box, land softly with knees bent. Step down — don't jump down. Full reset before each rep." },
+    instructions: { instructions: { equipment: "Plyo box or sturdy elevated surface", setup: "Stand about 6-12 inches from the box. Feet hip-width. Slight athletic stance — this is an explosive power movement, not a jump for height.", execution: ["Quarter squat, swing arms back", "Explode up — drive arms forward as you jump", "Land softly on the box with knees bent — quiet landing", "Stand tall at the top — full hip extension", "Step down (don't jump down) — reset and repeat"], cues: ["Land soft — loud landing = poor technique and joint stress", "Step down every single time — jumping down adds unnecessary impact", "Full hip extension at the top counts — don't just land and crouch"], mistakes: ["Jumping down from the box — major injury risk over time", "Landing with knees caving in — push them out on landing", "Too high a box — use a height you can land safely with perfect mechanics"] } },
   },
   // Battle Ropes
   "battle-ropes": {
@@ -1621,7 +1621,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "other",
-    instructions: { stub: "Hold rope ends, alternate or double-wave. Stay in athletic stance with slight knee bend. Keep waves going to the anchor. Vary: alternating, double, slam." },
+    instructions: { instructions: { equipment: "Battle ropes anchored to a wall or post", setup: "Stand in athletic stance — feet shoulder-width, slight knee bend. Hold one end of each rope. Stay close enough to maintain tension in the ropes at all times.", execution: ["Alternating waves: move arms up and down alternately — create smooth waves to the anchor", "Double waves: both arms together up and down", "Slams: lift both arms overhead, slam down hard", "Maintain athletic stance and don't stop moving"], cues: ["The goal is continuous wave generation — don't let the ropes go slack", "The waves should reach the anchor — that's how you know you're generating enough force", "Change movements every 20-30 seconds to target different muscle patterns"], mistakes: ["Standing too far from anchor — ropes go slack, reduces effectiveness", "Only using arms — drive from the hips and legs for power", "Stopping too soon — push through the discomfort, that's the point"] } },
   },
   // Sled Push
   "sled-push": {
@@ -1632,7 +1632,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "other",
-    instructions: { stub: "Lean forward into sled at 45°. Drive through balls of feet with short powerful steps. Keep hips low. Load progressively." },
+    instructions: { instructions: { equipment: "Weighted sled, turf or smooth floor", setup: "Load the sled. Lean into it at roughly 45° — hands on the uprights, arms straight. Low athletic position — this is a full-body push.", execution: ["Drive through the balls of your feet with short, powerful steps", "Keep hips low — don't stand up as you push", "Maintain forward lean angle throughout", "Drive all the way through to the end of the track"], cues: ["Short powerful steps beat long slow strides", "Think sprint mechanics — drive the knee up and push back", "The sled will tell you when you've loaded too much — if it stops, reduce weight"], mistakes: ["Standing up during the push — lose the power angle", "Long slow steps — reduces drive and speed", "Arms bending — keep them straight and push through the handles"] } },
   },
   // Barbell Complexes
   "barbell-complexes": {
@@ -1643,7 +1643,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "barbell",
-    instructions: { stub: "Series of exercises done back-to-back without setting bar down. Common: deadlift → row → clean → press → squat. Use light weight." },
+    instructions: { instructions: { equipment: "Barbell, light weight — typically 40-65% of your weakest lift", setup: "Load the bar with light weight. A complex is a series of exercises performed back-to-back without setting the bar down. Choose 4-6 movements. Common sequence: Deadlift → Hang Clean → Front Squat → Push Press → Back Squat → Good Morning.", execution: ["Perform all reps of the first exercise", "Without setting the bar down, transition to the next exercise", "Continue through all exercises — that's one round", "Rest 2-3 minutes between rounds"], cues: ["The weight is limited by your weakest movement — don't ego load", "This is metabolic conditioning, not a strength test", "Smooth transitions between movements — the bar never touches the floor"], mistakes: ["Too much weight — you'll be forced to set it down", "Too many reps per exercise — 5-6 reps per movement is plenty", "Poor transitions — practice the sequence before loading"] } },
   },
   // Ball Slams
   "ball-slams": {
@@ -1654,7 +1654,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "conditioning",
     equipment: "other",
-    instructions: { stub: "Lift medicine ball overhead. Slam down as hard as possible, catch or pick up. Generate power from your whole body." },
+    instructions: { instructions: { equipment: "Medicine ball (non-bouncing slam ball, 10-30 lbs)", setup: "Stand with feet shoulder-width. Hold the ball at waist height. This is a full-body power movement — generate force from your entire body.", execution: ["Lift ball overhead — fully extend arms and stand tall", "Slam the ball down as hard as possible — drive through your entire body", "The power comes from your hips, core, and arms together", "Catch or pick up the ball and repeat immediately"], cues: ["Make it violent — the harder you slam, the more you get out of it", "Engage your core as you slam — protect the spine", "Use your hips — bend the knees on the catch and drive up through the hips on the lift"], mistakes: ["Only using arms — reduces power and effectiveness", "Not fully extending overhead — short range of motion", "Using a bouncing ball — creates an unpredictable bounce and injury risk"] } },
   },
   // Incline Treadmill Walk (12-15%)
   "incline-treadmill-walk": {
@@ -1665,7 +1665,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "liss-cardio",
     equipment: "machine",
-    instructions: { stub: "Set treadmill to 12-15% incline, 3.0-4.0 mph. Do not hold rails. Keep HR 130-150 bpm. 30-45 min Zone 2 steady state." },
+    instructions: { instructions: { equipment: "Treadmill", setup: "Set incline to 12-15%. Speed to 3.0-4.0 mph. This is Zone 2 steady-state cardio — your heart rate should be 130-150 bpm. Conversational pace.", execution: ["Start the incline and speed, then step on", "Do NOT hold the handrails — defeats the entire metabolic purpose", "Walk at a pace that challenges you without becoming a jog", "Maintain for 30-45 minutes"], cues: ["Holding the rails drops calorie burn by up to 40% — let go", "Slightly lean forward naturally — don't exaggerate it", "This is the most effective low-impact fat burning protocol available"], mistakes: ["Holding the handrails — completely negates the incline benefit", "Too fast — should be a walk, not a jog or run", "Too short a duration — 30 minutes minimum for meaningful Zone 2 benefit"] } },
   },
   // Treadmill Sprints
   "treadmill-sprints": {
@@ -1676,7 +1676,7 @@ const EXERCISES = {
     category: "cardio",
     swapGroup: "hiit-cardio",
     equipment: "machine",
-    instructions: { stub: "Sprint intervals: 20-30s at max effort, 40-60s rest. 6-10 rounds." },
+    instructions: { instructions: { equipment: "Treadmill", setup: "Set treadmill to sprint speed before getting on (8-12 mph depending on fitness). This is HIIT — maximum effort intervals followed by rest. 6-10 rounds total.", execution: ["Sprint at maximum effort for 20-30 seconds", "Step off or reduce to very slow walk for 40-60 second rest", "Repeat for planned rounds", "Cool down with 5 minute walk at end"], cues: ["True max effort — if you could do more rounds easily, you're not sprinting hard enough", "The rest period is sacred — don't shorten it until fitness improves", "Use the treadmill sides to step off during rest — safer than holding on while speed is high"], mistakes: ["Not truly sprinting — slow jog is not HIIT", "Shortening rest too much — undermines the high-intensity quality of each interval", "Too many rounds — 6-8 true maximum effort sprints is enough"] } },
   },
   // Foam Rolling (Full Body)
   "foam-rolling": {
@@ -1687,7 +1687,7 @@ const EXERCISES = {
     category: "mobility",
     swapGroup: "recovery",
     equipment: "other",
-    instructions: { stub: "Spend 30-60s per muscle group. Roll slowly, pause on tight spots. Focus on quads, IT band, upper back, lats." },
+    instructions: { instructions: { equipment: "Foam roller", setup: "Place foam roller under the target muscle group. Use your body weight to apply pressure. Start with light pressure — don't crush a cold muscle.", execution: ["Roll slowly — about 1 inch per second", "When you find a tender spot, pause on it for 20-30 seconds", "Breathe deeply during the pause — it helps release the tension", "Move through the entire muscle — not just one spot"], cues: ["You're looking for tender spots — those are adhesions that need work", "Avoid rolling directly on joints — roll the muscle belly only", "Consistency beats intensity — daily foam rolling beats one brutal session per week"], mistakes: ["Rolling too fast — you won't find or release tension points", "Rolling directly on the IT band — it's a tendon, not a muscle. Roll the TFL and quad instead", "Skipping it — most people only foam roll when already injured"] } },
   },
   // Yoga Flow
   "yoga-flow": {
@@ -1698,7 +1698,7 @@ const EXERCISES = {
     category: "mobility",
     swapGroup: "recovery",
     equipment: "bodyweight",
-    instructions: { stub: "Sun salutations, warrior poses, pigeon pose. Move with breath. Focus on hip flexors, thoracic spine, and hamstrings." },
+    instructions: { instructions: { equipment: "Yoga mat", setup: "Clear space. Comfortable temperature. No time pressure. Yoga is active recovery and mobility work — it should feel restorative, not stressful.", execution: ["Sun salutation: mountain pose → forward fold → plank → cobra → downward dog → forward fold → mountain pose", "Warrior sequence: warrior I → warrior II → triangle pose", "Hip work: pigeon pose hold 60-90 seconds each side", "Close with child's pose and savasana"], cues: ["Move with your breath — inhale on expansions, exhale on folds", "Find the edge of your range of motion — not pain", "Consistency with yoga compounds — mobility improves over weeks and months"], mistakes: ["Forcing range of motion — yoga is not a stretching competition", "Skipping the holds — the benefit comes from sustained position", "Rushing through — the transitions matter as much as the poses"] } },
   },
   // Light Walk
   "light-walk": {
@@ -1709,7 +1709,7 @@ const EXERCISES = {
     category: "mobility",
     swapGroup: "recovery",
     equipment: "bodyweight",
-    instructions: { stub: "15-30 min easy walk. Active recovery — keeps blood moving without adding stress. Outdoors preferred." },
+    instructions: { instructions: { equipment: "Comfortable shoes", setup: "No setup needed. Go outside if possible — natural light and environment add psychological recovery benefits beyond the physical.", execution: ["Walk at a comfortable, easy pace — this is not exercise", "15-30 minutes is sufficient", "No phone if possible — let your mind decompress", "Breathe through your nose — stays in Zone 1"], cues: ["This is active recovery — the goal is movement without stress", "Outdoors beats treadmill for recovery walks — terrain variation and fresh air", "Can be done morning or evening — great post-meal for blood sugar management"], mistakes: ["Walking too fast and turning it into cardio — this is recovery, keep it easy", "Skipping it on rest days — light movement accelerates recovery vs complete inactivity", "Staring at your phone the whole time — you're robbing yourself of the mental recovery"] } },
   },
 
 };
