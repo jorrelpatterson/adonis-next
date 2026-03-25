@@ -2144,33 +2144,7 @@ function buildRoutine(dayIdx, prof, recPeps, isPremium, intensity, workSched, cy
     }
   }
   add("supplement", fmt(14, 0), "Hydration Check", `${Math.round(ozTarget * 0.6)}oz+ by now (of ${ozTarget}oz daily). ${isWorkDay ? "Keep water at desk. Add electrolytes if training later." : "Add electrolytes if training later."}`);
-  // Use active program day if available, fallback to legacy WORKOUTS
-  let workout;
-  if (typeof PROGRAMS !== "undefined" && typeof EXERCISES !== "undefined") {
-    const _prog = PROGRAMS[derivedProgramId];
-    const _dayMap = {0:"rest",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat"};
-    const _dk = _dayMap[new Date().getDay()] || "mon";
-    const _dayConf = _prog && _prog.days[_dk];
-    if (_dayConf) {
-      workout = {
-        d: _dayConf.label + " — " + _dayConf.muscles,
-        dur: 60,
-        warmup: _dayConf.warmup ? _dayConf.warmup.join(" · ") : null,
-        cooldown: _dayConf.cardio || null,
-        exercises: _dayConf.exercises.map(ex => {
-          const exData = EXERCISES[ex.exId];
-          return {
-            name: exData ? exData.name : ex.exId,
-            sets: ex.sets,
-            reps: ex.targetReps,
-            rest: "60-90s",
-            note: ex.note || ""
-          };
-        })
-      };
-    }
-  }
-  if (!workout) workout = (WORKOUTS[goal] || WORKOUTS["Wellness"])[dayIdx];
+  const workout = (WORKOUTS[goal] || WORKOUTS["Wellness"])[dayIdx];
   const iLbl = effIntensity === "extreme" ? " \xB7 \u{1F6A8} EXTREME" : effIntensity === "high" ? " \xB7 \u26A1 HIGH INTENSITY" : effIntensity === "recovery" ? " \xB7 \u{1F7E2} RECOVERY" : "";
   const cycleLbl = cycleInfo ? ` \xB7 ${cycleInfo.phase.icon} ${cycleInfo.phase.name}` : "";
   if (workout && workout.dur > 0) {
@@ -2179,7 +2153,7 @@ function buildRoutine(dayIdx, prof, recPeps, isPremium, intensity, workSched, cy
   let _wd=0,_wt=0;
   if(workout&&workout.exercises){workout.exercises.forEach(ex=>{for(let _i=0;_i<ex.sets;_i++){_wt++;const _k=_wg+"|"+(typeof wkWeek!=="undefined"?wkWeek:1)+"|"+dayIdx+"|"+ex.name+"|"+_i;if(typeof wkLogs!=="undefined"&&wkLogs[_k]&&wkLogs[_k].c)_wd++;}});}  
   const _ws=_wt>0&&_wd===_wt?" ✓ Done":_wd>0?" · "+_wd+"/"+_wt+" sets":"";
-  add("training", trainTime, "\\u{1F525} " + workout.d + _ws, `${workout.dur} min session${iLbl}${cycleLbl}${isWorkDay ? " \\xB7 Post-work" : ""}`);""}`);
+  add("training", trainTime, "\\u{1F525} " + workout.d + _ws, `${workout.dur} min session${iLbl}${cycleLbl}${isWorkDay ? " \\xB7 Post-work" : ""}`);
     if (workout.warmup) add("training", fmt(trainH, 5), "Warm-up", workout.warmup);
     workout.exercises.forEach((ex, i) => {
       let sets = ex.sets, reps = ex.reps;
