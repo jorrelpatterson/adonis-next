@@ -2144,7 +2144,33 @@ function buildRoutine(dayIdx, prof, recPeps, isPremium, intensity, workSched, cy
     }
   }
   add("supplement", fmt(14, 0), "Hydration Check", `${Math.round(ozTarget * 0.6)}oz+ by now (of ${ozTarget}oz daily). ${isWorkDay ? "Keep water at desk. Add electrolytes if training later." : "Add electrolytes if training later."}`);
-  const workout = (WORKOUTS[goal] || WORKOUTS["Wellness"])[dayIdx];
+  // Use active program day if available, fallback to legacy WORKOUTS
+  let workout;
+  if (typeof PROGRAMS !== "undefined" && typeof EXERCISES !== "undefined") {
+    const _prog = PROGRAMS[derivedProgramId];
+    const _dayMap = {0:"rest",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat"};
+    const _dk = _dayMap[new Date().getDay()] || "mon";
+    const _dayConf = _prog && _prog.days[_dk];
+    if (_dayConf) {
+      workout = {
+        d: _dayConf.label + " — " + _dayConf.muscles,
+        dur: 60,
+        warmup: _dayConf.warmup ? _dayConf.warmup.join(" · ") : null,
+        cooldown: _dayConf.cardio || null,
+        exercises: _dayConf.exercises.map(ex => {
+          const exData = EXERCISES[ex.exId];
+          return {
+            name: exData ? exData.name : ex.exId,
+            sets: ex.sets,
+            reps: ex.targetReps,
+            rest: "60-90s",
+            note: ex.note || ""
+          };
+        })
+      };
+    }
+  }
+  if (!workout) workout = (WORKOUTS[goal] || WORKOUTS["Wellness"])[dayIdx];
   const iLbl = effIntensity === "extreme" ? " \xB7 \u{1F6A8} EXTREME" : effIntensity === "high" ? " \xB7 \u26A1 HIGH INTENSITY" : effIntensity === "recovery" ? " \xB7 \u{1F7E2} RECOVERY" : "";
   const cycleLbl = cycleInfo ? ` \xB7 ${cycleInfo.phase.icon} ${cycleInfo.phase.name}` : "";
   if (workout && workout.dur > 0) {
@@ -3216,7 +3242,24 @@ function AppInner() {
   });
   const sourceRoute = SOURCE_ROUTES[sourceTag] || null;
   const [stackTab, setStackTab] = useState("stack");
-  const [wkProgramId, setWkProgramId] = useState(() => ls("wkProgramId", "adonis-ppl"));
+  // Goal → Program mapping
+  const GOAL_TO_PROGRAM = {
+    "Muscle Gain":   "adonis-ppl",
+    "Recomposition": "adonis-ppl",
+    "Aesthetics":    "adonis-ppl",
+    "Fat Loss":      "adonis-ppl",
+    "Anti-Aging":    "adonis-ppl",
+    "Wellness":      "adonis-ppl",
+    "Hormonal":      "adonis-ppl",
+    "Cognitive":     "adonis-ppl",
+  };
+  const activeGoal = prof.primary || (prof.goals && prof.goals[0]) || "Wellness";
+  const derivedProgramId = GOAL_TO_PROGRAM[activeGoal] || "adonis-ppl";
+  const [wkProgramId, setWkProgramId] = useState(() => GOAL_TO_PROGRAM[ls("prof",{}).primary || ""] || "adonis-ppl");
+  useEffect(() => {
+    const pid = GOAL_TO_PROGRAM[activeGoal] || "adonis-ppl";
+    if (pid !== wkProgramId) { setWkProgramId(pid); ss("wkProgramId", pid); }
+  }, [activeGoal]);
   const [wkWeek, setWkWeek] = useState(() => ls("wkWeek", 1));
   const [wkDay, setWkDay] = useState(() => { const d = new Date().getDay(); const m={0:"rest",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat"}; return ls("wkDay", m[d]||"mon"); });
   const [wkLogs, setWkLogs] = useState(() => ls("wkLogs", {}));
