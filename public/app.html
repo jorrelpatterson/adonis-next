@@ -3245,6 +3245,7 @@ function AppInner() {
   const [wkPRs, setWkPRs] = useState(() => ls("wkPRs", {}));
   const [wkExpanded, setWkExpanded] = useState({});
   const [wkInstructions, setWkInstructions] = useState(null);
+  const [wkViewDay, setWkViewDay] = useState((new Date()).getDay());
   const [creditScores, setCreditScores] = useState(() => ls("creditScores", []));
   const [scoreInput, setScoreInput] = useState("");
   const [scoreBureau, setScoreBureau] = useState("experian");
@@ -6339,7 +6340,6 @@ ${prof.name || "[Your Name]"}`
   const WorkoutV = () => {
     const CE = React.createElement;
     const todayDayIdx = (new Date()).getDay();
-    const [wkViewDay, setWkViewDay] = React.useState(todayDayIdx);
     const currentGoal = prof.primary || (prof.goals && prof.goals[0]) || "Wellness";
     const goalWorkouts = WORKOUTS[currentGoal] || WORKOUTS["Wellness"];
     const dayWorkout = goalWorkouts[wkViewDay];
