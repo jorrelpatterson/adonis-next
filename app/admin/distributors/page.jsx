@@ -1,6 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+async function sbFetch(table, params='') {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+  const d = await r.json();
+  return Array.isArray(d) ? d : [];
+}
+
+async function sbPatch(table, match, body) {
+  const [key, val] = Object.entries(match)[0];
+  await fetch(`${SUPABASE_URL}/rest/v1/${table}?${key}=eq.${val}`, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(body)
+  });
+}
 
 const STATUS_COLOR = {
   pending:  { color:'#F59E0B', bg:'#FFFBEB', label:'Pending' },
@@ -29,13 +48,18 @@ export default function DistributorsPage() {
 
   useEffect(() => {
     async function load() {
-      const [{ data: dists }, { data: orders }] = await Promise.all([
-        supabase.from('distributors').select('*').order('created_at', { ascending: false }),
-        supabase.from('distributor_orders').select('*').order('created_at', { ascending: false }),
-      ]);
-      setDistributors(dists || []);
-      setDistOrders(orders || []);
-      setLoading(false);
+      try {
+        const [dists, orders] = await Promise.all([
+          sbFetch('distributors', 'select=*&order=created_at.desc'),
+          sbFetch('distributor_orders', 'select=*&order=created_at.desc'),
+        ]);
+        setDistributors(dists);
+        setDistOrders(orders);
+      } catch(e) {
+        console.error('Distributors load error:', e);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
@@ -53,11 +77,9 @@ export default function DistributorsPage() {
     const form = approveForm[dist.id] || {};
     if (!form.login_code) { alert('Enter a login code first'); return; }
     setSaving(prev => ({ ...prev, [dist.id]: true }));
-    const { error } = await supabase.from('distributors').update({
-      status: 'approved', tier: form.tier || 'entry',
-      login_code: form.login_code.toUpperCase(), approved_at: new Date().toISOString(),
-    }).eq('id', dist.id);
-    if (!error) setDistributors(prev => prev.map(d => d.id === dist.id ? { ...d, status:'approved', tier:form.tier||'entry', login_code:form.login_code.toUpperCase() } : d));
+    const updates = { status:'approved', tier:form.tier||'entry', login_code:form.login_code.toUpperCase(), approved_at:new Date().toISOString() };
+    await sbPatch('distributors', { id: dist.id }, updates);
+    setDistributors(prev => prev.map(d => d.id === dist.id ? { ...d, ...updates } : d));
     setSaving(prev => ({ ...prev, [dist.id]: false }));
   };
 
@@ -75,7 +97,7 @@ export default function DistributorsPage() {
   };
 
   const updateStatus = async (distId, newStatus) => {
-    await supabase.from('distributors').update({ status: newStatus }).eq('id', distId);
+    await sbPatch('distributors', { id: distId }, { status: newStatus });
     setDistributors(prev => prev.map(d => d.id === distId ? { ...d, status: newStatus } : d));
   };
 
@@ -111,7 +133,7 @@ export default function DistributorsPage() {
         </div>
       </div>
       <div style={{display:'flex',flexDirection:'column',gap:8}}>
-        {filtered.map(dist=>{
+        {filtered.map(dist => {
           const ie = expandedId === dist.id;
           const sc = STATUS_COLOR[dist.status] || STATUS_COLOR.pending;
           const myOrders = getDistOrders(dist.id);
@@ -125,10 +147,10 @@ export default function DistributorsPage() {
                   <div style={{width:36,height:36,borderRadius:8,background:'#F0FDF4',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,color:'#22C55E',flexShrink:0}}>{(dist.business_name||'?').charAt(0).toUpperCase()}</div>
                   <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{dist.business_name}</div><div style={{fontSize:11,color:'#8C919E'}}>{dist.contact_name} · {dist.email}</div></div>
                   <span style={{fontSize:10,color:'#8C919E',background:'#F7F8FA',padding:'2px 8px',borderRadius:4}}>{dist.market}</span>
-                  {isApproved && dist.tier && <span style={{fontSize:10,fontWeight:600,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>{dist.tier.charAt(0).toUpperCase()+dist.tier.slice(1)} · {TIER_DISC[dist.tier]}</span>}
+                  {isApproved&&dist.tier&&<span style={{fontSize:10,fontWeight:600,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>{dist.tier.charAt(0).toUpperCase()+dist.tier.slice(1)} · {TIER_DISC[dist.tier]}</span>}
                 </div>
                 <div style={{display:'flex',gap:16,alignItems:'center'}}>
-                  {isApproved && <div style={{textAlign:'right'}}><div style={{fontFamily:"'JetBrains Mono'",fontSize:13,fontWeight:700,color:'#0072B5'}}>${myRevenue.toFixed(2)}</div><div style={{fontSize:11,color:'#8C919E'}}>{myOrders.length} orders</div></div>}
+                  {isApproved&&<div style={{textAlign:'right'}}><div style={{fontFamily:"'JetBrains Mono'",fontSize:13,fontWeight:700,color:'#0072B5'}}>${myRevenue.toFixed(2)}</div><div style={{fontSize:11,color:'#8C919E'}}>{myOrders.length} orders</div></div>}
                   <span style={{fontSize:10,fontWeight:600,padding:'4px 10px',borderRadius:4,background:sc.bg,color:sc.color}}>{sc.label}</span>
                   <div style={{fontSize:11,color:'#8C919E'}}>{new Date(dist.created_at).toLocaleDateString()}</div>
                   <div style={{fontSize:12,color:'#8C919E',transform:ie?'rotate(90deg)':'',transition:'transform 0.15s'}}>▶</div>
@@ -145,8 +167,8 @@ export default function DistributorsPage() {
                           <span style={{color:'#0F1928'}}>{x.v}</span>
                         </div>
                       ))}
-                      {dist.notes && <div style={{marginTop:12,padding:'10px 12px',background:'#F7F8FA',borderRadius:4,fontSize:13,color:'#4A4F5C',lineHeight:1.7}}><strong>Notes:</strong> {dist.notes}</div>}
-                      {myOrders.length > 0 && (
+                      {dist.notes&&<div style={{marginTop:12,padding:'10px 12px',background:'#F7F8FA',borderRadius:4,fontSize:13,color:'#4A4F5C',lineHeight:1.7}}><strong>Notes:</strong> {dist.notes}</div>}
+                      {myOrders.length>0&&(
                         <div style={{marginTop:20}}>
                           <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Order History</div>
                           {myOrders.slice(0,5).map((o,i)=>(
@@ -154,7 +176,6 @@ export default function DistributorsPage() {
                               <span style={{fontFamily:"'JetBrains Mono'",color:'#0072B5',fontSize:11}}>{o.order_id}</span>
                               <span style={{color:'#8C919E'}}>{o.total_vials} vials</span>
                               <span style={{fontWeight:600}}>${parseFloat(o.subtotal).toFixed(2)}</span>
-                              <span style={{color:o.status==='shipped'?'#22C55E':'#F59E0B',fontSize:11}}>{o.status}</span>
                             </div>
                           ))}
                         </div>
@@ -201,7 +222,7 @@ export default function DistributorsPage() {
                             <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:8}}>Change Tier</div>
                             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                               {Object.entries(TIER_DISC).map(([k,v])=>(
-                                <button key={k} onClick={async()=>{await supabase.from('distributors').update({tier:k}).eq('id',dist.id);setDistributors(prev=>prev.map(d=>d.id===dist.id?{...d,tier:k}:d));}} style={{...cs.btn,padding:'6px 12px',fontSize:11,background:dist.tier===k?'#0072B5':'#F7F8FA',color:dist.tier===k?'#fff':'#6B7A94',border:'1px solid '+(dist.tier===k?'#0072B5':'#E4E7EC')}}>{k.charAt(0).toUpperCase()+k.slice(1)} ({v})</button>
+                                <button key={k} onClick={async()=>{await sbPatch('distributors',{id:dist.id},{tier:k});setDistributors(prev=>prev.map(d=>d.id===dist.id?{...d,tier:k}:d));}} style={{...cs.btn,padding:'6px 12px',fontSize:11,background:dist.tier===k?'#0072B5':'#F7F8FA',color:dist.tier===k?'#fff':'#6B7A94',border:'1px solid '+(dist.tier===k?'#0072B5':'#E4E7EC')}}>{k.charAt(0).toUpperCase()+k.slice(1)} ({v})</button>
                               ))}
                             </div>
                           </div>
