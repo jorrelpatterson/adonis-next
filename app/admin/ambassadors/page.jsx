@@ -1,6 +1,19 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const sb = (table) => ({
+  select: async (cols='*', opts={}) => {
+    const order = opts.order ? '&order=' + opts.order : '';
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${cols}${order}`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    return Array.isArray(data) ? data : [];
+  }
+});
 
 const TIER_COLOR = { starter:'#60A5FA', builder:'#A78BFA', elite:'#F59E0B' };
 const cs = {
@@ -25,13 +38,18 @@ export default function AmbassadorsPage() {
 
   useEffect(() => {
     async function load() {
-      const [{ data: ambs }, { data: comms }] = await Promise.all([
-        supabase.from('ambassadors').select('*').order('created_at', { ascending: false }),
-        supabase.from('referral_commissions').select('*'),
-      ]);
-      setAmbassadors(ambs || []);
-      setCommissions(comms || []);
-      setLoading(false);
+      try {
+        const [ambs, comms] = await Promise.all([
+          sb('ambassadors').select('*', { order: 'created_at.desc' }),
+          sb('referral_commissions').select('*'),
+        ]);
+        setAmbassadors(ambs);
+        setCommissions(comms);
+      } catch(e) {
+        console.error('Load error:', e);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
