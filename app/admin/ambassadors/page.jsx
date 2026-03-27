@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-// Email APIs: welcome = same origin (no CORS), payout/custom = advncelabs.com
-const EXT_API = 'https://advncelabs.com/api';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 const H = () => ({ 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` });
+const SH = () => ({ 'apikey': SERVICE_KEY, 'Authorization': `Bearer ${SERVICE_KEY}` });
+
 async function sbFetch(table, params='') {
   const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, { headers: H() });
   const d = await r.json(); return Array.isArray(d) ? d : [];
@@ -17,7 +18,11 @@ async function sbPatch(table, id, body) {
   });
 }
 async function sbDelete(table, id) {
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method:'DELETE', headers:{...H(),'Prefer':'return=minimal'} });
+  // Use service key to bypass RLS for deletes
+  const key = SERVICE_KEY || SUPABASE_KEY;
+  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+    method:'DELETE', headers:{ 'apikey': key, 'Authorization': `Bearer ${key}`, 'Prefer':'return=minimal' }
+  });
 }
 
 const TIER_COLOR = { starter:'#60A5FA', builder:'#A78BFA', elite:'#F59E0B' };
@@ -89,26 +94,26 @@ export default function AmbassadorsPage() {
   const deleteAmb = async (amb) => {
     if (!confirm(`Delete ${amb.name} (${amb.code})? Cannot be undone.`)) return;
     setDeleting(prev=>({...prev,[amb.id]:true}));
-    await sbDelete('ambassadors',amb.id);
+    await sbDelete('ambassadors', amb.id);
     setAmbassadors(prev=>prev.filter(a=>a.id!==amb.id));
+    setDeleting(prev=>({...prev,[amb.id]:false}));
   };
 
   const sendEmail = async (type, amb) => {
     setSending(prev=>({...prev,[amb.id+type]:true}));
     let endpoint, payload;
     if (type==='welcome') {
-      // Same-origin route on adonis.pro — zero CORS
       endpoint = '/api/ambassador-welcome';
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code} };
     } else if (type==='payout') {
       const l1=parseFloat(payout[amb.id]?.l1||0),l2=parseFloat(payout[amb.id]?.l2||0),l3=parseFloat(payout[amb.id]?.l3||0);
       if (l1+l2+l3===0) { alert('Enter payout amounts first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = `${EXT_API}/ambassador-payout`;
+      endpoint = '/api/ambassador-payout';
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3} };
     } else if (type==='custom') {
       const msg = customMsg[amb.id];
       if (!msg?.subject||!msg?.body) { alert('Enter subject and message first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = `${EXT_API}/ambassador-message`;
+      endpoint = '/api/ambassador-message';
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code}, subject:msg.subject, message:msg.body };
     }
     try {
