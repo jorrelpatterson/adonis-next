@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const API = 'https://advncelabs.com/api';
+// Email APIs: welcome = same origin (no CORS), payout/custom = advncelabs.com
+const EXT_API = 'https://advncelabs.com/api';
 
 const H = () => ({ 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` });
 async function sbFetch(table, params='') {
@@ -96,17 +97,18 @@ export default function AmbassadorsPage() {
     setSending(prev=>({...prev,[amb.id+type]:true}));
     let endpoint, payload;
     if (type==='welcome') {
-      endpoint = `${API}/ambassador-notify`;
-      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,phone:amb.phone||null,referred_by_code:null} };
+      // Same-origin route on adonis.pro — zero CORS
+      endpoint = '/api/ambassador-welcome';
+      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code} };
     } else if (type==='payout') {
       const l1=parseFloat(payout[amb.id]?.l1||0),l2=parseFloat(payout[amb.id]?.l2||0),l3=parseFloat(payout[amb.id]?.l3||0);
       if (l1+l2+l3===0) { alert('Enter payout amounts first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = `${API}/ambassador-payout`;
+      endpoint = `${EXT_API}/ambassador-payout`;
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3} };
     } else if (type==='custom') {
       const msg = customMsg[amb.id];
       if (!msg?.subject||!msg?.body) { alert('Enter subject and message first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = `${API}/ambassador-message`;
+      endpoint = `${EXT_API}/ambassador-message`;
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code}, subject:msg.subject, message:msg.body };
     }
     try {
