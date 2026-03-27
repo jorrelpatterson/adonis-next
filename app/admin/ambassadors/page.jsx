@@ -3,23 +3,20 @@ import { useState, useEffect } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const H = () => ({ 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` });
+const API = 'https://advncelabs.com/api';
 
+const H = () => ({ 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` });
 async function sbFetch(table, params='') {
   const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, { headers: H() });
-  const d = await r.json();
-  return Array.isArray(d) ? d : [];
+  const d = await r.json(); return Array.isArray(d) ? d : [];
 }
 async function sbPatch(table, id, body) {
   await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method:'PATCH', headers:{...H(),'Content-Type':'application/json','Prefer':'return=minimal'},
-    body: JSON.stringify(body)
+    method:'PATCH', headers:{...H(),'Content-Type':'application/json','Prefer':'return=minimal'}, body:JSON.stringify(body)
   });
 }
 async function sbDelete(table, id) {
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method:'DELETE', headers:{...H(),'Prefer':'return=minimal'}
-  });
+  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, { method:'DELETE', headers:{...H(),'Prefer':'return=minimal'} });
 }
 
 const TIER_COLOR = { starter:'#60A5FA', builder:'#A78BFA', elite:'#F59E0B' };
@@ -55,10 +52,8 @@ export default function AmbassadorsPage() {
           sbFetch('ambassadors','select=*&order=created_at.desc'),
           sbFetch('referral_commissions','select=*'),
         ]);
-        setAmbassadors(ambs);
-        setCommissions(comms);
-      } catch(e) { console.error(e); }
-      finally { setLoading(false); }
+        setAmbassadors(ambs); setCommissions(comms);
+      } catch(e) { console.error(e); } finally { setLoading(false); }
     }
     load();
   }, []);
@@ -82,38 +77,36 @@ export default function AmbassadorsPage() {
     setActiveTab(prev=>({...prev,[amb.id]:'edit'}));
     setEditForm(prev=>({...prev,[amb.id]:{name:amb.name,email:amb.email,phone:amb.phone||'',code:amb.code,tier:amb.tier||'starter'}}));
   };
-
   const saveEdit = async (amb) => {
     setSaving(prev=>({...prev,[amb.id]:true}));
     const f = editForm[amb.id];
-    await sbPatch('ambassadors', amb.id, {name:f.name,email:f.email,phone:f.phone||null,code:f.code.toUpperCase(),tier:f.tier});
+    await sbPatch('ambassadors',amb.id,{name:f.name,email:f.email,phone:f.phone||null,code:f.code.toUpperCase(),tier:f.tier});
     setAmbassadors(prev=>prev.map(a=>a.id===amb.id?{...a,...f,code:f.code.toUpperCase()}:a));
     setActiveTab(prev=>({...prev,[amb.id]:'details'}));
     setSaving(prev=>({...prev,[amb.id]:false}));
   };
-
   const deleteAmb = async (amb) => {
-    if (!confirm(`Delete ${amb.name} (${amb.code})? This cannot be undone.`)) return;
+    if (!confirm(`Delete ${amb.name} (${amb.code})? Cannot be undone.`)) return;
     setDeleting(prev=>({...prev,[amb.id]:true}));
-    await sbDelete('ambassadors', amb.id);
+    await sbDelete('ambassadors',amb.id);
     setAmbassadors(prev=>prev.filter(a=>a.id!==amb.id));
   };
 
   const sendEmail = async (type, amb) => {
     setSending(prev=>({...prev,[amb.id+type]:true}));
     let endpoint, payload;
-    if (type === 'welcome') {
-      endpoint = '/api/ambassador-notify';
-      payload = { ambassador: { name:amb.name, email:amb.email, code:amb.code, phone:amb.phone||null, referred_by_code:null }};
-    } else if (type === 'payout') {
+    if (type==='welcome') {
+      endpoint = `${API}/ambassador-notify`;
+      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,phone:amb.phone||null,referred_by_code:null} };
+    } else if (type==='payout') {
       const l1=parseFloat(payout[amb.id]?.l1||0),l2=parseFloat(payout[amb.id]?.l2||0),l3=parseFloat(payout[amb.id]?.l3||0);
       if (l1+l2+l3===0) { alert('Enter payout amounts first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = '/api/ambassador-payout';
-      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3}};
-    } else if (type === 'custom') {
+      endpoint = `${API}/ambassador-payout`;
+      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3} };
+    } else if (type==='custom') {
       const msg = customMsg[amb.id];
-      if (!msg?.subject || !msg?.body) { alert('Enter subject and message first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
-      endpoint = '/api/ambassador-message';
+      if (!msg?.subject||!msg?.body) { alert('Enter subject and message first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
+      endpoint = `${API}/ambassador-message`;
       payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code}, subject:msg.subject, message:msg.body };
     }
     try {
@@ -122,12 +115,15 @@ export default function AmbassadorsPage() {
         alert(`Email sent to ${amb.email}`);
         if (type==='payout') setPayout(prev=>({...prev,[amb.id]:{}}));
         if (type==='custom') setCustomMsg(prev=>({...prev,[amb.id]:{subject:'',body:''}}));
-      } else alert('Failed — check Resend logs');
+      } else {
+        const err = await res.json().catch(()=>({}));
+        alert('Failed: '+(err.error||res.status));
+      }
     } catch(e) { alert('Error: '+e.message); }
     setSending(prev=>({...prev,[amb.id+type]:false}));
   };
 
-  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'50vh',color:'#8C919E'}}><div style={{textAlign:'center'}}><div style={{fontSize:32,marginBottom:8}}>🤝</div>Loading ambassadors...</div></div>;
+  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'50vh',color:'#8C919E'}}><div style={{textAlign:'center'}}><div style={{fontSize:32,marginBottom:8}}>🤝</div>Loading...</div></div>;
 
   return (
     <div>
@@ -135,9 +131,9 @@ export default function AmbassadorsPage() {
       <p style={{color:'#8C919E',fontSize:14,marginBottom:24}}>{ambassadors.length} ambassadors · ${totalPaid.toFixed(2)} total earned · {totalOrders} referral orders</p>
       <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
         {[
-          {l:'Total Ambassadors',v:ambassadors.length,c:'#0F1928'},
+          {l:'Total',v:ambassadors.length,c:'#0F1928'},
           {l:'Referral Orders',v:totalOrders,c:'#0072B5'},
-          {l:'Total Commissions',v:'$'+totalPaid.toFixed(2),c:'#22C55E'},
+          {l:'Commissions',v:'$'+totalPaid.toFixed(2),c:'#22C55E'},
           {l:'Avg Earnings',v:ambassadors.length>0?'$'+(totalPaid/ambassadors.length).toFixed(2):'$0',c:'#A78BFA'},
         ].map((x,i)=>(
           <div key={i} style={{...cs.card,padding:16}}>
@@ -153,19 +149,13 @@ export default function AmbassadorsPage() {
           <input style={{...cs.input,width:180}} value={period} onChange={e=>setPeriod(e.target.value)} />
         </div>
       </div>
-
       <div style={{display:'flex',flexDirection:'column',gap:8}}>
-        {filtered.map(amb => {
-          const ie  = expandedId === amb.id;
-          const tab = activeTab[amb.id] || 'details';
-          const earn = getEarnings(amb.id);
-          const tc  = TIER_COLOR[amb.tier]||'#8C919E';
-          const f   = editForm[amb.id]||{};
-          const cm  = customMsg[amb.id]||{subject:'',body:''};
-
+        {filtered.map(amb=>{
+          const ie=expandedId===amb.id, tab=activeTab[amb.id]||'details';
+          const earn=getEarnings(amb.id), tc=TIER_COLOR[amb.tier]||'#8C919E';
+          const f=editForm[amb.id]||{}, cm2=customMsg[amb.id]||{subject:'',body:''};
           return (
             <div key={amb.id} style={cs.card}>
-              {/* Row */}
               <div onClick={()=>setExpanded(ie?null:amb.id)} style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                 <div style={{display:'flex',gap:20,alignItems:'center'}}>
                   <div style={{width:36,height:36,borderRadius:'50%',background:'#EFF6FF',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,color:'#0072B5',flexShrink:0}}>{(amb.name||'?').charAt(0).toUpperCase()}</div>
@@ -182,27 +172,17 @@ export default function AmbassadorsPage() {
                   <div style={{fontSize:12,color:'#8C919E',transform:ie?'rotate(90deg)':'',transition:'transform 0.15s'}}>▶</div>
                 </div>
               </div>
-
               {ie && (
                 <div style={{borderTop:'1px solid #F0F1F4'}}>
-                  {/* Tab bar */}
                   <div style={{display:'flex',borderBottom:'1px solid #F0F1F4'}}>
-                    {[
-                      {key:'details',  label:'Details'},
-                      {key:'edit',     label:'✏ Edit'},
-                      {key:'emails',   label:'✉ Emails'},
-                      {key:'payout',   label:'💸 Payout'},
-                    ].map(t=>(
-                      <button key={t.key} onClick={()=>{ if(t.key==='edit') startEdit(amb); else setActiveTab(prev=>({...prev,[amb.id]:t.key})); }}
+                    {[{key:'details',label:'Details'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'}].map(t=>(
+                      <button key={t.key} onClick={()=>{if(t.key==='edit')startEdit(amb);else setActiveTab(prev=>({...prev,[amb.id]:t.key}));}}
                         style={{padding:'10px 16px',border:'none',borderBottom:tab===t.key?'2px solid #0072B5':'2px solid transparent',background:'none',fontSize:12,fontWeight:tab===t.key?600:400,color:tab===t.key?'#0072B5':'#8C919E',cursor:'pointer'}}>
                         {t.label}
                       </button>
                     ))}
                   </div>
-
                   <div style={{padding:'20px'}}>
-
-                    {/* DETAILS TAB */}
                     {tab==='details' && (
                       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
                         <div>
@@ -223,7 +203,7 @@ export default function AmbassadorsPage() {
                         <div>
                           <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Earnings</div>
                           {[{l:'Direct (L1)',v:earn.l1},{l:'L2 override',v:earn.l2},{l:'L3 override',v:earn.l3}].map((x,i)=>(
-                            <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid #F0F1F4',fontSize:13}}>
+                            <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid #F0F1F4',fontSize:13}}>
                               <span style={{color:'#4A4F5C'}}>{x.l}</span>
                               <span style={{fontFamily:"'JetBrains Mono'",fontSize:12,color:'#22C55E'}}>${x.v.toFixed(2)}</span>
                             </div>
@@ -237,8 +217,6 @@ export default function AmbassadorsPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* EDIT TAB */}
                     {tab==='edit' && (
                       <div style={{maxWidth:400}}>
                         {[{label:'Name',key:'name',type:'text'},{label:'Email',key:'email',type:'email'},{label:'Phone',key:'phone',type:'text'},{label:'Code',key:'code',type:'text'}].map(({label,key,type})=>(
@@ -250,8 +228,7 @@ export default function AmbassadorsPage() {
                         ))}
                         <div style={{marginBottom:16}}>
                           <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Tier</label>
-                          <select style={{...cs.input,width:'100%'}} value={f.tier||'starter'}
-                            onChange={e=>setEditForm(prev=>({...prev,[amb.id]:{...f,tier:e.target.value}}))}>
+                          <select style={{...cs.input,width:'100%'}} value={f.tier||'starter'} onChange={e=>setEditForm(prev=>({...prev,[amb.id]:{...f,tier:e.target.value}}))}>
                             <option value="starter">Starter (10%)</option>
                             <option value="builder">Builder (15%)</option>
                             <option value="elite">Elite (20%)</option>
@@ -267,36 +244,29 @@ export default function AmbassadorsPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* EMAILS TAB */}
                     {tab==='emails' && (
                       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
-                        {/* Welcome / Onboarding */}
                         <div style={{padding:16,background:'#F7F8FA',borderRadius:6}}>
                           <div style={{fontSize:12,fontWeight:600,color:'#0F1928',marginBottom:4}}>🎉 Welcome / Onboarding</div>
-                          <p style={{fontSize:12,color:'#8C919E',marginBottom:12,lineHeight:1.6}}>Sends their referral link, ambassador code, dashboard link, and full commission structure. Use this if they never got the original welcome email.</p>
+                          <p style={{fontSize:12,color:'#8C919E',marginBottom:12,lineHeight:1.6}}>Sends their referral link, ambassador code, dashboard link, and full commission structure.</p>
                           <button onClick={()=>sendEmail('welcome',amb)} disabled={sending[amb.id+'welcome']}
                             style={{...cs.btn,background:'#0072B5',color:'#fff',width:'100%',opacity:sending[amb.id+'welcome']?0.5:1}}>
                             {sending[amb.id+'welcome']?'Sending...':'Send Welcome Email'}
                           </button>
                         </div>
-
-                        {/* Custom message */}
                         <div style={{padding:16,background:'#F7F8FA',borderRadius:6}}>
                           <div style={{fontSize:12,fontWeight:600,color:'#0F1928',marginBottom:4}}>✏ Custom Message</div>
-                          <p style={{fontSize:12,color:'#8C919E',marginBottom:12,lineHeight:1.6}}>Send any message in the advnce labs branded email template. Their referral link is auto-appended at the bottom.</p>
+                          <p style={{fontSize:12,color:'#8C919E',marginBottom:12,lineHeight:1.6}}>Send any message in the advnce labs branded template. Referral link auto-appended.</p>
                           <div style={{marginBottom:8}}>
                             <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Subject</label>
                             <input style={{...cs.input,width:'100%'}} placeholder="e.g. Important update from advnce labs"
-                              value={cm.subject||''}
-                              onChange={e=>setCustomMsg(prev=>({...prev,[amb.id]:{...cm,subject:e.target.value}}))} />
+                              value={cm2.subject||''} onChange={e=>setCustomMsg(prev=>({...prev,[amb.id]:{...cm2,subject:e.target.value}}))} />
                           </div>
                           <div style={{marginBottom:12}}>
                             <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Message</label>
                             <textarea style={{...cs.input,width:'100%',minHeight:80,resize:'vertical'}}
                               placeholder="Type your message here..."
-                              value={cm.body||''}
-                              onChange={e=>setCustomMsg(prev=>({...prev,[amb.id]:{...cm,body:e.target.value}}))} />
+                              value={cm2.body||''} onChange={e=>setCustomMsg(prev=>({...prev,[amb.id]:{...cm2,body:e.target.value}}))} />
                           </div>
                           <button onClick={()=>sendEmail('custom',amb)} disabled={sending[amb.id+'custom']}
                             style={{...cs.btn,background:'#1A1C22',color:'#fff',width:'100%',opacity:sending[amb.id+'custom']?0.5:1}}>
@@ -305,8 +275,6 @@ export default function AmbassadorsPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* PAYOUT TAB */}
                     {tab==='payout' && (
                       <div style={{maxWidth:400}}>
                         <p style={{fontSize:13,color:'#8C919E',marginBottom:16,lineHeight:1.6}}>Sends a branded payout breakdown email to {amb.email}. Send the Zelle payment separately.</p>
@@ -314,8 +282,7 @@ export default function AmbassadorsPage() {
                           <div key={f2.key} style={{display:'flex',gap:12,alignItems:'center',marginBottom:10}}>
                             <label style={{fontSize:12,color:'#8C919E',width:160,flexShrink:0}}>{f2.label}</label>
                             <input style={{...cs.input,flex:1}} type="number" step="0.01" min="0" placeholder="0.00"
-                              value={payout[amb.id]?.[f2.key]||''}
-                              onChange={e=>setPayout(prev=>({...prev,[amb.id]:{...(prev[amb.id]||{}),[f2.key]:e.target.value}}))} />
+                              value={payout[amb.id]?.[f2.key]||''} onChange={e=>setPayout(prev=>({...prev,[amb.id]:{...(prev[amb.id]||{}),[f2.key]:e.target.value}}))} />
                           </div>
                         ))}
                         <div style={{padding:'12px 0',borderTop:'1px solid #E4E7EC',marginTop:8,marginBottom:16,fontSize:13}}>
@@ -330,7 +297,6 @@ export default function AmbassadorsPage() {
                         </button>
                       </div>
                     )}
-
                   </div>
                 </div>
               )}
