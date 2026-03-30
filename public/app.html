@@ -4012,7 +4012,7 @@ function AppInner() {
     if (!weightInput) return;
     const wNum = parseFloat(weightInput);
     setWeightLog((prev) => [...prev, { date: tk, weight: wNum }]);
-    setProf((prev) => ({ ...prev, weight: String(wNum) }));
+    setProf((prev) => ({ ...prev, weight: String(Math.round(wNum)) }));
     setWeightInput("");
     SFX.log();
   };
