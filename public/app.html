@@ -3998,7 +3998,7 @@ function AppInner() {
     const ids = new Set(activeCycles.map((c) => c.pepId));
     return PEPTIDES.filter((p) => ids.has(p.id) && p._active !== false);
   }, [activeCycles]);
-  const stackAdj = useMemo(() => activePeps.length > 0 ? getStackAdj(checkins, activePeps) : [], [checkins, activePeps]);
+  const stackAdj = useMemo(() => activePeps.length > 0 ? getStackAdj(checkins, activePeps) : [], [checkins, activePeps, weightLog, prof]);
   const setCheckin = (field, val) => {
     setCheckins((prev) => ({ ...prev, [tk]: { ...prev[tk] || {}, [field]: val } }));
     SFX.tap();
@@ -6617,6 +6617,7 @@ ${prof.name || "[Your Name]"}`
       const w = parseFloat(quickWeight);
       if (!w) return;
       setWeightLog((prev) => [...prev, { date: tk, weight: w }]);
+      setProf((prev) => ({ ...prev, weight: String(Math.round(w)) }));
       setShowQuickWeight(false);
       setQuickWeight("");
       SFX.log();
