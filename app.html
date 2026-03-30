@@ -735,7 +735,9 @@ const WORKOUTS = {
       { name: "Pull-ups", sets: 4, reps: "8-10", rest: "45s" },
       { name: "Dips", sets: 3, reps: "12", rest: "30s" },
       { name: "Renegade Rows", sets: 3, reps: "10/arm", rest: "30s" },
-      { name: "Ball Slams", sets: 3, reps: "12", rest: "30s" }
+      { name: "Ball Slams", sets: 3, reps: "12", rest: "30s" },
+      { name: "Lateral Raises", sets: 3, reps: "15", rest: "30s", note: "Light weight, controlled — side delt isolation" },
+      { name: "Face Pulls", sets: 3, reps: "15", rest: "30s", note: "Pull to forehead, elbows high — rear delt and rotator cuff health" }
     ] },
     { d: "Lower Body + Cardio", dur: 50, warmup: "5 min bike + hip circles + leg swings", cooldown: "5 min walk + hip flexor stretch", exercises: [
       { name: "Trap Bar Deadlifts", sets: 4, reps: "8", rest: "60s" },
@@ -754,7 +756,10 @@ const WORKOUTS = {
       { name: "Cable Flyes (low to high)", sets: 3, reps: "12", rest: "60s" },
       { name: "Weighted Dips", sets: 3, reps: "8-10", rest: "75s" },
       { name: "Overhead Tricep Extension (rope)", sets: 3, reps: "12", rest: "60s" },
-      { name: "Tricep Pushdowns", sets: 3, reps: "15", rest: "45s", note: "Drop set on last set" }
+      { name: "Tricep Pushdowns", sets: 3, reps: "15", rest: "45s", note: "Drop set on last set" },
+      { name: "Hanging Leg Raises", sets: 3, reps: "12", rest: "45s", note: "Raise legs to 90 degrees, control descent" },
+      { name: "Cable Crunches", sets: 3, reps: "15", rest: "45s", note: "Curl spine down — not hips to knees" },
+      { name: "Plank Hold", sets: 3, reps: "45s", rest: "30s" }
     ] },
     { d: "Back & Biceps", dur: 60, warmup: "5 min row + band pull-aparts + dead hangs", cooldown: "5 min lat/bicep stretches", exercises: [
       { name: "Conventional Deadlifts", sets: 4, reps: "5", rest: "120s", note: "Top set + back-off sets" },
@@ -762,7 +767,9 @@ const WORKOUTS = {
       { name: "Weighted Pull-ups", sets: 4, reps: "6-8", rest: "90s" },
       { name: "Face Pulls", sets: 3, reps: "15", rest: "45s" },
       { name: "Barbell Curls", sets: 3, reps: "10", rest: "60s" },
-      { name: "Hammer Curls", sets: 3, reps: "12", rest: "45s" }
+      { name: "Hammer Curls", sets: 3, reps: "12", rest: "45s" },
+      { name: "Ab Wheel Rollouts", sets: 3, reps: "10", rest: "45s", note: "From knees — roll until back flat, pull with abs" },
+      { name: "Dead Bug", sets: 3, reps: "10", rest: "30s", note: "Opposite arm and leg — back stays flat on floor" }
     ] },
     { d: "Legs (Quad Focus)", dur: 65, warmup: "5 min bike + leg swings + goblet squat warmup", cooldown: "5 min quad/hip stretch + foam roll", exercises: [
       { name: "Back Squats", sets: 5, reps: "5", rest: "120s", note: "5x5 \u2014 track weight progression" },
@@ -779,7 +786,9 @@ const WORKOUTS = {
       { name: "EZ Bar Curls", sets: 3, reps: "10", rest: "60s" },
       { name: "Skull Crushers", sets: 3, reps: "10", rest: "60s" },
       { name: "Incline DB Curls", sets: 3, reps: "12", rest: "45s" },
-      { name: "Overhead Tricep Extension", sets: 3, reps: "12", rest: "45s" }
+      { name: "Overhead Tricep Extension", sets: 3, reps: "12", rest: "45s" },
+      { name: "Pallof Press", sets: 3, reps: "12", rest: "30s", note: "Press out and resist rotation — anti-rotation core" },
+      { name: "Russian Twists", sets: 3, reps: "20", rest: "30s", note: "Feet elevated, rotate torso side to side" }
     ] },
     { d: "Legs (Posterior)", dur: 60, warmup: "5 min walk + hip circles + RDL warmup", cooldown: "5 min hamstring/glute stretch", exercises: [
       { name: "Romanian Deadlifts", sets: 4, reps: "8", rest: "90s" },
@@ -812,7 +821,9 @@ const WORKOUTS = {
       { name: "Romanian Deadlifts", sets: 4, reps: "8", rest: "90s" },
       { name: "Walking Lunges", sets: 3, reps: "10/leg", rest: "60s" },
       { name: "Leg Press", sets: 3, reps: "12", rest: "75s" },
-      { name: "Standing Calf Raises", sets: 4, reps: "15", rest: "45s" }
+      { name: "Standing Calf Raises", sets: 4, reps: "15", rest: "45s" },
+      { name: "Pallof Press", sets: 3, reps: "12", rest: "30s", note: "Anti-rotation core — press out and resist" },
+      { name: "Plank Hold", sets: 3, reps: "45s", rest: "30s" }
     ] },
     { d: "Cardio + Core", dur: 40, warmup: "5 min easy jog", cooldown: "5 min walk + stretch", exercises: [
       { name: "Treadmill Intervals", sets: 8, reps: "30s sprint / 60s walk", rest: "\u2014" },
@@ -841,7 +852,9 @@ const WORKOUTS = {
       { name: "KB Swings", sets: 4, reps: "15", rest: "30s" },
       { name: "Thrusters", sets: 3, reps: "10", rest: "45s" },
       { name: "Burpees", sets: 3, reps: "10", rest: "30s" },
-      { name: "Box Jumps", sets: 3, reps: "8", rest: "30s" }
+      { name: "Box Jumps", sets: 3, reps: "8", rest: "30s" },
+      { name: "Ab Wheel Rollouts", sets: 3, reps: "10", rest: "45s" },
+      { name: "Russian Twists", sets: 3, reps: "20", rest: "30s" }
     ] },
     { d: "Rest", dur: 0, warmup: "", cooldown: "", exercises: [] }
   ],
@@ -868,7 +881,9 @@ const WORKOUTS = {
       { name: "Romanian Deadlifts", sets: 3, reps: "10", rest: "75s" },
       { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: "60s" },
       { name: "Leg Extensions", sets: 3, reps: "15", rest: "45s" },
-      { name: "Calf Raises (standing)", sets: 4, reps: "15", rest: "30s" }
+      { name: "Calf Raises (standing)", sets: 4, reps: "15", rest: "30s" },
+      { name: "Cable Crunches", sets: 3, reps: "15", rest: "45s" },
+      { name: "Hanging Leg Raises", sets: 3, reps: "12", rest: "45s" }
     ] },
     { d: "Arms & Abs", dur: 45, warmup: "5 min light curls + tricep warmup", cooldown: "5 min arm stretches", exercises: [
       { name: "EZ Bar Curls", sets: 4, reps: "10", rest: "60s" },
@@ -2148,7 +2163,12 @@ function buildRoutine(dayIdx, prof, recPeps, isPremium, intensity, workSched, cy
   const iLbl = effIntensity === "extreme" ? " \xB7 \u{1F6A8} EXTREME" : effIntensity === "high" ? " \xB7 \u26A1 HIGH INTENSITY" : effIntensity === "recovery" ? " \xB7 \u{1F7E2} RECOVERY" : "";
   const cycleLbl = cycleInfo ? ` \xB7 ${cycleInfo.phase.icon} ${cycleInfo.phase.name}` : "";
   if (workout && workout.dur > 0) {
-    add("training", trainTime, "\u{1F525} " + workout.d, `${workout.dur} min session${iLbl}${cycleLbl}${isWorkDay ? " \xB7 Post-work" : ""}`);
+    // session completion from Train tab logs
+  const _wg = prof.primary || (prof.goals&&prof.goals[0]) || "Wellness";
+  let _wd=0,_wt=0;
+  if(workout&&workout.exercises){workout.exercises.forEach(ex=>{for(let _i=0;_i<ex.sets;_i++){_wt++;const _k=_wg+"|"+(typeof wkWeek!=="undefined"?wkWeek:1)+"|"+dayIdx+"|"+ex.name+"|"+_i;if(typeof wkLogs!=="undefined"&&wkLogs[_k]&&wkLogs[_k].c)_wd++;}});}  
+  const _ws=_wt>0&&_wd===_wt?" ✓ Done":_wd>0?" · "+_wd+"/"+_wt+" sets":"";
+  add("training", trainTime, "\\u{1F525} " + workout.d + _ws, `${workout.dur} min session${iLbl}${cycleLbl}${isWorkDay ? " \\xB7 Post-work" : ""}`);
     if (workout.warmup) add("training", fmt(trainH, 5), "Warm-up", workout.warmup);
     workout.exercises.forEach((ex, i) => {
       let sets = ex.sets, reps = ex.reps;
@@ -3216,13 +3236,31 @@ function AppInner() {
   });
   const sourceRoute = SOURCE_ROUTES[sourceTag] || null;
   const [stackTab, setStackTab] = useState("stack");
-  const [wkProgramId, setWkProgramId] = useState(() => ls("wkProgramId", "adonis-ppl"));
+  // Goal → Program mapping
+  const GOAL_TO_PROGRAM = {
+    "Muscle Gain":   "adonis-ppl",
+    "Recomposition": "adonis-ppl",
+    "Aesthetics":    "adonis-ppl",
+    "Fat Loss":      "adonis-ppl",
+    "Anti-Aging":    "adonis-ppl",
+    "Wellness":      "adonis-ppl",
+    "Hormonal":      "adonis-ppl",
+    "Cognitive":     "adonis-ppl",
+  };
+  const activeGoal = prof.primary || (prof.goals && prof.goals[0]) || "Wellness";
+  const derivedProgramId = GOAL_TO_PROGRAM[activeGoal] || "adonis-ppl";
+  const [wkProgramId, setWkProgramId] = useState(() => GOAL_TO_PROGRAM[ls("prof",{}).primary || ""] || "adonis-ppl");
+  useEffect(() => {
+    const pid = GOAL_TO_PROGRAM[activeGoal] || "adonis-ppl";
+    if (pid !== wkProgramId) { setWkProgramId(pid); ss("wkProgramId", pid); }
+  }, [activeGoal]);
   const [wkWeek, setWkWeek] = useState(() => ls("wkWeek", 1));
   const [wkDay, setWkDay] = useState(() => { const d = new Date().getDay(); const m={0:"rest",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat"}; return ls("wkDay", m[d]||"mon"); });
   const [wkLogs, setWkLogs] = useState(() => ls("wkLogs", {}));
   const [wkPRs, setWkPRs] = useState(() => ls("wkPRs", {}));
   const [wkExpanded, setWkExpanded] = useState({});
   const [wkInstructions, setWkInstructions] = useState(null);
+  const [wkViewDay, setWkViewDay] = useState((new Date()).getDay());
   const [creditScores, setCreditScores] = useState(() => ls("creditScores", []));
   const [scoreInput, setScoreInput] = useState("");
   const [scoreBureau, setScoreBureau] = useState("experian");
@@ -3972,7 +4010,11 @@ function AppInner() {
   const removeFood = (idx) => setFoodLogs((prev) => ({ ...prev, [tk]: (prev[tk] || []).filter((_, i) => i !== idx) }));
   const logWeight = () => {
     if (!weightInput) return;
-    setWeightLog((prev) => [...prev, { date: tk, weight: parseFloat(weightInput) }]);
+    const wNum = parseFloat(weightInput);
+    setWeightLog((prev) => [...prev, { date: tk, weight: wNum }]);
+    const np = Object.assign({}, prof, { weight: String(wNum) });
+    setProf(np);
+    ss("prof", np);
     setWeightInput("");
     SFX.log();
   };
@@ -5269,7 +5311,7 @@ ${prof.name || "[Your Name]"}`
       const left = Math.max(0, Math.ceil((end - Date.now()) / 864e5));
       const pct = c.cycleDays > 0 ? Math.min(100, Math.round((1 - left / c.cycleDays) * 100)) : 100;
       return /* @__PURE__ */ React.createElement("div", { key: c.pepId, style: { ...s.card, padding: 14, marginBottom: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: P.txS } }, pep2.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: P.txD } }, pep2.dose, " \xB7 ", pep2.dur)), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "right" } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: FM, fontSize: 16, fontWeight: 700, color: left <= 7 ? P.warn : P.ok } }, left), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 7, color: P.txD, letterSpacing: 1 } }, "DAYS LEFT"))), /* @__PURE__ */ React.createElement("div", { style: { height: 4, borderRadius: 2, background: P.bgH, overflow: "hidden" } }, /* @__PURE__ */ React.createElement("div", { style: { height: "100%", borderRadius: 2, width: pct + "%", background: left <= 7 ? "linear-gradient(90deg,#FBBF24,#F59E0B)" : "linear-gradient(90deg,#34D399,#059669)", transition: "width .5s" } })), left <= 7 && !c.reordered && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 6, fontSize: 10, color: P.warn, fontWeight: 600 } }, "\u{1F514} Cycle ending soon \u2014 reorder from Peptides tab"));
-    })) : /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 20, textAlign: "center" } }, /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: P.txD, margin: "0 0 12px" } }, "No active cycles. Browse the Peptides tab to find protocols matched to your goals."))), prof.domains.includes("image") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u2728", title: "Skincare Protocol" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 600, color: P.txS, marginBottom: 8 } }, "7-Day Rotation"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: P.txM, margin: "0 0 10px", lineHeight: 1.5 } }, "Your AM and PM skincare rotates daily. Retinol nights alternate with hydration nights to avoid irritation. The Routine tab shows exactly what to apply each day."), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#F59E0B", marginBottom: 6 } }, "\u2600\uFE0F AM Base"), ["Cleanser", "Hyaluronic Acid", "Moisturizer", "SPF 50+"].map((step, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 11, color: P.txM, padding: "2px 0" } }, i + 1, ". ", step))), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#A855F7", marginBottom: 6 } }, "\u{1F319} PM Base"), ["Oil Cleanser", "Foaming Cleanser", "Treatment (rotates)", "Night Cream"].map((step, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 11, color: P.txM, padding: "2px 0" } }, i + 1, ". ", step)))))), prof.domains.includes("money") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u{1F4B3}", title: "Credit Card Strategy" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14 } }, /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: P.txM, margin: "0 0 12px", lineHeight: 1.6 } }, "The Cards tab tracks your full credit card portfolio \u2014 signup bonus deadlines, spend optimization by category, 5/24 status, and annual fee calendars. Every purchase should be on the right card."), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#3B82F6", marginBottom: 6 } }, "\u{1F3AF} Bonus Tracking"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Countdown to min spend deadlines. Daily spend needed. Progress bars.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.gW, marginBottom: 6 } }, "\u{1F4A1} Spend Optimizer"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Best card for every category. Maximize points on every purchase.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.ok, marginBottom: 6 } }, "\u{1F4CA} 5/24 Management"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Track Chase slots. Recommended next card. Application velocity.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.warn, marginBottom: 6 } }, "\u26A0\uFE0F AF Calendar"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Annual fee alerts. 60-day warning. Evaluate retention offers."))))), cycleInfo && prof.domains.includes("body") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u{1F319}", title: "Cycle-Synced Protocol" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 0, overflow: "hidden" } }, /* @__PURE__ */ React.createElement("div", { style: { padding: "16px", borderBottom: `1px solid ${P.bd}` } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 44, height: 44, borderRadius: 14, background: `${cycleInfo.phase.color}12`, border: `1.5px solid ${cycleInfo.phase.color}33`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 } }, cycleInfo.phase.icon), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, fontWeight: 700, color: cycleInfo.phase.color } }, cycleInfo.phase.name, " Phase"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txD } }, "Day ", cycleInfo.dayInCycle, " of ", cycleInfo.cycleLen, " \xB7 ", cycleInfo.daysUntilPeriod, " days to period"))))), CYCLE_PHASES.map((ph, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { padding: "12px 16px", borderBottom: i < 3 ? `1px solid ${P.bd}22` : void 0, background: ph.id === cycleInfo.phase.id ? `${ph.color}06` : "transparent" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 4 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14 } }, ph.icon), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12, fontWeight: 700, color: ph.id === cycleInfo.phase.id ? ph.color : P.txS } }, ph.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, color: P.txD } }, "Days ", ph.days[0], "\u2013", ph.days[1]), ph.id === cycleInfo.phase.id && /* @__PURE__ */ React.createElement("span", { style: { ...s.tag, background: `${ph.color}15`, color: ph.color, fontSize: 8, padding: "2px 8px", border: `1px solid ${ph.color}22` } }, "NOW")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txD, lineHeight: 1.5, paddingLeft: 22 } }, ph.training), ph.calMod > 0 && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: ph.color, paddingLeft: 22, marginTop: 2 } }, "+", ph.calMod, " cal/day (BMR naturally elevated)")))), /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14, marginTop: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 600, color: "#EC4899", marginBottom: 6 } }, "How This Adapts Your Protocol"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 6 } }, [
+    })) : /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 20, textAlign: "center" } }, /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: P.txD, margin: "0 0 12px" } }, "No active cycles. Browse the Peptides tab to find protocols matched to your goals."))), prof.domains.includes("image") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u2728", title: "Skincare Protocol" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 600, color: P.txS, marginBottom: 8 } }, "7-Day Rotation"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: P.txM, margin: "0 0 10px", lineHeight: 1.5 } }, "Your AM and PM skincare rotates daily. Retinol nights alternate with hydration nights to avoid irritation. The Routine tab shows exactly what to apply each day."), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#F59E0B", marginBottom: 6 } }, "\u2600\uFE0F AM Base"), ["Cleanser", "Hyaluronic Acid", "Moisturizer", "SPF 50+"].map((step, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 11, color: P.txM, padding: "2px 0" } }, i + 1, ". ", step))), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#A855F7", marginBottom: 6 } }, "\u{1F319} PM Base"), ["Oil Cleanser", "Foaming Cleanser", "Treatment (rotates)", "Night Cream"].map((step, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 11, color: P.txM, padding: "2px 0" } }, i + 1, ". ", step)))))), /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14, marginBottom: 12 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em", color: P.txD, marginBottom: 10 } }, "Equipment Access"), [["gym","Full Gym","Barbells, cables, machines"],["home","Home / Dumbbells","Dumbbells or resistance bands"],["bodyweight","No Equipment","Calisthenics only"]].map(function(row) { var opt=row[0],label=row[1],desc=row[2]; var sel=prof.equipment===opt; return /* @__PURE__ */ React.createElement("button", { key: opt, onClick: function() { setProf(function(x) { return Object.assign({},x,{equipment:opt}); }); ss("prof", Object.assign({},prof,{equipment:opt})); }, style: { display: "block", width: "100%", textAlign: "left", padding: "10px 12px", borderRadius: 8, border: "1px solid " + (sel ? P.ok+"44" : P.bd), background: sel ? "rgba(52,211,153,0.05)" : "transparent", cursor: "pointer", marginBottom: 6, fontFamily: FN } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: sel ? 700 : 500, color: sel ? P.ok : P.txS } }, label), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: P.txD, marginTop: 1 } }, desc)), sel && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.ok, fontWeight: 700 } }, "✓ Selected"))); })), prof.domains.includes("money") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u{1F4B3}", title: "Credit Card Strategy" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14 } }, /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: P.txM, margin: "0 0 12px", lineHeight: 1.6 } }, "The Cards tab tracks your full credit card portfolio \u2014 signup bonus deadlines, spend optimization by category, 5/24 status, and annual fee calendars. Every purchase should be on the right card."), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#3B82F6", marginBottom: 6 } }, "\u{1F3AF} Bonus Tracking"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Countdown to min spend deadlines. Daily spend needed. Progress bars.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.gW, marginBottom: 6 } }, "\u{1F4A1} Spend Optimizer"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Best card for every category. Maximize points on every purchase.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.ok, marginBottom: 6 } }, "\u{1F4CA} 5/24 Management"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Track Chase slots. Recommended next card. Application velocity.")), /* @__PURE__ */ React.createElement("div", { style: { padding: 10, borderRadius: 8, background: P.bgH } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.warn, marginBottom: 6 } }, "\u26A0\uFE0F AF Calendar"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txM, lineHeight: 1.5 } }, "Annual fee alerts. 60-day warning. Evaluate retention offers."))))), cycleInfo && prof.domains.includes("body") && /* @__PURE__ */ React.createElement(Sec, { icon: "\u{1F319}", title: "Cycle-Synced Protocol" }, /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 0, overflow: "hidden" } }, /* @__PURE__ */ React.createElement("div", { style: { padding: "16px", borderBottom: `1px solid ${P.bd}` } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 44, height: 44, borderRadius: 14, background: `${cycleInfo.phase.color}12`, border: `1.5px solid ${cycleInfo.phase.color}33`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 } }, cycleInfo.phase.icon), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, fontWeight: 700, color: cycleInfo.phase.color } }, cycleInfo.phase.name, " Phase"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txD } }, "Day ", cycleInfo.dayInCycle, " of ", cycleInfo.cycleLen, " \xB7 ", cycleInfo.daysUntilPeriod, " days to period"))))), CYCLE_PHASES.map((ph, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { padding: "12px 16px", borderBottom: i < 3 ? `1px solid ${P.bd}22` : void 0, background: ph.id === cycleInfo.phase.id ? `${ph.color}06` : "transparent" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 4 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14 } }, ph.icon), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12, fontWeight: 700, color: ph.id === cycleInfo.phase.id ? ph.color : P.txS } }, ph.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, color: P.txD } }, "Days ", ph.days[0], "\u2013", ph.days[1]), ph.id === cycleInfo.phase.id && /* @__PURE__ */ React.createElement("span", { style: { ...s.tag, background: `${ph.color}15`, color: ph.color, fontSize: 8, padding: "2px 8px", border: `1px solid ${ph.color}22` } }, "NOW")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: P.txD, lineHeight: 1.5, paddingLeft: 22 } }, ph.training), ph.calMod > 0 && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: ph.color, paddingLeft: 22, marginTop: 2 } }, "+", ph.calMod, " cal/day (BMR naturally elevated)")))), /* @__PURE__ */ React.createElement("div", { style: { ...s.card, padding: 14, marginTop: 8 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 600, color: "#EC4899", marginBottom: 6 } }, "How This Adapts Your Protocol"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 6 } }, [
       "Training intensity auto-adjusts by phase \u2014 harder follicular, easier menstrual",
       "Calorie target increases +150 cal during luteal phase when BMR rises",
       "Weight log filters out water retention so the adaptive engine doesn't overreact",
@@ -6310,215 +6352,248 @@ ${prof.name || "[Your Name]"}`
   };
 
   // ─── WORKOUT ENGINE ─────────────────────────────────────────────────────────
+
+  // ─── WORKOUT ENGINE v2 ────────────────────────────────────────────────────────
+  // Source of truth: WORKOUTS[activeGoal][dayIdx] — same as Routine
+  // Logs keyed: goal|weekNum|dayIdx|exerciseName|setIndex
   const WorkoutV = () => {
     const CE = React.createElement;
-    const ready = typeof PROGRAMS !== "undefined" && typeof EXERCISES !== "undefined";
-    if (!ready) return CE("div", {style:{...s.card,padding:32,textAlign:"center"}},
-      CE("div",{style:{fontSize:24,marginBottom:12}},"\uD83D\uDCAA"),
-      CE("div",{style:{fontSize:14,color:P.txS,fontWeight:600}},"Loading workout engine..."),
-      CE("div",{style:{fontSize:11,color:P.txD,marginTop:6}},"Upload /public/lib/exercises.js and programs.js then redeploy.")
-    );
-    const prog = PROGRAMS[wkProgramId];
-    if (!prog) return CE("div",null,"Program not found.");
-    const totalWeeks = prog.durationWeeks;
-    const phase = prog.phases.find(ph => ph.weeks.includes(wkWeek)) || prog.phases[0];
-    const dayConfig = prog.days[wkDay];
+    const todayDayIdx = (new Date()).getDay();
+    const currentGoal = prof.primary || (prof.goals && prof.goals[0]) || "Wellness";
+    const goalWorkouts = WORKOUTS[currentGoal] || WORKOUTS["Wellness"];
+    const dayWorkout = goalWorkouts[wkViewDay];
+    const isRestDay = !dayWorkout || dayWorkout.dur === 0;
 
-    // log helpers
-    const lk = (exId,si) => wkProgramId+"|"+wkWeek+"|"+wkDay+"|"+exId+"|"+si;
-    const gl = (exId,si) => wkLogs[lk(exId,si)] || {wt:"",r:"",c:false};
-    const gpl = (exId,si) => { if(wkWeek<=1) return null; const k=wkProgramId+"|"+(wkWeek-1)+"|"+wkDay+"|"+exId+"|"+si; return wkLogs[k]||null; };
-    const ul = (exId,si,field,val) => {
-      const k=lk(exId,si);
-      const up={...wkLogs,[k]:{...gl(exId,si),[field]:val}};
-      setWkLogs(up); ss("wkLogs",up);
-      if(field==="wt"&&val){const n=parseFloat(val);if(!isNaN(n)){const pk=wkProgramId+"|"+exId;if(n>(wkPRs[pk]||0)){const np={...wkPRs,[pk]:n};setWkPRs(np);ss("wkPRs",np);}}}
+    // log key: goal|week|dayIdx|exerciseName|setIndex
+    const lk = (exName, si) => currentGoal + "|" + wkWeek + "|" + wkViewDay + "|" + exName + "|" + si;
+    const gl = (exName, si) => wkLogs[lk(exName, si)] || { wt: "", r: "", c: false };
+    const gpl = (exName, si) => {
+      if (wkWeek <= 1) return null;
+      const k = currentGoal + "|" + (wkWeek - 1) + "|" + wkViewDay + "|" + exName + "|" + si;
+      return wkLogs[k] || null;
     };
-    const suggest = (exSlot) => {
-      if(wkWeek<=1) return null;
-      const sets=[];
-      for(let i=0;i<exSlot.sets;i++){const p=gpl(exSlot.exId,i);if(p&&p.c&&p.wt)sets.push(p);}
-      if(!sets.length) return null;
-      const maxWt=Math.max(...sets.map(s=>parseFloat(s.wt)||0));
-      const avgR=sets.reduce((a,s)=>a+(parseFloat(s.r)||0),0)/sets.length;
-      const tr=parseFloat(exSlot.targetReps)||10;
-      if(sets.length>=exSlot.sets&&avgR>=tr) return {wt:maxWt+(exSlot.increment||5),msg:"+"+(exSlot.increment||5)+"lbs \u2014 W"+(wkWeek-1)+" complete \u2713"};
-      return {wt:maxWt,msg:"Repeat "+maxWt+"lbs \u2014 solidify first"};
+    const ul = (exName, si, field, val) => {
+      const k = lk(exName, si);
+      const up = { ...wkLogs, [k]: { ...gl(exName, si), [field]: val } };
+      setWkLogs(up); ss("wkLogs", up);
+      if (field === "wt" && val) {
+        const n = parseFloat(val);
+        if (!isNaN(n)) {
+          const pk = currentGoal + "|" + exName;
+          if (n > (wkPRs[pk] || 0)) { const np = { ...wkPRs, [pk]: n }; setWkPRs(np); ss("wkPRs", np); }
+        }
+      }
     };
-    const isDone = (dk) => { const dc=prog.days[dk]; if(!dc) return false; return dc.exercises.some(ex=>{for(let i=0;i<ex.sets;i++){const k=wkProgramId+"|"+wkWeek+"|"+dk+"|"+ex.exId+"|"+i;if(wkLogs[k]&&wkLogs[k].c)return true;}return false;}); };
+    const suggest = (ex) => {
+      if (wkWeek <= 1) return null;
+      const sets = [];
+      for (let i = 0; i < ex.sets; i++) { const p = gpl(ex.name, i); if (p && p.c && p.wt) sets.push(p); }
+      if (!sets.length) return null;
+      const maxWt = Math.max(...sets.map(s => parseFloat(s.wt) || 0));
+      const avgR = sets.reduce((a, s) => a + (parseFloat(s.r) || 0), 0) / sets.length;
+      const tr = parseFloat(ex.reps) || 10;
+      const compounds = ["Bench", "Squat", "Deadlift", "OHP", "Row", "Hip Thrust", "Press", "Pull"];
+      const inc = compounds.some(w => ex.name.includes(w)) ? 5 : 2.5;
+      if (sets.length >= ex.sets && avgR >= tr) return { wt: maxWt + inc, msg: "+" + inc + "lbs \u2014 W" + (wkWeek - 1) + " complete \u2713" };
+      return { wt: maxWt, msg: "Repeat " + maxWt + "lbs \u2014 solidify first" };
+    };
+
+    // check how many sets done for a day
+    const daySetsDone = (dIdx) => {
+      const dw = goalWorkouts[dIdx];
+      if (!dw || !dw.exercises) return { done: 0, total: 0 };
+      let done = 0, total = 0;
+      dw.exercises.forEach(ex => {
+        for (let i = 0; i < ex.sets; i++) {
+          total++;
+          const k = currentGoal + "|" + wkWeek + "|" + dIdx + "|" + ex.name + "|" + i;
+          if (wkLogs[k] && wkLogs[k].c) done++;
+        }
+      });
+      return { done, total };
+    };
 
     // styles
-    const tc = (t) => t==="compound"?"#F87171":t==="isolation"?"#60A5FA":"#C084FC";
-    const tb = (t) => t==="compound"?"rgba(248,113,113,0.08)":t==="isolation"?"rgba(96,165,250,0.08)":"rgba(192,132,252,0.08)";
-    const inpS = {background:P.bgH,border:"1px solid "+P.bd,borderRadius:5,padding:"6px 4px",color:P.tx,fontFamily:FN,fontSize:13,fontWeight:600,textAlign:"center",width:"100%",outline:"none"};
-    const sHdr = {display:"grid",gridTemplateColumns:"28px 1fr 80px 64px 30px",gap:4,padding:"6px 0 4px",fontSize:9,fontWeight:700,letterSpacing:"0.15em",textTransform:"uppercase",color:P.txD,borderBottom:"1px solid "+P.bd};
-    const sRow = (done) => ({display:"grid",gridTemplateColumns:"28px 1fr 80px 64px 30px",gap:4,alignItems:"center",padding:"5px 0",borderBottom:"1px solid "+P.bd+"44",background:done?"rgba(52,211,153,0.03)":"transparent"});
-    const SL = (lbl) => CE("div",{style:{display:"flex",alignItems:"center",gap:10,margin:"14px 0 8px"}},
-      CE("div",{style:{fontSize:9,fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",color:P.txD,whiteSpace:"nowrap"}},lbl),
-      CE("div",{style:{flex:1,height:1,background:P.bd}})
+    const tc = (cat) => cat === "compound" ? "#F87171" : cat === "isolation" ? "#60A5FA" : "#C084FC";
+    const tb = (cat) => cat === "compound" ? "rgba(248,113,113,0.08)" : cat === "isolation" ? "rgba(96,165,250,0.08)" : "rgba(192,132,252,0.08)";
+    const inpS = { background: P.bgH, border: "1px solid " + P.bd, borderRadius: 5, padding: "6px 4px", color: P.tx, fontFamily: FN, fontSize: 13, fontWeight: 600, textAlign: "center", width: "100%", outline: "none" };
+    const sHdr = { display: "grid", gridTemplateColumns: "28px 1fr 80px 64px 30px", gap: 4, padding: "6px 0 4px", fontSize: 9, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: P.txD, borderBottom: "1px solid " + P.bd };
+    const sRow = (done) => ({ display: "grid", gridTemplateColumns: "28px 1fr 80px 64px 30px", gap: 4, alignItems: "center", padding: "5px 0", borderBottom: "1px solid " + P.bd + "44", background: done ? "rgba(52,211,153,0.03)" : "transparent" });
+    const SL = (lbl) => CE("div", { style: { display: "flex", alignItems: "center", gap: 10, margin: "14px 0 8px" } },
+      CE("div", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: P.txD, whiteSpace: "nowrap" } }, lbl),
+      CE("div", { style: { flex: 1, height: 1, background: P.bd } })
     );
 
+    const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const DAY_COLORS = ["#60A5FA", "#F87171", "#60A5FA", "#4ADE80", "#F87171", "#60A5FA", "#4ADE80"];
+
     // day tab buttons
-    const dayBtns = Object.entries(prog.schedule).filter(([,v])=>v!=="rest").map(([,dk]) => {
-      const dc=prog.days[dk]; const active=wkDay===dk; const done=isDone(dk);
-      return CE("button",{key:dk,onClick:()=>{setWkDay(dk);ss("wkDay",dk);},style:{flexShrink:0,padding:"7px 12px",borderRadius:8,border:"1px solid "+(active?dc.color+"66":P.bd),background:active?dc.color+"15":P.bgH,color:active?dc.color:P.txM,fontFamily:FN,fontSize:11,fontWeight:active?700:500,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,position:"relative"}},
-        CE("span",{style:{fontSize:10,fontWeight:700}},dc.label),
-        CE("span",{style:{fontSize:9,color:active?dc.color+"aa":P.txD}},dc.name.slice(0,3)),
-        done ? CE("div",{style:{position:"absolute",top:4,right:4,width:6,height:6,borderRadius:3,background:P.ok}}) : null
+    const dayBtns = DAY_NAMES.map((name, dIdx) => {
+      const dw = goalWorkouts[dIdx];
+      const isRest = !dw || dw.dur === 0;
+      const active = wkViewDay === dIdx;
+      const isToday = dIdx === todayDayIdx;
+      const { done, total } = daySetsDone(dIdx);
+      const allDone = total > 0 && done === total;
+      const color = DAY_COLORS[dIdx];
+      return CE("button", {
+        key: dIdx,
+        onClick: () => setWkViewDay(dIdx),
+        style: { flexShrink: 0, padding: "7px 10px", borderRadius: 8, border: "1px solid " + (active ? color + "66" : P.bd), background: active ? color + "15" : P.bgH, color: active ? color : P.txM, fontFamily: FN, fontSize: 11, fontWeight: active ? 700 : 500, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, position: "relative", minWidth: 44 }
+      },
+        CE("span", { style: { fontSize: 10, fontWeight: 700 } }, name),
+        CE("span", { style: { fontSize: 8, color: active ? color + "aa" : P.txD, marginTop: 1 } }, isRest ? "Rest" : isToday ? "Today" : (dw ? dw.d.split(" ")[0] : "")),
+        allDone ? CE("div", { style: { position: "absolute", top: 3, right: 3, width: 6, height: 6, borderRadius: 3, background: P.ok } }) : null,
+        !allDone && total > 0 && done > 0 ? CE("div", { style: { position: "absolute", top: 3, right: 3, width: 6, height: 6, borderRadius: 3, background: "#F59E0B" } }) : null
       );
     });
 
     // instruction modal
-    const modal = wkInstructions && CE("div",{onClick:()=>setWkInstructions(null),style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:200,overflowY:"auto",padding:20}},
-      CE("div",{onClick:e=>e.stopPropagation(),style:{...s.card,maxWidth:560,margin:"0 auto",padding:20}},
-        CE("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}},
-          CE("div",{style:{fontSize:15,fontWeight:700,color:P.txS}},wkInstructions.name),
-          CE("button",{onClick:()=>setWkInstructions(null),style:{background:"none",border:"none",color:P.txD,cursor:"pointer",fontSize:20,fontFamily:FN}},"\u00d7")
+    const modal = wkInstructions && CE("div", { onClick: () => setWkInstructions(null), style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, overflowY: "auto", padding: 20 } },
+      CE("div", { onClick: e => e.stopPropagation(), style: { ...s.card, maxWidth: 560, margin: "0 auto", padding: 20 } },
+        CE("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
+          CE("div", { style: { fontSize: 15, fontWeight: 700, color: P.txS } }, wkInstructions.name),
+          CE("button", { onClick: () => setWkInstructions(null), style: { background: "none", border: "none", color: P.txD, cursor: "pointer", fontSize: 20, fontFamily: FN } }, "\u00d7")
         ),
         wkInstructions.instr && wkInstructions.instr.stub
-          ? CE("p",{style:{fontSize:13,color:P.txM,lineHeight:1.7,margin:0}},wkInstructions.instr.stub)
-          : CE("div",null,
-              wkInstructions.instr && wkInstructions.instr.equipment && CE("div",{style:{marginBottom:10}},
-                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"EQUIPMENT"),
-                CE("p",{style:{fontSize:12,color:P.txM,lineHeight:1.6,margin:0}},wkInstructions.instr.equipment)
-              ),
-              wkInstructions.instr && wkInstructions.instr.setup && CE("div",{style:{marginBottom:10}},
-                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"SETUP"),
-                CE("p",{style:{fontSize:12,color:P.txM,lineHeight:1.6,margin:0}},wkInstructions.instr.setup)
-              ),
-              wkInstructions.instr && wkInstructions.instr.execution && wkInstructions.instr.execution.length > 0 && CE("div",{style:{marginBottom:10}},
-                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.gW,marginBottom:5}},"EXECUTION"),
-                wkInstructions.instr.execution.map((st,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:5}},
-                  CE("span",{style:{fontSize:10,fontWeight:700,color:P.ok,flexShrink:0}},(i+1)+"."),
-                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},st)
-                ))
-              ),
-              wkInstructions.instr && wkInstructions.instr.cues && wkInstructions.instr.cues.length > 0 && CE("div",{style:{marginBottom:10}},
-                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:"#F59E0B",marginBottom:5}},"COACHING CUES"),
-                wkInstructions.instr.cues.map((cu,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
-                  CE("span",{style:{color:"#F59E0B",flexShrink:0}},"\u25b8"),
-                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},cu)
-                ))
-              ),
-              wkInstructions.instr && wkInstructions.instr.mistakes && wkInstructions.instr.mistakes.length > 0 && CE("div",null,
-                CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:P.err,marginBottom:5}},"COMMON MISTAKES"),
-                wkInstructions.instr.mistakes.map((m,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
-                  CE("span",{style:{color:P.err,flexShrink:0}},"\u00d7"),
-                  CE("span",{style:{fontSize:12,color:P.txM,lineHeight:1.5}},m)
-                ))
-              )
+          ? CE("p", { style: { fontSize: 13, color: P.txM, lineHeight: 1.7, margin: 0 } }, wkInstructions.instr.stub)
+          : CE("div", null,
+            wkInstructions.instr && wkInstructions.instr.equipment && CE("div", { style: { marginBottom: 10 } }, CE("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.gW, marginBottom: 5 } }, "EQUIPMENT"), CE("p", { style: { fontSize: 12, color: P.txM, lineHeight: 1.6, margin: 0 } }, wkInstructions.instr.equipment)),
+            wkInstructions.instr && wkInstructions.instr.setup && CE("div", { style: { marginBottom: 10 } }, CE("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.gW, marginBottom: 5 } }, "SETUP"), CE("p", { style: { fontSize: 12, color: P.txM, lineHeight: 1.6, margin: 0 } }, wkInstructions.instr.setup)),
+            wkInstructions.instr && wkInstructions.instr.execution && wkInstructions.instr.execution.length > 0 && CE("div", { style: { marginBottom: 10 } },
+              CE("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.gW, marginBottom: 5 } }, "EXECUTION"),
+              wkInstructions.instr.execution.map((st, i) => CE("div", { key: i, style: { display: "flex", gap: 8, marginBottom: 5 } }, CE("span", { style: { fontSize: 10, fontWeight: 700, color: P.ok, flexShrink: 0 } }, (i + 1) + "."), CE("span", { style: { fontSize: 12, color: P.txM, lineHeight: 1.5 } }, st)))
+            ),
+            wkInstructions.instr && wkInstructions.instr.cues && wkInstructions.instr.cues.length > 0 && CE("div", { style: { marginBottom: 10 } },
+              CE("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#F59E0B", marginBottom: 5 } }, "COACHING CUES"),
+              wkInstructions.instr.cues.map((cu, i) => CE("div", { key: i, style: { display: "flex", gap: 8, marginBottom: 4 } }, CE("span", { style: { color: "#F59E0B", flexShrink: 0 } }, "\u25b8"), CE("span", { style: { fontSize: 12, color: P.txM, lineHeight: 1.5 } }, cu)))
+            ),
+            wkInstructions.instr && wkInstructions.instr.mistakes && wkInstructions.instr.mistakes.length > 0 && CE("div", null,
+              CE("div", { style: { fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: P.err, marginBottom: 5 } }, "COMMON MISTAKES"),
+              wkInstructions.instr.mistakes.map((m, i) => CE("div", { key: i, style: { display: "flex", gap: 8, marginBottom: 4 } }, CE("span", { style: { color: P.err, flexShrink: 0 } }, "\u00d7"), CE("span", { style: { fontSize: 12, color: P.txM, lineHeight: 1.5 } }, m)))
             )
+          )
       )
     );
 
-    if (!dayConfig) return CE("div",null,
-      CE(H,{t:"Train",sub:prog.name}),
-      CE("div",{style:{display:"flex",gap:6,marginBottom:16,overflowX:"auto"}},dayBtns),
-      CE("div",{style:{...s.card,padding:32,textAlign:"center"}},
-        CE("div",{style:{fontSize:32,marginBottom:8}},"\uD83D\uDE34"),
-        CE("div",{style:{fontSize:14,fontWeight:600,color:P.txS}},"Rest Day"),
-        CE("div",{style:{fontSize:12,color:P.txD,marginTop:4}},"Recovery is part of the program.")
+    // rest day
+    if (isRestDay) return CE("div", null,
+      modal,
+      CE(H, { t: "Train", sub: currentGoal + " \u00b7 Week " + wkWeek }),
+      CE("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 12, ...s.card, padding: "10px 14px" } },
+        CE("button", { onClick: () => { const w = Math.max(1, wkWeek - 1); setWkWeek(w); ss("wkWeek", w); }, style: { width: 32, height: 32, background: P.bgH, border: "1px solid " + P.bd, color: P.txM, borderRadius: 6, cursor: "pointer", fontSize: 16, fontFamily: FN } }, "\u2039"),
+        CE("div", { style: { flex: 1, textAlign: "center" } }, CE("div", { style: { fontSize: 20, fontWeight: 800, color: P.txS } }, "Week " + wkWeek), CE("div", { style: { fontSize: 10, color: P.txD, marginTop: 2 } }, "of 16 weeks")),
+        CE("button", { onClick: () => { const w = Math.min(16, wkWeek + 1); setWkWeek(w); ss("wkWeek", w); }, style: { width: 32, height: 32, background: P.bgH, border: "1px solid " + P.bd, color: P.txM, borderRadius: 6, cursor: "pointer", fontSize: 16, fontFamily: FN } }, "\u203a")
+      ),
+      CE("div", { style: { display: "flex", gap: 6, marginBottom: 16, overflowX: "auto", paddingBottom: 4 } }, dayBtns),
+      CE("div", { style: { ...s.card, padding: 32, textAlign: "center" } },
+        CE("div", { style: { fontSize: 32, marginBottom: 8 } }, "\uD83D\uDE34"),
+        CE("div", { style: { fontSize: 14, fontWeight: 600, color: P.txS } }, "Rest Day"),
+        CE("div", { style: { fontSize: 12, color: P.txD, marginTop: 4 } }, "Recovery is part of the program. Sleep, hydrate, eat.")
       )
     );
 
     // exercise cards
-    const exCards = dayConfig.exercises.map((exSlot,exIdx) => {
-      const exData = EXERCISES[exSlot.exId];
-      const name = exData ? exData.name : exSlot.exId;
-      const muscles = exData ? exData.muscles : "";
-      const category = exData ? exData.category : "compound";
-      const sug = suggest(exSlot);
-      const prKey = wkProgramId+"|"+exSlot.exId;
+    const { done: totalDone, total: totalSets } = daySetsDone(wkViewDay);
+    const sessionComplete = totalSets > 0 && totalDone === totalSets;
+    const color = DAY_COLORS[wkViewDay];
+
+    const exCards = dayWorkout.exercises.map((ex, exIdx) => {
+      // look up full instructions from EXERCISES catalog by name match
+      let exData = null;
+      if (typeof EXERCISES !== "undefined") {
+        exData = Object.values(EXERCISES).find(e => e.name === ex.name);
+      }
+      const sug = suggest(ex);
+      const prKey = currentGoal + "|" + ex.name;
       const currentPR = wkPRs[prKey] || 0;
-      const logs = Array.from({length:exSlot.sets},(_,i)=>gl(exSlot.exId,i));
-      const done = logs.filter(l=>l.c).length;
-      const allDone = done === exSlot.sets;
-      return CE("div",{key:exSlot.exId+exIdx,style:{...s.card,marginBottom:8,overflow:"hidden",borderLeft:exSlot.superset?"3px solid rgba(192,132,252,0.5)":undefined}},
-        CE("div",{style:{padding:"12px 14px 10px"}},
-          CE("div",{style:{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:4}},
-            CE("div",{style:{flex:1}},
-              CE("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:3}},
-                CE("span",{style:{fontSize:14,fontWeight:700,color:allDone?P.ok:P.txS}},name),
-                CE("span",{style:{padding:"2px 6px",borderRadius:3,fontSize:8,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",background:tb(category),color:tc(category),flexShrink:0}},category)
+      const logs = Array.from({ length: ex.sets }, (_, i) => gl(ex.name, i));
+      const setsDone = logs.filter(l => l.c).length;
+      const allDone = setsDone === ex.sets;
+
+      return CE("div", { key: ex.name + exIdx, style: { ...s.card, marginBottom: 8, overflow: "hidden" } },
+        CE("div", { style: { padding: "12px 14px 10px" } },
+          CE("div", { style: { display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 4 } },
+            CE("div", { style: { flex: 1 } },
+              CE("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 3 } },
+                CE("span", { style: { fontSize: 14, fontWeight: 700, color: allDone ? P.ok : P.txS } }, ex.name)
               ),
-              muscles ? CE("div",{style:{fontSize:10,color:P.txD}},muscles) : null,
-              exSlot.note ? CE("div",{style:{fontSize:11,color:P.txM,marginTop:4,lineHeight:1.5,fontStyle:"italic"}},exSlot.note) : null,
-              exSlot.superset ? CE("div",{style:{marginTop:5,display:"inline-flex",alignItems:"center",gap:3,padding:"2px 7px",background:"rgba(192,132,252,0.08)",border:"1px solid rgba(192,132,252,0.2)",borderRadius:3,fontSize:8,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#C084FC"}},"Superset "+exSlot.superset) : null
+              exData ? CE("div", { style: { fontSize: 10, color: P.txD } }, exData.muscles) : null,
+              ex.note ? CE("div", { style: { fontSize: 11, color: P.txM, marginTop: 4, lineHeight: 1.5, fontStyle: "italic" } }, ex.note) : null
             ),
-            CE("div",{style:{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}},
-              CE("div",{style:{fontSize:10,fontWeight:700,color:allDone?P.ok:P.txD}},done+"/"+exSlot.sets+" sets"),
-              currentPR > 0 ? CE("div",{style:{fontSize:9,color:"#F59E0B",fontWeight:700}},"PR: "+currentPR+"lb") : null,
-              exData && exData.instructions ? CE("button",{onClick:()=>setWkInstructions({name:name,instr:exData.instructions}),style:{fontSize:10,padding:"3px 8px",borderRadius:4,border:"1px solid "+P.bd,background:P.bgH,color:P.txD,cursor:"pointer",fontFamily:FN}},"How-To") : null
+            CE("div", { style: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 5, flexShrink: 0 } },
+              CE("div", { style: { fontSize: 10, fontWeight: 700, color: allDone ? P.ok : P.txD } }, setsDone + "/" + ex.sets + " sets"),
+              currentPR > 0 ? CE("div", { style: { fontSize: 9, color: "#F59E0B", fontWeight: 700 } }, "PR: " + currentPR + "lb") : null,
+              exData && exData.instructions ? CE("button", { onClick: () => setWkInstructions({ name: ex.name, instr: exData.instructions }), style: { fontSize: 10, padding: "3px 8px", borderRadius: 4, border: "1px solid " + P.bd, background: P.bgH, color: P.txD, cursor: "pointer", fontFamily: FN } }, "How-To") : null
             )
           ),
-          sug ? CE("div",{style:{marginTop:6,padding:"5px 10px",borderRadius:6,background:"rgba(74,222,128,0.06)",border:"1px solid rgba(74,222,128,0.15)",fontSize:11,color:P.ok}},
-            "\uD83D\uDCA1 Suggested: ",CE("strong",null,sug.wt+" lbs")," \u2014 ",sug.msg
+          sug ? CE("div", { style: { marginTop: 6, padding: "5px 10px", borderRadius: 6, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.15)", fontSize: 11, color: P.ok } },
+            "\uD83D\uDCA1 Suggested: ", CE("strong", null, sug.wt + " lbs"), " \u2014 ", sug.msg
           ) : null
         ),
-        CE("div",{style:{padding:"0 12px 10px"}},
-          CE("div",{style:sHdr},
-            CE("span",{style:{textAlign:"center"}},"SET"),
-            CE("span",null,"LAST WK"),
-            CE("span",{style:{textAlign:"center"}},"WEIGHT"),
-            CE("span",{style:{textAlign:"center"}},"REPS"),
-            CE("span",{style:{textAlign:"center"}},"\u2713")
+        CE("div", { style: { padding: "0 12px 10px" } },
+          CE("div", { style: sHdr },
+            CE("span", { style: { textAlign: "center" } }, "SET"),
+            CE("span", null, "LAST WK"),
+            CE("span", { style: { textAlign: "center" } }, "WEIGHT"),
+            CE("span", { style: { textAlign: "center" } }, "REPS"),
+            CE("span", { style: { textAlign: "center" } }, "\u2713")
           ),
-          Array.from({length:exSlot.sets},(_,si) => {
-            const log=gl(exSlot.exId,si); const prev=gpl(exSlot.exId,si);
-            return CE("div",{key:si,style:sRow(log.c)},
-              CE("span",{style:{fontSize:12,fontWeight:700,color:P.txD,textAlign:"center"}},(si+1)),
-              CE("span",{style:{fontSize:10,color:P.txD,textAlign:"center",lineHeight:1.4}},
-                prev && prev.c ? (prev.wt ? prev.wt+"lb" : "\u2014")+(prev.r ? " / "+prev.r+"r" : "") : "\u2014"
+          Array.from({ length: ex.sets }, (_, si) => {
+            const log = gl(ex.name, si);
+            const prev = gpl(ex.name, si);
+            return CE("div", { key: si, style: sRow(log.c) },
+              CE("span", { style: { fontSize: 12, fontWeight: 700, color: P.txD, textAlign: "center" } }, (si + 1)),
+              CE("span", { style: { fontSize: 10, color: P.txD, textAlign: "center", lineHeight: 1.4 } },
+                prev && prev.c ? (prev.wt ? prev.wt + "lb" : "\u2014") + (prev.r ? " / " + prev.r + "r" : "") : "\u2014"
               ),
-              CE("input",{type:"number",inputMode:"decimal",placeholder:sug?String(sug.wt):"lbs",value:log.wt,onChange:e=>ul(exSlot.exId,si,"wt",e.target.value),style:inpS}),
-              CE("input",{type:"text",inputMode:"numeric",placeholder:exSlot.targetReps,value:log.r,onChange:e=>ul(exSlot.exId,si,"r",e.target.value),style:inpS}),
-              CE("button",{onClick:()=>ul(exSlot.exId,si,"c",!log.c),style:{width:26,height:26,borderRadius:"50%",border:"2px solid "+(log.c?P.ok:P.bd),background:log.c?P.ok:"transparent",color:log.c?"#000":P.txD,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,margin:"0 auto",fontWeight:800,fontFamily:FN}},log.c?"\u2713":"")
+              CE("input", { type: "number", inputMode: "decimal", placeholder: sug ? String(sug.wt) : "lbs", value: log.wt, onChange: e => ul(ex.name, si, "wt", e.target.value), style: inpS }),
+              CE("input", { type: "text", inputMode: "numeric", placeholder: ex.reps, value: log.r, onChange: e => ul(ex.name, si, "r", e.target.value), style: inpS }),
+              CE("button", { onClick: () => ul(ex.name, si, "c", !log.c), style: { width: 26, height: 26, borderRadius: "50%", border: "2px solid " + (log.c ? P.ok : P.bd), background: log.c ? P.ok : "transparent", color: log.c ? "#000" : P.txD, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, margin: "0 auto", fontWeight: 800, fontFamily: FN } }, log.c ? "\u2713" : "")
             );
           })
         )
       );
     });
 
-    return CE("div",null,
+    return CE("div", null,
       modal,
-      CE(H,{t:"Train",sub:prog.name+" \u00b7 Week "+wkWeek+" of "+totalWeeks}),
-      CE("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:12,...s.card,padding:"10px 14px"}},
-        CE("button",{onClick:()=>{const w=Math.max(1,wkWeek-1);setWkWeek(w);ss("wkWeek",w);},style:{width:32,height:32,background:P.bgH,border:"1px solid "+P.bd,color:P.txM,borderRadius:6,cursor:"pointer",fontSize:16,fontFamily:FN}},"\u2039"),
-        CE("div",{style:{flex:1,textAlign:"center"}},
-          CE("div",{style:{fontSize:22,fontWeight:800,color:P.txS,lineHeight:1}},"Week "+wkWeek),
-          CE("div",{style:{fontSize:10,color:P.txD,marginTop:2,letterSpacing:"0.08em"}},"of "+totalWeeks+" weeks")
+      CE(H, { t: "Train", sub: currentGoal + " \u00b7 Week " + wkWeek }),
+      CE("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 12, ...s.card, padding: "10px 14px" } },
+        CE("button", { onClick: () => { const w = Math.max(1, wkWeek - 1); setWkWeek(w); ss("wkWeek", w); }, style: { width: 32, height: 32, background: P.bgH, border: "1px solid " + P.bd, color: P.txM, borderRadius: 6, cursor: "pointer", fontSize: 16, fontFamily: FN } }, "\u2039"),
+        CE("div", { style: { flex: 1, textAlign: "center" } },
+          CE("div", { style: { fontSize: 20, fontWeight: 800, color: P.txS } }, "Week " + wkWeek),
+          CE("div", { style: { fontSize: 10, color: P.txD, marginTop: 2 } }, "of 16 weeks \u00b7 " + currentGoal)
         ),
-        CE("button",{onClick:()=>{const w=Math.min(totalWeeks,wkWeek+1);setWkWeek(w);ss("wkWeek",w);},style:{width:32,height:32,background:P.bgH,border:"1px solid "+P.bd,color:P.txM,borderRadius:6,cursor:"pointer",fontSize:16,fontFamily:FN}},"\u203a")
+        CE("button", { onClick: () => { const w = Math.min(16, wkWeek + 1); setWkWeek(w); ss("wkWeek", w); }, style: { width: 32, height: 32, background: P.bgH, border: "1px solid " + P.bd, color: P.txM, borderRadius: 6, cursor: "pointer", fontSize: 16, fontFamily: FN } }, "\u203a")
       ),
-      CE("div",{style:{padding:"8px 14px",borderRadius:8,background:phase.color+"15",border:"1px solid "+phase.color+"33",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}},
-        CE("div",null,
-          CE("span",{style:{fontSize:12,fontWeight:700,color:phase.color}},phase.name+" Phase"),
-          CE("span",{style:{fontSize:10,color:P.txD,marginLeft:8}},phase.rpe)
-        ),
-        CE("span",{style:{fontSize:10,color:P.txD,fontStyle:"italic",maxWidth:180,textAlign:"right"}},phase.note)
-      ),
-      CE("div",{style:{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}},dayBtns),
-      CE("div",{style:{fontSize:13,fontWeight:700,color:dayConfig.color,marginBottom:10}},dayConfig.label+" \u2014 "+dayConfig.muscles),
-      dayConfig.warmup && dayConfig.warmup.length > 0 ? CE("div",null,
+      sessionComplete ? CE("div", { style: { padding: "8px 14px", borderRadius: 8, background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", marginBottom: 12, display: "flex", alignItems: "center", gap: 10 } },
+        CE("span", { style: { fontSize: 16 } }, "\uD83C\uDFC6"),
+        CE("span", { style: { fontSize: 13, fontWeight: 700, color: P.ok } }, "Session complete! " + totalDone + "/" + totalSets + " sets logged.")
+      ) : totalDone > 0 ? CE("div", { style: { padding: "8px 14px", borderRadius: 8, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)", marginBottom: 12, display: "flex", alignItems: "center", gap: 10 } },
+        CE("span", { style: { fontSize: 13, color: "#F59E0B" } }, totalDone + "/" + totalSets + " sets done \u2014 keep going")
+      ) : null,
+      CE("div", { style: { display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", paddingBottom: 4 } }, dayBtns),
+      CE("div", { style: { fontSize: 13, fontWeight: 700, color, marginBottom: 4 } }, dayWorkout.d),
+      CE("div", { style: { fontSize: 11, color: P.txD, marginBottom: 10 } }, dayWorkout.dur + " min session"),
+      dayWorkout.warmup ? CE("div", null,
         SL("WARMUP"),
-        CE("div",{style:{...s.card,padding:12,marginBottom:8,background:"rgba(251,146,60,0.04)",border:"1px solid rgba(251,146,60,0.15)"}},
-          dayConfig.warmup.map((wu,i) => CE("div",{key:i,style:{display:"flex",gap:8,marginBottom:i<dayConfig.warmup.length-1?4:0,fontSize:12,color:P.txM}},
-            CE("span",{style:{color:"#FB923C",flexShrink:0}},"\u2192"),wu
-          ))
+        CE("div", { style: { ...s.card, padding: 12, marginBottom: 8, background: "rgba(251,146,60,0.04)", border: "1px solid rgba(251,146,60,0.15)" } },
+          CE("div", { style: { fontSize: 12, color: P.txM } }, dayWorkout.warmup)
         )
       ) : null,
       SL("EXERCISES"),
       exCards,
-      dayConfig.cardio ? CE("div",null,
-        SL("CARDIO"),
-        CE("div",{style:{...s.card,padding:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.15)"}},
-          CE("div",{style:{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:"#60A5FA",marginBottom:6}},"CARDIO PRESCRIPTION"),
-          CE("div",{style:{fontSize:12,color:P.txM,lineHeight:1.6}},dayConfig.cardio)
+      dayWorkout.cooldown ? CE("div", null,
+        SL("COOLDOWN"),
+        CE("div", { style: { ...s.card, padding: 12, background: "rgba(96,165,250,0.04)", border: "1px solid rgba(96,165,250,0.15)" } },
+          CE("div", { style: { fontSize: 12, color: P.txM, lineHeight: 1.6 } }, dayWorkout.cooldown)
         )
       ) : null
     );
   };
-  // ─── END WORKOUT ENGINE ───────────────────────────────────────────────────────
+  // ─── END WORKOUT ENGINE ────────────────────────────────────────────────────────
+
 
   const RoutineV = () => {
     const daySched = workSchedule.enabled ? workSchedule.schedule?.[routineDay] : null;
