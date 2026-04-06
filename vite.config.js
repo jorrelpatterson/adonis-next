@@ -8,7 +8,7 @@ export default defineConfig({
     outDir: 'dist',
   },
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     globals: true,
   },
 });
