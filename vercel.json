@@ -1,5 +1,9 @@
 {
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/admin/(.*)", "destination": "/admin/$1" },
+    { "source": "/app.html", "destination": "/public/app.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
