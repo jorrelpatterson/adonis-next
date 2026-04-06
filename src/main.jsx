@@ -5,6 +5,7 @@ import { StateProvider } from './state/store';
 import { runMigrationIfNeeded } from './state/migration';
 import App from './app/App';
 import './design/animations.css';
+import './protocols/register-all';
 
 runMigrationIfNeeded();
 
