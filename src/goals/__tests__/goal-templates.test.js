@@ -45,7 +45,7 @@ describe('goal-templates', () => {
     expect(loseWeight).toBeDefined();
     expect(loseWeight.domain).toBe('body');
     expect(loseWeight.protocols.some(p => p.protocolId === 'peptides')).toBe(true);
-    expect(loseWeight.protocols.some(p => p.protocolId === 'fat-loss-workout')).toBe(true);
+    expect(loseWeight.protocols.some(p => p.protocolId === 'workout')).toBe(true);
   });
 
   it('travel domain has trip template with cross-domain protocols', () => {

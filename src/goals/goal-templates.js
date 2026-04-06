@@ -13,8 +13,8 @@ export const GOAL_TEMPLATES = [
     description: 'Structured fat-loss protocol combining peptides, nutrition, and cardio-focused training.',
     protocols: [
       { protocolId: 'peptides', domain: 'body' },
-      { protocolId: 'fat-loss-workout', domain: 'body' },
-      { protocolId: 'nutrition-deficit', domain: 'body' },
+      { protocolId: 'workout', domain: 'body' },
+      { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
       { key: 'currentWeight', label: 'Current weight (lbs)', type: 'number' },
@@ -36,8 +36,8 @@ export const GOAL_TEMPLATES = [
     icon: '💪',
     description: 'Hypertrophy-focused program with progressive overload and protein optimization.',
     protocols: [
-      { protocolId: 'muscle-gain-workout', domain: 'body' },
-      { protocolId: 'nutrition-surplus', domain: 'body' },
+      { protocolId: 'workout', domain: 'body' },
+      { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
       { key: 'currentWeight', label: 'Current weight (lbs)', type: 'number' },
@@ -59,9 +59,9 @@ export const GOAL_TEMPLATES = [
     icon: '⚖️',
     description: 'Simultaneously lose fat and gain muscle with strategic cycling and TRT optimization.',
     protocols: [
-      { protocolId: 'recomp-workout', domain: 'body' },
+      { protocolId: 'workout', domain: 'body' },
       { protocolId: 'peptides', domain: 'body' },
-      { protocolId: 'nutrition-maintenance', domain: 'body' },
+      { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
       { key: 'bodyFatPercent', label: 'Estimated body fat %', type: 'number' },
@@ -83,8 +83,8 @@ export const GOAL_TEMPLATES = [
     icon: '📈',
     description: 'Systematic credit-building through utilization management and on-time payment habits.',
     protocols: [
-      { protocolId: 'credit-builder', domain: 'money' },
-      { protocolId: 'budget-tracker', domain: 'money' },
+      { protocolId: 'credit-repair', domain: 'money' },
+      { protocolId: 'credit-repair', domain: 'money' },
     ],
     setupQuestions: [
       { key: 'currentScore', label: 'Current credit score', type: 'number' },
@@ -104,8 +104,8 @@ export const GOAL_TEMPLATES = [
     icon: '💳',
     description: 'Maximize rewards, cashback, and travel points through strategic card selection and spending.',
     protocols: [
-      { protocolId: 'rewards-optimizer', domain: 'money' },
-      { protocolId: 'credit-builder', domain: 'money' },
+      { protocolId: 'credit-repair', domain: 'money' },
+      { protocolId: 'credit-repair', domain: 'money' },
     ],
     setupQuestions: [
       { key: 'monthlySpend', label: 'Monthly spend ($)', type: 'number' },
@@ -126,8 +126,8 @@ export const GOAL_TEMPLATES = [
     icon: '💰',
     description: 'Structured income growth through skill monetization, side income, and investment returns.',
     protocols: [
-      { protocolId: 'income-tracker', domain: 'money' },
-      { protocolId: 'skill-monetization', domain: 'money' },
+      { protocolId: 'income', domain: 'money' },
+      { protocolId: 'income', domain: 'money' },
     ],
     setupQuestions: [
       { key: 'currentMonthlyIncome', label: 'Current monthly income ($)', type: 'number' },
@@ -151,9 +151,9 @@ export const GOAL_TEMPLATES = [
     icon: '✈️',
     description: 'Full trip planning across logistics, budget, appearance, and experience optimization.',
     protocols: [
-      { protocolId: 'trip-logistics', domain: 'travel' },
-      { protocolId: 'travel-budget', domain: 'money' },
-      { protocolId: 'travel-style', domain: 'image' },
+      { protocolId: 'citizenship', domain: 'travel' },
+      { protocolId: 'income', domain: 'money' },
+      { protocolId: 'skincare', domain: 'image' },
     ],
     setupQuestions: [
       { key: 'destination', label: 'Destination', type: 'text' },
@@ -177,8 +177,8 @@ export const GOAL_TEMPLATES = [
     icon: '🛂',
     description: 'Step-by-step roadmap to second citizenship or residency for maximum global mobility.',
     protocols: [
-      { protocolId: 'passport-research', domain: 'travel' },
-      { protocolId: 'legal-residency', domain: 'travel' },
+      { protocolId: 'citizenship', domain: 'travel' },
+      { protocolId: 'citizenship', domain: 'travel' },
     ],
     setupQuestions: [
       { key: 'currentPassport', label: 'Current passport country', type: 'text' },
@@ -203,8 +203,8 @@ export const GOAL_TEMPLATES = [
     icon: '✨',
     description: 'Evidence-based AM/PM skincare routine for clear, youthful, high-status skin.',
     protocols: [
-      { protocolId: 'skincare-am-pm', domain: 'image' },
-      { protocolId: 'nutrition-skin', domain: 'body' },
+      { protocolId: 'skincare', domain: 'image' },
+      { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
       { key: 'skinType', label: 'Skin type', type: 'select',
@@ -226,9 +226,9 @@ export const GOAL_TEMPLATES = [
     icon: '👔',
     description: 'Complete image overhaul: wardrobe, grooming, posture, and social presence.',
     protocols: [
-      { protocolId: 'wardrobe-audit', domain: 'image' },
-      { protocolId: 'grooming-protocol', domain: 'image' },
-      { protocolId: 'posture-training', domain: 'body' },
+      { protocolId: 'skincare', domain: 'image' },
+      { protocolId: 'skincare', domain: 'image' },
+      { protocolId: 'environment', domain: 'body' },
     ],
     setupQuestions: [
       { key: 'styleGoal', label: 'Style goal', type: 'select',
@@ -251,9 +251,9 @@ export const GOAL_TEMPLATES = [
     icon: '🧠',
     description: 'Biohack your mental performance through sleep, nootropics, and deep work protocols.',
     protocols: [
-      { protocolId: 'deep-work', domain: 'mind' },
-      { protocolId: 'sleep-optimization', domain: 'body' },
-      { protocolId: 'nootropic-stack', domain: 'mind' },
+      { protocolId: 'mind', domain: 'mind' },
+      { protocolId: 'environment', domain: 'body' },
+      { protocolId: 'mind', domain: 'mind' },
     ],
     setupQuestions: [
       { key: 'currentSleepHours', label: 'Current avg sleep (hours)', type: 'number' },
@@ -276,8 +276,8 @@ export const GOAL_TEMPLATES = [
     icon: '🎯',
     description: 'Turn a life goal into a concrete action plan with milestones and accountability.',
     protocols: [
-      { protocolId: 'milestone-planner', domain: 'purpose' },
-      { protocolId: 'accountability-system', domain: 'purpose' },
+      { protocolId: 'purpose', domain: 'purpose' },
+      { protocolId: 'community', domain: 'purpose' },
     ],
     setupQuestions: [
       { key: 'item', label: 'What is the bucket list item?', type: 'text' },

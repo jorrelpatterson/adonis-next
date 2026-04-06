@@ -263,28 +263,82 @@ export default function App() {
             <div style={{ ...s.card, padding: 14 }}>
               <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>System Status</div>
               <div style={{ fontSize: 10, color: P.txD, lineHeight: 1.8 }}>
-                Protocols: {getAllProtocols().length} registered{'
-'}
-                Goals: {goals.length} ({activeGoals.length} active){'
-'}
+                Protocols: {getAllProtocols().length} registered<br />
+                Goals: {goals.length} ({activeGoals.length} active)<br />
                 Engine: active
               </div>
             </div>
           </div>
         ) : (
-          /* Domain tab placeholder */
-          <div>
-            <H t={DOMAINS.find(d => d.id === activeTab)?.icon + ' ' + (DOMAINS.find(d => d.id === activeTab)?.name || activeTab)}
-              sub={DOMAINS.find(d => d.id === activeTab)?.desc || ''} />
-            <div style={{ ...s.card, padding: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 13, color: P.txM }}>
-                {DOMAINS.find(d => d.id === activeTab)?.name} domain coming soon
+          /* Domain tab view */
+          (() => {
+            const domain = DOMAINS.find(d => d.id === activeTab);
+            const domainGoals = activeGoals.filter(g => g.domain === activeTab);
+            const domainTasks = routine.scheduled.filter(t => {
+              const proto = protocolMap[t.protocolId];
+              return proto && proto.domain === activeTab;
+            });
+            return (
+              <div>
+                <H t={(domain?.icon || '') + ' ' + (domain?.name || activeTab)}
+                  sub={domain?.sub || ''} />
+
+                {/* Domain Goals */}
+                {domainGoals.length > 0 ? (
+                  <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                    <div style={{ ...s.lab }}>Goals</div>
+                    {domainGoals.map(g => (
+                      <div key={g.id} style={{ padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>{g.title}</div>
+                          <div style={{ fontSize: 11, color: P.gW }}>{g.progress?.percent || 0}%</div>
+                        </div>
+                        <div style={{ marginTop: 4, height: 3, borderRadius: 2, background: 'rgba(232,213,183,0.08)' }}>
+                          <div style={{ height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, ' + P.gW + ', ' + P.ok + ')', width: (g.progress?.percent || 0) + '%' }} />
+                        </div>
+                        <div style={{ fontSize: 10, color: P.txD, marginTop: 3 }}>{g.activeProtocols?.length || 0} protocols active</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ ...s.card, padding: 20, textAlign: 'center', marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, color: P.txM }}>No {domain?.name} goals yet</div>
+                    <button onClick={() => setShowGoalSetup(true)}
+                      style={{ ...s.pri, marginTop: 10, padding: '8px 20px', fontSize: 12 }}>
+                      + Add {domain?.name} Goal
+                    </button>
+                  </div>
+                )}
+
+                {/* Today's tasks for this domain */}
+                {domainTasks.length > 0 && (
+                  <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                    <div style={{ ...s.lab }}>Today's Tasks</div>
+                    {domainTasks.map(task => {
+                      const isDone = completedTasks.includes(task.id);
+                      return (
+                        <div key={task.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid ' + P.bd, opacity: isDone ? 0.5 : 1 }}>
+                          <button onClick={() => handleCheckTask(task.id)}
+                            style={{ width: 20, height: 20, borderRadius: 10, border: isDone ? 'none' : '1.5px solid ' + P.gW + '44', background: isDone ? P.ok : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff', fontFamily: FN, flexShrink: 0 }}>
+                            {isDone ? '\u2713' : ''}
+                          </button>
+                          <div>
+                            <div style={{ fontSize: 13, color: isDone ? P.txD : P.txS, textDecoration: isDone ? 'line-through' : 'none' }}>{task.title}</div>
+                            {task.subtitle && <div style={{ fontSize: 10, color: P.txD }}>{task.subtitle}</div>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Domain description */}
+                <div style={{ ...s.card, padding: 14 }}>
+                  <div style={{ fontSize: 12, color: P.txM, lineHeight: 1.6 }}>{domain?.desc || ''}</div>
+                </div>
               </div>
-              <div style={{ fontSize: 11, color: P.txD, marginTop: 4 }}>
-                Your routine already includes tasks from this domain's protocols.
-              </div>
-            </div>
-          </div>
+            );
+          })()
         )}
       </div>
 
