@@ -4,10 +4,17 @@ import peptideProtocol from './body/peptides/index';
 import nutritionProtocol from './body/nutrition/index';
 import creditProtocol from './money/credit/index';
 import incomeProtocol from './money/income/index';
+import citizenshipProtocol from './travel/citizenship/index';
+import skincareProtocol from './image/skincare/index';
+import mindProtocol from './mind/index';
+import purposeProtocol from './purpose/index';
 
 registerProtocol(workoutProtocol);
 registerProtocol(peptideProtocol);
 registerProtocol(nutritionProtocol);
 registerProtocol(creditProtocol);
 registerProtocol(incomeProtocol);
-
+registerProtocol(citizenshipProtocol);
+registerProtocol(skincareProtocol);
+registerProtocol(mindProtocol);
+registerProtocol(purposeProtocol);
