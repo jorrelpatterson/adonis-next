@@ -8,6 +8,8 @@ import citizenshipProtocol from './travel/citizenship/index';
 import skincareProtocol from './image/skincare/index';
 import mindProtocol from './mind/index';
 import purposeProtocol from './purpose/index';
+import environmentProtocol from './environment/index';
+import communityProtocol from './community/index';
 
 registerProtocol(workoutProtocol);
 registerProtocol(peptideProtocol);
@@ -18,3 +20,5 @@ registerProtocol(citizenshipProtocol);
 registerProtocol(skincareProtocol);
 registerProtocol(mindProtocol);
 registerProtocol(purposeProtocol);
+registerProtocol(environmentProtocol);
+registerProtocol(communityProtocol);
