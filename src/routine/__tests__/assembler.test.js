@@ -58,7 +58,7 @@ describe('collectTasks', () => {
       'sleep',
       'body',
       [{ id: 't1', label: 'Wind-down routine' }],
-      [{ id: 'r1', label: 'Take magnesium' }]
+      [{ id: 'r1', type: 'recommendation', label: 'Take magnesium' }]
     );
 
     const goals = [

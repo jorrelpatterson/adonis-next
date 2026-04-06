@@ -1,15 +1,8 @@
 // src/routine/assembler.js
-// Step 1 of the collect→prioritize→schedule pipeline.
-// Gathers raw tasks and recommendations from all active protocols across all goals.
+// Step 1 of collect → prioritize → schedule pipeline.
 
 /**
  * Collects tasks from all active protocols across all goals.
- *
- * @param {object[]} goals      - Array of goal objects (each with id, title, activeProtocols)
- * @param {object}   protocolMap - Map of protocolId → protocol instance
- * @param {object}   profile    - User profile (passed through to protocol calls)
- * @param {string}   day        - ISO date string for the current day
- * @returns {object[]} Flat array of tagged task and recommendation objects
  */
 export function collectTasks(goals, protocolMap, profile, day) {
   const collected = [];
@@ -21,17 +14,16 @@ export function collectTasks(goals, protocolMap, profile, day) {
       const proto = protocolMap[ref.protocolId];
       if (!proto) continue;
 
-      // Call getState so protocols can update internal state if needed
-      proto.getState(profile, day);
+      // Get protocol state, then ask for tasks
+      const state = proto.getState(profile, {}, goal);
+      const tasks = proto.getTasks(state, profile, day);
+      const recs = proto.getRecommendations(state, profile, goal);
 
-      const tasks = proto.getTasks(profile, day);
       for (const task of tasks) {
         collected.push({ ...task, goalId, goalTitle, protocolId: proto.id });
       }
-
-      const recommendations = proto.getRecommendations(profile, day);
-      for (const rec of recommendations) {
-        collected.push({ ...rec, type: 'recommendation', goalId, goalTitle, protocolId: proto.id });
+      for (const rec of recs) {
+        collected.push({ ...rec, goalId, goalTitle, protocolId: proto.id });
       }
     }
   }

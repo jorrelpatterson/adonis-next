@@ -1,4 +1,3 @@
-// src/protocols/body/nutrition/index.js
 import { MEALS } from './meals.js';
 import { MORNING_SUPPS, EVENING_SUPPS } from './supplements.js';
 
@@ -8,88 +7,69 @@ const nutritionProtocol = {
   name: 'Nutrition & Supplements',
   icon: '\u{1F37D}\uFE0F',
 
-  canServe(goal) {
-    return goal?.domain === 'body';
+  canServe(goal) { return goal?.domain === 'body'; },
+
+  getState(profile, logs, goal) {
+    return { goal: profile?.primary || 'Wellness' };
   },
 
-  getState(profile) {
-    const goal = profile?.primary || 'Wellness';
-    return { goal };
-  },
-
-  getTasks(state) {
+  getTasks(state, profile, day) {
     const { goal } = state;
+    const dayIdx = day.getUTCDay();
     const tasks = [];
 
-    // Morning supplements task
+    // Morning supplements
     const morningSupps = MORNING_SUPPS[goal] || MORNING_SUPPS['Wellness'];
     tasks.push({
-      id: 'nutrition-morning-supps',
-      title: 'Morning Supplements',
+      id: 'supp-morning',
+      title: '\u{1F48A} Morning Supplements',
+      subtitle: morningSupps,
       type: 'guided',
       category: 'supplement',
-      time: '7:00 AM',
+      time: null,
       priority: 2,
       skippable: true,
-      data: {
-        supplements: morningSupps,
-        goal
+    });
+
+    // Meals for today
+    const goalMeals = MEALS[goal] || MEALS['Wellness'] || MEALS['Fat Loss'];
+    if (goalMeals) {
+      const dayPlan = Array.isArray(goalMeals[0]) ? goalMeals[dayIdx % goalMeals.length] : goalMeals;
+      if (dayPlan) {
+        dayPlan.forEach((meal, i) => {
+          tasks.push({
+            id: 'meal-' + dayIdx + '-' + i,
+            title: '\u{1F37D}\uFE0F ' + meal.n,
+            subtitle: meal.f + ' \u00B7 ' + meal.cal + ' cal \u00B7 ' + meal.p + 'P/' + (meal.c || 0) + 'C/' + (meal.fat || 0) + 'F',
+            type: 'guided',
+            category: 'nutrition',
+            time: meal.t || null,
+            priority: 3,
+            skippable: true,
+          });
+        });
       }
-    });
+    }
 
-    // Meal tasks — use day 0 (Monday) as the default daily plan
-    const goalMeals = MEALS[goal] || MEALS['Wellness'];
-    const dayPlan = goalMeals[0] || [];
-    dayPlan.forEach((meal, idx) => {
-      tasks.push({
-        id: 'nutrition-meal-' + idx,
-        title: meal.n,
-        type: 'guided',
-        category: 'nutrition',
-        time: meal.t,
-        priority: 2,
-        skippable: true,
-        data: {
-          food: meal.f,
-          calories: meal.cal,
-          protein: meal.p,
-          carbs: meal.c,
-          fat: meal.fat,
-          goal
-        }
-      });
-    });
-
-    // Evening supplements task
+    // Evening supplements
     const eveningSupps = EVENING_SUPPS[goal] || EVENING_SUPPS['Wellness'];
     tasks.push({
-      id: 'nutrition-evening-supps',
-      title: 'Evening Supplements',
+      id: 'supp-evening',
+      title: '\u{1F48A} Evening Supplements',
+      subtitle: eveningSupps,
       type: 'guided',
       category: 'supplement',
-      time: '9:00 PM',
+      time: null,
       priority: 2,
       skippable: true,
-      data: {
-        supplements: eveningSupps,
-        goal
-      }
     });
 
     return tasks;
   },
 
-  getAutomations() {
-    return [];
-  },
-
-  getRecommendations() {
-    return [];
-  },
-
-  getUpsells() {
-    return [];
-  }
+  getAutomations() { return []; },
+  getRecommendations(state, profile, goal) { return []; },
+  getUpsells(state, profile, goal) { return []; },
 };
 
 export default nutritionProtocol;

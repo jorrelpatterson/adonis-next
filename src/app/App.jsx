@@ -315,7 +315,7 @@ export default function App() {
                 ) : (
                   <div style={{ ...s.card, padding: 20, textAlign: 'center', marginBottom: 12 }}>
                     <div style={{ fontSize: 13, color: P.txM }}>No {domain?.name} goals yet</div>
-                    <button onClick={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
+                    <button onClick={() => { setGoalSetupDomain(activeTab); setShowGoalSetup(true); }}
                       style={{ ...s.pri, marginTop: 10, padding: '8px 20px', fontSize: 12 }}>
                       + Add {domain?.name} Goal
                     </button>

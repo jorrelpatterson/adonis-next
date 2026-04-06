@@ -79,7 +79,7 @@ describe('nutrition protocol', () => {
   });
 
   it('getState returns goal from profile.primary', () => {
-    const state = nutritionProtocol.getState({ primary: 'Fat Loss' });
+    const state = nutritionProtocol.getState({ primary: 'Fat Loss' }, {}, {});
     expect(state.goal).toBe('Fat Loss');
   });
 
@@ -89,46 +89,43 @@ describe('nutrition protocol', () => {
   });
 
   it('getTasks returns supplement tasks (at least morning + evening)', () => {
-    const state = nutritionProtocol.getState({ primary: 'Fat Loss' });
-    const tasks = nutritionProtocol.getTasks(state);
+    const state = nutritionProtocol.getState({ primary: 'Fat Loss' }, {}, {});
+    const tasks = nutritionProtocol.getTasks(state, { primary: 'Fat Loss' }, new Date('2026-04-06T12:00:00Z'));
     const suppTasks = tasks.filter((t) => t.category === 'supplement');
     expect(suppTasks.length).toBeGreaterThanOrEqual(2);
   });
 
   it('getTasks includes morning supplement task', () => {
-    const state = nutritionProtocol.getState({ primary: 'Muscle Gain' });
-    const tasks = nutritionProtocol.getTasks(state);
-    const morning = tasks.find((t) => t.id === 'nutrition-morning-supps');
+    const state = nutritionProtocol.getState({ primary: 'Muscle Gain' }, {}, {});
+    const tasks = nutritionProtocol.getTasks(state, { primary: 'Fat Loss' }, new Date('2026-04-06T12:00:00Z'));
+    const morning = tasks.find((t) => t.id === 'supp-morning');
     expect(morning).toBeDefined();
     expect(morning.category).toBe('supplement');
     expect(morning.type).toBe('guided');
     expect(morning.priority).toBe(2);
     expect(morning.skippable).toBe(true);
-    expect(morning.data.supplements).toBeTruthy();
+    expect(morning.subtitle).toBeTruthy();
   });
 
   it('getTasks includes evening supplement task', () => {
-    const state = nutritionProtocol.getState({ primary: 'Muscle Gain' });
-    const tasks = nutritionProtocol.getTasks(state);
-    const evening = tasks.find((t) => t.id === 'nutrition-evening-supps');
+    const state = nutritionProtocol.getState({ primary: 'Muscle Gain' }, {}, {});
+    const tasks = nutritionProtocol.getTasks(state, { primary: 'Fat Loss' }, new Date('2026-04-06T12:00:00Z'));
+    const evening = tasks.find((t) => t.id === 'supp-evening');
     expect(evening).toBeDefined();
     expect(evening.category).toBe('supplement');
     expect(evening.type).toBe('guided');
     expect(evening.skippable).toBe(true);
-    expect(evening.data.supplements).toBeTruthy();
+    expect(evening.subtitle).toBeTruthy();
   });
 
   it('getTasks returns nutrition/meal tasks', () => {
-    const state = nutritionProtocol.getState({ primary: 'Fat Loss' });
-    const tasks = nutritionProtocol.getTasks(state);
+    const state = nutritionProtocol.getState({ primary: 'Fat Loss' }, {}, {});
+    const tasks = nutritionProtocol.getTasks(state, { primary: 'Fat Loss' }, new Date('2026-04-06T12:00:00Z'));
     const mealTasks = tasks.filter((t) => t.category === 'nutrition');
     expect(mealTasks.length).toBeGreaterThan(0);
     const meal = mealTasks[0];
-    expect(meal.data).toHaveProperty('food');
-    expect(meal.data).toHaveProperty('calories');
-    expect(meal.data).toHaveProperty('protein');
-    expect(meal.data).toHaveProperty('carbs');
-    expect(meal.data).toHaveProperty('fat');
+    expect(meal.subtitle).toBeTruthy();
+    expect(meal.title).toBeTruthy();
     expect(meal.time).toBeTruthy();
   });
 
