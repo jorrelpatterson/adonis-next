@@ -13,12 +13,13 @@ import TabNav from './TabNav';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
-  const { state, addGoal, setProfile, log, updateGoal } = useAppState();
+  const { state, addGoal, removeGoal, setProfile, log, updateGoal } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
   const tierInfo = SUB_TIERS[profile.tier] || SUB_TIERS.free;
 
   const [activeTab, setActiveTab] = useState('routine');
   const [showGoalSetup, setShowGoalSetup] = useState(false);
+  const [goalSetupDomain, setGoalSetupDomain] = useState(null);
   const [viewDay, setViewDay] = useState(new Date());
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
@@ -53,10 +54,19 @@ export default function App() {
   }, [logs.routine, todayKey, log]);
 
   const handleCreateGoal = useCallback((goal) => {
+    // Prevent duplicate goals from same template
+    const isDuplicate = goals.some(g => g.templateId === goal.templateId && g.status === 'active');
+    if (isDuplicate) {
+      // Could show a message, but for now just close
+      setShowGoalSetup(false);
+      setGoalSetupDomain(null);
+      return;
+    }
     addGoal(goal);
     setShowGoalSetup(false);
+    setGoalSetupDomain(null);
     setActiveTab('routine');
-  }, [addGoal]);
+  }, [addGoal, goals]);
 
   const handleAccessCode = useCallback(() => {
     const result = validateAccessCode(accessCodeInput);
@@ -115,13 +125,14 @@ export default function App() {
         {showGoalSetup ? (
           <GoalSetup
             onCreateGoal={handleCreateGoal}
-            onCancel={() => setShowGoalSetup(false)}
+            onCancel={() => { setShowGoalSetup(false); setGoalSetupDomain(null); }}
             profile={profile}
+            initialDomain={goalSetupDomain}
           />
         ) : activeTab === 'routine' ? (
           <div>
             {/* Add Goal Button */}
-            <button onClick={() => setShowGoalSetup(true)}
+            <button onClick={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
               style={{
                 ...s.out, width: '100%', marginBottom: 16,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -154,16 +165,17 @@ export default function App() {
               />
             </div>
 
-            {/* Primary Goal */}
+            {/* Primary Goal — derived from first active goal */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Primary Goal</label>
-              <select value={profile.primary || ''} onChange={e => setProfile({ primary: e.target.value })}
-                style={{ ...s.inp, width: '100%' }}>
-                <option value="">Select...</option>
-                {['Fat Loss', 'Muscle Gain', 'Recomposition', 'Aesthetics', 'Anti-Aging', 'Cognitive', 'Wellness'].map(g =>
-                  <option key={g} value={g}>{g}</option>
-                )}
-              </select>
+              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Primary Goal</div>
+              <div style={{ fontSize: 13, color: P.txS }}>
+                {activeGoals.length > 0 ? activeGoals[0].title : 'Add a goal to get started'}
+              </div>
+              {activeGoals.length > 0 && (
+                <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
+                  Set by your first active goal. Determines workout program + supplement stack.
+                </div>
+              )}
             </div>
 
             {/* Weight */}
@@ -303,7 +315,7 @@ export default function App() {
                 ) : (
                   <div style={{ ...s.card, padding: 20, textAlign: 'center', marginBottom: 12 }}>
                     <div style={{ fontSize: 13, color: P.txM }}>No {domain?.name} goals yet</div>
-                    <button onClick={() => setShowGoalSetup(true)}
+                    <button onClick={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
                       style={{ ...s.pri, marginTop: 10, padding: '8px 20px', fontSize: 12 }}>
                       + Add {domain?.name} Goal
                     </button>

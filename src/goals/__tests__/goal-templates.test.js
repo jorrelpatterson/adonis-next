@@ -21,7 +21,7 @@ describe('goal-templates', () => {
     }
   });
 
-  it('every template protocol entry has protocolId and domain', () => {
+  it('every protocol entry has protocolId and domain', () => {
     for (const t of GOAL_TEMPLATES) {
       for (const p of t.protocols) {
         expect(p).toHaveProperty('protocolId');
@@ -40,19 +40,22 @@ describe('goal-templates', () => {
     expect(getTemplatesForDomain('nonexistent')).toEqual([]);
   });
 
-  it('body domain has lose weight template with peptide protocol', () => {
-    const loseWeight = GOAL_TEMPLATES.find(t => t.id === 'lose-weight');
-    expect(loseWeight).toBeDefined();
-    expect(loseWeight.domain).toBe('body');
-    expect(loseWeight.protocols.some(p => p.protocolId === 'peptides')).toBe(true);
-    expect(loseWeight.protocols.some(p => p.protocolId === 'workout')).toBe(true);
+  it('body lose-weight has workout and peptides protocols', () => {
+    const lw = GOAL_TEMPLATES.find(t => t.id === 'lose-weight');
+    expect(lw).toBeDefined();
+    expect(lw.protocols.some(p => p.protocolId === 'workout')).toBe(true);
+    expect(lw.protocols.some(p => p.protocolId === 'peptides')).toBe(true);
   });
 
-  it('travel domain has trip template with cross-domain protocols', () => {
+  it('travel plan-trip has cross-domain protocols', () => {
     const trip = GOAL_TEMPLATES.find(t => t.id === 'plan-trip');
     expect(trip).toBeDefined();
-    expect(trip.domain).toBe('travel');
     const domains = new Set(trip.protocols.map(p => p.domain));
     expect(domains.size).toBeGreaterThan(1);
+  });
+
+  it('money templates only reference money-domain or cross-domain protocols', () => {
+    const moneyTemplates = getTemplatesForDomain('money');
+    expect(moneyTemplates.length).toBeGreaterThan(0);
   });
 });

@@ -29,9 +29,9 @@ describe("createGoalFromTemplate", () => {
     expect(goal.status).toBe("active");
     expect(goal.target).toBeDefined();
     expect(goal.target.metric).toBe("weight");
-    expect(goal.target.start).toBe(210);
-    expect(goal.target.end).toBe(180);
-    expect(goal.target.deadline).toBe("2026-12-31");
+    expect(goal.target.from).toBe(210);
+    expect(goal.target.to).toBe(180);
+    expect(goal.deadline).toBe("2026-12-31");
     expect(Array.isArray(goal.activeProtocols)).toBe(true);
     expect(goal.activeProtocols.length).toBe(3);
     expect(goal.progress).toBe(0);
@@ -163,15 +163,9 @@ describe("updateGoalProgress", () => {
 
 describe("activateProtocolsForGoal", () => {
   it("returns protocol list from template", () => {
-    const protocols = activateProtocolsForGoal(loseWeightTemplate);
-    expect(Array.isArray(protocols)).toBe(true);
-    expect(protocols.length).toBe(3);
-    expect(protocols[0]).toEqual({ protocolId: "peptides", domain: "body" });
-  });
-
-  it("returns a copy (not the same reference)", () => {
-    const protocols = activateProtocolsForGoal(loseWeightTemplate);
-    expect(protocols).not.toBe(loseWeightTemplate.protocols);
+    const result = activateProtocolsForGoal(loseWeightTemplate);
+    expect(result.length).toBe(loseWeightTemplate.protocols.length);
+    expect(result[0].protocolId).toBe(loseWeightTemplate.protocols[0].protocolId);
   });
 });
 

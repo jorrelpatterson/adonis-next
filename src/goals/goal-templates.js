@@ -1,19 +1,11 @@
-// src/goals/goal-templates.js
-// Predefined goal templates for all Adonis domains.
-// Each template maps to one or more protocol IDs that generate daily tasks.
-
 export const GOAL_TEMPLATES = [
-  // ── Body ──────────────────────────────────────────────────────────────────
   {
-    id: 'lose-weight',
-    title: 'Lose Weight',
-    domain: 'body',
-    type: 'template',
-    icon: '🔥',
-    description: 'Structured fat-loss protocol combining peptides, nutrition, and cardio-focused training.',
+    id: 'lose-weight', title: 'Lose Weight', domain: 'body', type: 'template',
+    icon: '\u{1F3CB}\uFE0F',
+    description: 'Fat loss with training + peptide protocol',
     protocols: [
-      { protocolId: 'peptides', domain: 'body' },
       { protocolId: 'workout', domain: 'body' },
+      { protocolId: 'peptides', domain: 'body' },
       { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
@@ -21,283 +13,160 @@ export const GOAL_TEMPLATES = [
       { key: 'targetWeight', label: 'Target weight (lbs)', type: 'number' },
       { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'weight',
-      start: Number(answers.currentWeight),
-      end: Number(answers.targetWeight),
-      deadline: answers.deadline,
-    }),
+    buildTarget: (answers) => ({ metric: 'weight', from: Number(answers.currentWeight), to: Number(answers.targetWeight), unit: 'lbs' }),
   },
   {
-    id: 'build-muscle',
-    title: 'Build Muscle',
-    domain: 'body',
-    type: 'template',
-    icon: '💪',
-    description: 'Hypertrophy-focused program with progressive overload and protein optimization.',
-    protocols: [
-      { protocolId: 'workout', domain: 'body' },
-      { protocolId: 'nutrition', domain: 'body' },
-    ],
-    setupQuestions: [
-      { key: 'currentWeight', label: 'Current weight (lbs)', type: 'number' },
-      { key: 'targetWeight', label: 'Target weight (lbs)', type: 'number' },
-      { key: 'trainingAge', label: 'Years training', type: 'number' },
-    ],
-    buildTarget: (answers) => ({
-      metric: 'leanMass',
-      start: Number(answers.currentWeight),
-      end: Number(answers.targetWeight),
-      trainingAge: Number(answers.trainingAge),
-    }),
-  },
-  {
-    id: 'body-recomp',
-    title: 'Body Recomposition',
-    domain: 'body',
-    type: 'template',
-    icon: '⚖️',
-    description: 'Simultaneously lose fat and gain muscle with strategic cycling and TRT optimization.',
+    id: 'build-muscle', title: 'Build Muscle', domain: 'body', type: 'template',
+    icon: '\u{1F4AA}',
+    description: 'Hypertrophy program with nutrition + peptides',
     protocols: [
       { protocolId: 'workout', domain: 'body' },
       { protocolId: 'peptides', domain: 'body' },
       { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
-      { key: 'bodyFatPercent', label: 'Estimated body fat %', type: 'number' },
-      { key: 'goalBodyFat', label: 'Goal body fat %', type: 'number' },
+      { key: 'currentWeight', label: 'Current weight (lbs)', type: 'number' },
+      { key: 'targetWeight', label: 'Target weight (lbs)', type: 'number' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'bodyFat',
-      start: Number(answers.bodyFatPercent),
-      end: Number(answers.goalBodyFat),
-    }),
+    buildTarget: (answers) => ({ metric: 'weight', from: Number(answers.currentWeight), to: Number(answers.targetWeight), unit: 'lbs' }),
   },
-
-  // ── Money ─────────────────────────────────────────────────────────────────
   {
-    id: 'build-credit',
-    title: 'Build Credit Score',
-    domain: 'money',
-    type: 'template',
-    icon: '📈',
-    description: 'Systematic credit-building through utilization management and on-time payment habits.',
+    id: 'body-recomp', title: 'Body Recomposition', domain: 'body', type: 'template',
+    icon: '\u{1F525}',
+    description: 'Lose fat and build muscle simultaneously',
     protocols: [
-      { protocolId: 'credit-repair', domain: 'money' },
+      { protocolId: 'workout', domain: 'body' },
+      { protocolId: 'peptides', domain: 'body' },
+      { protocolId: 'nutrition', domain: 'body' },
+    ],
+    setupQuestions: [
+      { key: 'currentWeight', label: 'Current weight (lbs)', type: 'number' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
+    ],
+    buildTarget: (answers) => ({ metric: 'body_composition', from: Number(answers.currentWeight), to: null, unit: 'lbs' }),
+  },
+  {
+    id: 'build-credit', title: 'Build Credit Score', domain: 'money', type: 'template',
+    icon: '\u{1F4B3}',
+    description: 'Credit repair + dispute strategy',
+    protocols: [
       { protocolId: 'credit-repair', domain: 'money' },
     ],
     setupQuestions: [
       { key: 'currentScore', label: 'Current credit score', type: 'number' },
       { key: 'targetScore', label: 'Target credit score', type: 'number' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'creditScore',
-      start: Number(answers.currentScore),
-      end: Number(answers.targetScore),
-    }),
+    buildTarget: (answers) => ({ metric: 'credit_score', from: Number(answers.currentScore), to: Number(answers.targetScore), unit: 'points' }),
   },
   {
-    id: 'cc-stacking',
-    title: 'Credit Card Stacking',
-    domain: 'money',
-    type: 'template',
-    icon: '💳',
-    description: 'Maximize rewards, cashback, and travel points through strategic card selection and spending.',
+    id: 'cc-stacking', title: 'Credit Card Stacking', domain: 'money', type: 'template',
+    icon: '\u{1F4B0}',
+    description: 'Maximize signup bonuses and rewards',
     protocols: [
-      { protocolId: 'credit-repair', domain: 'money' },
       { protocolId: 'credit-repair', domain: 'money' },
     ],
     setupQuestions: [
       { key: 'monthlySpend', label: 'Monthly spend ($)', type: 'number' },
-      { key: 'primaryGoal', label: 'Primary reward goal', type: 'select',
-        options: ['Travel', 'Cashback', 'Points'] },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'annualRewards',
-      monthlySpend: Number(answers.monthlySpend),
-      primaryGoal: answers.primaryGoal,
-    }),
+    buildTarget: (answers) => ({ metric: 'rewards_value', from: 0, to: null, unit: 'dollars' }),
   },
   {
-    id: 'grow-income',
-    title: 'Grow Income',
-    domain: 'money',
-    type: 'template',
-    icon: '💰',
-    description: 'Structured income growth through skill monetization, side income, and investment returns.',
+    id: 'grow-income', title: 'Grow Income', domain: 'money', type: 'template',
+    icon: '\u{1F4C8}',
+    description: 'Build your referral pipeline and commissions',
     protocols: [
-      { protocolId: 'income', domain: 'money' },
       { protocolId: 'income', domain: 'money' },
     ],
     setupQuestions: [
-      { key: 'currentMonthlyIncome', label: 'Current monthly income ($)', type: 'number' },
-      { key: 'targetMonthlyIncome', label: 'Target monthly income ($)', type: 'number' },
-      { key: 'timeline', label: 'Timeline (months)', type: 'number' },
+      { key: 'targetMonthly', label: 'Monthly income target ($)', type: 'number' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'monthlyIncome',
-      start: Number(answers.currentMonthlyIncome),
-      end: Number(answers.targetMonthlyIncome),
-      timelineMonths: Number(answers.timeline),
-    }),
+    buildTarget: (answers) => ({ metric: 'monthly_income', from: 0, to: Number(answers.targetMonthly), unit: 'dollars' }),
   },
-
-  // ── Travel ────────────────────────────────────────────────────────────────
   {
-    id: 'plan-trip',
-    title: 'Plan a Trip',
-    domain: 'travel',
-    type: 'template',
-    icon: '✈️',
-    description: 'Full trip planning across logistics, budget, appearance, and experience optimization.',
+    id: 'plan-trip', title: 'Plan a Trip', domain: 'travel', type: 'template',
+    icon: '\u2708\uFE0F',
+    description: 'Full trip planning with travel cards + visa check',
     protocols: [
       { protocolId: 'citizenship', domain: 'travel' },
-      { protocolId: 'income', domain: 'money' },
+      { protocolId: 'credit-repair', domain: 'money' },
       { protocolId: 'skincare', domain: 'image' },
     ],
     setupQuestions: [
       { key: 'destination', label: 'Destination', type: 'text' },
       { key: 'departureDate', label: 'Departure date', type: 'date' },
-      { key: 'returnDate', label: 'Return date', type: 'date' },
-      { key: 'budget', label: 'Total budget ($)', type: 'number' },
+      { key: 'budget', label: 'Budget ($)', type: 'number' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'tripComplete',
-      destination: answers.destination,
-      departureDate: answers.departureDate,
-      returnDate: answers.returnDate,
-      budget: Number(answers.budget),
-    }),
+    buildTarget: (answers) => ({ metric: 'trip', destination: answers.destination, budget: Number(answers.budget), unit: 'dollars' }),
   },
   {
-    id: 'second-passport',
-    title: 'Obtain Second Passport',
-    domain: 'travel',
-    type: 'template',
-    icon: '🛂',
-    description: 'Step-by-step roadmap to second citizenship or residency for maximum global mobility.',
+    id: 'second-passport', title: 'Get a Second Passport', domain: 'travel', type: 'template',
+    icon: '\u{1F4D8}',
+    description: 'Citizenship by descent, investment, or residency',
     protocols: [
       { protocolId: 'citizenship', domain: 'travel' },
-      { protocolId: 'citizenship', domain: 'travel' },
     ],
     setupQuestions: [
-      { key: 'currentPassport', label: 'Current passport country', type: 'text' },
-      { key: 'targetCountry', label: 'Target country', type: 'text' },
-      { key: 'program', label: 'Program type', type: 'select',
-        options: ['Ancestry', 'Investment', 'Naturalization', 'Digital Nomad Visa'] },
+      { key: 'country', label: 'Target country', type: 'text' },
+      { key: 'pathway', label: 'Pathway', type: 'select', options: ['Descent', 'Investment', 'Residency', 'Unsure'] },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'passportObtained',
-      currentPassport: answers.currentPassport,
-      targetCountry: answers.targetCountry,
-      program: answers.program,
-    }),
+    buildTarget: (answers) => ({ metric: 'passport', country: answers.country, pathway: answers.pathway }),
   },
-
-  // ── Image ─────────────────────────────────────────────────────────────────
   {
-    id: 'skincare-protocol',
-    title: 'Skincare Protocol',
-    domain: 'image',
-    type: 'template',
-    icon: '✨',
-    description: 'Evidence-based AM/PM skincare routine for clear, youthful, high-status skin.',
+    id: 'skincare-protocol', title: 'Start Skincare Protocol', domain: 'image', type: 'template',
+    icon: '\u2728',
+    description: '7-day AM/PM skincare rotation',
     protocols: [
       { protocolId: 'skincare', domain: 'image' },
-      { protocolId: 'nutrition', domain: 'body' },
     ],
     setupQuestions: [
-      { key: 'skinType', label: 'Skin type', type: 'select',
-        options: ['Oily', 'Dry', 'Combination', 'Normal', 'Sensitive'] },
-      { key: 'primaryConcern', label: 'Primary concern', type: 'select',
-        options: ['Acne', 'Aging', 'Hyperpigmentation', 'Texture', 'Dullness'] },
+      { key: 'skinType', label: 'Skin type', type: 'select', options: ['Oily', 'Dry', 'Combination', 'Sensitive'] },
     ],
-    buildTarget: (answers) => ({
-      metric: 'skincareConsistency',
-      skinType: answers.skinType,
-      primaryConcern: answers.primaryConcern,
-    }),
+    buildTarget: (answers) => ({ metric: 'routine_adherence', skinType: answers.skinType }),
   },
   {
-    id: 'level-up-image',
-    title: 'Level Up Image',
-    domain: 'image',
-    type: 'template',
-    icon: '👔',
-    description: 'Complete image overhaul: wardrobe, grooming, posture, and social presence.',
+    id: 'level-up-image', title: 'Level Up Image', domain: 'image', type: 'template',
+    icon: '\u{1F48E}',
+    description: 'Skincare + grooming + wardrobe overhaul',
     protocols: [
       { protocolId: 'skincare', domain: 'image' },
-      { protocolId: 'skincare', domain: 'image' },
-      { protocolId: 'environment', domain: 'body' },
     ],
     setupQuestions: [
-      { key: 'styleGoal', label: 'Style goal', type: 'select',
-        options: ['Business Professional', 'Smart Casual', 'Athletic/Lifestyle', 'High Fashion'] },
-      { key: 'budget', label: 'Monthly style budget ($)', type: 'number' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'imageScore',
-      styleGoal: answers.styleGoal,
-      monthlyBudget: Number(answers.budget),
-    }),
+    buildTarget: (answers) => ({ metric: 'image_score', from: 0, to: null }),
   },
-
-  // ── Mind ──────────────────────────────────────────────────────────────────
   {
-    id: 'optimize-focus',
-    title: 'Optimize Focus & Cognition',
-    domain: 'mind',
-    type: 'template',
-    icon: '🧠',
-    description: 'Biohack your mental performance through sleep, nootropics, and deep work protocols.',
+    id: 'optimize-focus', title: 'Optimize Focus & Clarity', domain: 'mind', type: 'template',
+    icon: '\u{1F9E0}',
+    description: 'Meditation + breathwork + focus blocks',
     protocols: [
-      { protocolId: 'mind', domain: 'mind' },
-      { protocolId: 'environment', domain: 'body' },
       { protocolId: 'mind', domain: 'mind' },
     ],
     setupQuestions: [
-      { key: 'currentSleepHours', label: 'Current avg sleep (hours)', type: 'number' },
-      { key: 'focusGoal', label: 'Primary focus goal', type: 'select',
-        options: ['Deep work blocks', 'Memory retention', 'Mental clarity', 'Stress reduction'] },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'focusScore',
-      sleepHours: Number(answers.currentSleepHours),
-      focusGoal: answers.focusGoal,
-    }),
+    buildTarget: (answers) => ({ metric: 'focus_score', from: 0, to: null }),
   },
-
-  // ── Purpose ───────────────────────────────────────────────────────────────
   {
-    id: 'bucket-list-item',
-    title: 'Complete a Bucket List Item',
-    domain: 'purpose',
-    type: 'template',
-    icon: '🎯',
-    description: 'Turn a life goal into a concrete action plan with milestones and accountability.',
+    id: 'bucket-list-item', title: 'Bucket List Goal', domain: 'purpose', type: 'template',
+    icon: '\u{1F9ED}',
+    description: 'Track a life goal across all relevant domains',
     protocols: [
       { protocolId: 'purpose', domain: 'purpose' },
-      { protocolId: 'community', domain: 'purpose' },
     ],
     setupQuestions: [
-      { key: 'item', label: 'What is the bucket list item?', type: 'text' },
-      { key: 'deadline', label: 'Target completion date', type: 'date' },
-      { key: 'why', label: 'Why does this matter to you?', type: 'textarea' },
+      { key: 'description', label: 'Describe your goal', type: 'text' },
+      { key: 'deadline', label: 'Target date', type: 'date' },
     ],
-    buildTarget: (answers) => ({
-      metric: 'completed',
-      item: answers.item,
-      deadline: answers.deadline,
-      why: answers.why,
-    }),
+    buildTarget: (answers) => ({ metric: 'bucket_list', description: answers.description }),
   },
 ];
 
-/**
- * Returns all templates that belong to the given domain.
- * @param {string} domainId
- * @returns {Array}
- */
 export function getTemplatesForDomain(domainId) {
   return GOAL_TEMPLATES.filter(t => t.domain === domainId);
 }

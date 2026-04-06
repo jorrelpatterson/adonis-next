@@ -23,7 +23,7 @@ export function createGoalFromTemplate(template, answers) {
     templateId: template.id,
     status: 'active',
     target,
-    deadline: target.deadline || null,
+    deadline: answers.deadline || target.deadline || null,
     activeProtocols: [...template.protocols],
     progress: 0,
     revenue: 0,
