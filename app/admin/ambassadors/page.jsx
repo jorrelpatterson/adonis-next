@@ -3,26 +3,12 @@ import { useState, useEffect } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-
-const H = () => ({ 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` });
-const SH = () => ({ 'apikey': SERVICE_KEY, 'Authorization': `Bearer ${SERVICE_KEY}` });
 
 async function sbFetch(table, params='') {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, { headers: H() });
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
   const d = await r.json(); return Array.isArray(d) ? d : [];
-}
-async function sbPatch(table, id, body) {
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method:'PATCH', headers:{...H(),'Content-Type':'application/json','Prefer':'return=minimal'}, body:JSON.stringify(body)
-  });
-}
-async function sbDelete(table, id) {
-  // Use service key to bypass RLS for deletes
-  const key = SERVICE_KEY || SUPABASE_KEY;
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method:'DELETE', headers:{ 'apikey': key, 'Authorization': `Bearer ${key}`, 'Prefer':'return=minimal' }
-  });
 }
 
 const TIER_COLOR = { starter:'#60A5FA', builder:'#A78BFA', elite:'#F59E0B' };
@@ -86,7 +72,16 @@ export default function AmbassadorsPage() {
   const saveEdit = async (amb) => {
     setSaving(prev=>({...prev,[amb.id]:true}));
     const f = editForm[amb.id];
-    await sbPatch('ambassadors',amb.id,{name:f.name,email:f.email,phone:f.phone||null,code:f.code.toUpperCase(),tier:f.tier});
+    const res = await fetch('/api/ambassador-write', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'update', id: amb.id, fields:{name:f.name,email:f.email,phone:f.phone||null,code:f.code.toUpperCase(),tier:f.tier} })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      alert('Save failed: '+(err.error||res.status));
+      setSaving(prev=>({...prev,[amb.id]:false}));
+      return;
+    }
     setAmbassadors(prev=>prev.map(a=>a.id===amb.id?{...a,...f,code:f.code.toUpperCase()}:a));
     setActiveTab(prev=>({...prev,[amb.id]:'details'}));
     setSaving(prev=>({...prev,[amb.id]:false}));
@@ -94,7 +89,16 @@ export default function AmbassadorsPage() {
   const deleteAmb = async (amb) => {
     if (!confirm(`Delete ${amb.name} (${amb.code})? Cannot be undone.`)) return;
     setDeleting(prev=>({...prev,[amb.id]:true}));
-    await sbDelete('ambassadors', amb.id);
+    const res = await fetch('/api/ambassador-write', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'delete', id: amb.id })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      alert('Delete failed: '+(err.error||res.status));
+      setDeleting(prev=>({...prev,[amb.id]:false}));
+      return;
+    }
     setAmbassadors(prev=>prev.filter(a=>a.id!==amb.id));
     setDeleting(prev=>({...prev,[amb.id]:false}));
   };
