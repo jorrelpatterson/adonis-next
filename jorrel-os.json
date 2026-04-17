@@ -1,0 +1,32 @@
+{
+  "id": "adonis-next",
+  "name": "Adonis Protocol",
+  "type": "saas",
+  "owner": "jorrel",
+  "status": "active",
+  "urls": {
+    "production": "https://adonis.pro",
+    "repo": "",
+    "admin": ""
+  },
+  "metrics": {
+    "stripe": true,
+    "supabase": true,
+    "vercel": true
+  },
+  "current": {
+    "blockers": [
+      "community_comments RLS may need INSERT policy — needs full audit",
+      "Neurodivergent rebrand + adaptive AI engine coded but not yet deployed to prod"
+    ],
+    "next_action": "Deploy neurodivergent rebrand + adaptive AI engine to production; run full RLS check on community_comments table",
+    "last_session": "",
+    "completed_today": []
+  },
+  "setup": {
+    "complete": false,
+    "missing": ["ROADMAP.md"],
+    "next_setup_action": "Create foundational files — confirm with Jorrel then create missing files"
+  },
+  "roadmap": "ROADMAP.md"
+}
