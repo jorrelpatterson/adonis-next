@@ -67,7 +67,7 @@ export default function InventoryPage() {
       fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=id,po_number,status,vendor_id,submitted_at`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received,unit_cost,received_at`, { headers }),
     ]);
     setInventory(await invRes.json());
     setVendors(await vRes.json());
