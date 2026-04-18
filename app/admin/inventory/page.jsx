@@ -139,8 +139,12 @@ export default function InventoryPage() {
     return out;
   }, [allPOs, allPOItems, vendors]);
 
-  const totalCost = inventory.reduce((s, p) => s + Number(p.cost) * (p.stock / 10), 0);
-  const totalRetail = inventory.reduce((s, p) => s + Number(p.retail) * p.stock, 0);
+  // Active products only for catalog-wide projections (skip hidden)
+  const activeInv = inventory.filter(p => p.active !== false);
+  const inventoryWholesale = inventory.reduce((s, p) => s + Number(p.cost) * (Number(p.stock) / 10), 0);
+  const inventoryRetail    = inventory.reduce((s, p) => s + Number(p.retail) * Number(p.stock), 0);
+  const catalogWholesale   = activeInv.reduce((s, p) => s + Number(p.cost), 0);                  // 1 kit each
+  const catalogRetail      = activeInv.reduce((s, p) => s + Number(p.retail) * 10, 0);           // 1 kit (10 vials) each at retail
   const lowStock = inventory.filter(p => p.stock <= 3 && p.cat !== 'Supplies');
 
   const saveEdit = async () => {
@@ -188,8 +192,17 @@ export default function InventoryPage() {
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12, marginBottom:24 }}>
-        {[{ l:'Wholesale', v:'$'+totalCost.toLocaleString(), c:'#0F1928' },{ l:'Retail Value', v:'$'+totalRetail.toLocaleString(), c:'#22C55E' },{ l:'Avg Margin', v:totalRetail>0?((1-totalCost/totalRetail)*100).toFixed(0)+'%':'0%', c:'#0072B5' },{ l:'Low Stock', v:lowStock.length, c:lowStock.length>0?'#DC2626':'#22C55E' }].map((x,i)=>(
-          <div key={i} style={{ ...cs.card, padding:16 }}><div style={{ fontSize:22, fontWeight:700, color:x.c, fontFamily:"'Barlow Condensed'" }}>{x.v}</div><div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>{x.l}</div></div>
+        {[
+          { l:'Inventory Wholesale', sub:'current stock @ kit cost', v:'$'+Math.round(inventoryWholesale).toLocaleString(), c:'#0F1928' },
+          { l:'Inventory Retail',    sub:'current stock @ retail/vial', v:'$'+Math.round(inventoryRetail).toLocaleString(),    c:'#22C55E' },
+          { l:'Catalog Wholesale',   sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogWholesale).toLocaleString(),  c:'#6B7A94' },
+          { l:'Catalog Retail',      sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogRetail).toLocaleString(),     c:'#0072B5' },
+        ].map((x,i)=>(
+          <div key={i} style={{ ...cs.card, padding:16 }}>
+            <div style={{ fontSize:22, fontWeight:700, color:x.c, fontFamily:"'Barlow Condensed'" }}>{x.v}</div>
+            <div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>{x.l}</div>
+            <div style={{ fontSize:10, color:'#A0A4AE', marginTop:2 }}>{x.sub}</div>
+          </div>
         ))}
       </div>
 
