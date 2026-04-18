@@ -1,6 +1,6 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -28,21 +28,21 @@ export default function PurchasesPage() {
   const [creating, setCreating] = useState(false);
   const [poSearch, setPoSearch] = useState('');
   const [pendingPOs, setPendingPOs] = useState([]);
-  const searchParams = useSearchParams();
 
-  // If arrived via inventory cart, hydrate the New PO form
+  // If arrived via inventory cart, hydrate the New PO form (read window.location instead of useSearchParams to avoid Suspense requirement)
   useEffect(() => {
-    if (searchParams.get('from_cart') === '1') {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('from_cart') === '1') {
       try {
         const cart = JSON.parse(localStorage.getItem('po_cart') || '{}');
         if (Object.keys(cart).length) {
           setNewPo(prev => ({ ...prev, qtys: cart }));
           setShowNew(true);
-          // We do NOT clear localStorage here — only after successful PO create
         }
       } catch {}
     }
-  }, [searchParams]);
+  }, []);
 
   useEffect(() => {
     async function load() {

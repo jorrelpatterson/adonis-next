@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
