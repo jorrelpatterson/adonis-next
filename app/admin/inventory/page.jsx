@@ -222,7 +222,6 @@ export default function InventoryPage() {
                     {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} title="Cancel" style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>✕</button></div>
                     :<div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
                       <button onClick={(e)=>{e.stopPropagation(); addToCart(p.id);}} title={poCart[p.id]?`In PO draft: ${poCart[p.id]} kit`:'Add 1 kit to PO draft'} style={{...cs.btn,padding:'2px 6px',fontSize:11,background:poCart[p.id]?'#16A34A':'#0072B5',color:'#fff',border:'none',whiteSpace:'nowrap',lineHeight:1}}>🛒{poCart[p.id]?poCart[p.id]:'+'}</button><button onClick={()=>{setEditId(p.id);setEditData({...p})}} title="Edit" style={{background:'none',border:'none',cursor:'pointer',fontSize:13,padding:'2px 4px',color:'#6B7A94',lineHeight:1}}>✎</button>
-                      <button onClick={()=>deleteProduct(p.id)} title="Delete" style={{background:'none',border:'none',cursor:'pointer',fontSize:14,padding:'2px 4px',lineHeight:1}}>🗑</button>
                       <button onClick={async (e)=>{
                         e.stopPropagation();
                         const r = await fetch('/api/product-write', {
@@ -244,6 +243,7 @@ export default function InventoryPage() {
                           research: Array.isArray(p.research) ? p.research : [],
                         });
                       }} title="Edit content" style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:13,padding:'2px 4px',lineHeight:1}}>✏</button>
+                      <button onClick={()=>deleteProduct(p.id)} title="Delete" style={{background:'none',border:'none',cursor:'pointer',fontSize:14,padding:'2px 4px',lineHeight:1}}>🗑</button>
                     </div>}
                   </td>
                 </tr>
