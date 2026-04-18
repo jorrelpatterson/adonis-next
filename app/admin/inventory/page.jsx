@@ -103,6 +103,20 @@ export default function InventoryPage() {
     return items;
   }, [inventory, search, filterCat, filterStock, pendingPOs, sortBy, sortDir]);
 
+  // For each product, find which vendor offers the lowest cost_per_kit
+  const cheapestByPid = useMemo(() => {
+    const out = {};
+    const vendorById = vendors.reduce((m,v) => { m[v.id] = v; return m; }, {});
+    inventory.forEach(p => {
+      const matches = vendorPrices.filter(vp => vp.product_id === p.id);
+      if (!matches.length) return;
+      const min = matches.reduce((a,b) => Number(a.cost_per_kit) < Number(b.cost_per_kit) ? a : b);
+      const v = vendorById[min.vendor_id];
+      if (v) out[p.id] = { name: v.name, cost: Number(min.cost_per_kit) };
+    });
+    return out;
+  }, [inventory, vendorPrices, vendors]);
+
   const totalCost = inventory.reduce((s, p) => s + Number(p.cost) * (p.stock / 10), 0);
   const totalRetail = inventory.reduce((s, p) => s + Number(p.retail) * p.stock, 0);
   const lowStock = inventory.filter(p => p.stock <= 3 && p.cat !== 'Supplies');
@@ -199,7 +213,7 @@ export default function InventoryPage() {
       <div style={{...cs.card, overflowX:'auto'}}>
         <table style={{ width:'100%', borderCollapse:'collapse', minWidth:980 }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:54},{k:'cost',l:'Cost',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
+            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:80},{k:'cost',l:'Cost',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
               <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&handleSort(c.k)} style={{ padding:'8px 8px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:c.k!=='actions'?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
             ))}
           </tr></thead>
@@ -213,7 +227,15 @@ export default function InventoryPage() {
                   <td style={{padding:'6px 8px'}}>{ie?<><input style={{...cs.input,padding:'4px 6px',marginBottom:4}} value={editData.name} onChange={e=>setEditData(d=>({...d,name:e.target.value}))}/><input style={{...cs.input,padding:'4px 6px',fontFamily:"'JetBrains Mono'",fontSize:11}} value={editData.sku} onChange={e=>setEditData(d=>({...d,sku:e.target.value}))}/></>:<div style={{display:'flex',flexDirection:'column',gap:1}}><span style={{fontWeight:600,color:'#0F1928',fontSize:13,lineHeight:1.2}}>{p.name}</span><span style={{fontFamily:"'JetBrains Mono'",fontSize:10,color:'#8C919E'}}>{p.sku}{p.active===false&&<span style={{marginLeft:6,padding:'1px 5px',background:'#FEE2E2',color:'#DC2626',fontSize:9,borderRadius:3,letterSpacing:1}}>HIDDEN</span>}</span></div>}</td>
                   <td style={{padding:'6px 8px',fontSize:12,color:'#6B7A94'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.size} onChange={e=>setEditData(d=>({...d,size:e.target.value}))}/>:p.size}</td>
                   <td style={{padding:'6px 8px'}}><span style={{...cs.badge,background:'#E8F4FB',color:'#0072B5'}}>{p.cat}</span></td>
-                  <td style={{padding:'6px 8px',fontSize:12,color:p.vendor==='Eve'?'#00A0A8':'#E07C24',fontWeight:600}}>{p.vendor}</td>
+                  <td style={{padding:'6px 8px',fontSize:12,fontWeight:600}}>
+                    <div style={{color:p.vendor==='Eve'?'#00A0A8':'#E07C24'}}>{p.vendor}</div>
+                    {(() => {
+                      const c = cheapestByPid[p.id];
+                      if (!c) return null;
+                      const same = c.name === p.vendor;
+                      return <div style={{fontSize:10,fontWeight:500,color:same?'#16A34A':'#7A7D88',marginTop:2,whiteSpace:'nowrap'}}>{same ? '✓ cheapest' : `↓ ${c.name} $${c.cost.toFixed(0)}`}</div>;
+                    })()}
+                  </td>
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.cost} onChange={e=>setEditData(d=>({...d,cost:e.target.value}))}/>:`$${p.cost}`}</td>
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.retail} onChange={e=>setEditData(d=>({...d,retail:e.target.value}))}/>:`$${p.retail}`}</td>
                   <td style={{padding:'6px 8px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:(<div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-start'}}><span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>{(p.stock||0)===0 && (() => { const pend = pendingPOs.filter(x=>x.product_id===p.id); if(!pend.length) return null; const totalKits = pend.reduce((s,x)=>s+x.kits_pending,0); const poNums = [...new Set(pend.map(x=>x.po_number))].join(', '); return <span title={'Pending: '+poNums} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalKits*10}v</span>; })()}</div>)}</td>
