@@ -18,6 +18,8 @@ export default function InventoryPage() {
   const [filterCat, setFilterCat] = useState('all');
   const [filterStock, setFilterStock] = useState('all');
   const [pendingPOs, setPendingPOs] = useState([]);
+  const [allPOs, setAllPOs] = useState([]);
+  const [allPOItems, setAllPOItems] = useState([]);
   const [poCart, setPoCart] = useState({});  // { product_id: kits }
   const [lowStockCollapsed, setLowStockCollapsed] = useState(true);
 
@@ -64,20 +66,22 @@ export default function InventoryPage() {
       fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name.asc`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=id,po_number,status&status=in.(submitted,partial)`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=id,po_number,status,vendor_id,submitted_at`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received`, { headers }),
     ]);
     setInventory(await invRes.json());
     setVendors(await vRes.json());
     setVendorPrices(await vpRes.json());
-    const openPOs = await poRes.json();
+    const allPOs = await poRes.json();
     const allItems = await poItemsRes.json();
-    const openIds = new Set(openPOs.map(p => p.id));
-    const poByItem = openPOs.reduce((m, p) => { m[p.id] = p; return m; }, {});
+    const openIds = new Set(allPOs.filter(p => p.status === 'submitted' || p.status === 'partial').map(p => p.id));
+    const poById = allPOs.reduce((m, p) => { m[p.id] = p; return m; }, {});
     const pending = allItems
       .filter(i => openIds.has(i.po_id) && (i.qty_ordered - (i.qty_received || 0)) > 0)
-      .map(i => ({ product_id: i.product_id, po_number: poByItem[i.po_id].po_number, kits_pending: i.qty_ordered - (i.qty_received || 0) }));
+      .map(i => ({ product_id: i.product_id, po_number: poById[i.po_id].po_number, kits_pending: i.qty_ordered - (i.qty_received || 0) }));
     setPendingPOs(pending);
+    setAllPOs(allPOs);
+    setAllPOItems(allItems);
     setLoading(false);
   };
 
@@ -116,6 +120,24 @@ export default function InventoryPage() {
     });
     return out;
   }, [inventory, vendorPrices, vendors]);
+
+  // For each product, find which vendor we most recently ordered from
+  const lastOrderedByPid = useMemo(() => {
+    const out = {};
+    const vendorById = vendors.reduce((m,v) => { m[v.id] = v; return m; }, {});
+    const poById = allPOs.reduce((m,p) => { m[p.id] = p; return m; }, {});
+    // Walk items, track latest submitted_at per product_id
+    allPOItems.forEach(it => {
+      const po = poById[it.po_id];
+      if (!po || !po.submitted_at) return;
+      const prev = out[it.product_id];
+      if (!prev || po.submitted_at > prev.submitted_at) {
+        const v = vendorById[po.vendor_id];
+        if (v) out[it.product_id] = { name: v.name, submitted_at: po.submitted_at };
+      }
+    });
+    return out;
+  }, [allPOs, allPOItems, vendors]);
 
   const totalCost = inventory.reduce((s, p) => s + Number(p.cost) * (p.stock / 10), 0);
   const totalRetail = inventory.reduce((s, p) => s + Number(p.retail) * p.stock, 0);
@@ -228,12 +250,15 @@ export default function InventoryPage() {
                   <td style={{padding:'6px 8px',fontSize:12,color:'#6B7A94'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.size} onChange={e=>setEditData(d=>({...d,size:e.target.value}))}/>:p.size}</td>
                   <td style={{padding:'6px 8px'}}><span style={{...cs.badge,background:'#E8F4FB',color:'#0072B5'}}>{p.cat}</span></td>
                   <td style={{padding:'6px 8px',fontSize:12,fontWeight:600}}>
-                    <div style={{color:p.vendor==='Eve'?'#00A0A8':'#E07C24'}}>{p.vendor}</div>
                     {(() => {
                       const c = cheapestByPid[p.id];
-                      if (!c) return null;
-                      const same = c.name === p.vendor;
-                      return <div style={{fontSize:10,fontWeight:500,color:same?'#16A34A':'#7A7D88',marginTop:2,whiteSpace:'nowrap'}}>{same ? '✓ cheapest' : `↓ ${c.name} $${c.cost.toFixed(0)}`}</div>;
+                      const lof = lastOrderedByPid[p.id];
+                      const top = c ? `${c.name} $${c.cost.toFixed(0)}` : p.vendor;
+                      const topColor = c ? '#16A34A' : (p.vendor==='Eve' ? '#00A0A8' : '#E07C24');
+                      return <>
+                        <div style={{color:topColor,whiteSpace:'nowrap'}} title={c ? 'Cheapest vendor' : 'Primary vendor (no compare data)'}>{top}</div>
+                        {lof && <div style={{fontSize:10,fontWeight:500,color:'#7A7D88',marginTop:2,whiteSpace:'nowrap'}} title={'Last ordered from on '+new Date(lof.submitted_at).toLocaleDateString()}>LOF: {lof.name}</div>}
+                      </>;
                     })()}
                   </td>
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.cost} onChange={e=>setEditData(d=>({...d,cost:e.target.value}))}/>:`$${p.cost}`}</td>
