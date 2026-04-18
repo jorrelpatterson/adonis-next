@@ -9,125 +9,951 @@
   "received_on": "2026-04-17",
   "source": "screenshot from Jorrel; Eve confirms this is unchanged from prior send",
   "notes": [
-    "Some entries marked red on Eve's sheet (likely highlight/recent — semantics unclear). Captured in 'red' boolean.",
-    "Two entries (LC120, LC216) have no compound name on the sheet — captured as unknown.",
+    "Some entries marked red on Eve's sheet (likely highlight/recent \u2014 semantics unclear). Captured in 'red' boolean.",
+    "Two entries (LC120, LC216) have no compound name on the sheet \u2014 captured as unknown.",
     "GKP70 appears twice with different prices (125 and 120). Captured both; needs Eve clarification.",
-    "PNC-27 5mg and 10mg both labeled 'PNC 27' on Eve's sheet without size suffix in Cat# — disambiguated by size."
+    "PNC-27 5mg and 10mg both labeled 'PNC 27' on Eve's sheet without size suffix in Cat# \u2014 disambiguated by size."
   ],
   "products": [
-    {"vendor_sku": "SM5",     "name": "Semaglutide",         "size": "5mg",     "cost_per_kit": 30,  "red": false, "our_sku": "SM5"},
-    {"vendor_sku": "SM10",    "name": "Semaglutide",         "size": "10mg",    "cost_per_kit": 45,  "red": true,  "our_sku": "SM10"},
-    {"vendor_sku": "SM15",    "name": "Semaglutide",         "size": "15mg",    "cost_per_kit": 55,  "red": false, "our_sku": "SM15"},
-    {"vendor_sku": "SM20",    "name": "Semaglutide",         "size": "20mg",    "cost_per_kit": 70,  "red": false, "our_sku": "SM20"},
-    {"vendor_sku": "SM30",    "name": "Semaglutide",         "size": "30mg",    "cost_per_kit": 90,  "red": false, "our_sku": "SM30"},
-    {"vendor_sku": "TR5",     "name": "Tirzepatide",         "size": "5mg",     "cost_per_kit": 35,  "red": false, "our_sku": "TZ5"},
-    {"vendor_sku": "TR10",    "name": "Tirzepatide",         "size": "10mg",    "cost_per_kit": 45,  "red": false, "our_sku": "TZ10"},
-    {"vendor_sku": "TR15",    "name": "Tirzepatide",         "size": "15mg",    "cost_per_kit": 55,  "red": false, "our_sku": "TZ15"},
-    {"vendor_sku": "TR20",    "name": "Tirzepatide",         "size": "20mg",    "cost_per_kit": 70,  "red": true,  "our_sku": "TZ20"},
-    {"vendor_sku": "TR30",    "name": "Tirzepatide",         "size": "30mg",    "cost_per_kit": 90,  "red": true,  "our_sku": "TZ30"},
-    {"vendor_sku": "TR40",    "name": "Tirzepatide",         "size": "40mg",    "cost_per_kit": 120, "red": false, "our_sku": "TZ40"},
-    {"vendor_sku": "TR45",    "name": "Tirzepatide",         "size": "45mg",    "cost_per_kit": 135, "red": false, "our_sku": null},
-    {"vendor_sku": "TR50",    "name": "Tirzepatide",         "size": "50mg",    "cost_per_kit": 145, "red": false, "our_sku": null},
-    {"vendor_sku": "TR60",    "name": "Tirzepatide",         "size": "60mg",    "cost_per_kit": 165, "red": false, "our_sku": null},
-    {"vendor_sku": "RT5",     "name": "Retatrutide",         "size": "5mg",     "cost_per_kit": 50,  "red": false, "our_sku": "RT5"},
-    {"vendor_sku": "RT10",    "name": "Retatrutide",         "size": "10mg",    "cost_per_kit": 85,  "red": false, "our_sku": "RT10"},
-    {"vendor_sku": "RT15",    "name": "Retatrutide",         "size": "15mg",    "cost_per_kit": 110, "red": false, "our_sku": null},
-    {"vendor_sku": "RT20",    "name": "Retatrutide",         "size": "20mg",    "cost_per_kit": 135, "red": false, "our_sku": "RT20"},
-    {"vendor_sku": "RT24",    "name": "Retatrutide",         "size": "24mg",    "cost_per_kit": 155, "red": false, "our_sku": null},
-    {"vendor_sku": "RT30",    "name": "Retatrutide",         "size": "30mg",    "cost_per_kit": 190, "red": false, "our_sku": null},
-    {"vendor_sku": "RT36",    "name": "Retatrutide",         "size": "36mg",    "cost_per_kit": 220, "red": false, "our_sku": null},
-    {"vendor_sku": "RT40",    "name": "Retatrutide",         "size": "40mg",    "cost_per_kit": 255, "red": false, "our_sku": null},
-    {"vendor_sku": "RT50",    "name": "Retatrutide",         "size": "50mg",    "cost_per_kit": 310, "red": false, "our_sku": null},
-    {"vendor_sku": "RT60",    "name": "Retatrutide",         "size": "60mg",    "cost_per_kit": 350, "red": false, "our_sku": null},
-    {"vendor_sku": "ML10",    "name": "Melanotan II",        "size": "10mg",    "cost_per_kit": 45,  "red": true,  "our_sku": "MT2", "alias": "MT-2 (Melanotan 2 Acetate)"},
-    {"vendor_sku": "CU50",    "name": "GHK-Cu",              "size": "50mg",    "cost_per_kit": 30,  "red": true,  "our_sku": "GC50"},
-    {"vendor_sku": "CU100",   "name": "GHK-Cu",              "size": "100mg",   "cost_per_kit": 50,  "red": true,  "our_sku": null},
-    {"vendor_sku": "GTT600",  "name": "Glutathione",         "size": "600mg",   "cost_per_kit": 35,  "red": false, "our_sku": "GT600"},
-    {"vendor_sku": "GTT1200", "name": "Glutathione",         "size": "1200mg",  "cost_per_kit": 60,  "red": false, "our_sku": null},
-    {"vendor_sku": "GTT",     "name": "Glutathione",         "size": "1500mg",  "cost_per_kit": 70,  "red": false, "our_sku": "GT1500"},
-    {"vendor_sku": "CGL5",    "name": "Cagrilintide",        "size": "5mg",     "cost_per_kit": 115, "red": false, "our_sku": null},
-    {"vendor_sku": "CGL10",   "name": "Cagrilintide",        "size": "10mg",    "cost_per_kit": 200, "red": false, "our_sku": null},
-    {"vendor_sku": "NP810",   "name": "Snap-8",              "size": "10mg",    "cost_per_kit": 45,  "red": false, "our_sku": "NP8"},
-    {"vendor_sku": "KPV5",    "name": "KPV",                 "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "KV5"},
-    {"vendor_sku": "KPV10",   "name": "KPV",                 "size": "10mg",    "cost_per_kit": 60,  "red": false, "our_sku": "KV10"},
-    {"vendor_sku": "柠檬瓶",    "name": "Lemon Bottle",        "size": "unknown", "cost_per_kit": 70,  "red": false, "our_sku": null, "alias": "柠檬瓶 (Chinese: 'lemon bottle' — compound unclear)"},
-    {"vendor_sku": "XA5",     "name": "Semax",               "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "SX5"},
-    {"vendor_sku": "XA11",    "name": "Semax",               "size": "11mg",    "cost_per_kit": 55,  "red": true,  "our_sku": "SX11"},
-    {"vendor_sku": "SK5",     "name": "Selank",              "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "SK5"},
-    {"vendor_sku": "SK11",    "name": "Selank",              "size": "11mg",    "cost_per_kit": 65,  "red": false, "our_sku": "SK11"},
-    {"vendor_sku": "IG01",    "name": "IGF-1 LR3",           "size": "0.1mg",   "cost_per_kit": 40,  "red": false, "our_sku": "IG01"},
-    {"vendor_sku": "IG1",     "name": "IGF-1 LR3",           "size": "1mg",     "cost_per_kit": 210, "red": false, "our_sku": "IG1"},
-    {"vendor_sku": "TSM5",    "name": "Tesamorelin",         "size": "5mg",     "cost_per_kit": 100, "red": false, "our_sku": "TE5"},
-    {"vendor_sku": "TSM10",   "name": "Tesamorelin",         "size": "10mg",    "cost_per_kit": 185, "red": true,  "our_sku": "TE10"},
-    {"vendor_sku": "TSM15",   "name": "Tesamorelin",         "size": "15mg",    "cost_per_kit": 230, "red": true,  "our_sku": "TE15"},
-    {"vendor_sku": "XT100",   "name": "Botulinum toxin",     "size": "100u",    "cost_per_kit": 145, "red": false, "our_sku": null},
-    {"vendor_sku": "VIP5",    "name": "VIP",                 "size": "5mg",     "cost_per_kit": 85,  "red": false, "our_sku": "VP5"},
-    {"vendor_sku": "VIP10",   "name": "VIP",                 "size": "10mg",    "cost_per_kit": 160, "red": false, "our_sku": "VP10"},
-    {"vendor_sku": "IP10",    "name": "Ipamorelin",          "size": "10mg",    "cost_per_kit": 80,  "red": false, "our_sku": "IP10"},
-    {"vendor_sku": "IP5",     "name": "Ipamorelin",          "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "IP5"},
-    {"vendor_sku": "MS10",    "name": "MOTS-c",              "size": "10mg",    "cost_per_kit": 70,  "red": true,  "our_sku": "MC10", "annotation": "Eve sheet notes 无色 (colorless)"},
-    {"vendor_sku": "MS40",    "name": "MOTS-c",              "size": "40mg",    "cost_per_kit": 200, "red": false, "our_sku": "MC40", "annotation": "Eve sheet notes 红色 (red color)"},
-    {"vendor_sku": "322",     "name": "SLU-PP-322",          "size": "5mg",     "cost_per_kit": 130, "red": false, "our_sku": "SL322"},
-    {"vendor_sku": "ET10",    "name": "Epitalon",            "size": "10mg",    "cost_per_kit": 50,  "red": true,  "our_sku": "EP10"},
-    {"vendor_sku": "ET50",    "name": "Epitalon",            "size": "50mg",    "cost_per_kit": 140, "red": true,  "our_sku": "EP50"},
-    {"vendor_sku": "P41",     "name": "PT-141",              "size": "10mg",    "cost_per_kit": 60,  "red": true,  "our_sku": "PT10"},
-    {"vendor_sku": "DS5",     "name": "DSIP",                "size": "5mg",     "cost_per_kit": 40,  "red": false, "our_sku": "DS5"},
-    {"vendor_sku": "DS15",    "name": "DSIP",                "size": "15mg",    "cost_per_kit": 100, "red": false, "our_sku": "DS15"},
-    {"vendor_sku": "DR5",     "name": "Dermorphin",          "size": "5mg",     "cost_per_kit": 60,  "red": false, "our_sku": "DM5"},
-    {"vendor_sku": "TA5",     "name": "Thymosin Alpha-1",    "size": "5mg",     "cost_per_kit": 90,  "red": false, "our_sku": "TA5"},
-    {"vendor_sku": "TA10",    "name": "Thymosin Alpha-1",    "size": "10mg",    "cost_per_kit": 170, "red": false, "our_sku": "TA10"},
-    {"vendor_sku": "G5K",     "name": "HCG",                 "size": "5000iu",  "cost_per_kit": 85,  "red": false, "our_sku": "G5K"},
-    {"vendor_sku": "G10K",    "name": "HCG",                 "size": "10000iu", "cost_per_kit": 165, "red": false, "our_sku": "G10K"},
-    {"vendor_sku": "G65",     "name": "GHRP-6",              "size": "5mg",     "cost_per_kit": 25,  "red": false, "our_sku": "G65"},
-    {"vendor_sku": "G610",    "name": "GHRP-6",              "size": "10mg",    "cost_per_kit": 50,  "red": false, "our_sku": "G610"},
-    {"vendor_sku": "IGD",     "name": "IGF-DES",             "size": "1mg",     "cost_per_kit": 60,  "red": false, "our_sku": "IGD1"},
-    {"vendor_sku": "2S10",    "name": "SS-31",               "size": "10mg",    "cost_per_kit": 85,  "red": true,  "our_sku": "SS10"},
-    {"vendor_sku": "2S50",    "name": "SS-31",               "size": "50mg",    "cost_per_kit": 340, "red": false, "our_sku": "SS50"},
-    {"vendor_sku": "MT1",     "name": "Melanotan I",         "size": "5mg",     "cost_per_kit": 50,  "red": false, "our_sku": "MT1"},
-    {"vendor_sku": "MDT",     "name": "Mazdutide",           "size": "10mg",    "cost_per_kit": 215, "red": false, "our_sku": "MZ10"},
-    {"vendor_sku": "GKP70",   "name": "GKP Blend",           "size": "70mg",    "cost_per_kit": 125, "red": false, "our_sku": "GKP70", "components": "CU50mg+KPV10mg+BPC10mg"},
-    {"vendor_sku": "GLOW50",  "name": "GLOW50 Blend",        "size": "50mg",    "cost_per_kit": 160, "red": false, "our_sku": "GL50",  "components": "CU35mg+TB10mg+BPC5mg"},
-    {"vendor_sku": "BBG70",   "name": "BBG Blend",           "size": "70mg",    "cost_per_kit": 195, "red": false, "our_sku": "BBG70", "components": "BPC10mg+GHK-Cu50mg+TB500 10mg"},
-    {"vendor_sku": "CS5",     "name": "CagriSema",           "size": "5mg",     "cost_per_kit": 100, "red": false, "our_sku": "CS5",   "components": "cagrilintide 2.5mg + semaglutide 2.5mg"},
-    {"vendor_sku": "CS10",    "name": "CagriSema",           "size": "10mg",    "cost_per_kit": 185, "red": false, "our_sku": "CS10",  "components": "cagrilintide 5mg + semaglutide 5mg"},
-    {"vendor_sku": "LC120",   "name": "UNKNOWN",             "size": "unknown", "cost_per_kit": 70,  "red": false, "our_sku": null, "alias": "Eve sheet has no compound name; ask vendor"},
-    {"vendor_sku": "LC216",   "name": "UNKNOWN",             "size": "unknown", "cost_per_kit": 70,  "red": false, "our_sku": null, "alias": "Eve sheet has no compound name; ask vendor"},
-    {"vendor_sku": "WA3",     "name": "Bac Water",           "size": "3ml",     "cost_per_kit": 10,  "red": true,  "our_sku": "WA3"},
-    {"vendor_sku": "WA10",    "name": "Bac Water",           "size": "10ml",    "cost_per_kit": 15,  "red": false, "our_sku": "WA10"},
-    {"vendor_sku": "CND5",    "name": "CJC-1295 noDAC",      "size": "5mg",     "cost_per_kit": 80,  "red": false, "our_sku": "CND5"},
-    {"vendor_sku": "CND10",   "name": "CJC-1295 noDAC",      "size": "10mg",    "cost_per_kit": 140, "red": false, "our_sku": "CND10"},
-    {"vendor_sku": "CD5",     "name": "CJC-1295 wDAC",       "size": "5mg",     "cost_per_kit": 170, "red": false, "our_sku": "CD5"},
-    {"vendor_sku": "RA10",    "name": "ARA-290",             "size": "10mg",    "cost_per_kit": 65,  "red": false, "our_sku": "AR10"},
-    {"vendor_sku": "CBL60",   "name": "Cerebrolysin",        "size": "60mg",    "cost_per_kit": 25,  "red": false, "our_sku": "CB60", "annotation": "60mg × 6 vials per Eve sheet"},
-    {"vendor_sku": "TY10",    "name": "Thymalin",            "size": "10mg",    "cost_per_kit": 65,  "red": false, "our_sku": "TM10"},
-    {"vendor_sku": "375",     "name": "LL-37",               "size": "5mg",     "cost_per_kit": 95,  "red": false, "our_sku": "LL5"},
-    {"vendor_sku": "SUR10",   "name": "Survodutide",         "size": "10mg",    "cost_per_kit": 280, "red": false, "our_sku": "SV10"},
-    {"vendor_sku": "PI5",     "name": "Pinealon",            "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "PI5"},
-    {"vendor_sku": "PI10",    "name": "Pinealon",            "size": "10mg",    "cost_per_kit": 65,  "red": false, "our_sku": "PI10"},
-    {"vendor_sku": "PI20",    "name": "Pinealon",            "size": "20mg",    "cost_per_kit": 100, "red": false, "our_sku": "PI20"},
-    {"vendor_sku": "PNC 27",  "name": "PNC-27",              "size": "5mg",     "cost_per_kit": 100, "red": false, "our_sku": "PNC5"},
-    {"vendor_sku": "PNC 27",  "name": "PNC-27",              "size": "10mg",    "cost_per_kit": 170, "red": false, "our_sku": "PNC10"},
-    {"vendor_sku": "OT2",     "name": "Oxytocin",            "size": "2mg",     "cost_per_kit": 30,  "red": false, "our_sku": null, "alias": "Oxytocin Acetate"},
-    {"vendor_sku": "G75",     "name": "HMG",                 "size": "75iu",    "cost_per_kit": 70,  "red": false, "our_sku": "G75", "annotation": "75iu × 10 per Eve sheet"},
-    {"vendor_sku": "KLOW",    "name": "KLOW",                "size": "80mg",    "cost_per_kit": 230, "red": false, "our_sku": "KL80", "components": "CU50+TB10+BC10+KPV10"},
-    {"vendor_sku": "BC10",    "name": "BPC-157",             "size": "10mg",    "cost_per_kit": 70,  "red": false, "our_sku": "BP10"},
-    {"vendor_sku": "BC5",     "name": "BPC-157",             "size": "5mg",     "cost_per_kit": 40,  "red": false, "our_sku": "BP5"},
-    {"vendor_sku": "TB10",    "name": "TB-500",              "size": "10mg",    "cost_per_kit": 135, "red": false, "our_sku": "TB10", "alias": "Thymosin B4 Acetate"},
-    {"vendor_sku": "TB5",     "name": "TB-500",              "size": "5mg",     "cost_per_kit": 75,  "red": false, "our_sku": "TB5"},
-    {"vendor_sku": "SMO5",    "name": "Sermorelin",          "size": "5mg",     "cost_per_kit": 70,  "red": false, "our_sku": "SR5",  "alias": "Sermorelin Acetate"},
-    {"vendor_sku": "SMO10",   "name": "Sermorelin",          "size": "10mg",    "cost_per_kit": 115, "red": false, "our_sku": "SR10", "alias": "Sermorelin Acetate"},
-    {"vendor_sku": "NJ500",   "name": "NAD+",                "size": "500mg",   "cost_per_kit": 70,  "red": false, "our_sku": "NA500"},
-    {"vendor_sku": "NJ100",   "name": "NAD+",                "size": "100mg",   "cost_per_kit": 45,  "red": false, "our_sku": "NA100"},
-    {"vendor_sku": "BB20",    "name": "BPC+TB Blend",        "size": "20mg",    "cost_per_kit": 170, "red": false, "our_sku": "BB20", "components": "BPC 10mg + TB 10mg"},
-    {"vendor_sku": "BB10",    "name": "BPC+TB Blend",        "size": "10mg",    "cost_per_kit": 95,  "red": false, "our_sku": "BB10", "components": "BPC 5mg + TB 5mg"},
-    {"vendor_sku": "KS5",     "name": "Kisspeptin-10",       "size": "5mg",     "cost_per_kit": 60,  "red": false, "our_sku": "KS5"},
-    {"vendor_sku": "KS10",    "name": "Kisspeptin-10",       "size": "10mg",    "cost_per_kit": 100, "red": false, "our_sku": "KS10"},
-    {"vendor_sku": "5AD",     "name": "AOD-9604",            "size": "5mg",     "cost_per_kit": 115, "red": false, "our_sku": "5AD"},
-    {"vendor_sku": "5AM",     "name": "5-Amino-1MQ",         "size": "5mg",     "cost_per_kit": 45,  "red": false, "our_sku": "5AM"},
-    {"vendor_sku": "CP10",    "name": "CJC+IPA Blend",       "size": "10mg",    "cost_per_kit": 100, "red": false, "our_sku": null, "components": "CJC-1295 noDAC 5mg + Ipamorelin 5mg"},
-    {"vendor_sku": "B12",     "name": "B12",                 "size": "10ml",    "cost_per_kit": 45,  "red": false, "our_sku": "B12", "annotation": "10ml vial, 1mg per ml"},
-    {"vendor_sku": "GKP70-alt", "name": "GKP Blend",         "size": "70mg",    "cost_per_kit": 120, "red": false, "our_sku": "GKP70", "components": "CU50+KPV10+BPC10", "annotation": "Eve sheet lists GKP70 twice — first instance has price 125, this duplicate shows 120. Needs vendor clarification."},
-    {"vendor_sku": "H10",     "name": "HGH",                 "size": "10iu",    "cost_per_kit": 55,  "red": false, "our_sku": "H10"},
-    {"vendor_sku": "H15",     "name": "HGH",                 "size": "15iu",    "cost_per_kit": 80,  "red": false, "our_sku": "H15"}
+    {
+      "vendor_sku": "SM5",
+      "name": "Semaglutide",
+      "size": "5mg",
+      "cost_per_kit": 30,
+      "red": false,
+      "our_sku": "SM5"
+    },
+    {
+      "vendor_sku": "SM10",
+      "name": "Semaglutide",
+      "size": "10mg",
+      "cost_per_kit": 45,
+      "red": true,
+      "our_sku": "SM10"
+    },
+    {
+      "vendor_sku": "SM15",
+      "name": "Semaglutide",
+      "size": "15mg",
+      "cost_per_kit": 55,
+      "red": false,
+      "our_sku": "SM15"
+    },
+    {
+      "vendor_sku": "SM20",
+      "name": "Semaglutide",
+      "size": "20mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "SM20"
+    },
+    {
+      "vendor_sku": "SM30",
+      "name": "Semaglutide",
+      "size": "30mg",
+      "cost_per_kit": 90,
+      "red": false,
+      "our_sku": "SM30"
+    },
+    {
+      "vendor_sku": "TR5",
+      "name": "Tirzepatide",
+      "size": "5mg",
+      "cost_per_kit": 35,
+      "red": false,
+      "our_sku": "TZ5"
+    },
+    {
+      "vendor_sku": "TR10",
+      "name": "Tirzepatide",
+      "size": "10mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "TZ10"
+    },
+    {
+      "vendor_sku": "TR15",
+      "name": "Tirzepatide",
+      "size": "15mg",
+      "cost_per_kit": 55,
+      "red": false,
+      "our_sku": "TZ15"
+    },
+    {
+      "vendor_sku": "TR20",
+      "name": "Tirzepatide",
+      "size": "20mg",
+      "cost_per_kit": 70,
+      "red": true,
+      "our_sku": "TZ20"
+    },
+    {
+      "vendor_sku": "TR30",
+      "name": "Tirzepatide",
+      "size": "30mg",
+      "cost_per_kit": 90,
+      "red": true,
+      "our_sku": "TZ30"
+    },
+    {
+      "vendor_sku": "TR40",
+      "name": "Tirzepatide",
+      "size": "40mg",
+      "cost_per_kit": 120,
+      "red": false,
+      "our_sku": "TZ40"
+    },
+    {
+      "vendor_sku": "TR45",
+      "name": "Tirzepatide",
+      "size": "45mg",
+      "cost_per_kit": 135,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "TR50",
+      "name": "Tirzepatide",
+      "size": "50mg",
+      "cost_per_kit": 145,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "TR60",
+      "name": "Tirzepatide",
+      "size": "60mg",
+      "cost_per_kit": 165,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT5",
+      "name": "Retatrutide",
+      "size": "5mg",
+      "cost_per_kit": 50,
+      "red": false,
+      "our_sku": "RT5"
+    },
+    {
+      "vendor_sku": "RT10",
+      "name": "Retatrutide",
+      "size": "10mg",
+      "cost_per_kit": 85,
+      "red": false,
+      "our_sku": "RT10"
+    },
+    {
+      "vendor_sku": "RT15",
+      "name": "Retatrutide",
+      "size": "15mg",
+      "cost_per_kit": 110,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT20",
+      "name": "Retatrutide",
+      "size": "20mg",
+      "cost_per_kit": 135,
+      "red": false,
+      "our_sku": "RT20"
+    },
+    {
+      "vendor_sku": "RT24",
+      "name": "Retatrutide",
+      "size": "24mg",
+      "cost_per_kit": 155,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT30",
+      "name": "Retatrutide",
+      "size": "30mg",
+      "cost_per_kit": 190,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT36",
+      "name": "Retatrutide",
+      "size": "36mg",
+      "cost_per_kit": 220,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT40",
+      "name": "Retatrutide",
+      "size": "40mg",
+      "cost_per_kit": 255,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT50",
+      "name": "Retatrutide",
+      "size": "50mg",
+      "cost_per_kit": 310,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "RT60",
+      "name": "Retatrutide",
+      "size": "60mg",
+      "cost_per_kit": 350,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "ML10",
+      "name": "Melanotan II",
+      "size": "10mg",
+      "cost_per_kit": 45,
+      "red": true,
+      "our_sku": "MT2",
+      "alias": "MT-2 (Melanotan 2 Acetate)"
+    },
+    {
+      "vendor_sku": "CU50",
+      "name": "GHK-Cu",
+      "size": "50mg",
+      "cost_per_kit": 30,
+      "red": true,
+      "our_sku": "GC50"
+    },
+    {
+      "vendor_sku": "CU100",
+      "name": "GHK-Cu",
+      "size": "100mg",
+      "cost_per_kit": 50,
+      "red": true,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "GTT600",
+      "name": "Glutathione",
+      "size": "600mg",
+      "cost_per_kit": 35,
+      "red": false,
+      "our_sku": "GT600"
+    },
+    {
+      "vendor_sku": "GTT1200",
+      "name": "Glutathione",
+      "size": "1200mg",
+      "cost_per_kit": 60,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "GTT",
+      "name": "Glutathione",
+      "size": "1500mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "GT1500"
+    },
+    {
+      "vendor_sku": "CGL5",
+      "name": "Cagrilintide",
+      "size": "5mg",
+      "cost_per_kit": 115,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "CGL10",
+      "name": "Cagrilintide",
+      "size": "10mg",
+      "cost_per_kit": 200,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "NP810",
+      "name": "Snap-8",
+      "size": "10mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "NP8"
+    },
+    {
+      "vendor_sku": "KPV5",
+      "name": "KPV",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "KV5"
+    },
+    {
+      "vendor_sku": "KPV10",
+      "name": "KPV",
+      "size": "10mg",
+      "cost_per_kit": 60,
+      "red": false,
+      "our_sku": "KV10"
+    },
+    {
+      "vendor_sku": "\u67e0\u6aac\u74f6",
+      "name": "Lemon Bottle",
+      "size": "5ml",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": null,
+      "alias": "Korean fat-dissolving brand. Composition: Riboflavin + Lecithin + Bromelain. Cosmetic lipolysis. Confirm size with Eve.",
+      "category_suggestion": "Weight Loss / Lipotropic"
+    },
+    {
+      "vendor_sku": "XA5",
+      "name": "Semax",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "SX5"
+    },
+    {
+      "vendor_sku": "XA11",
+      "name": "Semax",
+      "size": "11mg",
+      "cost_per_kit": 55,
+      "red": true,
+      "our_sku": "SX11"
+    },
+    {
+      "vendor_sku": "SK5",
+      "name": "Selank",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "SK5"
+    },
+    {
+      "vendor_sku": "SK11",
+      "name": "Selank",
+      "size": "11mg",
+      "cost_per_kit": 65,
+      "red": false,
+      "our_sku": "SK11"
+    },
+    {
+      "vendor_sku": "IG01",
+      "name": "IGF-1 LR3",
+      "size": "0.1mg",
+      "cost_per_kit": 40,
+      "red": false,
+      "our_sku": "IG01"
+    },
+    {
+      "vendor_sku": "IG1",
+      "name": "IGF-1 LR3",
+      "size": "1mg",
+      "cost_per_kit": 210,
+      "red": false,
+      "our_sku": "IG1"
+    },
+    {
+      "vendor_sku": "TSM5",
+      "name": "Tesamorelin",
+      "size": "5mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "TE5"
+    },
+    {
+      "vendor_sku": "TSM10",
+      "name": "Tesamorelin",
+      "size": "10mg",
+      "cost_per_kit": 185,
+      "red": true,
+      "our_sku": "TE10"
+    },
+    {
+      "vendor_sku": "TSM15",
+      "name": "Tesamorelin",
+      "size": "15mg",
+      "cost_per_kit": 230,
+      "red": true,
+      "our_sku": "TE15"
+    },
+    {
+      "vendor_sku": "XT100",
+      "name": "Botulinum toxin",
+      "size": "100u",
+      "cost_per_kit": 145,
+      "red": false,
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "VIP5",
+      "name": "VIP",
+      "size": "5mg",
+      "cost_per_kit": 85,
+      "red": false,
+      "our_sku": "VP5"
+    },
+    {
+      "vendor_sku": "VIP10",
+      "name": "VIP",
+      "size": "10mg",
+      "cost_per_kit": 160,
+      "red": false,
+      "our_sku": "VP10"
+    },
+    {
+      "vendor_sku": "IP10",
+      "name": "Ipamorelin",
+      "size": "10mg",
+      "cost_per_kit": 80,
+      "red": false,
+      "our_sku": "IP10"
+    },
+    {
+      "vendor_sku": "IP5",
+      "name": "Ipamorelin",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "IP5"
+    },
+    {
+      "vendor_sku": "MS10",
+      "name": "MOTS-c",
+      "size": "10mg",
+      "cost_per_kit": 70,
+      "red": true,
+      "our_sku": "MC10",
+      "annotation": "Eve sheet notes \u65e0\u8272 (colorless)"
+    },
+    {
+      "vendor_sku": "MS40",
+      "name": "MOTS-c",
+      "size": "40mg",
+      "cost_per_kit": 200,
+      "red": false,
+      "our_sku": "MC40",
+      "annotation": "Eve sheet notes \u7ea2\u8272 (red color)"
+    },
+    {
+      "vendor_sku": "322",
+      "name": "SLU-PP-322",
+      "size": "5mg",
+      "cost_per_kit": 130,
+      "red": false,
+      "our_sku": "SL322"
+    },
+    {
+      "vendor_sku": "ET10",
+      "name": "Epitalon",
+      "size": "10mg",
+      "cost_per_kit": 50,
+      "red": true,
+      "our_sku": "EP10"
+    },
+    {
+      "vendor_sku": "ET50",
+      "name": "Epitalon",
+      "size": "50mg",
+      "cost_per_kit": 140,
+      "red": true,
+      "our_sku": "EP50"
+    },
+    {
+      "vendor_sku": "P41",
+      "name": "PT-141",
+      "size": "10mg",
+      "cost_per_kit": 60,
+      "red": true,
+      "our_sku": "PT10"
+    },
+    {
+      "vendor_sku": "DS5",
+      "name": "DSIP",
+      "size": "5mg",
+      "cost_per_kit": 40,
+      "red": false,
+      "our_sku": "DS5"
+    },
+    {
+      "vendor_sku": "DS15",
+      "name": "DSIP",
+      "size": "15mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "DS15"
+    },
+    {
+      "vendor_sku": "DR5",
+      "name": "Dermorphin",
+      "size": "5mg",
+      "cost_per_kit": 60,
+      "red": false,
+      "our_sku": "DM5"
+    },
+    {
+      "vendor_sku": "TA5",
+      "name": "Thymosin Alpha-1",
+      "size": "5mg",
+      "cost_per_kit": 90,
+      "red": false,
+      "our_sku": "TA5"
+    },
+    {
+      "vendor_sku": "TA10",
+      "name": "Thymosin Alpha-1",
+      "size": "10mg",
+      "cost_per_kit": 170,
+      "red": false,
+      "our_sku": "TA10"
+    },
+    {
+      "vendor_sku": "G5K",
+      "name": "HCG",
+      "size": "5000iu",
+      "cost_per_kit": 85,
+      "red": false,
+      "our_sku": "G5K"
+    },
+    {
+      "vendor_sku": "G10K",
+      "name": "HCG",
+      "size": "10000iu",
+      "cost_per_kit": 165,
+      "red": false,
+      "our_sku": "G10K"
+    },
+    {
+      "vendor_sku": "G65",
+      "name": "GHRP-6",
+      "size": "5mg",
+      "cost_per_kit": 25,
+      "red": false,
+      "our_sku": "G65"
+    },
+    {
+      "vendor_sku": "G610",
+      "name": "GHRP-6",
+      "size": "10mg",
+      "cost_per_kit": 50,
+      "red": false,
+      "our_sku": "G610"
+    },
+    {
+      "vendor_sku": "IGD",
+      "name": "IGF-DES",
+      "size": "1mg",
+      "cost_per_kit": 60,
+      "red": false,
+      "our_sku": "IGD1"
+    },
+    {
+      "vendor_sku": "2S10",
+      "name": "SS-31",
+      "size": "10mg",
+      "cost_per_kit": 85,
+      "red": true,
+      "our_sku": "SS10"
+    },
+    {
+      "vendor_sku": "2S50",
+      "name": "SS-31",
+      "size": "50mg",
+      "cost_per_kit": 340,
+      "red": false,
+      "our_sku": "SS50"
+    },
+    {
+      "vendor_sku": "MT1",
+      "name": "Melanotan I",
+      "size": "5mg",
+      "cost_per_kit": 50,
+      "red": false,
+      "our_sku": "MT1"
+    },
+    {
+      "vendor_sku": "MDT",
+      "name": "Mazdutide",
+      "size": "10mg",
+      "cost_per_kit": 215,
+      "red": false,
+      "our_sku": "MZ10"
+    },
+    {
+      "vendor_sku": "GKP70",
+      "name": "GKP Blend",
+      "size": "70mg",
+      "cost_per_kit": 125,
+      "red": false,
+      "our_sku": "GKP70",
+      "components": "CU50mg+KPV10mg+BPC10mg",
+      "annotation": "Per Jorrel: possibly different mg compositions but Eve sheet shows identical CU50+KPV10+BPC10 total 70mg for both. Needs WhatsApp confirmation."
+    },
+    {
+      "vendor_sku": "GLOW50",
+      "name": "GLOW50 Blend",
+      "size": "50mg",
+      "cost_per_kit": 160,
+      "red": false,
+      "our_sku": "GL50",
+      "components": "CU35mg+TB10mg+BPC5mg"
+    },
+    {
+      "vendor_sku": "BBG70",
+      "name": "BBG Blend",
+      "size": "70mg",
+      "cost_per_kit": 195,
+      "red": false,
+      "our_sku": "BBG70",
+      "components": "BPC10mg+GHK-Cu50mg+TB500 10mg"
+    },
+    {
+      "vendor_sku": "CS5",
+      "name": "CagriSema",
+      "size": "5mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "CS5",
+      "components": "cagrilintide 2.5mg + semaglutide 2.5mg"
+    },
+    {
+      "vendor_sku": "CS10",
+      "name": "CagriSema",
+      "size": "10mg",
+      "cost_per_kit": 185,
+      "red": false,
+      "our_sku": "CS10",
+      "components": "cagrilintide 5mg + semaglutide 5mg"
+    },
+    {
+      "vendor_sku": "LC120",
+      "name": "Lipo-C 120",
+      "size": "120mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": null,
+      "alias": "Liquid Compound 120mg total. Composition: methionine + choline chloride + carnitine + dexpanthenol. L-carnitine-focused lipolytic.",
+      "category_suggestion": "Weight Loss / Lipotropic"
+    },
+    {
+      "vendor_sku": "LC216",
+      "name": "Lipo-B 216 (MIC)",
+      "size": "216mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": null,
+      "alias": "Liquid Compound 216mg total. MIC formulation (methionine + inositol + choline) + extras. Liver-focused fat processing. Some vendors also brand this as Lemon Bottle.",
+      "category_suggestion": "Weight Loss / Lipotropic"
+    },
+    {
+      "vendor_sku": "WA3",
+      "name": "Bac Water",
+      "size": "3ml",
+      "cost_per_kit": 10,
+      "red": true,
+      "our_sku": "WA3"
+    },
+    {
+      "vendor_sku": "WA10",
+      "name": "Bac Water",
+      "size": "10ml",
+      "cost_per_kit": 15,
+      "red": false,
+      "our_sku": "WA10"
+    },
+    {
+      "vendor_sku": "CND5",
+      "name": "CJC-1295 noDAC",
+      "size": "5mg",
+      "cost_per_kit": 80,
+      "red": false,
+      "our_sku": "CND5"
+    },
+    {
+      "vendor_sku": "CND10",
+      "name": "CJC-1295 noDAC",
+      "size": "10mg",
+      "cost_per_kit": 140,
+      "red": false,
+      "our_sku": "CND10"
+    },
+    {
+      "vendor_sku": "CD5",
+      "name": "CJC-1295 wDAC",
+      "size": "5mg",
+      "cost_per_kit": 170,
+      "red": false,
+      "our_sku": "CD5"
+    },
+    {
+      "vendor_sku": "RA10",
+      "name": "ARA-290",
+      "size": "10mg",
+      "cost_per_kit": 65,
+      "red": false,
+      "our_sku": "AR10"
+    },
+    {
+      "vendor_sku": "CBL60",
+      "name": "Cerebrolysin",
+      "size": "60mg",
+      "cost_per_kit": 25,
+      "red": false,
+      "our_sku": "CB60",
+      "annotation": "60mg \u00d7 6 vials per Eve sheet"
+    },
+    {
+      "vendor_sku": "TY10",
+      "name": "Thymalin",
+      "size": "10mg",
+      "cost_per_kit": 65,
+      "red": false,
+      "our_sku": "TM10"
+    },
+    {
+      "vendor_sku": "375",
+      "name": "LL-37",
+      "size": "5mg",
+      "cost_per_kit": 95,
+      "red": false,
+      "our_sku": "LL5"
+    },
+    {
+      "vendor_sku": "SUR10",
+      "name": "Survodutide",
+      "size": "10mg",
+      "cost_per_kit": 280,
+      "red": false,
+      "our_sku": "SV10"
+    },
+    {
+      "vendor_sku": "PI5",
+      "name": "Pinealon",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "PI5"
+    },
+    {
+      "vendor_sku": "PI10",
+      "name": "Pinealon",
+      "size": "10mg",
+      "cost_per_kit": 65,
+      "red": false,
+      "our_sku": "PI10"
+    },
+    {
+      "vendor_sku": "PI20",
+      "name": "Pinealon",
+      "size": "20mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "PI20"
+    },
+    {
+      "vendor_sku": "PNC 27",
+      "name": "PNC-27",
+      "size": "5mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "PNC5"
+    },
+    {
+      "vendor_sku": "PNC 27",
+      "name": "PNC-27",
+      "size": "10mg",
+      "cost_per_kit": 170,
+      "red": false,
+      "our_sku": "PNC10"
+    },
+    {
+      "vendor_sku": "OT2",
+      "name": "Oxytocin",
+      "size": "2mg",
+      "cost_per_kit": 30,
+      "red": false,
+      "our_sku": null,
+      "alias": "Oxytocin Acetate"
+    },
+    {
+      "vendor_sku": "G75",
+      "name": "HMG",
+      "size": "75iu",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "G75",
+      "annotation": "75iu \u00d7 10 per Eve sheet"
+    },
+    {
+      "vendor_sku": "KLOW",
+      "name": "KLOW",
+      "size": "80mg",
+      "cost_per_kit": 230,
+      "red": false,
+      "our_sku": "KL80",
+      "components": "CU50+TB10+BC10+KPV10"
+    },
+    {
+      "vendor_sku": "BC10",
+      "name": "BPC-157",
+      "size": "10mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "BP10"
+    },
+    {
+      "vendor_sku": "BC5",
+      "name": "BPC-157",
+      "size": "5mg",
+      "cost_per_kit": 40,
+      "red": false,
+      "our_sku": "BP5"
+    },
+    {
+      "vendor_sku": "TB10",
+      "name": "TB-500",
+      "size": "10mg",
+      "cost_per_kit": 135,
+      "red": false,
+      "our_sku": "TB10",
+      "alias": "Thymosin B4 Acetate"
+    },
+    {
+      "vendor_sku": "TB5",
+      "name": "TB-500",
+      "size": "5mg",
+      "cost_per_kit": 75,
+      "red": false,
+      "our_sku": "TB5"
+    },
+    {
+      "vendor_sku": "SMO5",
+      "name": "Sermorelin",
+      "size": "5mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "SR5",
+      "alias": "Sermorelin Acetate"
+    },
+    {
+      "vendor_sku": "SMO10",
+      "name": "Sermorelin",
+      "size": "10mg",
+      "cost_per_kit": 115,
+      "red": false,
+      "our_sku": "SR10",
+      "alias": "Sermorelin Acetate"
+    },
+    {
+      "vendor_sku": "NJ500",
+      "name": "NAD+",
+      "size": "500mg",
+      "cost_per_kit": 70,
+      "red": false,
+      "our_sku": "NA500"
+    },
+    {
+      "vendor_sku": "NJ100",
+      "name": "NAD+",
+      "size": "100mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "NA100"
+    },
+    {
+      "vendor_sku": "BB20",
+      "name": "BPC+TB Blend",
+      "size": "20mg",
+      "cost_per_kit": 170,
+      "red": false,
+      "our_sku": "BB20",
+      "components": "BPC 10mg + TB 10mg"
+    },
+    {
+      "vendor_sku": "BB10",
+      "name": "BPC+TB Blend",
+      "size": "10mg",
+      "cost_per_kit": 95,
+      "red": false,
+      "our_sku": "BB10",
+      "components": "BPC 5mg + TB 5mg"
+    },
+    {
+      "vendor_sku": "KS5",
+      "name": "Kisspeptin-10",
+      "size": "5mg",
+      "cost_per_kit": 60,
+      "red": false,
+      "our_sku": "KS5"
+    },
+    {
+      "vendor_sku": "KS10",
+      "name": "Kisspeptin-10",
+      "size": "10mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": "KS10"
+    },
+    {
+      "vendor_sku": "5AD",
+      "name": "AOD-9604",
+      "size": "5mg",
+      "cost_per_kit": 115,
+      "red": false,
+      "our_sku": "5AD"
+    },
+    {
+      "vendor_sku": "5AM",
+      "name": "5-Amino-1MQ",
+      "size": "5mg",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "5AM"
+    },
+    {
+      "vendor_sku": "CP10",
+      "name": "CJC+IPA Blend",
+      "size": "10mg",
+      "cost_per_kit": 100,
+      "red": false,
+      "our_sku": null,
+      "components": "CJC-1295 noDAC 5mg + Ipamorelin 5mg"
+    },
+    {
+      "vendor_sku": "B12",
+      "name": "B12",
+      "size": "10ml",
+      "cost_per_kit": 45,
+      "red": false,
+      "our_sku": "B12",
+      "annotation": "10ml vial, 1mg per ml"
+    },
+    {
+      "vendor_sku": "GKP70-alt",
+      "name": "GKP Blend",
+      "size": "70mg",
+      "cost_per_kit": 120,
+      "red": false,
+      "our_sku": "GKP70",
+      "components": "CU50+KPV10+BPC10",
+      "annotation": "Eve sheet lists GKP70 twice \u2014 first instance has price 125, this duplicate shows 120. Needs vendor clarification. | Per Jorrel: possibly different mg compositions but Eve sheet shows identical CU50+KPV10+BPC10 total 70mg for both. Needs WhatsApp confirmation."
+    },
+    {
+      "vendor_sku": "H10",
+      "name": "HGH",
+      "size": "10iu",
+      "cost_per_kit": 55,
+      "red": false,
+      "our_sku": "H10"
+    },
+    {
+      "vendor_sku": "H15",
+      "name": "HGH",
+      "size": "15iu",
+      "cost_per_kit": 80,
+      "red": false,
+      "our_sku": "H15"
+    }
   ]
 }
