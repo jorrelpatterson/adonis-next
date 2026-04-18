@@ -26,19 +26,26 @@ export default function PurchasesPage() {
   const [newPo, setNewPo] = useState({ vendor_id: '', qtys: {}, notes: '' });
   const [creating, setCreating] = useState(false);
   const [poSearch, setPoSearch] = useState('');
+  const [pendingPOs, setPendingPOs] = useState([]);
 
   useEffect(() => {
     async function load() {
-      const [poRes, vRes, prRes, pRes] = await Promise.all([
+      const [poRes, vRes, prRes, pRes, openItRes] = await Promise.all([
         fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=*,vendor:vendors(name)&order=created_at.desc`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*&active=is.true&order=name.asc`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers: H() }),
-        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size`, { headers: H() }),
+        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size,stock`, { headers: H() }),
+        fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received,po:purchase_orders(po_number,status)`, { headers: H() }),
       ]);
       setPos(await poRes.json());
       setVendors(await vRes.json());
       setPrices(await prRes.json());
       setProducts(await pRes.json());
+      const openItems = await openItRes.json();
+      const pending = openItems
+        .filter(i => i.po && ['submitted','partial'].includes(i.po.status) && (i.qty_ordered - (i.qty_received || 0)) > 0)
+        .map(i => ({ product_id: i.product_id, po_number: i.po.po_number, kits_pending: i.qty_ordered - (i.qty_received || 0) }));
+      setPendingPOs(pending);
       setLoading(false);
     }
     load();
@@ -115,7 +122,7 @@ export default function PurchasesPage() {
                 <div style={{maxHeight:480,overflow:'auto',border:'1px solid #E4E7EC',borderRadius:6,marginBottom:16}}>
                   <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
                     <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC',position:'sticky',top:0,zIndex:1}}>
-                      {['Product','Size','SKU','Cost/kit','Qty (kits)','Line total'].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:i>=3?'right':'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
+                      {['Product','Size','SKU','On hand','Cost/kit','Qty (kits)','Line total'].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:i>=3?'right':'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
                     </tr></thead>
                     <tbody>
                       {catalog.map(p => {
@@ -127,6 +134,21 @@ export default function PurchasesPage() {
                             <td style={{padding:'8px 12px'}}>{p.name}</td>
                             <td style={{padding:'8px 12px',color:'#7A7D88',fontSize:11}}>{p.size}</td>
                             <td style={{padding:'8px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{p.sku}</td>
+                            <td style={{padding:'8px 12px',textAlign:'right'}}>
+                              {(() => {
+                                const stock = p.stock || 0;
+                                const pend = pendingPOs.filter(x => x.product_id === p.id);
+                                const totalPending = pend.reduce((s,x) => s+x.kits_pending, 0);
+                                return (
+                                  <div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-end'}}>
+                                    <span style={{fontFamily:"'JetBrains Mono'",fontSize:11,fontWeight:600,color:stock>0?'#16A34A':'#9CA3AF'}}>{stock}v</span>
+                                    {totalPending > 0 && (
+                                      <span title={'Pending: '+[...new Set(pend.map(x=>x.po_number))].join(', ')} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalPending*10}v</span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
+                            </td>
                             <td style={{padding:'8px 12px',textAlign:'right',fontFamily:'monospace'}}>${Number(cost).toFixed(2)}</td>
                             <td style={{padding:'8px 12px',textAlign:'right'}}>
                               <input type="number" min="0" value={qty} onChange={e=>setNewPo(prev=>({...prev,qtys:{...(prev.qtys||{}),[p.id]:e.target.value}}))} style={{width:70,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12,textAlign:'right'}} />
