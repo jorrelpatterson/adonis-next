@@ -11,13 +11,14 @@ const s = {
 };
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0, lowStock: 0 });
+  const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0, lowStock: 0, openPos: 0, inTransitValue: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       const { data: products } = await supabase.from('products').select('*');
       const { data: orders } = await supabase.from('orders').select('*');
+      const { data: openPos } = await supabase.from('purchase_orders').select('total_cost').in('status', ['submitted','partial']);
       const p = products || [];
       const o = orders || [];
       setStats({
@@ -25,6 +26,8 @@ export default function AdminDashboard() {
         orders: o.length,
         revenue: o.reduce((s, x) => s + Number(x.total || 0), 0),
         lowStock: p.filter(x => x.stock <= 3 && x.cat !== 'Supplies').length,
+        openPos: (openPos || []).length,
+        inTransitValue: (openPos || []).reduce((s, p) => s + Number(p.total_cost || 0), 0),
       });
       setLoading(false);
     }
@@ -38,12 +41,14 @@ export default function AdminDashboard() {
         {loading ? 'Loading...' : 'Live from Supabase'} · Adonis Admin v3.0
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 16, marginBottom: 32 }}>
         {[
           { label: 'Products', value: stats.products, icon: '🧪', color: '#00A0A8' },
           { label: 'Protocol Stacks', value: 18, icon: '📋', color: '#E07C24' },
           { label: 'Orders', value: stats.orders, icon: '📦', color: '#0072B5' },
           { label: 'Low Stock', value: stats.lowStock, icon: '⚠️', color: stats.lowStock > 0 ? '#DC2626' : '#22C55E' },
+          { label: 'Open POs',         value: stats.openPos,                                icon: '📥', color: '#A16207' },
+          { label: 'In-transit value', value: '$' + (stats.inTransitValue || 0).toFixed(0), icon: '🚚', color: '#1D4ED8' },
         ].map((item, i) => (
           <div key={i} style={{ ...s.card, borderTop: `3px solid ${item.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

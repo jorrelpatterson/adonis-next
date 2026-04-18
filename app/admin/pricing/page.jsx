@@ -16,6 +16,7 @@ export default function PricingPage() {
   const [editRetail, setEditRetail] = useState('');
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [marginTarget, setMarginTarget] = useState(95);  // percent
 
   useEffect(() => {
     async function load() {
@@ -90,12 +91,16 @@ export default function PricingPage() {
         </div>
       </div>}
 
+      <div style={{display:'flex',gap:8,alignItems:'center',marginBottom:16}}>
+        <label style={{fontSize:12,color:'#8C919E'}}>Target margin %:</label>
+        <input type="number" min="1" max="99" value={marginTarget} onChange={e=>setMarginTarget(Number(e.target.value)||95)} style={{width:60,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12}} />
+      </div>
       <input style={{ ...cs.input, maxWidth:300, marginBottom:16 }} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)}/>
 
       <div style={cs.card}>
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {['Product','Size','Category','Cost/Box','Cost/Vial','Retail','Market','Margin','vs Market',''].map((h,i)=><th key={i} style={{ padding:'10px 12px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC' }}>{h}</th>)}
+            {['Product','Size','Category','Cost/Box','Cost/Vial','Retail','Market','Margin','vs Market','Suggested',''].map((h,i)=><th key={i} style={{ padding:'10px 12px', textAlign:i===9?'right':'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC' }}>{h}</th>)}
           </tr></thead>
           <tbody>{filtered.map(p=>{
             const cpv=(Number(p.cost)/10).toFixed(2);const mg=Number(p.retail)>0?((Number(p.retail)-Number(p.cost)/10)/Number(p.retail)*100).toFixed(1):'0';
@@ -118,6 +123,13 @@ export default function PricingPage() {
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:12,color:'#8C919E'}}>{mkt>0?`$${mkt}`:'—'}</td>
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:Number(mg)>=85?'#22C55E':Number(mg)>=70?'#F59E0B':'#DC2626'}}>{mg}%</td>
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:11,fontWeight:600,color:mkt===0?'#8C919E':vs<0?'#22C55E':vs===0?'#8C919E':'#DC2626'}}>{mkt===0?'—':vs<0?`$${Math.abs(vs)} below`:vs===0?'At market':`$${vs} above`}</td>
+                <td style={{padding:'8px 12px',textAlign:'right'}}>
+                  {(() => {
+                    const pv = Number(p.cost) / 10;
+                    const sug = Math.round(pv / (1 - marginTarget / 100));
+                    return <button onClick={()=>updatePrice(p.id, sug)} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontFamily:'monospace',fontSize:12,textDecoration:'underline'}}>${sug}</button>;
+                  })()}
+                </td>
                 <td style={{padding:'12px'}}>{!ie&&<button onClick={()=>{setEditId(p.id);setEditRetail(String(p.retail))}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 12px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>}</td>
               </tr>
             );
