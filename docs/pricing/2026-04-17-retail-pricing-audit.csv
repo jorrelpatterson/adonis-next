@@ -1,0 +1,98 @@
+SKU,Product,Size,Category,Cur Retail,Cheapest Vendor,Vendor Cost (kit),Cost/Vial,Cur Margin %,Sugg @ 90% margin,Sugg @ 92% margin,Sugg @ 95% margin,Market Median,10% Under Market,Market Source,Recommended Action
+CB60,Cerebrolysin,60mg / 3ml,Cognitive,$29,Rosyy,$22,$2.20,92.4%,$22,$28,$44,,,,Need market reference
+SK11,Selank,11mg / 3ml,Cognitive,$75,Eve,$65,$6.50,91.3%,$65,$81,$130,,,,Need market reference
+SK5,Selank,5mg / 3ml,Cognitive,$49,Weak,$42,$4.20,91.4%,$42,$52,$84,,,,Need market reference
+SX11,Semax,11mg / 3ml,Cognitive,$65,Eve,$55,$5.50,91.5%,$55,$69,$110,,,,Need market reference
+SX5,Semax,5mg / 3ml,Cognitive,$49,Weak,$42,$4.20,91.4%,$42,$52,$84,,,,Need market reference
+CND10,CJC-1295 noDAC,10mg / 3ml,GH,$159,Weak,$135,$13.50,91.5%,$135,$169,$270,,,,Need market reference
+CND5,CJC-1295 noDAC,5mg / 3ml,GH,$89,Weak,$75,$7.50,91.6%,$75,$94,$150,,,,Need market reference
+CD5,CJC-1295 wDAC,5mg / 3ml,GH,$59,Rosyy,$165,$16.50,72.0%,$165,$206,$330,,,,Below 80% margin — consider raising
+G610,GHRP-6,10mg / 3ml,GH,$55,Rosyy,$48,$4.80,91.3%,$48,$60,$96,,,,Need market reference
+G65,GHRP-6,5mg / 3ml,GH,$29,Eve,$25,$2.50,91.4%,$25,$31,$50,,,,Need market reference
+H10,HGH,10iu / 3ml,GH,$65,Weak,$50,$5.00,92.3%,$50,$62,$100,,,,Need market reference
+H15,HGH,15iu / 3ml,GH,$95,Eve,$80,$8.00,91.6%,$80,$100,$160,,,,Need market reference
+IP10,Ipamorelin,10mg / 3ml,GH,$79,Weak,$65,$6.50,91.8%,$65,$81,$130,,,,Need market reference
+IP5,Ipamorelin,5mg / 3ml,GH,$49,Eve,$45,$4.50,90.8%,$45,$56,$90,,,,Need market reference
+SR10,Sermorelin,10mg / 3ml,GH,$125,Rosyy,$108,$10.80,91.4%,$108,$135,$216,,,,Need market reference
+SR5,Sermorelin,5mg / 3ml,GH,$79,Rosyy,$68,$6.80,91.4%,$68,$85,$136,,,,Need market reference
+TE10,Tesamorelin,10mg / 3ml,GH,$209,Eve,$185,$18.50,91.1%,$185,$231,$370,,,,Need market reference
+TE15,Tesamorelin,15mg / 3ml,GH,$265,Eve,$230,$23.00,91.3%,$230,$288,$460,,,,Need market reference
+TE5,Tesamorelin,5mg / 3ml,GH,$115,Eve,$100,$10.00,91.3%,$100,$125,$200,,,,Need market reference
+G10K,HCG,10000iu / 3ml,Hormonal,$189,Rosyy,$148,$14.80,92.2%,$148,$185,$296,,,,Need market reference
+G5K,HCG,5000iu / 3ml,Hormonal,$99,Rosyy,$78,$7.80,92.1%,$78,$98,$156,,,,Need market reference
+G75,HMG,75iu / 3ml,Hormonal,$79,Weak,$63,$6.30,92.0%,$63,$79,$126,,,,Need market reference
+KV10,KPV,10mg / 3ml,Immune,$85,Rosyy,$58,$5.80,93.2%,$58,$72,$116,,,,Need market reference
+KV5,KPV,5mg / 3ml,Immune,$55,Weak,$38,$3.80,93.1%,$38,$48,$76,,,,Need market reference
+LL5,LL-37,5mg / 3ml,Immune,$89,Rosyy,$91,$9.10,89.8%,$91,$114,$182,,,,Need market reference
+PNC10,PNC-27,10mg / 3ml,Immune,$195,Rosyy,$165,$16.50,91.5%,$165,$206,$330,,,,Need market reference
+PNC5,PNC-27,5mg / 3ml,Immune,$115,Rosyy,$95,$9.50,91.7%,$95,$119,$190,,,,Need market reference
+TM10,Thymalin,10mg / 3ml,Immune,$75,Rosyy,$61,$6.10,91.9%,$61,$76,$122,,,,Need market reference
+TA10,Thymosin A1,10mg / 3ml,Immune,$195,Rosyy,$165,$16.50,91.5%,$165,$206,$330,,,,Need market reference
+TA5,Thymosin A1,5mg / 3ml,Immune,$105,Rosyy,$89,$8.90,91.5%,$89,$111,$178,,,,Need market reference
+VP10,VIP,10mg / 3ml,Immune,$185,Rosyy,$141,$14.10,92.4%,$141,$176,$282,,,,Need market reference
+VP5,VIP,5mg / 3ml,Immune,$99,Rosyy,$77,$7.70,92.2%,$77,$96,$154,,,,Need market reference
+AI50,AICAR,50mg / 3ml,Longevity,$115,Weak,$60,$6.00,94.8%,$60,$75,$120,,,,Need market reference
+EP10,Epitalon,10mg / 3ml,Longevity,$65,Eve,$50,$5.00,92.3%,$50,$62,$100,,,,Need market reference
+EP50,Epitalon,50mg / 3ml,Longevity,$165,Rosyy,$127,$12.70,92.3%,$127,$159,$254,,,,Need market reference
+GT1500,Glutathione,1500mg / 3ml,Longevity,$175,Eve,$70,$7.00,96.0%,$70,$88,$140,,,,Above 95% margin — well-priced
+GT600,Glutathione,600mg / 3ml,Longevity,$69,Eve,$35,$3.50,94.9%,$35,$44,$70,,,,Need market reference
+IG01,IGF-1 LR3,0.1mg / 3ml,Longevity,$45,Rosyy,$36,$3.60,92.0%,$36,$45,$72,,,,Need market reference
+IG1,IGF-1 LR3,1mg / 3ml,Longevity,$245,Eve,$210,$21.00,91.4%,$210,$262,$420,,,,Need market reference
+IGD1,IGF-DES,1mg / 3ml,Longevity,$69,Eve,$60,$6.00,91.3%,$60,$75,$120,,,,Need market reference
+MC10,MOTS-c,10mg / 3ml,Longevity,$75,Weak,$69,$6.90,90.8%,$69,$86,$138,,,,Need market reference
+MC40,MOTS-c,40mg / 3ml,Longevity,$229,Rosyy,$185,$18.50,91.9%,$185,$231,$370,,,,Need market reference
+NA100,NAD+,100mg / 3ml,Longevity,$49,Weak,$40,$4.00,91.8%,$40,$50,$80,,,,Need market reference
+NA500,NAD+,500mg / 3ml,Longevity,$99,Weak,$69,$6.90,93.0%,$69,$86,$138,$60,$54,extrapolated from Verified NAD+ 1000mg $119,LOWER to $54 (-$45)
+PI10,Pinealon,10mg / 3ml,Longevity,$79,Rosyy,$63,$6.30,92.0%,$63,$79,$126,,,,Need market reference
+PI20,Pinealon,20mg / 3ml,Longevity,$119,Rosyy,$97,$9.70,91.8%,$97,$121,$194,,,,Need market reference
+PI5,Pinealon,5mg / 3ml,Longevity,$55,Rosyy,$41,$4.10,92.5%,$41,$51,$82,,,,Need market reference
+SL322,SLU-PP-322,5mg / 3ml,Longevity,$149,Rosyy,$129,$12.90,91.3%,$129,$161,$258,,,,Need market reference
+SS10,SS-31,10mg / 3ml,Longevity,$99,Eve,$85,$8.50,91.4%,$85,$106,$170,,,,Need market reference
+SS50,SS-31,50mg / 3ml,Longevity,$389,Eve,$340,$34.00,91.3%,$340,$425,$680,,,,Need market reference
+BBG70,BBG Blend,70mg / 3ml,Peptide Blend,$225,Eve,$195,$19.50,91.3%,$195,$244,$390,,,,Need market reference
+GKP70,GKP Blend,70mg / 3ml,Peptide Blend,$139,Eve,$120,$12.00,91.4%,$120,$150,$240,,,,Need market reference
+GL50,GLOW50 Blend,50mg / 3ml,Peptide Blend,$185,Eve,$160,$16.00,91.4%,$160,$200,$320,,,,Need market reference
+AR10,ARA-290,10mg / 3ml,Recovery,$79,Rosyy,$63,$6.30,92.0%,$63,$79,$126,,,,Need market reference
+BB10,BPC+TB Blend,10mg / 3ml,Recovery,$79,Rosyy,$90,$9.00,88.6%,$90,$112,$180,,,,Need market reference
+BB20,BPC+TB Blend,20mg / 3ml,Recovery,$125,Eve,$170,$17.00,86.4%,$170,$212,$340,,,,Need market reference
+BP10,BPC-157,10mg / 3ml,Recovery,$49,Rosyy,$64,$6.40,86.9%,$64,$80,$128,$75,$68,"Verified $53, Core $97",RAISE to $68 (+$19)
+BP5,BPC-157,5mg / 3ml,Recovery,$29,Eve,$40,$4.00,86.2%,$40,$50,$80,$52,$47,Core $52,RAISE to $47 (+$18)
+DM5,Dermorphin,5mg / 3ml,Recovery,$69,Weak,$36,$3.60,94.8%,$36,$45,$72,,,,Need market reference
+KL80,KLOW,80mg / 3ml,Recovery,$139,Rosyy,$219,$21.90,84.2%,$219,$274,$438,,,,Need market reference
+TB10,TB-500,10mg / 3ml,Recovery,$45,Eve,$135,$13.50,70.0%,$135,$169,$270,,,,Below 80% margin — consider raising
+TB5,TB-500,5mg / 3ml,Recovery,$28,Eve,$75,$7.50,73.2%,$75,$94,$150,,,,Below 80% margin — consider raising
+KS10,Kisspeptin-10,10mg / 3ml,Sexual Health,$115,Weak,$85,$8.50,92.6%,$85,$106,$170,,,,Need market reference
+KS5,Kisspeptin-10,5mg / 3ml,Sexual Health,$69,Weak,$50,$5.00,92.8%,$50,$62,$100,,,,Need market reference
+MT1,Melanotan I,5mg / 3ml,Sexual Health,$59,Eve,$50,$5.00,91.5%,$50,$62,$100,,,,Need market reference
+MT2,Melanotan II,10mg / 3ml,Sexual Health,$49,Eve,$45,$4.50,90.8%,$45,$56,$90,,,,Need market reference
+OT10,Oxytocin,10mg / 3ml,Sexual Health,$35,Weak,$85,$8.50,75.7%,$85,$106,$170,,,,Below 80% margin — consider raising
+PT10,PT-141,10mg / 3ml,Sexual Health,$69,Eve,$60,$6.00,91.3%,$60,$75,$120,,,,Need market reference
+GC50,GHK-Cu,50mg / 3ml,Skin,$69,Eve,$30,$3.00,95.7%,$30,$38,$60,,,,Above 95% margin — well-priced
+NP8,Snap-8,10mg / 3ml,Skin,$49,Weak,$42,$4.20,91.4%,$42,$52,$84,,,,Need market reference
+DS15,DSIP,15mg / 3ml,Sleep,$115,Eve,$100,$10.00,91.3%,$100,$125,$200,,,,Need market reference
+DS5,DSIP,5mg / 3ml,Sleep,$49,Eve,$40,$4.00,91.8%,$40,$50,$80,,,,Need market reference
+MTN10,Melatonin,10mg / 3ml,Sleep,$80,Weak,$184,$18.40,77.0%,$184,$230,$368,,,,Below 80% margin — consider raising
+B12,B12,10ml / vial,Supplies,$49,Weak,$39,$3.90,92.0%,$39,$49,$78,,,,Need market reference
+WA10,Bac Water,10ml / vial,Supplies,$12,Weak,$9,$0.90,92.5%,$9,$11,$18,,,,Need market reference
+WA3,Bac Water,3ml / vial,Supplies,$9,Weak,$6,$0.60,93.3%,$6,$8,$12,,,,Need market reference
+5AM,5-Amino-1MQ,5mg / 3ml,Weight Loss,$55,Rosyy,$42,$4.20,92.4%,$42,$52,$84,,,,Need market reference
+5AD,AOD-9604,5mg / 3ml,Weight Loss,$129,Weak,$99,$9.90,92.3%,$99,$124,$198,,,,Need market reference
+ADP5,Adipotide,5mg / 3ml,Weight Loss,$99,Weak,$140,$14.00,85.9%,$140,$175,$280,,,,Need market reference
+CS10,CagriSema,10mg / 3ml,Weight Loss,$199,Weak,$150,$15.00,92.5%,$150,$188,$300,,,,Need market reference
+CS5,CagriSema,5mg / 3ml,Weight Loss,$115,Eve,$100,$10.00,91.3%,$100,$125,$200,,,,Need market reference
+MZ10,Mazdutide,10mg / 3ml,Weight Loss,$249,Weak,$199,$19.90,92.0%,$199,$249,$398,,,,Need market reference
+RT10,Retatrutide,10mg / 3ml,Weight Loss,$95,Eve,$85,$8.50,91.1%,$85,$106,$170,$120,$108,wide range $75-165,RAISE to $108 (+$13)
+RT20,Retatrutide,20mg / 3ml,Weight Loss,$169,Eve,$135,$13.50,92.0%,$135,$169,$270,,,,Need market reference
+RT5,Retatrutide,5mg / 3ml,Weight Loss,$55,Eve,$50,$5.00,90.9%,$50,$62,$100,,,,Need market reference
+SM10,Semaglutide,10mg / 3ml,Weight Loss,$65,Eve,$45,$4.50,93.1%,$45,$56,$90,,,,Need market reference
+SM15,Semaglutide,15mg / 3ml,Weight Loss,$85,Eve,$55,$5.50,93.5%,$55,$69,$110,,,,Need market reference
+SM20,Semaglutide,20mg / 3ml,Weight Loss,$109,Eve,$70,$7.00,93.6%,$70,$88,$140,,,,Need market reference
+SM30,Semaglutide,30mg / 3ml,Weight Loss,$149,Eve,$90,$9.00,94.0%,$90,$112,$180,,,,Need market reference
+SM5,Semaglutide,5mg / 3ml,Weight Loss,$39,Eve,$30,$3.00,92.3%,$30,$38,$60,$90,$81,"Expert $70, ZempX $110",RAISE to $81 (+$42)
+SV10,Survodutide,10mg / 3ml,Weight Loss,$319,Eve,$280,$28.00,91.2%,$280,$350,$560,,,,Need market reference
+TZ10,Tirzepatide,10mg / 3ml,Weight Loss,$89,Eve,$45,$4.50,94.9%,$45,$56,$90,$115,$104,"Expert $125, PeptSkin $105",RAISE to $104 (+$15)
+TZ15,Tirzepatide,15mg / 3ml,Weight Loss,$115,Eve,$55,$5.50,95.2%,$55,$69,$110,,,,Above 95% margin — well-priced
+TZ20,Tirzepatide,20mg / 3ml,Weight Loss,$139,Eve,$70,$7.00,95.0%,$70,$88,$140,,,,Need market reference
+TZ30,Tirzepatide,30mg / 3ml,Weight Loss,$185,Eve,$90,$9.00,95.1%,$90,$112,$180,,,,Above 95% margin — well-priced
+TZ40,Tirzepatide,40mg / 3ml,Weight Loss,$225,Eve,$120,$12.00,94.7%,$120,$150,$240,,,,Need market reference
+TZ5,Tirzepatide,5mg / 3ml,Weight Loss,$55,Eve,$35,$3.50,93.6%,$35,$44,$70,,,,Need market reference
