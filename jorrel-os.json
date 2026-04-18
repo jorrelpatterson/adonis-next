@@ -6,27 +6,59 @@
   "status": "active",
   "urls": {
     "production": "https://adonis.pro",
-    "repo": "",
-    "admin": ""
+    "admin": "https://adonis.pro/admin",
+    "storefront": "https://www.advncelabs.com",
+    "supabase": "https://supabase.com/dashboard/project/efuxqrvdkrievbpljlaf",
+    "vercel_admin": "https://vercel.com/jorrelpattersons-projects/adonis-next",
+    "vercel_storefront": "https://vercel.com/jorrelpattersons-projects/advnce-site"
   },
   "metrics": {
     "stripe": true,
     "supabase": true,
-    "vercel": true
+    "vercel": true,
+    "resend": true
   },
   "current": {
     "blockers": [
-      "community_comments RLS may need INSERT policy — needs full audit",
-      "Neurodivergent rebrand + adaptive AI engine coded but not yet deployed to prod"
+      "Botulinum toxin / Botox SKUs (BOTU100, BT100) need legal counsel review before activating — Schedule 1 Select Agent + prescription-only drug, real regulatory exposure",
+      "GKP70 dual-entry on Eve sheet ($125 vs $120, identical components) — needs WhatsApp clarification with Eve",
+      "Vendor contact info missing in admin: Weak WhatsApp + Rosyy WhatsApp (currently 'TODO_WHATSAPP') — POs to those vendors will fail submit until contact_phone or contact_email is set",
+      "/api/product-write returns 'Server config missing' — likely needs Vercel redeploy after env var changes (workaround: direct Supabase REST PATCH works fine)",
+      "57 active products without market price reference data — retail still at original (pre-audit) values for these"
     ],
-    "next_action": "Deploy neurodivergent rebrand + adaptive AI engine to production; run full RLS check on community_comments table",
-    "last_session": "",
-    "completed_today": []
+    "next_action": "Toggle on Bucket B/C new products in admin (48 currently hidden) once Jorrel decides which to expose; finish researching market prices for the remaining 57 products to round out 'Below Market' pricing strategy",
+    "last_session": "2026-04-17 — Massive session: built entire vendor pricing + PO + receiving system, captured 3 vendor pricing sheets as authoritative JSONs, found+fixed seed bug (DB prices were ~55% of true vendor prices), added Rosyy as 3rd vendor, added 48 hidden new products to catalog, applied 41 retail price corrections (6 manual + 35 batch via 10%-under-market), drafted 'About this Compound' content for ALL 150 products via 6 parallel subagents.",
+    "completed_today": [
+      "Cloned advnce-site as sibling repo at /Volumes/Alexandria/AI Projects/advnce-site",
+      "Verified Supabase RLS state (products: Allow all on public; ambassadors: anon INSERT+SELECT only — DELETE/UPDATE blocked)",
+      "Verified Vercel env vars on both projects (all 6 on adonis-next, all 3 on advnce-site)",
+      "Fixed bac water visibility — removed Supplies category filter from advnce-catalog.html",
+      "Added stock-aware shipping copy to product page + checkout (2-3 days vs 2 weeks)",
+      "Added multi-shipment messaging for mixed in/out-of-stock carts",
+      "Made order confirmation email shipping copy stock-aware",
+      "Built /api/ambassador-write server-side route + wired admin/ambassadors/page.jsx to use it (fixed silent edit/delete bug)",
+      "Brainstormed + spec'd + planned + EXECUTED full vendor pricing + PO + receiving system: 4 new tables (vendors, vendor_prices, purchase_orders, purchase_order_items), 5 server-side API routes (vendor-write, vendor-prices-write, purchase-write, purchase-receive, product-write), 2 new admin pages (/admin/vendors with detail+pricing-sheet tabs, /admin/purchases with list+detail+receiving modal), 4 enhanced existing pages (inventory hide toggle + compare modal + content editor, pricing suggested-retail, dashboard PO KPI cards), storefront active filter + dynamic content rendering",
+      "Added WhatsApp vendor support — submit allowed without email; 'Copy as WhatsApp text' button on PO detail builds plaintext PO and copies to clipboard",
+      "Built bulk-catalog PO form — pick vendor, see all priced products as table with qty inputs, type qtys, save draft (much faster than per-line add)",
+      "Vendor pricing filter on detail page — show only products this vendor sells",
+      "Captured Eve pricing sheet (114 products, 94 mapped) → docs/vendors/eve-pricing.json",
+      "Captured Weak pricing sheet (114 products, 78 mapped) → docs/vendors/weak-pricing.json",
+      "Captured Rosyy pricing sheet (115 products, 91 mapped) → docs/vendors/rosyy-pricing.json",
+      "Identified Lemon Bottle (Korean fat-dissolver) + LC120 (Lipo-C) + LC216 (Lipo-B/MIC) via web research",
+      "Cross-vendor reconciliation report: Eve and Weak DB prices were ~55% of true vendor sheet prices — systematic seed bug, NOT vendor price changes",
+      "Generated 2 SQL migration scripts (add Rosyy + 48 missing products; replace vendor_prices for all 3 vendors). Both ran successfully in Supabase.",
+      "Researched competitor market prices for ~30 high-volume products via Verified Peptides + Core Peptides + 4 individual product searches",
+      "Applied 6 user-confirmed retail prices: BPC-157 5/10mg, Tirz 10mg, Sema 5mg, Reta 10mg, NAD+ 500mg",
+      "Batch-applied 35 '10% under market' retail prices across the catalog (mostly LOWER — products were overpriced; TB-500/MOTS-c/PNC-27 raised because under-market)",
+      "Generated retail pricing audit CSV at docs/pricing/2026-04-17-retail-pricing-audit.csv",
+      "Drafted 'About this Compound' content for all 150 products: 200-300 word descriptions (4 sections: intro, How it works, What research shows, Why notable, Form), 5-7 specs bullets, 3 verified PubMed/PMC research links each. Tonal direction: layman-accessible + exciting + research-cited + NO FDA disclaimer block in body.",
+      "Written via 6 parallel sonnet subagents (Weight Loss / GH / Longevity / Recovery+Cognitive+Sleep / Immune+Hormonal+Sexual / Skin+Supplies+Blends+Cosmetic)"
+    ]
   },
   "setup": {
     "complete": false,
     "missing": ["ROADMAP.md"],
-    "next_setup_action": "Create foundational files — confirm with Jorrel then create missing files"
+    "next_setup_action": "Create ROADMAP.md if Jorrel wants formal roadmap doc"
   },
   "roadmap": "ROADMAP.md"
 }
