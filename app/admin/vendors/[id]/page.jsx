@@ -16,6 +16,7 @@ export default function VendorDetailPage() {
   const [tab, setTab] = useState('details');
   const [saving, setSaving] = useState(false);
   const [bulkText, setBulkText] = useState('');
+  const [onlyPriced, setOnlyPriced] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -135,6 +136,10 @@ export default function VendorDetailPage() {
 
       {tab === 'pricing' && (
         <>
+          <label style={{display:'flex',alignItems:'center',gap:8,marginBottom:12,fontSize:12,color:'#4A4F5C',cursor:'pointer'}}>
+            <input type="checkbox" checked={onlyPriced} onChange={e=>setOnlyPriced(e.target.checked)} />
+            Show only products this vendor sells ({Object.keys(prices).length} priced)
+          </label>
           <details style={{marginBottom:20}}>
             <summary style={{cursor:'pointer',fontSize:12,color:'#0072B5'}}>Bulk paste prices (one per line: SKU,cost)</summary>
             <textarea style={{width:'100%',marginTop:8,padding:8,fontFamily:'monospace',fontSize:12,minHeight:120,border:'1px solid #E4E7EC',borderRadius:4}} placeholder="BP10,25&#10;TB50,28" value={bulkText} onChange={e=>setBulkText(e.target.value)} />
@@ -146,7 +151,7 @@ export default function VendorDetailPage() {
                 {['SKU','Product','Size','Cat','Cost / kit',''].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
               </tr></thead>
               <tbody>
-                {products.map(p => (
+                {products.filter(p => !onlyPriced || prices[p.id] !== undefined).map(p => (
                   <tr key={p.id} style={{borderBottom:'1px solid #F0F1F4'}}>
                     <td style={{padding:'8px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{p.sku}</td>
                     <td style={{padding:'8px 12px'}}>{p.name}</td>

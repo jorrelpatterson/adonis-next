@@ -23,8 +23,9 @@ export default function PurchasesPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showNew, setShowNew] = useState(false);
-  const [newPo, setNewPo] = useState({ vendor_id: '', items: [], notes: '' });
+  const [newPo, setNewPo] = useState({ vendor_id: '', qtys: {}, notes: '' });
   const [creating, setCreating] = useState(false);
+  const [poSearch, setPoSearch] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -45,31 +46,18 @@ export default function PurchasesPage() {
 
   const vendorPrices = (vendor_id) => prices.filter(p => p.vendor_id === vendor_id);
 
-  const addLine = () => setNewPo(p => ({ ...p, items: [...p.items, { product_id: '', qty_ordered: 1, unit_cost: 0 }] }));
-  const removeLine = (i) => setNewPo(p => ({ ...p, items: p.items.filter((_, idx) => idx !== i) }));
-  const updateLine = (i, field, val) => setNewPo(p => {
-    const items = [...p.items];
-    items[i] = { ...items[i], [field]: val };
-    if (field === 'product_id') {
-      const vp = vendorPrices(p.vendor_id).find(x => x.product_id === parseInt(val, 10));
-      if (vp) items[i].unit_cost = vp.cost_per_kit;
-    }
-    return { ...p, items };
-  });
-
-  const total = newPo.items.reduce((s, i) => s + (Number(i.qty_ordered) || 0) * (Number(i.unit_cost) || 0), 0);
-
   const create = async () => {
     if (!newPo.vendor_id) { alert('Pick a vendor'); return; }
-    if (!newPo.items.length) { alert('Add at least one line'); return; }
-    for (const i of newPo.items) {
-      if (!i.product_id) { alert('Pick a product on every line'); return; }
-      if (!i.qty_ordered || i.qty_ordered < 1) { alert('Qty must be ≥1'); return; }
-    }
+    const vp = vendorPrices(newPo.vendor_id);
+    const priceByPid = Object.fromEntries(vp.map(x => [x.product_id, x.cost_per_kit]));
+    const items = Object.entries(newPo.qtys || {})
+      .map(([pid, qty]) => ({ product_id: parseInt(pid,10), qty_ordered: parseInt(qty,10), unit_cost: priceByPid[parseInt(pid,10)] }))
+      .filter(i => i.qty_ordered > 0 && i.unit_cost !== undefined);
+    if (!items.length) { alert('Set qty on at least one row'); return; }
     setCreating(true);
     const r = await fetch('/api/purchase-write', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'create', vendor_id: newPo.vendor_id, items: newPo.items, notes: newPo.notes }),
+      body: JSON.stringify({ action:'create', vendor_id: newPo.vendor_id, items, notes: newPo.notes }),
     });
     if (r.ok) {
       const { po } = await r.json();
@@ -82,8 +70,6 @@ export default function PurchasesPage() {
   };
 
   if (loading) return <div style={{padding:32}}>Loading...</div>;
-
-  const allowedProducts = newPo.vendor_id ? products.filter(p => vendorPrices(newPo.vendor_id).some(vp => vp.product_id === p.id)) : [];
 
   return (
     <div>
@@ -101,49 +87,74 @@ export default function PurchasesPage() {
         <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,padding:20,marginBottom:24}}>
           <div style={{marginBottom:16}}>
             <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Vendor</label>
-            <select value={newPo.vendor_id} onChange={e=>setNewPo(p=>({...p,vendor_id:e.target.value,items:[]}))} style={{padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minWidth:240}}>
+            <select value={newPo.vendor_id} onChange={e=>setNewPo(p=>({...p,vendor_id:e.target.value,qtys:{}}))} style={{padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minWidth:240}}>
               <option value="">— pick vendor —</option>
               {vendors.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
             </select>
           </div>
 
-          {newPo.vendor_id && (
-            <>
-              <table style={{width:'100%',borderCollapse:'collapse',marginBottom:12}}>
-                <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
-                  {['Product','Qty (kits)','Unit cost','Line total',''].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
-                </tr></thead>
-                <tbody>
-                  {newPo.items.map((line, i) => {
-                    const lt = (Number(line.qty_ordered)||0) * (Number(line.unit_cost)||0);
-                    return (
-                      <tr key={i} style={{borderBottom:'1px solid #F0F1F4'}}>
-                        <td style={{padding:'8px 12px'}}>
-                          <select value={line.product_id} onChange={e=>updateLine(i,'product_id',e.target.value)} style={{padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:12,minWidth:240}}>
-                            <option value="">—</option>
-                            {allowedProducts.map(p => <option key={p.id} value={p.id}>{p.name} · {p.size} ({p.sku})</option>)}
-                          </select>
-                        </td>
-                        <td style={{padding:'8px 12px'}}><input type="number" min="1" value={line.qty_ordered} onChange={e=>updateLine(i,'qty_ordered',e.target.value)} style={{width:80,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12}} /></td>
-                        <td style={{padding:'8px 12px'}}><input type="number" step="0.01" min="0" value={line.unit_cost} onChange={e=>updateLine(i,'unit_cost',e.target.value)} style={{width:80,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12}} /></td>
-                        <td style={{padding:'8px 12px',fontFamily:'monospace',fontSize:13}}>${lt.toFixed(2)}</td>
-                        <td style={{padding:'8px 12px'}}><button onClick={()=>removeLine(i)} style={{background:'none',border:'none',color:'#EF4444',cursor:'pointer'}}>×</button></td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-                <tfoot><tr><td colSpan="3" style={{padding:'12px',textAlign:'right',fontWeight:700}}>Total</td><td style={{padding:'12px',fontFamily:'monospace',fontSize:15,color:'#0072B5',fontWeight:700}}>${total.toFixed(2)}</td><td></td></tr></tfoot>
-              </table>
-              <button onClick={addLine} style={{padding:'6px 14px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:4,fontSize:12,cursor:'pointer',marginBottom:16}}>+ Add line</button>
-              <div style={{marginBottom:16}}>
-                <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Notes (optional)</label>
-                <textarea value={newPo.notes} onChange={e=>setNewPo(p=>({...p,notes:e.target.value}))} style={{width:'100%',padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minHeight:60}} />
-              </div>
-              <button onClick={create} disabled={creating} style={{padding:'10px 24px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:creating?0.5:1}}>
-                {creating ? 'Creating...' : 'Save as Draft'}
-              </button>
-            </>
-          )}
+          {newPo.vendor_id && (() => {
+            const vp = vendorPrices(newPo.vendor_id);
+            const priceByPid = Object.fromEntries(vp.map(x => [x.product_id, x.cost_per_kit]));
+            const catalog = products.filter(p => priceByPid[p.id] !== undefined)
+              .filter(p => !poSearch || p.name.toLowerCase().includes(poSearch.toLowerCase()) || p.sku.toLowerCase().includes(poSearch.toLowerCase()))
+              .sort((a,b) => a.name.localeCompare(b.name));
+            const lineCount = Object.values(newPo.qtys || {}).filter(q => Number(q) > 0).length;
+            const total = Object.entries(newPo.qtys || {}).reduce((s, [pid, q]) => {
+              const cost = priceByPid[parseInt(pid,10)] || 0;
+              return s + (Number(q) || 0) * Number(cost);
+            }, 0);
+
+            return (
+              <>
+                <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:12}}>
+                  <input type="text" placeholder="Search product or SKU..." value={poSearch} onChange={e=>setPoSearch(e.target.value)} style={{flex:1,padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13}} />
+                  <div style={{fontSize:12,color:'#8C919E'}}>{catalog.length} products · {vp.length} total in vendor catalog</div>
+                </div>
+
+                <div style={{maxHeight:480,overflow:'auto',border:'1px solid #E4E7EC',borderRadius:6,marginBottom:16}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                    <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC',position:'sticky',top:0,zIndex:1}}>
+                      {['Product','Size','SKU','Cost/kit','Qty (kits)','Line total'].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:i>=3?'right':'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
+                    </tr></thead>
+                    <tbody>
+                      {catalog.map(p => {
+                        const cost = priceByPid[p.id];
+                        const qty = newPo.qtys?.[p.id] || '';
+                        const lt = (Number(qty) || 0) * Number(cost);
+                        return (
+                          <tr key={p.id} style={{borderBottom:'1px solid #F0F1F4',background:Number(qty) > 0 ? '#F0FDF4' : 'transparent'}}>
+                            <td style={{padding:'8px 12px'}}>{p.name}</td>
+                            <td style={{padding:'8px 12px',color:'#7A7D88',fontSize:11}}>{p.size}</td>
+                            <td style={{padding:'8px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{p.sku}</td>
+                            <td style={{padding:'8px 12px',textAlign:'right',fontFamily:'monospace'}}>${Number(cost).toFixed(2)}</td>
+                            <td style={{padding:'8px 12px',textAlign:'right'}}>
+                              <input type="number" min="0" value={qty} onChange={e=>setNewPo(prev=>({...prev,qtys:{...(prev.qtys||{}),[p.id]:e.target.value}}))} style={{width:70,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12,textAlign:'right'}} />
+                            </td>
+                            <td style={{padding:'8px 12px',textAlign:'right',fontFamily:'monospace',color:Number(qty) > 0 ? '#16A34A' : '#9CA3AF',fontWeight:Number(qty) > 0 ? 600 : 400}}>${lt.toFixed(2)}</td>
+                          </tr>
+                        );
+                      })}
+                      {!catalog.length && <tr><td colSpan="6" style={{padding:'24px',textAlign:'center',color:'#9CA3AF'}}>No products match (or vendor has no priced products yet — add prices on the vendor's Pricing tab first).</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16,padding:'12px 16px',background:'#FAFBFC',borderRadius:6}}>
+                  <div style={{fontSize:13,color:'#4A4F5C'}}>{lineCount} line{lineCount === 1 ? '' : 's'}</div>
+                  <div style={{fontSize:18,fontFamily:'monospace',color:'#0072B5',fontWeight:700}}>Total: ${total.toFixed(2)}</div>
+                </div>
+
+                <div style={{marginBottom:16}}>
+                  <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Notes (optional)</label>
+                  <textarea value={newPo.notes} onChange={e=>setNewPo(p=>({...p,notes:e.target.value}))} style={{width:'100%',padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minHeight:60}} />
+                </div>
+                <button onClick={create} disabled={creating || lineCount === 0} style={{padding:'10px 24px',background:lineCount === 0 ? '#9CA3AF' : '#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:lineCount === 0 ? 'not-allowed' : 'pointer',opacity:creating?0.5:1}}>
+                  {creating ? 'Creating...' : `Save as Draft (${lineCount} line${lineCount === 1 ? '' : 's'})`}
+                </button>
+              </>
+            );
+          })()}
         </div>
       )}
 
