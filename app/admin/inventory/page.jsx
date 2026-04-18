@@ -21,14 +21,30 @@ export default function InventoryPage() {
   const [sortDir, setSortDir] = useState('asc');
   const [showAdd, setShowAdd] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [newP, setNewP] = useState({ name:'', size:'', cat:'Recovery', vendor:'Eve', cost:'', retail:'', stock:10, sku:'', risk:'🟡' });
+  const [newP, setNewP] = useState({ name:'', size:'', cat:'Recovery', vendor:'Eve', cost:'', retail:'', stock:10, sku:'', risk:'\uD83D\uDFE1' });
+
+  // New state for hide toggle, compare modal, content modal
+  const [compareFor, setCompareFor] = useState(null);
+  const [vendorPrices, setVendorPrices] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  const [contentFor, setContentFor] = useState(null);
+  const [contentForm, setContentForm] = useState({ description:'', specs:[], research:[] });
 
   useEffect(() => { fetchProducts(); }, []);
 
   const fetchProducts = async () => {
     setLoading(true);
-    const { data } = await supabase.from('products').select('*').order('name');
-    setInventory(data || []);
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+    const [invRes, vRes, vpRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name.asc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers }),
+    ]);
+    setInventory(await invRes.json());
+    setVendors(await vRes.json());
+    setVendorPrices(await vpRes.json());
     setLoading(false);
   };
 
@@ -76,21 +92,21 @@ export default function InventoryPage() {
       cost: Number(newP.cost), retail: Number(newP.retail), stock: Number(newP.stock), sku: newP.sku, risk: newP.risk
     }).select();
     if (error) alert('Add failed: ' + error.message);
-    else { setInventory(prev => [...prev, ...data]); setNewP({ name:'', size:'', cat:'Recovery', vendor:'Eve', cost:'', retail:'', stock:10, sku:'', risk:'🟡' }); setShowAdd(false); }
+    else { setInventory(prev => [...prev, ...data]); setNewP({ name:'', size:'', cat:'Recovery', vendor:'Eve', cost:'', retail:'', stock:10, sku:'', risk:'\uD83D\uDFE1' }); setShowAdd(false); }
     setSaving(false);
   };
 
   const handleSort = (col) => { if (sortBy === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setSortBy(col); setSortDir('asc'); } };
-  const SI = ({ col }) => sortBy === col ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+  const SI = ({ col }) => sortBy === col ? (sortDir === 'asc' ? ' \u2191' : ' \u2193') : '';
 
-  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'50vh', color:'#8C919E' }}><div style={{ textAlign:'center' }}><div style={{ fontSize:32, marginBottom:8 }}>📦</div>Loading inventory...</div></div>;
+  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'50vh', color:'#8C919E' }}><div style={{ textAlign:'center' }}><div style={{ fontSize:32, marginBottom:8 }}>\uD83D\uDCE6</div>Loading inventory...</div></div>;
 
   return (
     <div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
         <div><h1 style={cs.h1}>Inventory</h1><p style={{ color:'#8C919E', fontSize:14 }}>{inventory.length} products · {inventory.reduce((s,p)=>s+p.stock,0)} vials · <span style={{color:'#22C55E'}}>Live</span></p></div>
         <div style={{ display:'flex', gap:8 }}>
-          <button onClick={fetchProducts} style={{ ...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC' }}>↻ Refresh</button>
+          <button onClick={fetchProducts} style={{ ...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC' }}>\u21BB Refresh</button>
           <button onClick={()=>setShowAdd(!showAdd)} style={{ ...cs.btn, background:'#0072B5', color:'#fff', padding:'10px 20px' }}>+ Add Product</button>
         </div>
       </div>
@@ -101,7 +117,7 @@ export default function InventoryPage() {
         ))}
       </div>
 
-      {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:16, marginBottom:20 }}><div style={{ fontSize:13, fontWeight:700, color:'#DC2626', marginBottom:6 }}>⚠️ Low Stock</div><div style={{ fontSize:12, color:'#7F1D1D' }}>{lowStock.map(p=>`${p.name} (${p.stock})`).join(' · ')}</div></div>}
+      {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:16, marginBottom:20 }}><div style={{ fontSize:13, fontWeight:700, color:'#DC2626', marginBottom:6 }}>\u26A0\uFE0F Low Stock</div><div style={{ fontSize:12, color:'#7F1D1D' }}>{lowStock.map(p=>`${p.name} (${p.stock})`).join(' \u00B7 ')}</div></div>}
 
       {showAdd&&<div style={{ ...cs.card, padding:20, marginBottom:20 }}>
         <div style={{ fontSize:14, fontWeight:700, color:'#0F1928', marginBottom:14 }}>Add New Product</div>
@@ -127,7 +143,7 @@ export default function InventoryPage() {
       <div style={cs.card}>
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {[{k:'risk',l:'',w:36},{k:'sku',l:'SKU',w:70},{k:'name',l:'Product'},{k:'size',l:'Size',w:70},{k:'cat',l:'Category',w:110},{k:'vendor',l:'Vendor',w:60},{k:'cost',l:'Cost',w:65},{k:'retail',l:'Retail',w:65},{k:'stock',l:'Stock',w:60},{k:'margin',l:'Margin',w:65},{k:'actions',l:'',w:100}].map(c=>(
+            {[{k:'risk',l:'',w:36},{k:'sku',l:'SKU',w:70},{k:'name',l:'Product'},{k:'size',l:'Size',w:70},{k:'cat',l:'Category',w:110},{k:'vendor',l:'Vendor',w:60},{k:'cost',l:'Cost',w:65},{k:'retail',l:'Retail',w:65},{k:'stock',l:'Stock',w:60},{k:'margin',l:'Margin',w:65},{k:'actions',l:'',w:180}].map(c=>(
               <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&handleSort(c.k)} style={{ padding:'10px 12px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:c.k!=='actions'?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
             ))}
           </tr></thead>
@@ -135,9 +151,14 @@ export default function InventoryPage() {
             {filtered.map(p=>{
               const ie=editId===p.id;const mg=Number(p.retail)>0?((Number(p.retail)-Number(p.cost)/10)/Number(p.retail)*100).toFixed(0):0;const sc=p.stock<=3?'#DC2626':p.stock<=10?'#F59E0B':'#22C55E';
               return(
-                <tr key={p.id} style={{ borderBottom:'1px solid #F0F1F4', background:ie?'#FFFBEB':'transparent' }}>
+                <tr key={p.id} style={{ borderBottom:'1px solid #F0F1F4', background:ie?'#FFFBEB':p.active===false?'#FAFAFA':'transparent' }}>
                   <td style={{padding:'10px 12px',fontSize:16}}>{p.risk}</td>
-                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#8C919E'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.sku} onChange={e=>setEditData(d=>({...d,sku:e.target.value}))}/>:p.sku}</td>
+                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#8C919E'}}>
+                    {ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.sku} onChange={e=>setEditData(d=>({...d,sku:e.target.value}))}/>:<>
+                      {p.sku}
+                      {p.active===false&&<span style={{marginLeft:6,padding:'1px 6px',background:'#FEE2E2',color:'#DC2626',fontSize:9,borderRadius:3,letterSpacing:1}}>HIDDEN</span>}
+                    </>}
+                  </td>
                   <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,padding:'4px 6px'}} value={editData.name} onChange={e=>setEditData(d=>({...d,name:e.target.value}))}/>:<span style={{fontWeight:600,color:'#0F1928',fontSize:13}}>{p.name}</span>}</td>
                   <td style={{padding:'10px 12px',fontSize:12,color:'#6B7A94'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.size} onChange={e=>setEditData(d=>({...d,size:e.target.value}))}/>:p.size}</td>
                   <td style={{padding:'10px 12px'}}><span style={{...cs.badge,background:'#E8F4FB',color:'#0072B5'}}>{p.cat}</span></td>
@@ -147,8 +168,32 @@ export default function InventoryPage() {
                   <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:<span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>}</td>
                   <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:Number(mg)>=80?'#22C55E':Number(mg)>=60?'#F59E0B':'#DC2626'}}>{mg}%</td>
                   <td style={{padding:'10px 12px'}}>
-                    {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>✕</button></div>
-                    :<div style={{display:'flex',gap:4}}><button onClick={()=>{setEditId(p.id);setEditData({...p})}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button><button onClick={()=>deleteProduct(p.id)} style={{...cs.btn,background:'#FEE2E2',color:'#DC2626',padding:'4px 10px',fontSize:11,border:'1px solid #FECACA'}}>✕</button></div>}
+                    {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>\u2715</button></div>
+                    :<div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+                      <button onClick={()=>{setEditId(p.id);setEditData({...p})}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>
+                      <button onClick={()=>deleteProduct(p.id)} style={{...cs.btn,background:'#FEE2E2',color:'#DC2626',padding:'4px 10px',fontSize:11,border:'1px solid #FECACA'}}>\u2715</button>
+                      <button onClick={async (e)=>{
+                        e.stopPropagation();
+                        const r = await fetch('/api/product-write', {
+                          method:'POST', headers:{'Content-Type':'application/json'},
+                          body: JSON.stringify({ action:'update', id: p.id, fields:{ active: p.active===false ? true : false } })
+                        });
+                        if (r.ok) setInventory(prev => prev.map(x => x.id===p.id ? { ...x, active: x.active===false ? true : false } : x));
+                        else { const e2 = await r.json().catch(()=>({})); alert('Failed: '+(e2.error||r.status)); }
+                      }} style={{background:'none',border:'none',cursor:'pointer',fontSize:16,opacity:p.active===false?0.3:1,padding:'4px'}} title={p.active===false?'Show':'Hide'}>
+                        {p.active===false ? '\uD83D\uDEAB' : '\uD83D\uDC41'}
+                      </button>
+                      <button onClick={(e)=>{e.stopPropagation(); setCompareFor(p);}} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:11,textDecoration:'underline',padding:'4px'}}>Compare</button>
+                      <button onClick={(e)=>{
+                        e.stopPropagation();
+                        setContentFor(p);
+                        setContentForm({
+                          description: p.description || '',
+                          specs: Array.isArray(p.specs) ? p.specs : [],
+                          research: Array.isArray(p.research) ? p.research : [],
+                        });
+                      }} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:11,textDecoration:'underline',padding:'4px'}}>Content</button>
+                    </div>}
                   </td>
                 </tr>
               );
@@ -156,6 +201,87 @@ export default function InventoryPage() {
           </tbody>
         </table>
       </div>
+
+      {compareFor && (() => {
+        const matches = vendorPrices.filter(vp => vp.product_id === compareFor.id);
+        const minCost = matches.length ? Math.min(...matches.map(m => Number(m.cost_per_kit))) : 0;
+        return (
+          <div onClick={()=>setCompareFor(null)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:8,maxWidth:500,width:'100%',padding:24}}>
+              <h2 style={{fontSize:18,fontWeight:700,color:'#0F1928',marginBottom:4}}>{compareFor.name}</h2>
+              <p style={{color:'#7A7D88',fontSize:12,marginBottom:16}}>{compareFor.size} \u00B7 {compareFor.sku}</p>
+              {matches.length === 0 && <p style={{color:'#7A7D88'}}>No vendors have priced this product yet.</p>}
+              {matches.length > 0 && (
+                <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                  <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
+                    <th style={{padding:'8px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>Vendor</th>
+                    <th style={{padding:'8px',textAlign:'right',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>Cost / kit</th>
+                    <th style={{padding:'8px',textAlign:'right',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>Updated</th>
+                  </tr></thead>
+                  <tbody>
+                    {matches.sort((a,b)=>Number(a.cost_per_kit)-Number(b.cost_per_kit)).map(m => {
+                      const v = vendors.find(v => v.id === m.vendor_id);
+                      const isMin = Number(m.cost_per_kit) === minCost;
+                      return (
+                        <tr key={m.id} style={{borderBottom:'1px solid #F0F1F4',background:isMin?'#F0FDF4':'transparent'}}>
+                          <td style={{padding:'8px',fontWeight:isMin?700:400}}>{v?.name} {isMin && <span style={{color:'#16A34A',fontSize:10,marginLeft:6}}>\u2193 CHEAPEST</span>}</td>
+                          <td style={{padding:'8px',textAlign:'right',fontFamily:'monospace',color:isMin?'#16A34A':'#0F1928',fontWeight:isMin?700:400}}>${Number(m.cost_per_kit).toFixed(2)}</td>
+                          <td style={{padding:'8px',textAlign:'right',fontSize:11,color:'#7A7D88'}}>{new Date(m.last_updated).toLocaleDateString()}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+              <button onClick={()=>setCompareFor(null)} style={{marginTop:16,padding:'8px 20px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,cursor:'pointer'}}>Close</button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {contentFor && (
+        <div onClick={()=>setContentFor(null)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:8,maxWidth:700,width:'100%',maxHeight:'90vh',overflow:'auto',padding:24}}>
+            <h2 style={{fontSize:20,fontWeight:700,color:'#0F1928',marginBottom:4}}>{contentFor.name}</h2>
+            <p style={{color:'#7A7D88',fontSize:12,marginBottom:20}}>{contentFor.size} \u00B7 {contentFor.sku}</p>
+            <p style={{fontSize:11,color:'#A16207',background:'#FEF3C7',padding:8,borderRadius:4,marginBottom:16}}>If left empty, the product page shows the generic template.</p>
+
+            <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Description</label>
+            <textarea value={contentForm.description} onChange={e=>setContentForm(f=>({...f,description:e.target.value}))} style={{width:'100%',padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minHeight:120,marginBottom:4}} />
+            <p style={{fontSize:10,color:'#7A7D88',marginBottom:16}}>{contentForm.description.length} characters</p>
+
+            <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Specs (one per line)</label>
+            <textarea value={contentForm.specs.join('\n')} onChange={e=>setContentForm(f=>({...f,specs:e.target.value.split('\n').map(s=>s.trim()).filter(Boolean)}))} style={{width:'100%',padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minHeight:80,marginBottom:16,fontFamily:'monospace'}} placeholder={'\u226599% purity\nLyophilized form\nHPLC verified'} />
+
+            <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Research links (one per line: Title | URL)</label>
+            <textarea value={contentForm.research.map(r=>`${r.title} | ${r.url}`).join('\n')} onChange={e=>{
+              const lines = e.target.value.split('\n').map(l=>l.trim()).filter(Boolean);
+              const arr = lines.map(l => {
+                const [title, url] = l.split('|').map(s=>s.trim());
+                return { title: title||'', url: url||'' };
+              }).filter(r => r.title && r.url);
+              setContentForm(f=>({...f,research:arr}));
+            }} style={{width:'100%',padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13,minHeight:80,marginBottom:20,fontFamily:'monospace'}} placeholder={'BPC-157 effects on tendon healing | https://pubmed.ncbi.nlm.nih.gov/...'} />
+
+            <div style={{display:'flex',gap:12,justifyContent:'flex-end'}}>
+              <button onClick={()=>setContentFor(null)} style={{padding:'8px 20px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,cursor:'pointer'}}>Cancel</button>
+              <button onClick={async ()=>{
+                const r = await fetch('/api/product-write', {
+                  method:'POST', headers:{'Content-Type':'application/json'},
+                  body: JSON.stringify({ action:'update', id: contentFor.id, fields: contentForm }),
+                });
+                if (r.ok) {
+                  setInventory(prev => prev.map(x => x.id===contentFor.id ? { ...x, ...contentForm } : x));
+                  setContentFor(null);
+                } else {
+                  const e = await r.json().catch(()=>({}));
+                  alert('Failed: '+(e.error||r.status));
+                }
+              }} style={{padding:'8px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Save Content</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
