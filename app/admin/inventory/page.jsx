@@ -217,7 +217,7 @@ export default function InventoryPage() {
                   <td style={{padding:'10px 12px'}}>
                     {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>\u2715</button></div>
                     :<div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
-                      <button onClick={()=>{setEditId(p.id);setEditData({...p})}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>
+                      <button onClick={(e)=>{e.stopPropagation(); addToCart(p.id);}} title="Add 1 kit to PO draft" style={{...cs.btn,padding:'4px 10px',fontSize:11,background:poCart[p.id]?'#16A34A':'#0072B5',color:'#fff',border:'none',marginRight:4,whiteSpace:'nowrap'}}>🛒{poCart[p.id]?` (${poCart[p.id]})`:' +'}</button><button onClick={()=>{setEditId(p.id);setEditData({...p})}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>
                       <button onClick={()=>deleteProduct(p.id)} style={{...cs.btn,background:'#FEE2E2',color:'#DC2626',padding:'4px 10px',fontSize:11,border:'1px solid #FECACA'}}>\u2715</button>
                       <button onClick={async (e)=>{
                         e.stopPropagation();
