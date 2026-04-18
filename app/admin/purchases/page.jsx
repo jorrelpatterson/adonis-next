@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -27,6 +28,21 @@ export default function PurchasesPage() {
   const [creating, setCreating] = useState(false);
   const [poSearch, setPoSearch] = useState('');
   const [pendingPOs, setPendingPOs] = useState([]);
+  const searchParams = useSearchParams();
+
+  // If arrived via inventory cart, hydrate the New PO form
+  useEffect(() => {
+    if (searchParams.get('from_cart') === '1') {
+      try {
+        const cart = JSON.parse(localStorage.getItem('po_cart') || '{}');
+        if (Object.keys(cart).length) {
+          setNewPo(prev => ({ ...prev, qtys: cart }));
+          setShowNew(true);
+          // We do NOT clear localStorage here — only after successful PO create
+        }
+      } catch {}
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function load() {
@@ -68,6 +84,7 @@ export default function PurchasesPage() {
     });
     if (r.ok) {
       const { po } = await r.json();
+      try { localStorage.removeItem('po_cart'); } catch {}
       router.push(`/admin/purchases/${po.id}`);
     } else {
       const e = await r.json().catch(()=>({}));

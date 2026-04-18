@@ -17,6 +17,24 @@ export default function InventoryPage() {
   const [filterCat, setFilterCat] = useState('all');
   const [filterStock, setFilterStock] = useState('all');
   const [pendingPOs, setPendingPOs] = useState([]);
+  const [poCart, setPoCart] = useState({});  // { product_id: kits }
+
+  // Hydrate cart from localStorage on mount
+  useEffect(() => {
+    try { const c = JSON.parse(localStorage.getItem('po_cart') || '{}'); setPoCart(c); } catch {}
+  }, []);
+  // Persist on change
+  useEffect(() => { localStorage.setItem('po_cart', JSON.stringify(poCart)); }, [poCart]);
+
+  const addToCart = (product_id) => {
+    setPoCart(prev => ({ ...prev, [product_id]: (prev[product_id] || 0) + 1 }));
+  };
+  const removeFromCart = (product_id) => {
+    setPoCart(prev => { const n = { ...prev }; if (n[product_id] > 1) n[product_id]--; else delete n[product_id]; return n; });
+  };
+  const clearCart = () => { setPoCart({}); localStorage.removeItem('po_cart'); };
+  const cartCount = Object.keys(poCart).length;
+  const cartKits = Object.values(poCart).reduce((s,n)=>s+Number(n),0);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({});
   const [sortBy, setSortBy] = useState('name');
@@ -309,6 +327,16 @@ export default function InventoryPage() {
               }} style={{padding:'8px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Save Content</button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+
+      {cartCount > 0 && (
+        <div style={{position:'fixed',bottom:24,right:24,background:'#0F1928',color:'white',padding:'14px 20px',borderRadius:8,boxShadow:'0 4px 16px rgba(0,0,0,0.25)',display:'flex',alignItems:'center',gap:14,zIndex:50,fontSize:13}}>
+          <span style={{fontFamily:"'JetBrains Mono'",fontSize:11,letterSpacing:1,color:'#7A7D88',textTransform:'uppercase'}}>PO draft</span>
+          <span style={{fontWeight:700}}>{cartCount} item{cartCount===1?'':'s'} · {cartKits} kit{cartKits===1?'':'s'}</span>
+          <button onClick={clearCart} style={{background:'none',border:'1px solid #7A7D88',color:'#7A7D88',padding:'4px 10px',borderRadius:4,fontSize:11,cursor:'pointer'}}>Clear</button>
+          <a href="/admin/purchases?from_cart=1" style={{background:'#00A0A8',color:'#fff',padding:'8px 14px',borderRadius:4,fontSize:12,fontWeight:700,textDecoration:'none',letterSpacing:1,textTransform:'uppercase'}}>Open in new PO →</a>
         </div>
       )}
     </div>
