@@ -79,7 +79,7 @@ export default function AdminLayout({ children }) {
         )}
       </aside>
 
-      <main style={{ flex:1, padding:32, maxWidth:1200, overflow:'auto' }}>
+      <main style={{ flex:1, padding:'24px 28px', minWidth:0, overflow:'auto' }}>
         {children}
       </main>
     </div>

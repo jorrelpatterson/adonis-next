@@ -19,10 +19,12 @@ export default function InventoryPage() {
   const [filterStock, setFilterStock] = useState('all');
   const [pendingPOs, setPendingPOs] = useState([]);
   const [poCart, setPoCart] = useState({});  // { product_id: kits }
+  const [lowStockCollapsed, setLowStockCollapsed] = useState(true);
 
-  // Hydrate cart from localStorage on mount
+  // Hydrate cart + collapsed pref from localStorage on mount
   useEffect(() => {
     try { const c = JSON.parse(localStorage.getItem('po_cart') || '{}'); setPoCart(c); } catch {}
+    try { const v = localStorage.getItem('low_stock_collapsed'); if (v !== null) setLowStockCollapsed(v === '1'); } catch {}
   }, []);
   // Persist on change
   useEffect(() => { localStorage.setItem('po_cart', JSON.stringify(poCart)); }, [poCart]);
@@ -155,7 +157,13 @@ export default function InventoryPage() {
         ))}
       </div>
 
-      {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:16, marginBottom:20 }}><div style={{ fontSize:13, fontWeight:700, color:'#DC2626', marginBottom:6 }}>\u26A0\uFE0F Low Stock</div><div style={{ fontSize:12, color:'#7F1D1D' }}>{lowStock.map(p=>`${p.name} (${p.stock})`).join(' \u00B7 ')}</div></div>}
+      {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:lowStockCollapsed?'10px 14px':16, marginBottom:20 }}>
+        <div onClick={()=>{const n=!lowStockCollapsed; setLowStockCollapsed(n); try{localStorage.setItem('low_stock_collapsed', n?'1':'0');}catch{}}} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', cursor:'pointer', userSelect:'none' }}>
+          <div style={{ fontSize:13, fontWeight:700, color:'#DC2626' }}>\u26A0\uFE0F Low Stock <span style={{fontWeight:400,opacity:0.7,marginLeft:6}}>({lowStock.length})</span></div>
+          <span style={{ fontSize:11, color:'#DC2626', fontWeight:600 }}>{lowStockCollapsed?'\u25BC Show':'\u25B2 Hide'}</span>
+        </div>
+        {!lowStockCollapsed && <div style={{ fontSize:12, color:'#7F1D1D', marginTop:8 }}>{lowStock.map(p=>`${p.name} (${p.stock})`).join(' \u00B7 ')}</div>}
+      </div>}
 
       {showAdd&&<div style={{ ...cs.card, padding:20, marginBottom:20 }}>
         <div style={{ fontSize:14, fontWeight:700, color:'#0F1928', marginBottom:14 }}>Add New Product</div>
