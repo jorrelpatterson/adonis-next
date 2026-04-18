@@ -102,7 +102,15 @@ export default function ContentPage() {
           <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Content Calendar</h1>
           <p style={{color:'#8C919E',fontSize:14}}>{stats.total} posts · {stats.scheduled} scheduled · {stats.posted} posted</p>
         </div>
-        <button onClick={reload} style={{padding:'8px 16px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,cursor:'pointer'}}>Refresh</button>
+        <div style={{display:'flex',gap:8}}>
+          <button onClick={async () => {
+            if (!confirm('Send a digest email to all active ambassadors with the current share library?')) return;
+            const r = await fetch('/api/ambassador-content-digest', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+            if (r.ok) { const j = await r.json(); alert(`Digest sent to ${j.sent} of ${j.total} ambassadors.${j.failed?.length ? \ + j.failed.length : ''}`); }
+            else { const e = await r.json().catch(()=>({})); alert('Failed: ' + (e.error || r.status)); }
+          }} style={{padding:'8px 16px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>📣 Notify ambassadors</button>
+          <button onClick={reload} style={{padding:'8px 16px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,cursor:'pointer'}}>Refresh</button>
+        </div>
       </div>
 
       <div style={{display:'flex',gap:8,alignItems:'center',marginBottom:16}}>
