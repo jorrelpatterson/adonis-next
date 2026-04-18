@@ -196,11 +196,11 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <div style={cs.card}>
-        <table style={{ width:'100%', borderCollapse:'collapse' }}>
+      <div style={{...cs.card, overflowX:'auto'}}>
+        <table style={{ width:'100%', borderCollapse:'collapse', minWidth:980 }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {[{k:'risk',l:'',w:36},{k:'sku',l:'SKU',w:70},{k:'name',l:'Product'},{k:'size',l:'Size',w:70},{k:'cat',l:'Category',w:110},{k:'vendor',l:'Vendor',w:60},{k:'cost',l:'Cost',w:65},{k:'retail',l:'Retail',w:65},{k:'stock',l:'Stock',w:60},{k:'margin',l:'Margin',w:65},{k:'actions',l:'',w:180}].map(c=>(
-              <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&handleSort(c.k)} style={{ padding:'10px 12px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:c.k!=='actions'?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
+            {[{k:'risk',l:'',w:28},{k:'name',l:'Product'},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:54},{k:'cost',l:'Cost',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
+              <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&handleSort(c.k)} style={{ padding:'8px 8px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:c.k!=='actions'?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
             ))}
           </tr></thead>
           <tbody>
@@ -208,26 +208,21 @@ export default function InventoryPage() {
               const ie=editId===p.id;const mg=Number(p.retail)>0?((Number(p.retail)-Number(p.cost)/10)/Number(p.retail)*100).toFixed(0):0;const sc=p.stock<=3?'#DC2626':p.stock<=10?'#F59E0B':'#22C55E';
               return(
                 <tr key={p.id} style={{ borderBottom:'1px solid #F0F1F4', background:ie?'#FFFBEB':p.active===false?'#FAFAFA':'transparent' }}>
-                  <td style={{padding:'10px 12px',fontSize:16}}>{p.risk}</td>
-                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#8C919E'}}>
-                    {ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.sku} onChange={e=>setEditData(d=>({...d,sku:e.target.value}))}/>:<>
-                      {p.sku}
-                      {p.active===false&&<span style={{marginLeft:6,padding:'1px 6px',background:'#FEE2E2',color:'#DC2626',fontSize:9,borderRadius:3,letterSpacing:1}}>HIDDEN</span>}
-                    </>}
-                  </td>
-                  <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,padding:'4px 6px'}} value={editData.name} onChange={e=>setEditData(d=>({...d,name:e.target.value}))}/>:<span style={{fontWeight:600,color:'#0F1928',fontSize:13}}>{p.name}</span>}</td>
-                  <td style={{padding:'10px 12px',fontSize:12,color:'#6B7A94'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.size} onChange={e=>setEditData(d=>({...d,size:e.target.value}))}/>:p.size}</td>
-                  <td style={{padding:'10px 12px'}}><span style={{...cs.badge,background:'#E8F4FB',color:'#0072B5'}}>{p.cat}</span></td>
-                  <td style={{padding:'10px 12px',fontSize:12,color:p.vendor==='Eve'?'#00A0A8':'#E07C24',fontWeight:600}}>{p.vendor}</td>
-                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:12}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.cost} onChange={e=>setEditData(d=>({...d,cost:e.target.value}))}/>:`$${p.cost}`}</td>
-                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.retail} onChange={e=>setEditData(d=>({...d,retail:e.target.value}))}/>:`$${p.retail}`}</td>
-                  <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:(<div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-start'}}><span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>{(p.stock||0)===0 && (() => { const pend = pendingPOs.filter(x=>x.product_id===p.id); if(!pend.length) return null; const totalKits = pend.reduce((s,x)=>s+x.kits_pending,0); const poNums = [...new Set(pend.map(x=>x.po_number))].join(', '); return <span title={'Pending: '+poNums} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalKits*10}v</span>; })()}</div>)}</td>
-                  <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:Number(mg)>=80?'#22C55E':Number(mg)>=60?'#F59E0B':'#DC2626'}}>{mg}%</td>
-                  <td style={{padding:'10px 12px'}}>
+                  <td style={{padding:'6px 8px',fontSize:16}}>{p.risk}</td>
+
+                  <td style={{padding:'6px 8px'}}>{ie?<><input style={{...cs.input,padding:'4px 6px',marginBottom:4}} value={editData.name} onChange={e=>setEditData(d=>({...d,name:e.target.value}))}/><input style={{...cs.input,padding:'4px 6px',fontFamily:"'JetBrains Mono'",fontSize:11}} value={editData.sku} onChange={e=>setEditData(d=>({...d,sku:e.target.value}))}/></>:<div style={{display:'flex',flexDirection:'column',gap:1}}><span style={{fontWeight:600,color:'#0F1928',fontSize:13,lineHeight:1.2}}>{p.name}</span><span style={{fontFamily:"'JetBrains Mono'",fontSize:10,color:'#8C919E'}}>{p.sku}{p.active===false&&<span style={{marginLeft:6,padding:'1px 5px',background:'#FEE2E2',color:'#DC2626',fontSize:9,borderRadius:3,letterSpacing:1}}>HIDDEN</span>}</span></div>}</td>
+                  <td style={{padding:'6px 8px',fontSize:12,color:'#6B7A94'}}>{ie?<input style={{...cs.input,width:60,padding:'4px 6px'}} value={editData.size} onChange={e=>setEditData(d=>({...d,size:e.target.value}))}/>:p.size}</td>
+                  <td style={{padding:'6px 8px'}}><span style={{...cs.badge,background:'#E8F4FB',color:'#0072B5'}}>{p.cat}</span></td>
+                  <td style={{padding:'6px 8px',fontSize:12,color:p.vendor==='Eve'?'#00A0A8':'#E07C24',fontWeight:600}}>{p.vendor}</td>
+                  <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.cost} onChange={e=>setEditData(d=>({...d,cost:e.target.value}))}/>:`$${p.cost}`}</td>
+                  <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.retail} onChange={e=>setEditData(d=>({...d,retail:e.target.value}))}/>:`$${p.retail}`}</td>
+                  <td style={{padding:'6px 8px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:(<div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-start'}}><span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>{(p.stock||0)===0 && (() => { const pend = pendingPOs.filter(x=>x.product_id===p.id); if(!pend.length) return null; const totalKits = pend.reduce((s,x)=>s+x.kits_pending,0); const poNums = [...new Set(pend.map(x=>x.po_number))].join(', '); return <span title={'Pending: '+poNums} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalKits*10}v</span>; })()}</div>)}</td>
+                  <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:11,color:Number(mg)>=80?'#22C55E':Number(mg)>=60?'#F59E0B':'#DC2626'}}>{mg}%</td>
+                  <td style={{padding:'6px 8px'}}>
                     {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>\u2715</button></div>
                     :<div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
-                      <button onClick={(e)=>{e.stopPropagation(); addToCart(p.id);}} title="Add 1 kit to PO draft" style={{...cs.btn,padding:'4px 10px',fontSize:11,background:poCart[p.id]?'#16A34A':'#0072B5',color:'#fff',border:'none',marginRight:4,whiteSpace:'nowrap'}}>🛒{poCart[p.id]?` (${poCart[p.id]})`:' +'}</button><button onClick={()=>{setEditId(p.id);setEditData({...p})}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>
-                      <button onClick={()=>deleteProduct(p.id)} style={{...cs.btn,background:'#FEE2E2',color:'#DC2626',padding:'4px 10px',fontSize:11,border:'1px solid #FECACA'}}>\u2715</button>
+                      <button onClick={(e)=>{e.stopPropagation(); addToCart(p.id);}} title={poCart[p.id]?`In PO draft: ${poCart[p.id]} kit`:'Add 1 kit to PO draft'} style={{...cs.btn,padding:'2px 6px',fontSize:11,background:poCart[p.id]?'#16A34A':'#0072B5',color:'#fff',border:'none',whiteSpace:'nowrap',lineHeight:1}}>🛒{poCart[p.id]?poCart[p.id]:'+'}</button><button onClick={()=>{setEditId(p.id);setEditData({...p})}} title="Edit" style={{background:'none',border:'none',cursor:'pointer',fontSize:13,padding:'2px 4px',color:'#6B7A94',lineHeight:1}}>✎</button>
+                      <button onClick={()=>deleteProduct(p.id)} title="Delete" style={{background:'none',border:'none',cursor:'pointer',fontSize:13,padding:'2px 4px',color:'#DC2626',lineHeight:1}}>\u2715</button>
                       <button onClick={async (e)=>{
                         e.stopPropagation();
                         const r = await fetch('/api/product-write', {
@@ -236,10 +231,10 @@ export default function InventoryPage() {
                         });
                         if (r.ok) setInventory(prev => prev.map(x => x.id===p.id ? { ...x, active: x.active===false ? true : false } : x));
                         else { const e2 = await r.json().catch(()=>({})); alert('Failed: '+(e2.error||r.status)); }
-                      }} style={{background:'none',border:'none',cursor:'pointer',fontSize:16,opacity:p.active===false?0.3:1,padding:'4px'}} title={p.active===false?'Show':'Hide'}>
+                      }} style={{background:'none',border:'none',cursor:'pointer',fontSize:13,opacity:p.active===false?0.3:1,padding:'2px 4px',lineHeight:1}} title={p.active===false?'Show':'Hide'}>
                         {p.active===false ? '\uD83D\uDEAB' : '\uD83D\uDC41'}
                       </button>
-                      <button onClick={(e)=>{e.stopPropagation(); setCompareFor(p);}} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:11,textDecoration:'underline',padding:'4px'}}>Compare</button>
+                      <button onClick={(e)=>{e.stopPropagation(); setCompareFor(p);}} title="Compare vendors" style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:13,padding:'2px 4px',lineHeight:1}}>⚖</button>
                       <button onClick={(e)=>{
                         e.stopPropagation();
                         setContentFor(p);
@@ -248,7 +243,7 @@ export default function InventoryPage() {
                           specs: Array.isArray(p.specs) ? p.specs : [],
                           research: Array.isArray(p.research) ? p.research : [],
                         });
-                      }} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:11,textDecoration:'underline',padding:'4px'}}>Content</button>
+                      }} title="Edit content" style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:13,padding:'2px 4px',lineHeight:1}}>✏</button>
                     </div>}
                   </td>
                 </tr>
