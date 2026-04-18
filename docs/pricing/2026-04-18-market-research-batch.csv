@@ -1,0 +1,111 @@
+sku,name,size,old_retail,market_median,target_retail,change,source,action
+5AM,5-Amino-1MQ,5mg,55,55,50,-5,"market median ~$55 (puretestedpeptides verified)",UPDATE
+5AMI10,5-Amino-1MQ,10mg,250,85,76,-174,"verifiedpeptides 50mg=$99 scaled",UPDATE
+5AMI50,5-Amino-1MQ,50mg,330,99,89,-241,"verifiedpeptides.com 50mg=$99",UPDATE
+ADP5,Adipotide,5mg,99,64,58,-41,"swisschems 5mg=$63.95; corepeptides 10mg=$78",UPDATE
+AI50,AICAR,50mg,56,62,56,0,"corepeptides 50mg=$62 within $3",SKIP_CLOSE
+AOD910,AOD-9604,10mg,378,72,65,-313,"corepeptides 5mg=$41 scaled to 10mg",UPDATE
+5AD,AOD-9604,5mg,37,41,37,0,"corepeptides 5mg=$41 within $3",SKIP_CLOSE
+AR10,ARA-290,10mg,58,65,58,0,"modernpeptides $40-140 median ~$65 within $3",SKIP_CLOSE
+B12,B12,10ml,49,30,27,-22,"market mid-market 10ml vials ~$30",UPDATE
+CAGR10,Cagrilintide,10mg,398,85,76,-322,"biotechcompounds $80; bluum $90 → median $85",UPDATE
+CAGR5,Cagrilintide,5mg,230,90,81,-149,"expertpeptides 5mg=$90 confirmed",UPDATE
+CS10,CagriSema,10mg,199,110,99,-100,"ziptides $95; astropeptides $125 → median $110",UPDATE
+CS5,CagriSema,5mg,115,110,99,-16,"scaled from 10mg median $110",UPDATE
+CB60,Cerebrolysin,60mg,29,80,72,43,"peptideshop.com $80 confirmed",UPDATE
+CJC12,CJC-1295 noDAC,2mg,90,35,32,-58,"apexpeptidesupply 2mg ~$35",UPDATE
+CND10,CJC-1295 noDAC,10mg,61,60,54,-7,"aminoclub 10mg=$60 confirmed",UPDATE
+CND5,CJC-1295 noDAC,5mg,37,52,47,10,"scaled from 2mg/10mg mid-market $52",UPDATE
+CJC121,CJC-1295 wDAC,2mg,146,48,43,-103,"swisschems 2mg ~$48",UPDATE
+CD5,CJC-1295 wDAC,5mg,42,52,47,5,"corepeptides 5mg=$52 confirmed",UPDATE
+CJCI10,CJC+IPA Blend,10mg,198,55,50,-148,"market 10mg blends $45-65 median $55",UPDATE
+DM5,Dermorphin,5mg,69,90,81,12,"dopepeptides 5mg=$90 confirmed",UPDATE
+DH10,Dihexa,10mg,149,105,94,-55,"propeptides.com 10mg=$105 confirmed",UPDATE
+DSIP10,DSIP,10mg,170,60,54,-116,"eternalpeptides 10mg=$59.99 confirmed",UPDATE
+DS5,DSIP,5mg,37,35,32,-5,"eternalpeptides 5mg=$34.99 confirmed",UPDATE
+DS15,DSIP,15mg,115,80,72,-43,"scaled 1.5x from 10mg=$60",UPDATE
+EP50,Epitalon,50mg,165,105,94,-71,"peptidehubs 50mg=$105 confirmed",UPDATE
+EP10,Epitalon,10mg,30,40,36,6,"biotechpeptides 25mg=$94 at $3.76/mg → 10mg≈$40",UPDATE
+FOXO10,FOXO4,10mg,734,212,191,-543,"corepeptides $235; ascension ~$190 → median $212",UPDATE
+GHRP5,GHRP-2,5mg,58,20,18,-40,"corepeptides 5mg=$20 confirmed",UPDATE
+GHRP10,GHRP-2,10mg,110,29,26,-84,"corepeptides 10mg=$29 confirmed",UPDATE
+G610,GHRP-6,10mg,55,32,29,-26,"comparable to GHRP-2 $29-35 range median $32",UPDATE
+G65,GHRP-6,5mg,29,20,18,-11,"comparable to GHRP-2 5mg=$20",UPDATE
+GLUT120,Glutathione,1200mg,120,75,68,-52,"scaled between 600mg ($55) and 1500mg ($80)",UPDATE
+GT1500,Glutathione,1500mg,72,80,72,0,"verifiedpeptides 1500mg=$79.99 within $3",SKIP_CLOSE
+GT600,Glutathione,600mg,69,55,50,-19,"peptidessource 600mg=$50 median $55",UPDATE
+G10K,HCG,10000iu,189,125,112,-77,"scaled 2x from 5000iu=$70 with bulk discount",UPDATE
+HCG2000,HCG,2000iu,158,35,32,-126,"scaled: 2000/5000 * $70 + overhead = $35",UPDATE
+G5K,HCG,5000iu,99,70,63,-36,"penguin $87 premium; nationwide ~$57 → median $70",UPDATE
+HCG1000,HCG,1000iu,100,20,18,-82,"scaled: 1000/5000 * $70 + overhead = $20",UPDATE
+H15,HGH,15iu,95,95,86,-9,"penguin 15iu ~$80; purelabpeptides ~$95 → median $95",UPDATE
+HGH12I,HGH,12iu,138,78,70,-68,"scaled from 15iu=$95; 12/15*$95=$76≈$78",UPDATE
+H10,HGH,10iu,65,65,58,-7,"peptidessource $30 budget; mid-market $65 confirmed",UPDATE
+HGH36I,HGH,36iu,400,220,198,-202,"scaled: 36/15 * $95 bulk discount → $220",UPDATE
+HGH24I,HGH,24iu,238,150,135,-103,"scaled: 24/15 * $95 ≈ $152 → $150",UPDATE
+G75,HMG,75iu,79,58,52,-27,"penguinpeptides $60; geneticpeptides $55 → median $58",UPDATE
+IG1,IGF-1 LR3,1mg,97,150,135,38,"corepeptides 1mg=$150 confirmed",UPDATE
+IG01,IGF-1 LR3,0.1mg,45,28,25,-20,"corepeptides 100mcg=$28 confirmed",UPDATE
+IGD1,IGF-DES,1mg,69,45,40,-29,"nootropicsource $34.95; swisschems ~$56 → median $45",UPDATE
+IGFD2,IGF-DES,2mg,112,80,72,-40,"scaled 2x from 1mg=$45 bulk discount",UPDATE
+KS5,Kisspeptin-10,5mg,69,40,36,-33,"scaled from 10mg=$63; 5mg≈$40",UPDATE
+KS10,Kisspeptin-10,10mg,55,63,57,2,"corepeptides 10mg=$63 within $3",SKIP_CLOSE
+KV10,KPV,10mg,50,55,50,0,"verifiedpeptides 10mg=$55 within $3",SKIP_CLOSE
+KV5,KPV,5mg,34,45,40,6,"market median ~$45 for 5mg",UPDATE
+LL5,LL-37,5mg,70,75,68,-2,"limitlesslifenootropics $67-83 → median $75 within $3",SKIP_CLOSE
+MZ10,Mazdutide,10mg,249,80,72,-177,"transforma $59 sale/$139 reg; edge $48.50/vial → median $80",UPDATE
+MT1,Melanotan I,5mg,59,45,40,-19,"market median $35-55 for 5mg → $45",UPDATE
+MELA10,Melanotan I,10mg,114,80,72,-42,"mid-tier quality vendors ~$70-90 → median $80",UPDATE
+MT2,Melanotan II,10mg,34,37,33,-1,"kilobio: mid-tier $30-45 → median $37 within $3",SKIP_CLOSE
+F2,MGF,2mg,126,55,50,-76,"peptides.gg $60; market $50-65 → median $55",UPDATE
+OXYT2,Oxytocin,2mg,60,30,27,-33,"scaled from 10mg=$52; 2mg≈$30",UPDATE
+OT10,Oxytocin,10mg,39,52,47,8,"corepeptides 10mg=$52 confirmed",UPDATE
+OXYT21,Oxytocin Acetate,2mg,56,30,27,-29,"comparable to Oxytocin 2mg≈$30",UPDATE
+OXYT5,Oxytocin Acetate,5mg,100,42,38,-62,"scaled from 10mg=$52; 5mg≈$42",UPDATE
+PEGM2,PEG MGF,2mg,184,65,58,-126,"peptides.gg $60; slightly more than MGF → $65",UPDATE
+PI10,Pinealon,10mg,79,45,40,-39,"scaled from 20mg=$75; 10mg≈$45",UPDATE
+PI5,Pinealon,5mg,55,28,25,-30,"scaled from 20mg=$75; 5mg≈$28",UPDATE
+PI20,Pinealon,20mg,58,75,68,10,"corepeptides 20mg=$75 confirmed",UPDATE
+PT10,PT-141,10mg,35,43,39,4,"corepeptides 10mg=$43 confirmed",UPDATE
+RETA40,Retatrutide,40mg,510,330,297,-213,"scaled from 10mg=$130; 40mg≈$330 non-linear bulk",UPDATE
+RETA24,Retatrutide,24mg,310,230,207,-103,"scaled from base; 24mg≈$230",UPDATE
+RT20,Retatrutide,20mg,169,200,180,11,"elitebiogenix range; ascension ~$200 for 20mg",UPDATE
+RETA50,Retatrutide,50mg,620,400,360,-260,"scaled; 50mg≈$400",UPDATE
+RETA36,Retatrutide,36mg,440,290,261,-179,"scaled; 36mg≈$290",UPDATE
+RETA15,Retatrutide,15mg,220,165,148,-72,"scaled; 15mg≈$165",UPDATE
+RETA60,Retatrutide,60mg,700,470,423,-277,"scaled; 60mg≈$470",UPDATE
+RETA30,Retatrutide,30mg,380,240,216,-164,"biotechcompounds $140; ascension $200 → median $220-240",UPDATE
+RT5,Retatrutide,5mg,55,65,58,3,"scaled from 10mg=$130; 5mg=$65 within $3",SKIP_CLOSE
+RT10,Retatrutide,10mg,109,130,117,8,"particle €140≈$152; ascension $120 → median $130",UPDATE
+SK11,Selank,11mg,63,50,45,-18,"scaled 1.1x from 10mg=$48; 11mg≈$50",UPDATE
+SELA10,Selank,10mg,144,48,43,-101,"biotechpeptides 10mg=$46 confirmed; median $48",UPDATE
+SK5,Selank,5mg,49,30,27,-22,"scaled from 10mg=$48; 5mg≈$30",UPDATE
+SM5,Semaglutide,5mg,89,72,65,-24,"expertpeptides $70; astropeptides $75 → median $72",UPDATE
+SM15,Semaglutide,15mg,85,165,148,63,"scaled 1.5x from 10mg=$132 → ~$165",UPDATE
+SM30,Semaglutide,30mg,149,290,261,112,"scaled 3x from 10mg with bulk discount → ~$290",UPDATE
+SM10,Semaglutide,10mg,65,132,119,54,"expertpeptides $125; astropeptides $140 → median $132",UPDATE
+SM20,Semaglutide,20mg,109,205,184,75,"scaled 2x from 10mg with bulk discount → ~$205",UPDATE
+SX11,Semax,11mg,63,50,45,-18,"comparable to Selank 11mg ~$50",UPDATE
+SEMA10,Semax,10mg,142,46,41,-101,"comparable to Selank 10mg ~$46",UPDATE
+SX5,Semax,5mg,49,30,27,-22,"comparable to Selank 5mg ~$30",UPDATE
+SR10,Sermorelin,10mg,125,85,76,-49,"purebiolabs $128 premium; ascension ~$65 → median $85",UPDATE
+SR5,Sermorelin,5mg,43,48,43,0,"corepeptides 5mg=$48 within $3",SKIP_CLOSE
+SL322,SLU-PP-322,5mg,149,120,108,-41,"market 5mg vials ~$120; beyond-peptides data point",UPDATE
+NP8,Snap-8,10mg,30,40,36,6,"basepeptide.com listed 10mg; market $35-50 → median $40",UPDATE
+SS50,SS-31,50mg,389,250,225,-164,"scaled 5x from 10mg with 40% bulk discount → $250",UPDATE
+SS10,SS-31,10mg,99,65,58,-41,"ascension $61; market ~$65 → median $65",UPDATE
+SV10,Survodutide,10mg,319,290,261,-58,"realpeptides.co ~$290/10mg confirmed",UPDATE
+TA10,Thymosin A1,10mg,103,149,134,31,"corepeptides 10mg=$149 confirmed",UPDATE
+TA5,Thymosin A1,5mg,73,81,73,0,"corepeptides 5mg=$81 within $3",SKIP_CLOSE
+TM10,Thymalin,10mg,32,36,32,0,"verifiedpeptides 10mg=$36 within $3",SKIP_CLOSE
+TZ5,Tirzepatide,5mg,55,62,56,1,"expertpeptides $79.99; scaled → $62 within $3",SKIP_CLOSE
+TZ15,Tirzepatide,15mg,115,150,135,20,"expertpeptides 15mg=$149.99 confirmed",UPDATE
+TZ20,Tirzepatide,20mg,139,170,153,14,"scaled from 10mg=$125; 20mg≈$170",UPDATE
+TIRZ60,Tirzepatide,60mg,330,480,432,102,"scaled from 10mg=$125; 60mg≈$480",UPDATE
+TZ40,Tirzepatide,40mg,225,330,297,72,"scaled; 40mg≈$330",UPDATE
+TZ10,Tirzepatide,10mg,105,125,112,7,"expertpeptides $124.99 confirmed",UPDATE
+TIRZ50,Tirzepatide,50mg,290,410,369,79,"scaled; 50mg≈$410",UPDATE
+TIRZ45,Tirzepatide,45mg,270,370,333,63,"scaled; 45mg≈$370",UPDATE
+TZ30,Tirzepatide,30mg,185,280,252,67,"expertpeptides 30mg=$279.99 confirmed",UPDATE
+VP10,VIP,10mg,185,125,112,-73,"scaled from 5mg=$70; 10mg≈$125",UPDATE
+VP5,VIP,5mg,99,70,63,-36,"limitlesslifenootropics 5mg=$65-75 → median $70",UPDATE
