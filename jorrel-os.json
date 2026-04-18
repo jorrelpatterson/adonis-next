@@ -8,6 +8,7 @@
     "production": "https://adonis.pro",
     "admin": "https://adonis.pro/admin",
     "storefront": "https://www.advncelabs.com",
+    "instagram": "https://instagram.com/advncelabs",
     "supabase": "https://supabase.com/dashboard/project/efuxqrvdkrievbpljlaf",
     "vercel_admin": "https://vercel.com/jorrelpattersons-projects/adonis-next",
     "vercel_storefront": "https://vercel.com/jorrelpattersons-projects/advnce-site"
@@ -20,45 +21,42 @@
   },
   "current": {
     "blockers": [
-      "Botulinum toxin / Botox SKUs (BOTU100, BT100) need legal counsel review before activating — Schedule 1 Select Agent + prescription-only drug, real regulatory exposure",
-      "GKP70 dual-entry on Eve sheet ($125 vs $120, identical components) — needs WhatsApp clarification with Eve",
-      "Vendor contact info missing in admin: Weak WhatsApp + Rosyy WhatsApp (currently 'TODO_WHATSAPP') — POs to those vendors will fail submit until contact_phone or contact_email is set",
-      "/api/product-write returns 'Server config missing' — likely needs Vercel redeploy after env var changes (workaround: direct Supabase REST PATCH works fine)",
-      "57 active products without market price reference data — retail still at original (pre-audit) values for these"
+      "Botox/Botulinum (BOTU100, BT100) hidden — needs legal review (Schedule 1 Select Agent + Rx-only) before activating on storefront",
+      "ET50 from Rosyy never arrived — recorded in PO-2026-0003 (status='partial'). Decide: refund/credit/reorder",
+      "Pending Eve PO-2026-0001 still open ($1,350, 13 lines including the $135 CND10 substitution) — awaiting shipment",
+      "Welcome 2/3 emails are manual-trigger only (no auto-cron); ok at low volume",
+      "Email templates (PO, ambassador welcome, order confirmation) still use dark navy palette — should migrate to cream brand palette eventually"
     ],
-    "next_action": "Toggle on Bucket B/C new products in admin (48 currently hidden) once Jorrel decides which to expose; finish researching market prices for the remaining 57 products to round out 'Below Market' pricing strategy",
-    "last_session": "2026-04-17 — Massive session: built entire vendor pricing + PO + receiving system, captured 3 vendor pricing sheets as authoritative JSONs, found+fixed seed bug (DB prices were ~55% of true vendor prices), added Rosyy as 3rd vendor, added 48 hidden new products to catalog, applied 41 retail price corrections (6 manual + 35 batch via 10%-under-market), drafted 'About this Compound' content for ALL 150 products via 6 parallel subagents.",
+    "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. Review the asset kit + admin/content pages on the live site to confirm UX feels right.",
+    "last_session": "2026-04-18 — Massive sprint: built complete IG social engine (24 posts, calendar admin, asset kit with auto-loading share library, ambassador notification email digest), 3-email welcome sequence, brand identity doc + PDF, inventory cleanup (zeroed 94 phantom items, fixed Bac Water 6→60), cart-style add-to-PO from inventory, stock filter buttons + Pending PO badges, all 8 admin write API routes (for vendor/ambassador/social/PO writes). DISCOVERED + FIXED Supabase API key migration crisis: Supabase rolled out new sb_secret_... key format on 2026-04-18; user's existing service_role key got cleared on Vercel (showed Empty); pasted new key, redeployed, all admin writes working again.",
     "completed_today": [
-      "Cloned advnce-site as sibling repo at /Volumes/Alexandria/AI Projects/advnce-site",
-      "Verified Supabase RLS state (products: Allow all on public; ambassadors: anon INSERT+SELECT only — DELETE/UPDATE blocked)",
-      "Verified Vercel env vars on both projects (all 6 on adonis-next, all 3 on advnce-site)",
-      "Fixed bac water visibility — removed Supplies category filter from advnce-catalog.html",
-      "Added stock-aware shipping copy to product page + checkout (2-3 days vs 2 weeks)",
-      "Added multi-shipment messaging for mixed in/out-of-stock carts",
-      "Made order confirmation email shipping copy stock-aware",
-      "Built /api/ambassador-write server-side route + wired admin/ambassadors/page.jsx to use it (fixed silent edit/delete bug)",
-      "Brainstormed + spec'd + planned + EXECUTED full vendor pricing + PO + receiving system: 4 new tables (vendors, vendor_prices, purchase_orders, purchase_order_items), 5 server-side API routes (vendor-write, vendor-prices-write, purchase-write, purchase-receive, product-write), 2 new admin pages (/admin/vendors with detail+pricing-sheet tabs, /admin/purchases with list+detail+receiving modal), 4 enhanced existing pages (inventory hide toggle + compare modal + content editor, pricing suggested-retail, dashboard PO KPI cards), storefront active filter + dynamic content rendering",
-      "Added WhatsApp vendor support — submit allowed without email; 'Copy as WhatsApp text' button on PO detail builds plaintext PO and copies to clipboard",
-      "Built bulk-catalog PO form — pick vendor, see all priced products as table with qty inputs, type qtys, save draft (much faster than per-line add)",
-      "Vendor pricing filter on detail page — show only products this vendor sells",
-      "Captured Eve pricing sheet (114 products, 94 mapped) → docs/vendors/eve-pricing.json",
-      "Captured Weak pricing sheet (114 products, 78 mapped) → docs/vendors/weak-pricing.json",
-      "Captured Rosyy pricing sheet (115 products, 91 mapped) → docs/vendors/rosyy-pricing.json",
-      "Identified Lemon Bottle (Korean fat-dissolver) + LC120 (Lipo-C) + LC216 (Lipo-B/MIC) via web research",
-      "Cross-vendor reconciliation report: Eve and Weak DB prices were ~55% of true vendor sheet prices — systematic seed bug, NOT vendor price changes",
-      "Generated 2 SQL migration scripts (add Rosyy + 48 missing products; replace vendor_prices for all 3 vendors). Both ran successfully in Supabase.",
-      "Researched competitor market prices for ~30 high-volume products via Verified Peptides + Core Peptides + 4 individual product searches",
-      "Applied 6 user-confirmed retail prices: BPC-157 5/10mg, Tirz 10mg, Sema 5mg, Reta 10mg, NAD+ 500mg",
-      "Batch-applied 35 '10% under market' retail prices across the catalog (mostly LOWER — products were overpriced; TB-500/MOTS-c/PNC-27 raised because under-market)",
-      "Generated retail pricing audit CSV at docs/pricing/2026-04-17-retail-pricing-audit.csv",
-      "Drafted 'About this Compound' content for all 150 products: 200-300 word descriptions (4 sections: intro, How it works, What research shows, Why notable, Form), 5-7 specs bullets, 3 verified PubMed/PMC research links each. Tonal direction: layman-accessible + exciting + research-cited + NO FDA disclaimer block in body.",
-      "Written via 6 parallel sonnet subagents (Weight Loss / GH / Longevity / Recovery+Cognitive+Sleep / Immune+Hormonal+Sexual / Skin+Supplies+Blends+Cosmetic)"
+      "Activated 3 stocked products (SELA10, SEMA10, GHKC100) on storefront",
+      "Hid Botox/Botulinum (BOTU100, BT100) for legal review",
+      "Added vendor WhatsApp numbers — Eve +852 5707 2237, Weak +1 (213) 822-2785, Rosyy +852 4633 5001",
+      "Spot-checked 7 product descriptions — quality high (1 minor CND10 dosage citation flag)",
+      "Brand identity doc created (262 lines, 8 sections) at docs/brand/advncelabs-brand-identity.md",
+      "Brand book PDF generated to ~/Desktop (9 pages, Chrome-headless rendered)",
+      "Social media engine: spec + plan + schema + admin/content calendar page + 5 IG post HTML templates + render pipeline + 24 pre-rendered posts (63 PNGs) + /api/social-post-write",
+      "Calendar: 8-week content slate Apr 27 → Jun 19, 3 posts/wk (Mon Compound / Wed Stack / Fri alternating Research Quote / Standards / Mechanism Diagram)",
+      "Email welcome sequence: /api/subscribe-welcome-2 + /api/subscribe-welcome-3 (cream-palette templates, manual trigger)",
+      "Ambassador recruitment script template (short/medium/long versions)",
+      "Asset kit page (advnce-asset-kit.html) — loads ambassador name from ?code=XXX, Share Library auto-loads all current social_posts with substituted referral code",
+      "Ambassador content digest API + Notify button on /admin/content (sends personalized email to all active ambassadors)",
+      "Inventory cleanup: zeroed 94 phantom items, kept 11 real (per xlsx import). Fixed Bac Water 6→60 vials.",
+      "Stock filter buttons on /admin/inventory: All / In stock / Out / Pending",
+      "Pending PO badges on out-of-stock inventory rows",
+      "Cart-style add-to-PO flow: 🛒 + button per inventory row → floating PO draft pill → opens new PO form pre-filled",
+      "On hand + pending columns added to New PO catalog grid",
+      "Multiple build fixes: JSX nesting bug from heredoc, useSearchParams Suspense issue, lib/supabase.js build-tolerant fallback, force-dynamic on all admin pages",
+      "Discovered Supabase API key migration (new sb_secret_... format), built /api/env-check diagnostic route to identify the issue, all 8 admin write routes updated to accept both SUPABASE_SERVICE_KEY and SUPABASE_SERVICE_ROLE_KEY env vars, user pasted new sb_secret_TC19Z key, redeployed, all admin writes restored",
+      "Asset kit cross-origin fix: copied 63 PNGs to advnce-site/social-images/ so downloads work same-origin",
+      "Removed legacy 'Share Images' placeholder section from asset kit (Share Library replaces it)"
     ]
   },
   "setup": {
     "complete": false,
     "missing": ["ROADMAP.md"],
-    "next_setup_action": "Create ROADMAP.md if Jorrel wants formal roadmap doc"
+    "next_setup_action": "Optional: Create ROADMAP.md if formal roadmap doc desired"
   },
   "roadmap": "ROADMAP.md"
 }
