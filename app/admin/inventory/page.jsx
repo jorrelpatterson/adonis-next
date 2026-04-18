@@ -15,6 +15,8 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('all');
+  const [filterStock, setFilterStock] = useState('all');
+  const [pendingPOs, setPendingPOs] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({});
   const [sortBy, setSortBy] = useState('name');
@@ -37,14 +39,24 @@ export default function InventoryPage() {
     const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
-    const [invRes, vRes, vpRes] = await Promise.all([
+    const [invRes, vRes, vpRes, poRes, poItemsRes] = await Promise.all([
       fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name.asc`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=id,po_number,status&status=in.(submitted,partial)`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received`, { headers }),
     ]);
     setInventory(await invRes.json());
     setVendors(await vRes.json());
     setVendorPrices(await vpRes.json());
+    const openPOs = await poRes.json();
+    const allItems = await poItemsRes.json();
+    const openIds = new Set(openPOs.map(p => p.id));
+    const poByItem = openPOs.reduce((m, p) => { m[p.id] = p; return m; }, {});
+    const pending = allItems
+      .filter(i => openIds.has(i.po_id) && (i.qty_ordered - (i.qty_received || 0)) > 0)
+      .map(i => ({ product_id: i.product_id, po_number: poByItem[i.po_id].po_number, kits_pending: i.qty_ordered - (i.qty_received || 0) }));
+    setPendingPOs(pending);
     setLoading(false);
   };
 
@@ -53,7 +65,10 @@ export default function InventoryPage() {
   const filtered = useMemo(() => {
     let items = inventory.filter(p => {
       const ms = p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase());
-      return ms && (filterCat === 'all' || p.cat === filterCat);
+      const mc = filterCat === 'all' || p.cat === filterCat;
+      const inStock = (p.stock || 0) > 0;
+      const stockMatch = filterStock === 'all' || (filterStock === 'in_stock' && inStock) || (filterStock === 'out_of_stock' && !inStock);
+      return ms && mc && stockMatch;
     });
     items.sort((a, b) => {
       const av = a[sortBy], bv = b[sortBy];
@@ -61,7 +76,7 @@ export default function InventoryPage() {
       return sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
     });
     return items;
-  }, [inventory, search, filterCat, sortBy, sortDir]);
+  }, [inventory, search, filterCat, filterStock, sortBy, sortDir]);
 
   const totalCost = inventory.reduce((s, p) => s + Number(p.cost) * (p.stock / 10), 0);
   const totalRetail = inventory.reduce((s, p) => s + Number(p.retail) * p.stock, 0);
@@ -133,8 +148,17 @@ export default function InventoryPage() {
         </div>
       </div>}
 
-      <div style={{ display:'flex', gap:12, marginBottom:16, flexWrap:'wrap' }}>
+      <div style={{ display:'flex', gap:12, marginBottom:16, flexWrap:'wrap', alignItems:'center' }}>
         <input style={{ ...cs.input, maxWidth:260 }} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)}/>
+        <div style={{ display:'flex', gap:4 }}>
+          {[
+            {k:'all', l:'All', c:'#0072B5'},
+            {k:'in_stock', l:'In stock', c:'#16A34A'},
+            {k:'out_of_stock', l:'Out of stock', c:'#DC2626'},
+          ].map(f=>(
+            <button key={f.k} onClick={()=>setFilterStock(f.k)} style={{...cs.btn, padding:'6px 12px', fontSize:11, background:filterStock===f.k?f.c:'#F7F8FA', color:filterStock===f.k?'#fff':'#6B7A94', border:'1px solid '+(filterStock===f.k?f.c:'#E4E7EC')}}>{f.l}</button>
+          ))}
+        </div>
         <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
           {categories.map(c=><button key={c} onClick={()=>setFilterCat(c)} style={{ ...cs.btn, padding:'6px 12px', fontSize:11, background:filterCat===c?'#0072B5':'#F7F8FA', color:filterCat===c?'#fff':'#6B7A94', border:'1px solid '+(filterCat===c?'#0072B5':'#E4E7EC') }}>{c==='all'?'All':c}</button>)}
         </div>
@@ -165,7 +189,7 @@ export default function InventoryPage() {
                   <td style={{padding:'10px 12px',fontSize:12,color:p.vendor==='Eve'?'#00A0A8':'#E07C24',fontWeight:600}}>{p.vendor}</td>
                   <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:12}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.cost} onChange={e=>setEditData(d=>({...d,cost:e.target.value}))}/>:`$${p.cost}`}</td>
                   <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.retail} onChange={e=>setEditData(d=>({...d,retail:e.target.value}))}/>:`$${p.retail}`}</td>
-                  <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:<span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>}</td>
+                  <td style={{padding:'10px 12px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:(<div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-start'}}><span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>{(p.stock||0)===0 && (() => { const pend = pendingPOs.filter(x=>x.product_id===p.id); if(!pend.length) return null; const totalKits = pend.reduce((s,x)=>s+x.kits_pending,0); const poNums = [...new Set(pend.map(x=>x.po_number))].join(', '); return <span title={'Pending: '+poNums} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalKits*10}v</span>; })()}</div>)}</td>
                   <td style={{padding:'10px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:Number(mg)>=80?'#22C55E':Number(mg)>=60?'#F59E0B':'#DC2626'}}>{mg}%</td>
                   <td style={{padding:'10px 12px'}}>
                     {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>\u2715</button></div>
