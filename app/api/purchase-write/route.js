@@ -37,7 +37,7 @@ async function sendPoEmail({ po, vendor, items, RESEND, SHIPPING_ADDRESS }) {
 
 export async function POST(request) {
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   const RESEND = process.env.RESEND_API_KEY;
   const SHIPPING_ADDRESS = process.env.SHIPPING_ADDRESS;
   if (!SUPABASE_URL || !SERVICE_KEY) return NextResponse.json({ error: 'Server config missing' }, { status: 500 });
