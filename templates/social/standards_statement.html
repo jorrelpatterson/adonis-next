@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>Standards Statement — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .canvas {
+    width: 1080px;
+    height: 1080px;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP BAR */
+  .top-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lockup svg { height: 40px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: #1A1C22;
+  }
+  .wordmark span { color: #7A7D88; }
+
+  /* PRINCIPLE NUMBER — Magazine style */
+  .principle-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 160px;
+    color: #00A0A8;
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+    opacity: 0.25;
+    user-select: none;
+  }
+
+  /* CENTER HERO */
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  .principle-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(80px, 10vw, 120px);
+    text-transform: uppercase;
+    color: #1A1C22;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+  }
+  .divider {
+    width: 80px;
+    height: 2px;
+    background: #00A0A8;
+    margin-top: 36px;
+    margin-bottom: 36px;
+    flex-shrink: 0;
+  }
+  .principle-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 24px;
+    color: #1A1C22;
+    line-height: 1.6;
+    max-width: 620px;
+  }
+
+  /* BOTTOM FOOTER */
+  .bottom-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(26,28,34,0.12);
+    padding-top: 20px;
+    margin-top: 16px;
+  }
+  .footer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #7A7D88;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <div class="wordmark">advnce <span>labs</span></div>
+    </div>
+    <div class="principle-number">{{PRINCIPLE_NUMBER}}</div>
+  </div>
+
+  <div class="hero">
+    <div class="principle-title">{{PRINCIPLE_TITLE}}</div>
+    <div class="divider"></div>
+    <div class="principle-body">{{PRINCIPLE_BODY}}</div>
+  </div>
+
+  <div class="bottom-footer">
+    <div class="footer-label">advnce labs &middot; principles</div>
+  </div>
+</div>
+</body>
+</html>

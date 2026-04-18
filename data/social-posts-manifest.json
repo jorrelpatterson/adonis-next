@@ -1,0 +1,50 @@
+[
+  {
+    "id": "bpc157-compound-card",
+    "post_type": "compound_card",
+    "output_filename": "bpc157-compound-card.png",
+    "vars": {
+      "EYEBROW_TAG": "MECHANISM MONDAY",
+      "COMPOUND_NAME": "BPC-157",
+      "TAGLINE": "The body's own repair signal, amplified.",
+      "BULLET_1": "Upregulates growth hormone receptor expression in tendon fibroblasts, accelerating connective tissue repair after mechanical stress.",
+      "BULLET_2": "Promotes angiogenesis via VEGF pathway activation \u2014 driving blood vessel formation to damaged tissue within days.",
+      "BULLET_3": "Modulates nitric oxide synthesis to reduce systemic inflammation while preserving normal immune function.",
+      "CITATION_SHORT": "Chang et al., 2011 \u00b7 J Physiol Pharmacol \u00b7 PMID: 22146578"
+    }
+  },
+  {
+    "id": "recovery-stack-quote",
+    "post_type": "research_quote",
+    "output_filename": "recovery-stack-quote.png",
+    "vars": {
+      "QUOTE": "Stable pentadecapeptide BPC 157 promotes healing of injured ligaments in rats with a dose-dependent effect.",
+      "CITATION_FULL": "Staresinic et al. \u00b7 J Orthop Res \u00b7 2003"
+    }
+  },
+  {
+    "id": "performance-stack-carousel",
+    "post_type": "stack_carousel",
+    "output_filename": "performance-stack.png",
+    "vars": {
+      "STACK_NAME": "PERFORMANCE\nSTACK",
+      "COMPOUNDS": [
+        {
+          "name": "BPC-157",
+          "role": "Tissue repair & joint protection",
+          "explainer": "Accelerates healing of tendons, ligaments, and muscle via VEGF-driven angiogenesis and enhanced growth hormone receptor expression."
+        },
+        {
+          "name": "TB-500",
+          "role": "Systemic recovery & mobility",
+          "explainer": "Thymosin Beta-4 promotes cell migration, reduces inflammation, and restores range of motion in injured musculoskeletal tissue."
+        },
+        {
+          "name": "CJC-1295",
+          "role": "Growth hormone pulse amplifier",
+          "explainer": "GHRH analogue that extends the half-life of endogenous GH pulses \u2014 supporting lean mass accrual and overnight recovery."
+        }
+      ]
+    }
+  }
+]
