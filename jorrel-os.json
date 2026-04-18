@@ -21,42 +21,92 @@
   },
   "current": {
     "blockers": [
-      "Botox/Botulinum (BOTU100, BT100) hidden — needs legal review (Schedule 1 Select Agent + Rx-only) before activating on storefront",
-      "ET50 from Rosyy never arrived — recorded in PO-2026-0003 (status='partial'). Decide: refund/credit/reorder",
-      "Pending Eve PO-2026-0001 still open ($1,350, 13 lines including the $135 CND10 substitution) — awaiting shipment",
+      "Botox/Botulinum (BOTU100, BT100) hidden \u2014 needs legal review (Schedule 1 Select Agent + Rx-only) before activating on storefront",
+      "ET50 from Rosyy never arrived \u2014 recorded in PO-2026-0003 (status='partial'). Decide: refund/credit/reorder",
+      "Pending Eve PO-2026-0001 still open ($1,350, 13 lines including the $135 CND10 substitution) \u2014 awaiting shipment",
       "Welcome 2/3 emails are manual-trigger only (no auto-cron); ok at low volume",
-      "Email templates (PO, ambassador welcome, order confirmation) still use dark navy palette — should migrate to cream brand palette eventually"
+      "Email templates (PO, ambassador welcome, order confirmation) still use dark navy palette \u2014 should migrate to cream brand palette eventually",
+      "Pre-PO-system inventory has no actual-paid cost record; current Inventory Wholesale falls back to cheapest-vendor for those items. Acceptable but worth noting when reading the dashboard."
     ],
-    "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. Review the asset kit + admin/content pages on the live site to confirm UX feels right.",
-    "last_session": "2026-04-18 — Massive sprint: built complete IG social engine (24 posts, calendar admin, asset kit with auto-loading share library, ambassador notification email digest), 3-email welcome sequence, brand identity doc + PDF, inventory cleanup (zeroed 94 phantom items, fixed Bac Water 6→60), cart-style add-to-PO from inventory, stock filter buttons + Pending PO badges, all 8 admin write API routes (for vendor/ambassador/social/PO writes). DISCOVERED + FIXED Supabase API key migration crisis: Supabase rolled out new sb_secret_... key format on 2026-04-18; user's existing service_role key got cleared on Vercel (showed Empty); pasted new key, redeployed, all admin writes working again.",
-    "completed_today": [
-      "Activated 3 stocked products (SELA10, SEMA10, GHKC100) on storefront",
-      "Hid Botox/Botulinum (BOTU100, BT100) for legal review",
-      "Added vendor WhatsApp numbers — Eve +852 5707 2237, Weak +1 (213) 822-2785, Rosyy +852 4633 5001",
-      "Spot-checked 7 product descriptions — quality high (1 minor CND10 dosage citation flag)",
-      "Brand identity doc created (262 lines, 8 sections) at docs/brand/advncelabs-brand-identity.md",
-      "Brand book PDF generated to ~/Desktop (9 pages, Chrome-headless rendered)",
-      "Social media engine: spec + plan + schema + admin/content calendar page + 5 IG post HTML templates + render pipeline + 24 pre-rendered posts (63 PNGs) + /api/social-post-write",
-      "Calendar: 8-week content slate Apr 27 → Jun 19, 3 posts/wk (Mon Compound / Wed Stack / Fri alternating Research Quote / Standards / Mechanism Diagram)",
-      "Email welcome sequence: /api/subscribe-welcome-2 + /api/subscribe-welcome-3 (cream-palette templates, manual trigger)",
-      "Ambassador recruitment script template (short/medium/long versions)",
-      "Asset kit page (advnce-asset-kit.html) — loads ambassador name from ?code=XXX, Share Library auto-loads all current social_posts with substituted referral code",
-      "Ambassador content digest API + Notify button on /admin/content (sends personalized email to all active ambassadors)",
-      "Inventory cleanup: zeroed 94 phantom items, kept 11 real (per xlsx import). Fixed Bac Water 6→60 vials.",
-      "Stock filter buttons on /admin/inventory: All / In stock / Out / Pending",
-      "Pending PO badges on out-of-stock inventory rows",
-      "Cart-style add-to-PO flow: 🛒 + button per inventory row → floating PO draft pill → opens new PO form pre-filled",
-      "On hand + pending columns added to New PO catalog grid",
-      "Multiple build fixes: JSX nesting bug from heredoc, useSearchParams Suspense issue, lib/supabase.js build-tolerant fallback, force-dynamic on all admin pages",
-      "Discovered Supabase API key migration (new sb_secret_... format), built /api/env-check diagnostic route to identify the issue, all 8 admin write routes updated to accept both SUPABASE_SERVICE_KEY and SUPABASE_SERVICE_ROLE_KEY env vars, user pasted new sb_secret_TC19Z key, redeployed, all admin writes restored",
-      "Asset kit cross-origin fix: copied 63 PNGs to advnce-site/social-images/ so downloads work same-origin",
-      "Removed legacy 'Share Images' placeholder section from asset kit (Share Library replaces it)"
+    "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. When ready, schedule a brainstorming session for the OOS-discount-funds-PO idea (see memory/idea_pre_sell_oos_to_fund_pos.md).",
+    "last_session": "2026-04-18 (second session) \u2014 Admin/inventory UX overhaul + dashboard rebuild. Removed 1200px main width cap, collapsible Low Stock banner, table density compressed (action icons, padding 6/8, SKU stacked under product name, min-width 980 with horizontal scroll fallback). Vendor column became a <select> defaulting to cheapest, with 'LOF: <vendor>' subtitle. Split cost into Kit$ + Vial$ columns. Wrote 2026-04-18_reconcile_products_cost.sql to align products.cost+vendor with cheapest vendor_price (one-shot fix; receive flow keeps it accurate going forward). Discovered original seed used cost=retail/2 (50% margin) \u2014 old Wholesale was inflated. Rebuilt dashboard with 5 KPI cards: Spent/Committed, Inventory Wholesale (paid-cost basis), Inventory Retail (now + committed POs), Catalog Wholesale, Catalog Retail. Fixed missing unit_cost/received_at in PO items fetch. Captured big idea: heavily discount OOS items, customer payments crowdfund the 10-vial PO (idea_pre_sell_oos_to_fund_pos.md).",
+    "completed_today_session2": [
+      "Admin layout: removed maxWidth:1200 cap; padding 32 \u2192 24px 28px",
+      "Inventory: collapsible Low Stock banner, persisted in localStorage",
+      "Inventory: table density pass \u2014 SKU into Product cell, padding 6/8, action icons, minWidth 980 + horizontal scroll fallback",
+      "Inventory: Product column capped at 80px; Vendor bumped to 110 for dropdown",
+      "Inventory: action buttons \u2192 icon-only with tooltips, Delete (\ud83d\uddd1) at end to disambiguate from Cancel \u2715",
+      "Inventory: replaced JSX-text \\uXXXX escapes with literal characters (Refresh, Low Stock, \u2193 CHEAPEST, loading)",
+      "Inventory: Vendor cell \u2192 <select> of all vendors with vendor_prices, sorted cheapest-first; on change persists vendor + cost via /api/product-write",
+      "Inventory: 'LOF: <vendor>' subtitle from most-recent submitted PO per product",
+      "Inventory: new Kit $ column (per kit, editable in edit mode) + new Vial $ column (per vial, derived/read-only)",
+      "Inventory dashboard: 5 KPI cards \u2014 Spent/Committed (single card), Inventory Wholesale (paid cost basis), Inventory Retail (with committed PO retail rolled in), Catalog Wholesale, Catalog Retail",
+      "Inventory dashboard: cost basis logic \u2014 most-recent received unit_cost per product, fallback to products.cost",
+      "Inventory dashboard: Committed PO kits roll into Inventory Retail projection (subtitle shows committed slice)",
+      "Wrote 2026-04-18_reconcile_products_cost.sql \u2014 sets products.cost + vendor = cheapest vendor_price; user ran it",
+      "Fixed Spent/Committed showing $0 \u2014 added unit_cost + received_at to purchase_order_items SELECT",
+      "Pricing audit query (Weak vs Eve/Rosyy): Weak strictly cheapest on 18 SKUs (CagriSema -$35, Dermorphin -$19, Kisspeptin-10 10mg -$14 lead the list), tied on 4, more expensive on 52, sole vendor on 4 (Adipotide, AICAR, Melatonin 10mg, Oxytocin Acetate)",
+      "Captured strategic idea: pre-sell OOS items at heavy discount to crowdfund the 10-vial PO (memory/idea_pre_sell_oos_to_fund_pos.md)"
     ]
   },
+  "roadmap_ideas": [
+    {
+      "id": "oos-presell-crowdfund",
+      "title": "Discount OOS items to crowdfund 10-vial POs",
+      "status": "captured, not scoped",
+      "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
+      "summary": "OOS items show heavy discount price + 'extended wait time' framing; orders queue until enough cash to fund a 10-vial PO; customers ship when kit arrives. Reduces capital tied up; turns dormant OOS state into funding mechanism. Open questions: discount depth, framing honesty, fulfillment risk, eligible products.",
+      "next_step": "Brainstorming session \u2014 start by deciding which open question matters most (discount depth vs framing vs fulfillment risk)."
+    },
+    {
+      "id": "actual-paid-vs-replacement-cost",
+      "title": "Decide whether dashboard surfaces both 'actual paid' and 'replacement cost' wholesale",
+      "status": "open consideration",
+      "summary": "Current Inventory Wholesale uses paid cost basis (PO unit_cost) where known, falls back to products.cost (cheapest vendor). Could add a separate 'Replacement Wholesale' card to make the gap explicit.",
+      "next_step": "Wait until cost basis vs replacement gap actually causes confusion in practice; revisit if Jorrel asks again."
+    },
+    {
+      "id": "auto-cron-welcome-emails",
+      "title": "Cron the welcome 2/3 emails (currently manual)",
+      "status": "blocker, deferred",
+      "summary": "subscribe-welcome-2 and subscribe-welcome-3 are manual triggers. At low subscriber volume this is fine; at scale needs Vercel cron + Supabase 'last_sent' tracking on subscribers table.",
+      "next_step": "Defer until subscriber volume justifies the cron+state work."
+    },
+    {
+      "id": "email-template-cream-palette",
+      "title": "Migrate transactional emails to cream brand palette",
+      "status": "blocker, deferred",
+      "summary": "PO confirmation, order confirmation, ambassador welcome still use dark navy (legacy from Elysian branding). Should match advnce labs cream + cyan + amber identity.",
+      "next_step": "Batch all three transactional templates in one pass when ready for visual polish."
+    },
+    {
+      "id": "botox-legal-review",
+      "title": "Botox/Botulinum legal review before activation",
+      "status": "blocker, external",
+      "summary": "BOTU100 and BT100 hidden on storefront. Schedule 1 Select Agent + Rx-only. Need attorney review before exposing.",
+      "next_step": "Engage legal counsel; estimate ~$500-1500 for opinion letter."
+    },
+    {
+      "id": "subscription-volume-discount",
+      "title": "Subscription model: customers commit to monthly volume for discount",
+      "status": "captured (in OOS idea memory), not scoped",
+      "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
+      "summary": "Smooth out PO cadence by giving subscribers a discount in exchange for committing to monthly volume. Adjacent to the OOS pre-sell idea \u2014 both convert future demand into present cash flow."
+    },
+    {
+      "id": "wholesale-ambassador-kits",
+      "title": "Wholesale ambassador kits \u2014 front cash for inventory at wholesale, sell at retail",
+      "status": "captured (in OOS idea memory), not scoped",
+      "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
+      "summary": "Ambassadors front cash for a starter kit at wholesale prices, then sell at retail and keep the margin. Bigger lever than commission program but riskier (compliance, customer support burden, reputation if mishandled)."
+    }
+  ],
   "setup": {
     "complete": false,
-    "missing": ["ROADMAP.md"],
-    "next_setup_action": "Optional: Create ROADMAP.md if formal roadmap doc desired"
+    "missing": [
+      "ROADMAP.md"
+    ],
+    "next_setup_action": "Optional: Create ROADMAP.md if a formal roadmap doc is desired. roadmap_ideas[] in this file is the working list."
   },
   "roadmap": "ROADMAP.md"
 }
