@@ -141,10 +141,48 @@ export default function InventoryPage() {
 
   // Active products only for catalog-wide projections (skip hidden)
   const activeInv = inventory.filter(p => p.active !== false);
-  const inventoryWholesale = inventory.reduce((s, p) => s + Number(p.cost) * (Number(p.stock) / 10), 0);
-  const inventoryRetail    = inventory.reduce((s, p) => s + Number(p.retail) * Number(p.stock), 0);
-  const catalogWholesale   = activeInv.reduce((s, p) => s + Number(p.cost), 0);                  // 1 kit each
-  const catalogRetail      = activeInv.reduce((s, p) => s + Number(p.retail) * 10, 0);           // 1 kit (10 vials) each at retail
+
+  // Cost basis: most recent received unit_cost per product (real paid price). Falls back to p.cost.
+  const paidCostByPid = (() => {
+    const out = {};
+    allPOItems.forEach(it => {
+      if ((it.qty_received || 0) > 0 && it.unit_cost != null) {
+        const ts = it.received_at || '';
+        const prev = out[it.product_id];
+        if (!prev || ts > prev.received_at) out[it.product_id] = { unit_cost: Number(it.unit_cost), received_at: ts };
+      }
+    });
+    return out;
+  })();
+  const costBasis = (p) => paidCostByPid[p.id]?.unit_cost ?? Number(p.cost || 0);
+
+  // Open PO commitments (submitted + partial)
+  const openPoIds = new Set(allPOs.filter(po => po.status === 'submitted' || po.status === 'partial').map(po => po.id));
+  const productById = inventory.reduce((m,p) => { m[p.id] = p; return m; }, {});
+  const openItems = allPOItems.filter(it => openPoIds.has(it.po_id));
+  const committedKitsByPid = openItems.reduce((m, it) => {
+    const pending = (it.qty_ordered || 0) - (it.qty_received || 0);
+    if (pending > 0) m[it.product_id] = (m[it.product_id] || 0) + pending;
+    return m;
+  }, {});
+  const committedRetail = Object.entries(committedKitsByPid).reduce((s, [pid, kits]) => {
+    const p = productById[pid];
+    return p ? s + kits * 10 * Number(p.retail || 0) : s;
+  }, 0);
+
+  // Spend totals
+  const spent     = allPOItems.reduce((s, it) => s + (it.qty_received || 0) * Number(it.unit_cost || 0), 0);
+  const committed = spent + openItems.reduce((s, it) => s + ((it.qty_ordered || 0) - (it.qty_received || 0)) * Number(it.unit_cost || 0), 0);
+
+  // Inventory metrics (paid-based, with committed projection on retail)
+  const inventoryWholesale = inventory.reduce((s, p) => s + costBasis(p) * (Number(p.stock) / 10), 0);
+  const inventoryRetailNow = inventory.reduce((s, p) => s + Number(p.retail) * Number(p.stock), 0);
+  const inventoryRetail    = inventoryRetailNow + committedRetail;
+
+  // Catalog metrics (1 kit per active product)
+  const catalogWholesale = activeInv.reduce((s, p) => s + costBasis(p), 0);
+  const catalogRetail    = activeInv.reduce((s, p) => s + Number(p.retail) * 10, 0);
+
   const lowStock = inventory.filter(p => p.stock <= 3 && p.cat !== 'Supplies');
 
   const saveEdit = async () => {
@@ -191,10 +229,15 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12, marginBottom:24 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:12, marginBottom:24 }}>
+        <div style={{ ...cs.card, padding:16 }}>
+          <div style={{ fontSize:18, fontWeight:700, color:'#0F1928', fontFamily:"'Barlow Condensed'" }}>${Math.round(spent).toLocaleString()} <span style={{color:'#8C919E',fontSize:14,fontWeight:400}}>/ ${Math.round(committed).toLocaleString()}</span></div>
+          <div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>Spent / Committed</div>
+          <div style={{ fontSize:10, color:'#A0A4AE', marginTop:2 }}>received POs / + open POs</div>
+        </div>
         {[
-          { l:'Inventory Wholesale', sub:'current stock @ kit cost', v:'$'+Math.round(inventoryWholesale).toLocaleString(), c:'#0F1928' },
-          { l:'Inventory Retail',    sub:'current stock @ retail/vial', v:'$'+Math.round(inventoryRetail).toLocaleString(),    c:'#22C55E' },
+          { l:'Inventory Wholesale', sub:'current stock @ paid cost', v:'$'+Math.round(inventoryWholesale).toLocaleString(), c:'#0F1928' },
+          { l:'Inventory Retail',    sub:`now + $${Math.round(committedRetail).toLocaleString()} committed`, v:'$'+Math.round(inventoryRetail).toLocaleString(), c:'#22C55E' },
           { l:'Catalog Wholesale',   sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogWholesale).toLocaleString(),  c:'#6B7A94' },
           { l:'Catalog Retail',      sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogRetail).toLocaleString(),     c:'#0072B5' },
         ].map((x,i)=>(
