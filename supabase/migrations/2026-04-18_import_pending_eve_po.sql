@@ -3,7 +3,7 @@
 
 WITH new_po AS (
   INSERT INTO purchase_orders (po_number, vendor_id, status, total_cost, notes, submitted_at)
-  SELECT 'PO-2026-0001', id, 'submitted', 1350, 'Imported from xlsx 2026-04-18. Order placed manually with Eve before adonis-next PO system. Recording for tracking + receiving workflow.', '2026-04-18T18:08:53Z'
+  SELECT 'PO-2026-0001', id, 'submitted', 1385, 'Imported from xlsx 2026-04-18. Order placed manually with Eve before adonis-next PO system. Recording for tracking + receiving workflow.', '2026-04-18T18:08:53Z'
   FROM vendors WHERE name = 'Eve'
   RETURNING id
 )
@@ -13,7 +13,7 @@ FROM new_po, products p JOIN (VALUES
   ('SM15', 1, 55),
   ('RT10', 1, 85),
   ('BP10', 1, 70),
-  ('CND10', 1, 100),
+  ('CND10', 1, 135),
   ('MC40', 1, 200),
   ('SX5', 1, 45),
   ('DS5', 1, 40),
