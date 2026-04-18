@@ -139,14 +139,14 @@ export default function InventoryPage() {
   const handleSort = (col) => { if (sortBy === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc'); else { setSortBy(col); setSortDir('asc'); } };
   const SI = ({ col }) => sortBy === col ? (sortDir === 'asc' ? ' \u2191' : ' \u2193') : '';
 
-  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'50vh', color:'#8C919E' }}><div style={{ textAlign:'center' }}><div style={{ fontSize:32, marginBottom:8 }}>\uD83D\uDCE6</div>Loading inventory...</div></div>;
+  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'50vh', color:'#8C919E' }}><div style={{ textAlign:'center' }}><div style={{ fontSize:32, marginBottom:8 }}>📦</div>Loading inventory...</div></div>;
 
   return (
     <div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
         <div><h1 style={cs.h1}>Inventory</h1><p style={{ color:'#8C919E', fontSize:14 }}>{inventory.length} products · {inventory.reduce((s,p)=>s+p.stock,0)} vials · <span style={{color:'#22C55E'}}>Live</span></p></div>
         <div style={{ display:'flex', gap:8 }}>
-          <button onClick={fetchProducts} style={{ ...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC' }}>\u21BB Refresh</button>
+          <button onClick={fetchProducts} style={{ ...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC' }}>↻ Refresh</button>
           <button onClick={()=>setShowAdd(!showAdd)} style={{ ...cs.btn, background:'#0072B5', color:'#fff', padding:'10px 20px' }}>+ Add Product</button>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function InventoryPage() {
 
       {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:lowStockCollapsed?'10px 14px':16, marginBottom:20 }}>
         <div onClick={()=>{const n=!lowStockCollapsed; setLowStockCollapsed(n); try{localStorage.setItem('low_stock_collapsed', n?'1':'0');}catch{}}} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', cursor:'pointer', userSelect:'none' }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'#DC2626' }}>\u26A0\uFE0F Low Stock <span style={{fontWeight:400,opacity:0.7,marginLeft:6}}>({lowStock.length})</span></div>
+          <div style={{ fontSize:13, fontWeight:700, color:'#DC2626' }}>⚠️ Low Stock <span style={{fontWeight:400,opacity:0.7,marginLeft:6}}>({lowStock.length})</span></div>
           <span style={{ fontSize:11, color:'#DC2626', fontWeight:600 }}>{lowStockCollapsed?'\u25BC Show':'\u25B2 Hide'}</span>
         </div>
         {!lowStockCollapsed && <div style={{ fontSize:12, color:'#7F1D1D', marginTop:8 }}>{lowStock.map(p=>`${p.name} (${p.stock})`).join(' \u00B7 ')}</div>}
@@ -275,7 +275,7 @@ export default function InventoryPage() {
                       const isMin = Number(m.cost_per_kit) === minCost;
                       return (
                         <tr key={m.id} style={{borderBottom:'1px solid #F0F1F4',background:isMin?'#F0FDF4':'transparent'}}>
-                          <td style={{padding:'8px',fontWeight:isMin?700:400}}>{v?.name} {isMin && <span style={{color:'#16A34A',fontSize:10,marginLeft:6}}>\u2193 CHEAPEST</span>}</td>
+                          <td style={{padding:'8px',fontWeight:isMin?700:400}}>{v?.name} {isMin && <span style={{color:'#16A34A',fontSize:10,marginLeft:6}}>↓ CHEAPEST</span>}</td>
                           <td style={{padding:'8px',textAlign:'right',fontFamily:'monospace',color:isMin?'#16A34A':'#0F1928',fontWeight:isMin?700:400}}>${Number(m.cost_per_kit).toFixed(2)}</td>
                           <td style={{padding:'8px',textAlign:'right',fontSize:11,color:'#7A7D88'}}>{new Date(m.last_updated).toLocaleDateString()}</td>
                         </tr>
