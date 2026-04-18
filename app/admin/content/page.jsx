@@ -106,7 +106,7 @@ export default function ContentPage() {
           <button onClick={async () => {
             if (!confirm('Send a digest email to all active ambassadors with the current share library?')) return;
             const r = await fetch('/api/ambassador-content-digest', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
-            if (r.ok) { const j = await r.json(); alert(`Digest sent to ${j.sent} of ${j.total} ambassadors.${j.failed?.length ? \ + j.failed.length : ''}`); }
+            if (r.ok) { const j = await r.json(); alert('Digest sent to ' + j.sent + ' of ' + j.total + ' ambassadors.' + (j.failed && j.failed.length ? ' Failures: ' + j.failed.length : '')); }
             else { const e = await r.json().catch(()=>({})); alert('Failed: ' + (e.error || r.status)); }
           }} style={{padding:'8px 16px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>📣 Notify ambassadors</button>
           <button onClick={reload} style={{padding:'8px 16px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,cursor:'pointer'}}>Refresh</button>
