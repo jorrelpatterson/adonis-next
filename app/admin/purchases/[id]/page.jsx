@@ -113,7 +113,7 @@ export default function PoDetailPage() {
     lines.push('');
     lines.push('*Ship to:*');
     lines.push('Jorrel Patterson');
-    lines.push('760 E Princeton St, Apt 3');
+    lines.push('760 E. Princeton St');
     lines.push('Ontario, CA 91764');
     if (po.notes) {
       lines.push('');
