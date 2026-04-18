@@ -67,7 +67,11 @@ export default function InventoryPage() {
       const ms = p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase());
       const mc = filterCat === 'all' || p.cat === filterCat;
       const inStock = (p.stock || 0) > 0;
-      const stockMatch = filterStock === 'all' || (filterStock === 'in_stock' && inStock) || (filterStock === 'out_of_stock' && !inStock);
+      const isPending = pendingPOs.some(x => x.product_id === p.id);
+      const stockMatch = filterStock === 'all'
+        || (filterStock === 'in_stock' && inStock)
+        || (filterStock === 'out_of_stock' && !inStock)
+        || (filterStock === 'pending' && isPending);
       return ms && mc && stockMatch;
     });
     items.sort((a, b) => {
@@ -76,7 +80,7 @@ export default function InventoryPage() {
       return sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
     });
     return items;
-  }, [inventory, search, filterCat, filterStock, sortBy, sortDir]);
+  }, [inventory, search, filterCat, filterStock, pendingPOs, sortBy, sortDir]);
 
   const totalCost = inventory.reduce((s, p) => s + Number(p.cost) * (p.stock / 10), 0);
   const totalRetail = inventory.reduce((s, p) => s + Number(p.retail) * p.stock, 0);
@@ -155,6 +159,7 @@ export default function InventoryPage() {
             {k:'all', l:'All', c:'#0072B5'},
             {k:'in_stock', l:'In stock', c:'#16A34A'},
             {k:'out_of_stock', l:'Out of stock', c:'#DC2626'},
+            {k:'pending', l:'Pending', c:'#A16207'},
           ].map(f=>(
             <button key={f.k} onClick={()=>setFilterStock(f.k)} style={{...cs.btn, padding:'6px 12px', fontSize:11, background:filterStock===f.k?f.c:'#F7F8FA', color:filterStock===f.k?'#fff':'#6B7A94', border:'1px solid '+(filterStock===f.k?f.c:'#E4E7EC')}}>{f.l}</button>
           ))}
