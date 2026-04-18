@@ -199,7 +199,7 @@ export default function InventoryPage() {
       <div style={{...cs.card, overflowX:'auto'}}>
         <table style={{ width:'100%', borderCollapse:'collapse', minWidth:980 }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:110},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:54},{k:'cost',l:'Cost',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
+            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:54},{k:'cost',l:'Cost',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
               <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&handleSort(c.k)} style={{ padding:'8px 8px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:c.k!=='actions'?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
             ))}
           </tr></thead>
