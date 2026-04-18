@@ -111,8 +111,6 @@ export async function POST(request) {
     const [po] = await poRes.json();
     if (!po) return NextResponse.json({ error: 'PO not found' }, { status: 404 });
     if (po.status !== 'draft') return NextResponse.json({ error: 'Only draft POs can be submitted' }, { status: 400 });
-    if (!po.vendor?.contact_email) return NextResponse.json({ error: `Vendor "${po.vendor?.name}" has no contact_email` }, { status: 400 });
-
     let poNumber;
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -129,23 +127,26 @@ export async function POST(request) {
       }
     }
 
-    try {
-      await sendPoEmail({
-        po: { ...po, po_number: poNumber },
-        vendor: po.vendor,
-        items: po.items.map(i => ({ ...i.product, qty_ordered: i.qty_ordered, unit_cost: i.unit_cost })),
-        RESEND, SHIPPING_ADDRESS,
-      });
-    } catch (e) {
-      // Roll back to draft so user can retry
-      await fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?id=eq.${id}`, {
-        method: 'PATCH', headers,
-        body: JSON.stringify({ status: 'draft', submitted_at: null, last_emailed_at: null }),
-      });
-      return NextResponse.json({ error: 'Email failed (PO reverted to draft): ' + e.message }, { status: 500 });
+    if (po.vendor?.contact_email) {
+      try {
+        await sendPoEmail({
+          po: { ...po, po_number: poNumber },
+          vendor: po.vendor,
+          items: po.items.map(i => ({ ...i.product, qty_ordered: i.qty_ordered, unit_cost: i.unit_cost })),
+          RESEND, SHIPPING_ADDRESS,
+        });
+      } catch (e) {
+        await fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?id=eq.${id}`, {
+          method: 'PATCH', headers,
+          body: JSON.stringify({ status: 'draft', submitted_at: null, last_emailed_at: null }),
+        });
+        return NextResponse.json({ error: 'Email failed (PO reverted to draft): ' + e.message }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, po_number: poNumber, emailed: true });
     }
 
-    return NextResponse.json({ success: true, po_number: poNumber });
+    // No email on file — vendor uses WhatsApp/other. Mark submitted but return whatsapp_only flag.
+    return NextResponse.json({ success: true, po_number: poNumber, emailed: false, whatsapp_only: true });
   }
 
   // RESEND email (only for submitted/partial)
@@ -154,6 +155,7 @@ export async function POST(request) {
     const [po] = await poRes.json();
     if (!po) return NextResponse.json({ error: 'PO not found' }, { status: 404 });
     if (!['submitted','partial'].includes(po.status)) return NextResponse.json({ error: 'Cannot resend in current status' }, { status: 400 });
+    if (!po.vendor?.contact_email) return NextResponse.json({ error: 'Vendor has no email — use the Copy as WhatsApp button instead.' }, { status: 400 });
     try {
       await sendPoEmail({
         po, vendor: po.vendor,

@@ -48,7 +48,15 @@ export default function PoDetailPage() {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ action:'submit', id }),
     });
-    if (r.ok) { const { po_number } = await r.json(); alert(`Submitted as ${po_number}. Email sent.`); reload(); }
+    if (r.ok) {
+      const data = await r.json();
+      if (data.whatsapp_only) {
+        alert(`Submitted as ${data.po_number}. No email on file — use "Copy as WhatsApp text" to send manually.`);
+      } else {
+        alert(`Submitted as ${data.po_number}. Email sent.`);
+      }
+      reload();
+    }
     else { const e = await r.json().catch(()=>({})); alert('Failed: '+(e.error||r.status)); }
     setBusy(false);
   };
@@ -86,6 +94,39 @@ export default function PoDetailPage() {
     if (r.ok) reload();
     else { const e = await r.json().catch(()=>({})); alert('Failed: '+(e.error||r.status)); }
     setBusy(false);
+  };
+
+  const copyWhatsApp = async () => {
+    const lines = [];
+    lines.push(`*PURCHASE ORDER ${po.po_number}*`);
+    lines.push(`Vendor: ${po.vendor?.name || ''}`);
+    lines.push(`Date: ${new Date(po.submitted_at || po.created_at).toLocaleDateString()}`);
+    lines.push('');
+    lines.push('*Items:*');
+    items.forEach(i => {
+      const p = products[i.product_id] || {};
+      const lt = (Number(i.qty_ordered) * Number(i.unit_cost)).toFixed(2);
+      lines.push(`• ${p.name} (${p.size}) — ${i.qty_ordered} kits @ $${Number(i.unit_cost).toFixed(2)} = $${lt}`);
+    });
+    lines.push('');
+    lines.push(`*Total: $${Number(po.total_cost || 0).toFixed(2)}*`);
+    lines.push('');
+    lines.push('*Ship to:*');
+    lines.push('Jorrel Patterson');
+    lines.push('760 Princeton St, Apt 3');
+    lines.push('Ontario, CA 91764');
+    if (po.notes) {
+      lines.push('');
+      lines.push(`Notes: ${po.notes}`);
+    }
+    const text = lines.join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('PO copied to clipboard. Paste into vendor\'s WhatsApp chat.');
+    } catch (e) {
+      // Fallback: show in a prompt the user can manually copy
+      prompt('Copy this PO text:', text);
+    }
   };
 
   const openReceive = () => {
@@ -135,6 +176,7 @@ export default function PoDetailPage() {
         {['submitted','partial'].includes(po.status) && <>
           <button onClick={openReceive} disabled={busy} style={{padding:'10px 20px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>Receive Shipment</button>
           <button onClick={resend} disabled={busy} style={{padding:'10px 20px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Resend PO email</button>
+          <button onClick={copyWhatsApp} disabled={busy} style={{padding:'10px 20px',background:'#25D366',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Copy as WhatsApp text</button>
           <button onClick={cancel} disabled={busy} style={{padding:'10px 20px',background:'#FEE2E2',color:'#DC2626',border:'1px solid #FECACA',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Cancel PO</button>
         </>}
         {po.status === 'partial' && <button onClick={closeForce} disabled={busy} style={{padding:'10px 20px',background:'#FEF3C7',color:'#A16207',border:'1px solid #FDE68A',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Close PO (forced)</button>}
