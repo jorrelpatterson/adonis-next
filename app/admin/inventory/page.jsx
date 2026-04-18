@@ -329,7 +329,6 @@ export default function InventoryPage() {
           </div>
         </div>
       )}
-    </div>
 
       {cartCount > 0 && (
         <div style={{position:'fixed',bottom:24,right:24,background:'#0F1928',color:'white',padding:'14px 20px',borderRadius:8,boxShadow:'0 4px 16px rgba(0,0,0,0.25)',display:'flex',alignItems:'center',gap:14,zIndex:50,fontSize:13}}>
