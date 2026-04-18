@@ -584,11 +584,11 @@
       "vendor_sku": "GKP70",
       "name": "GKP Blend",
       "size": "70mg",
-      "cost_per_kit": 125,
+      "cost_per_kit": 120,
       "red": false,
       "our_sku": "GKP70",
       "components": "CU50mg+KPV10mg+BPC10mg",
-      "annotation": "Per Jorrel: possibly different mg compositions but Eve sheet shows identical CU50+KPV10+BPC10 total 70mg for both. Needs WhatsApp confirmation."
+      "annotation": "Confirmed with Eve 2026-04-18: cheaper of dual sheet entries ($120, not $125). Sheet had typo."
     },
     {
       "vendor_sku": "GLOW50",
@@ -928,16 +928,6 @@
       "red": false,
       "our_sku": "B12",
       "annotation": "10ml vial, 1mg per ml"
-    },
-    {
-      "vendor_sku": "GKP70-alt",
-      "name": "GKP Blend",
-      "size": "70mg",
-      "cost_per_kit": 120,
-      "red": false,
-      "our_sku": "GKP70",
-      "components": "CU50+KPV10+BPC10",
-      "annotation": "Eve sheet lists GKP70 twice \u2014 first instance has price 125, this duplicate shows 120. Needs vendor clarification. | Per Jorrel: possibly different mg compositions but Eve sheet shows identical CU50+KPV10+BPC10 total 70mg for both. Needs WhatsApp confirmation."
     },
     {
       "vendor_sku": "H10",
