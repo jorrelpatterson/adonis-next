@@ -102,9 +102,12 @@ export default function PurchasesPage() {
           <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Purchases</h1>
           <p style={{color:'#8C919E',fontSize:14}}>{pos.length} purchase orders</p>
         </div>
-        <button onClick={()=>setShowNew(s=>!s)} style={{padding:'10px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>
-          {showNew ? 'Cancel' : '+ New PO'}
-        </button>
+        <div style={{display:'flex',gap:8}}>
+          <Link href="/admin/purchases/multi" style={{padding:'10px 20px',background:'#00A0A8',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',textDecoration:'none'}}>+ Multi-Vendor PO</Link>
+          <button onClick={()=>setShowNew(s=>!s)} style={{padding:'10px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>
+            {showNew ? 'Cancel' : '+ New PO'}
+          </button>
+        </div>
       </div>
 
       {showNew && (
