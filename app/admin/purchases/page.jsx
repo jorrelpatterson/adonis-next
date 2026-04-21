@@ -146,8 +146,18 @@ export default function PurchasesPage() {
                         const cost = priceByPid[p.id];
                         const qty = newPo.qtys?.[p.id] || '';
                         const lt = (Number(qty) || 0) * Number(cost);
+                        // Find the cheapest other vendor (if any) for this product
+                        let cheaperRow = null;
+                        prices.forEach(vp => {
+                          if (vp.product_id !== p.id) return;
+                          if (vp.vendor_id === newPo.vendor_id) return;
+                          if (Number(vp.cost_per_kit) >= Number(cost)) return;
+                          if (!cheaperRow || Number(vp.cost_per_kit) < Number(cheaperRow.cost_per_kit)) cheaperRow = vp;
+                        });
+                        const cheaperVendor = cheaperRow ? (vendors.find(v => v.id === cheaperRow.vendor_id) || {}).name : null;
+                        const isDimmed = !!cheaperRow && !(Number(qty) > 0);
                         return (
-                          <tr key={p.id} style={{borderBottom:'1px solid #F0F1F4',background:Number(qty) > 0 ? '#F0FDF4' : 'transparent'}}>
+                          <tr key={p.id} style={{borderBottom:'1px solid #F0F1F4',background:Number(qty) > 0 ? '#F0FDF4' : 'transparent',opacity:isDimmed?0.55:1}}>
                             <td style={{padding:'8px 12px'}}>{p.name}</td>
                             <td style={{padding:'8px 12px',color:'#7A7D88',fontSize:11}}>{p.size}</td>
                             <td style={{padding:'8px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{p.sku}</td>
@@ -166,7 +176,12 @@ export default function PurchasesPage() {
                                 );
                               })()}
                             </td>
-                            <td style={{padding:'8px 12px',textAlign:'right',fontFamily:'monospace'}}>${Number(cost).toFixed(2)}</td>
+                            <td style={{padding:'8px 12px',textAlign:'right',fontFamily:'monospace'}}>
+                              <div>${Number(cost).toFixed(2)}</div>
+                              {cheaperRow && cheaperVendor && (
+                                <div style={{fontSize:10,color:'#7A7D88',fontWeight:500,marginTop:2,whiteSpace:'nowrap'}}>↓ {cheaperVendor} ${Number(cheaperRow.cost_per_kit).toFixed(0)}</div>
+                              )}
+                            </td>
                             <td style={{padding:'8px 12px',textAlign:'right'}}>
                               <input type="number" min="0" value={qty} onChange={e=>setNewPo(prev=>({...prev,qtys:{...(prev.qtys||{}),[p.id]:e.target.value}}))} style={{width:70,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12,textAlign:'right'}} />
                             </td>
