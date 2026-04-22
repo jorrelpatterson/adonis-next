@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { explainFor, InfoIcon } from '../../../../lib/constants/peptide-explanations';
+import { explainFor, InfoIcon, PRODUCT_TYPES, typeFor } from '../../../../lib/constants/peptide-explanations';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -18,6 +18,7 @@ export default function MultiVendorOrderPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [stockFilter, setStockFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [qtys, setQtys] = useState({});
   const [vendorOverrides, setVendorOverrides] = useState({});
   const [notes, setNotes] = useState('');
@@ -87,9 +88,10 @@ export default function MultiVendorOrderPage() {
       if (stockFilter === 'in_stock' && stock <= 0) return false;
       if (stockFilter === 'out_of_stock' && stock > 0) return false;
       if (stockFilter === 'pending' && !isPending) return false;
+      if (typeFilter !== 'all' && typeFor(p.cat) !== typeFilter) return false;
       return true;
     });
-  }, [products, search, stockFilter, pendingPOs]);
+  }, [products, search, stockFilter, typeFilter, pendingPOs]);
 
   const setQty = (pid, val) => setQtys(prev => {
     const n = { ...prev };
@@ -198,6 +200,15 @@ export default function MultiVendorOrderPage() {
             <button onClick={resetToCheapest} style={{ padding: '6px 10px', background: '#FEF3C7', color: '#A16207', border: '1px solid #FDE68A', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>Reset to cheapest</button>
           )}
         </div>
+      </div>
+
+      {/* Type filter row */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: 11, color: '#8C919E', textTransform: 'uppercase', letterSpacing: 1, marginRight: 6 }}>Type:</span>
+        <button onClick={() => setTypeFilter('all')} style={{ padding: '5px 11px', fontSize: 11, fontWeight: 600, cursor: 'pointer', borderRadius: 4, background: typeFilter === 'all' ? '#0F1928' : '#F7F8FA', color: typeFilter === 'all' ? '#fff' : '#6B7A94', border: '1px solid ' + (typeFilter === 'all' ? '#0F1928' : '#E4E7EC') }}>All</button>
+        {PRODUCT_TYPES.map(t => (
+          <button key={t} onClick={() => setTypeFilter(t)} style={{ padding: '5px 11px', fontSize: 11, fontWeight: 600, cursor: 'pointer', borderRadius: 4, background: typeFilter === t ? '#0F1928' : '#F7F8FA', color: typeFilter === t ? '#fff' : '#6B7A94', border: '1px solid ' + (typeFilter === t ? '#0F1928' : '#E4E7EC') }}>{t}</button>
+        ))}
       </div>
 
       <div style={{ ...cardStyle, overflowX: 'auto', marginBottom: 20 }}>

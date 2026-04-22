@@ -126,6 +126,7 @@ export default function PurchasesPage() {
             const priceByPid = Object.fromEntries(vp.map(x => [x.product_id, x.cost_per_kit]));
             const catalog = products.filter(p => priceByPid[p.id] !== undefined)
               .filter(p => !poSearch || p.name.toLowerCase().includes(poSearch.toLowerCase()) || p.sku.toLowerCase().includes(poSearch.toLowerCase()))
+              .filter(p => poTypeFilter === 'all' || typeFor(p.cat) === poTypeFilter)
               .sort((a,b) => a.name.localeCompare(b.name));
             const lineCount = Object.values(newPo.qtys || {}).filter(q => Number(q) > 0).length;
             const total = Object.entries(newPo.qtys || {}).reduce((s, [pid, q]) => {
@@ -135,9 +136,16 @@ export default function PurchasesPage() {
 
             return (
               <>
-                <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:12}}>
+                <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:8}}>
                   <input type="text" placeholder="Search product or SKU..." value={poSearch} onChange={e=>setPoSearch(e.target.value)} style={{flex:1,padding:'8px 12px',border:'1px solid #E4E7EC',borderRadius:4,fontSize:13}} />
                   <div style={{fontSize:12,color:'#8C919E'}}>{catalog.length} products · {vp.length} total in vendor catalog</div>
+                </div>
+                <div style={{display:'flex',gap:4,marginBottom:12,flexWrap:'wrap',alignItems:'center'}}>
+                  <span style={{fontSize:11,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginRight:6}}>Type:</span>
+                  <button onClick={()=>setPoTypeFilter('all')} style={{padding:'5px 11px',fontSize:11,fontWeight:600,cursor:'pointer',borderRadius:4,background:poTypeFilter==='all'?'#0F1928':'#F7F8FA',color:poTypeFilter==='all'?'#fff':'#6B7A94',border:'1px solid '+(poTypeFilter==='all'?'#0F1928':'#E4E7EC')}}>All</button>
+                  {PRODUCT_TYPES.map(t => (
+                    <button key={t} onClick={()=>setPoTypeFilter(t)} style={{padding:'5px 11px',fontSize:11,fontWeight:600,cursor:'pointer',borderRadius:4,background:poTypeFilter===t?'#0F1928':'#F7F8FA',color:poTypeFilter===t?'#fff':'#6B7A94',border:'1px solid '+(poTypeFilter===t?'#0F1928':'#E4E7EC')}}>{t}</button>
+                  ))}
                 </div>
 
                 <div style={{maxHeight:480,overflow:'auto',border:'1px solid #E4E7EC',borderRadius:6,marginBottom:16}}>
