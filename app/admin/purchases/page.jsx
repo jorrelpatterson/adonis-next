@@ -51,7 +51,7 @@ export default function PurchasesPage() {
         fetch(`${SUPABASE_URL}/rest/v1/purchase_orders?select=*,vendor:vendors(name)&order=created_at.desc`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*&active=is.true&order=name.asc`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers: H() }),
-        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size,stock`, { headers: H() }),
+        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size,stock,cat`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received,po:purchase_orders(po_number,status)`, { headers: H() }),
       ]);
       setPos(await poRes.json());

@@ -29,7 +29,7 @@ export default function MultiVendorOrderPage() {
     async function load() {
       const [vRes, pRes, prRes, openItRes] = await Promise.all([
         fetch(`${SUPABASE_URL}/rest/v1/vendors?select=*&active=is.true&order=name.asc`, { headers: H() }),
-        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size,stock,active&order=name.asc`, { headers: H() }),
+        fetch(`${SUPABASE_URL}/rest/v1/products?select=id,sku,name,size,stock,active,cat&order=name.asc`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/vendor_prices?select=*`, { headers: H() }),
         fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?select=po_id,product_id,qty_ordered,qty_received,po:purchase_orders(po_number,status)`, { headers: H() }),
       ]);
