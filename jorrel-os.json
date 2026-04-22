@@ -28,10 +28,12 @@
       "Email templates (PO, ambassador welcome, order confirmation) still use dark navy palette \u2014 should migrate to cream brand palette eventually",
       "Vendor JSONs still have 48 entries with our_sku=null \u2014 backfill SQL fixed the database, but if JSONs are ever re-run as a seed source the gap returns. Patching the JSON files is a follow-up task.",
       "Dihexa, GHK-Cu 200mg, NAD+ 300mg are in catalog but no vendor in our JSONs offers them. Currently hidden. Either chase vendor availability via WhatsApp or delete.",
-      "Default retail prices on ~97 newly-inserted products from 2026-04-21_ensure_all_products_visible.sql are placeholders (~50% margin) \u2014 user should update via inventory Edit button when they have time."
+      "Default retail prices on ~97 newly-inserted products from 2026-04-21_ensure_all_products_visible.sql are placeholders (~50% margin) \u2014 user should update via inventory Edit button when they have time.",
+      "12 anabolic steroid tablets are inserted as hidden \u2014 needs legal review before activating on storefront. Same Schedule-III risk as Botox.",
+      "Default retail prices on 81 new tablets are 2\u00d7 cost (placeholder) \u2014 real market research needed before activation."
     ],
     "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. Multi-vendor order sheet at /admin/purchases/multi is ready to use for next restock \u2014 auto-routes everything to cheapest vendor and splits into multiple POs in one click.",
-    "last_session": "2026-04-21 \u2014 Built Multi-Vendor Order Sheet (/admin/purchases/multi) with auto-route-to-cheapest + per-row/bulk override + multi-PO submit. Fixed 3 layers of catalog data integrity issues via SQL migrations: (1) missing products (Adipotide, AICAR, Melatonin, 5-Amino-1MQ inserted/unhidden via 2026-04-21_ensure_all_products_visible.sql), (2) 48 SKUs with our_sku=null in JSONs causing silent vendor_prices skips (fixed via 2026-04-21_backfill_vendor_prices_for_orphan_products.sql), (3) 5 truly-orphan products hidden via one-off SQL. Added cheaper-elsewhere row dim on per-vendor PO catalog. Added InfoIcon tooltips with 75-compound layman peptide explanations. Fixed storefront OOS copy: 'This ships in 2-3 weeks' instead of blocking. Renamed BBG \u2192 Glow Plus, GLOW50 \u2192 Glow.",
+    "last_session": "2026-04-21 (continued) \u2014 Eve sent her oral tablet catalog; added 81 new SKUs (steroids, SARMs, PCT, pharma, thyroid, oral peptides) via 2026-04-21_eve_tablets_finished_products.sql with all hidden except DHA20 Dihexa (resolves prior orphan question). Renamed SLU-PP-322 \u2192 SLU-PP-332 to match Eve's sheet (SKU SL322 unchanged). Added 6-bucket type filter (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic) to both order sheets via typeFor() helper. Added 58 layman explanations for new tablets in InfoIcon tooltips. Fixed bug where products fetch was missing cat field \u2014 type filter was always defaulting to Peptide.",
     "completed_today": [
       "Multi-Vendor Order Sheet at /admin/purchases/multi \u2014 auto-routes to cheapest vendor, per-row + bulk override, summary panel, splits into multi-PO on submit",
       "Per-vendor PO catalog: rows where another vendor is cheaper now dim with '\u2193 Vendor $XX' subtitle",
@@ -44,7 +46,13 @@
       "InfoIcon component (lib/constants/peptide-explanations.js) \u2014 React state-based tooltip on ? icons, 75 compounds with layman 'what you notice' explanations. Used in both order sheet pages.",
       "Pricing audit: identified Weak strictly cheapest on 18 SKUs (CagriSema -$35, Dermorphin -$19, Kisspeptin-10 -$14 lead the savings list). Top Rosyy savings: VP10 (-$19), G10K (-$17), MC40 (-$15).",
       "Vendor cell on inventory page now shows cheapest vendor + LOF (last ordered from) subtitle. Cost columns split into Kit $ + Vial $ derived from kit \u00f7 10.",
-      "3 specs written under docs/superpowers/specs/: 2026-04-19-oos-shipping-copy-design, 2026-04-21-po-cheaper-elsewhere-dim-design, 2026-04-21-multi-vendor-order-sheet-design"
+      "3 specs written under docs/superpowers/specs/: 2026-04-19-oos-shipping-copy-design, 2026-04-21-po-cheaper-elsewhere-dim-design, 2026-04-21-multi-vendor-order-sheet-design",
+      "Eve's oral tablet catalog audited + 81 SKUs added (anabolic steroids 12, SARMs 8, PCT 7, thyroid 3, stimulant 2, pharma 11, oral peptides 7, weight loss orals 2, etc.) via 2026-04-21_eve_tablets_finished_products.sql",
+      "Dihexa activated \u2014 DHA20 (Dihexa 20mg tablet from Eve $130) replaces the prior hidden orphan DH10 vial",
+      "SLU-PP-322 renamed to SLU-PP-332 to match Eve's sheet \u2014 SKU SL322 unchanged, display name + 4 code files updated",
+      "Type filter on order sheets \u2014 6 buckets: Peptide / Steroid / SARM / Pharma / Supply / Cosmetic. Steroid absorbs Anabolic + Stimulant + PCT + Thyroid (cycle-adjacent). Peptide absorbs Weight Loss (GLP-1s).",
+      "58 layman 'what you notice' explanations for the new tablet/oral compounds added to InfoIcon tooltips",
+      "Bug fix: products fetch was missing cat field on both /admin/purchases/multi and /admin/purchases pages \u2014 type filter always returned Peptide. Added cat to SELECT (commit f70d5d5)."
     ]
   },
   "roadmap_ideas": [
@@ -111,6 +119,20 @@
       "status": "captured (in OOS idea memory), not scoped",
       "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
       "summary": "Ambassadors front cash for a starter kit at wholesale prices, then sell at retail and keep the margin. Bigger lever than commission program but riskier (compliance, customer support burden, reputation if mishandled)."
+    },
+    {
+      "id": "oral-tablet-product-line-strategy",
+      "title": "Decide which of the 80 hidden oral-tablet SKUs to activate (and to whom)",
+      "status": "captured 2026-04-21, decision pending",
+      "summary": "81 new oral tablet SKUs from Eve's 2026-04-21 sheet sit hidden in admin: 12 anabolic steroids (Schedule III legal risk), 8 SARMs, 7 PCT/AI, 3 thyroid, 2 stimulants, 11 pharma (Sildenafil, Finasteride, etc.), 7 oral peptide forms, 2 oral GLP-1s, etc. Different audiences and legal profiles per cluster. Default retail = 2\u00d7 cost (placeholder).",
+      "next_step": "Brainstorm: same site or new vertical? Start with lowest-risk additions (Methylene Blue, oral peptides, SARMs) and grow from there. Steroid tablets need legal review like Botox."
+    },
+    {
+      "id": "tablets-vendor-json",
+      "title": "Add tablets to vendor JSON source-of-truth or create separate file",
+      "status": "open follow-up",
+      "summary": "docs/vendors/eve-pricing.json currently only covers peptide vials. The 81 new tablet SKUs are only in the migration. If the JSONs are ever re-run as a seed source, the tablets won't be regenerated.",
+      "next_step": "Either extend eve-pricing.json with a 'tablets' section (cleaner) or create eve-tablets.json (more granular). One-time data extraction from the migration file."
     }
   ],
   "setup": {
