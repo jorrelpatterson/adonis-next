@@ -30,10 +30,13 @@
       "Dihexa, GHK-Cu 200mg, NAD+ 300mg are in catalog but no vendor in our JSONs offers them. Currently hidden. Either chase vendor availability via WhatsApp or delete.",
       "Default retail prices on ~97 newly-inserted products from 2026-04-21_ensure_all_products_visible.sql are placeholders (~50% margin) \u2014 user should update via inventory Edit button when they have time.",
       "12 anabolic steroid tablets are inserted as hidden \u2014 needs legal review before activating on storefront. Same Schedule-III risk as Botox.",
-      "Default retail prices on 81 new tablets are 2\u00d7 cost (placeholder) \u2014 real market research needed before activation."
+      "Default retail prices on 81 new tablets are 2\u00d7 cost (placeholder) \u2014 real market research needed before activation.",
+      "12 anabolic-steroid tablets are hidden \u2014 Schedule III legal risk in US, needs legal review before activating on storefront",
+      "Default retail prices on the 81 new Eve tablets are 2\u00d7 cost (placeholder) \u2014 need real market research before activation",
+      "Vendor JSONs (eve-pricing.json) don't include the tablets sheet \u2014 only peptide vials"
     ],
     "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. Multi-vendor order sheet at /admin/purchases/multi is ready to use for next restock \u2014 auto-routes everything to cheapest vendor and splits into multiple POs in one click.",
-    "last_session": "2026-04-21 (continued) \u2014 Eve sent her oral tablet catalog; added 81 new SKUs (steroids, SARMs, PCT, pharma, thyroid, oral peptides) via 2026-04-21_eve_tablets_finished_products.sql with all hidden except DHA20 Dihexa (resolves prior orphan question). Renamed SLU-PP-322 \u2192 SLU-PP-332 to match Eve's sheet (SKU SL322 unchanged). Added 6-bucket type filter (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic) to both order sheets via typeFor() helper. Added 58 layman explanations for new tablets in InfoIcon tooltips. Fixed bug where products fetch was missing cat field \u2014 type filter was always defaulting to Peptide.",
+    "last_session": "2026-04-21 (continued, session 3) \u2014 Built complete discount-codes + ambassador-lifetime-attribution system across both repos: 15% off + 15% L1 commission on first sale per phone-attributed customer; tier % commission on repeats. New discount_codes + customer_attribution Supabase tables, /api/discount-code-write CRUD, /admin/discount-codes UI, /admin/orders + /admin/ambassadors enriched. /api/send-order-email rewritten with phone normalization + attribution + code resolution + first-sale-bonus commission. Bac Water auto-add (1 per 100mg of injectable) on checkout with red AUTO badge + removable. Protocols-page checkout fixed (was placeholder alert) \u2014 now routes into standard Zelle flow with cart merge. Added Eve's 81 oral tablet SKUs (steroids/SARMs/PCT/pharma/oral peptides). Renamed SLU-PP-322\u2192332. Added 6-bucket type filter on order sheets (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic). Recategorized 12 misfits: Cock Bombs/Flibanserin/Dapoxetine/Melatonin \u2192 Pharma; Snap-8/Minoxidil/Finasteride 1mg/Dutasteride \u2192 Cosmetic; Methylene Blue/B12/DNP/Tesofensine \u2192 Pharma. Phone now required at checkout.",
     "completed_today": [
       "Multi-Vendor Order Sheet at /admin/purchases/multi \u2014 auto-routes to cheapest vendor, per-row + bulk override, summary panel, splits into multi-PO on submit",
       "Per-vendor PO catalog: rows where another vendor is cheaper now dim with '\u2193 Vendor $XX' subtitle",
@@ -52,7 +55,16 @@
       "SLU-PP-322 renamed to SLU-PP-332 to match Eve's sheet \u2014 SKU SL322 unchanged, display name + 4 code files updated",
       "Type filter on order sheets \u2014 6 buckets: Peptide / Steroid / SARM / Pharma / Supply / Cosmetic. Steroid absorbs Anabolic + Stimulant + PCT + Thyroid (cycle-adjacent). Peptide absorbs Weight Loss (GLP-1s).",
       "58 layman 'what you notice' explanations for the new tablet/oral compounds added to InfoIcon tooltips",
-      "Bug fix: products fetch was missing cat field on both /admin/purchases/multi and /admin/purchases pages \u2014 type filter always returned Peptide. Added cat to SELECT (commit f70d5d5)."
+      "Bug fix: products fetch was missing cat field on both /admin/purchases/multi and /admin/purchases pages \u2014 type filter always returned Peptide. Added cat to SELECT (commit f70d5d5).",
+      "Discount codes + ambassador lifetime attribution shipped (cross-repo) \u2014 discount_codes + customer_attribution tables, /api/discount-code-write CRUD, /admin/discount-codes page, attribution lookup + commission with first-sale bonus in send-order-email, discount/attribution badges on /admin/orders, Attributed tab on /admin/ambassadors. Phone now required at checkout.",
+      "Bac Water auto-add (advnce-checkout.html): 1\u00d7 WA10 per 100mg of injectable peptide ordered, red AUTO badge, removable with \u00d7 (sessionStorage flag prevents re-add for the session)",
+      "Protocols-page Checkout button fixed \u2014 was placeholder alert; now persists cart to localStorage, MERGES with existing catalog/product cart, redirects to /advnce-checkout.html",
+      "Eve oral tablet catalog (81 SKUs) added via 2026-04-21_eve_tablets_finished_products.sql; Dihexa activated, others hidden",
+      "SLU-PP-322 \u2192 SLU-PP-332 rename across stack (matches Eve's sheet naming); SKU SL322 unchanged",
+      "Type filter on order sheets \u2014 6 buckets (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic) with typeFor() helper",
+      "Bug fix: products fetch was missing cat field \u2014 type filter always returned Peptide. Fixed in commit f70d5d5.",
+      "Categorization cleanup: 12 SKUs recategorized \u2014 Cock Bombs/Flibanserin/Dapoxetine/Melatonin \u2192 Pharma; Snap-8/Minoxidil/Finasteride 1mg/Dutasteride \u2192 Cosmetic (expanded from just Botox); Methylene Blue/B12/DNP/Tesofensine \u2192 Pharma (not actually peptides)",
+      "58 layman explanations added for new tablet/oral compounds in InfoIcon tooltips"
     ]
   },
   "roadmap_ideas": [
@@ -133,6 +145,34 @@
       "status": "open follow-up",
       "summary": "docs/vendors/eve-pricing.json currently only covers peptide vials. The 81 new tablet SKUs are only in the migration. If the JSONs are ever re-run as a seed source, the tablets won't be regenerated.",
       "next_step": "Either extend eve-pricing.json with a 'tablets' section (cleaner) or create eve-tablets.json (more granular). One-time data extraction from the migration file."
+    },
+    {
+      "id": "live-discount-preview",
+      "title": "Live discount preview on checkout cart summary",
+      "status": "captured 2026-04-21, polish not blocking",
+      "summary": "Currently customer only sees the discount on the success/email screen. Could pre-validate the code on blur and show '\u2212$X (CODE)' in the cart summary live.",
+      "next_step": "When time permits, add an /api/validate-code endpoint and wire onChange/onBlur of the code input to it."
+    },
+    {
+      "id": "commission-reversal-flow",
+      "title": "Refund / commission-reversal workflow",
+      "status": "open follow-up",
+      "summary": "If an order is canceled or refunded, the referral_commissions row needs reversal. Currently manual via Supabase. Should add a 'Refund' button on /admin/orders that reverses commissions atomically.",
+      "next_step": "Add a /api/order-refund endpoint that updates order status + creates a commission-reversal entry."
+    },
+    {
+      "id": "phone-once-per-customer",
+      "title": "Per-phone one-use limit on promo codes",
+      "status": "open follow-up",
+      "summary": "Currently promo codes have a global usage_limit only. Could add per-phone enforcement (e.g., LAUNCH25 can only be used once per phone, even if not at the global limit).",
+      "next_step": "Add a (code, phone) uniqueness check in send-order-email before applying the discount."
+    },
+    {
+      "id": "eve-tablets-vendor-json",
+      "title": "Add Eve tablets to vendor JSON or create a separate eve-tablets.json",
+      "status": "open follow-up from 2026-04-21",
+      "summary": "Migration captured the 81 tablet SKUs in the DB but the JSON source-of-truth (docs/vendors/eve-pricing.json) is peptide-vials-only. If the JSON is ever re-run as a seed source, the tablets won't be regenerated.",
+      "next_step": "Extract tablet data from the migration into a structured JSON. One-time data work."
     }
   ],
   "setup": {
