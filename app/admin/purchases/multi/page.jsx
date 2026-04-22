@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { explainFor } from '../../../../lib/constants/peptide-explanations';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -77,7 +78,6 @@ export default function MultiVendorOrderPage() {
 
   const filtered = useMemo(() => {
     return products.filter(p => {
-      if (p.active === false) return false;
       if (search) {
         const s = search.toLowerCase();
         if (!p.name.toLowerCase().includes(s) && !p.sku.toLowerCase().includes(s)) return false;
@@ -222,7 +222,15 @@ export default function MultiVendorOrderPage() {
               const isOverride = vendorOverrides[p.id] && sel && sel.vendor_id !== cheapestByPid[p.id]?.vendor_id;
               return (
                 <tr key={p.id} style={{ borderBottom: '1px solid #F0F1F4', background: Number(qty) > 0 ? '#F0FDF4' : 'transparent' }}>
-                  <td style={{ padding: '6px 10px', fontWeight: 500 }}>{p.name}</td>
+                  <td style={{ padding: '6px 10px', fontWeight: 500 }}>
+                    {p.name}
+                    {explainFor(p.name) && (
+                      <span title={explainFor(p.name)} style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 14, height: 14, borderRadius: '50%', background: '#E8F4FB', color: '#0072B5', fontSize: 10, fontWeight: 700, cursor: 'help', verticalAlign: 'middle' }}>?</span>
+                    )}
+                    {p.active === false && (
+                      <span style={{ marginLeft: 6, padding: '1px 5px', background: '#FEE2E2', color: '#DC2626', fontSize: 9, fontWeight: 600, borderRadius: 3, letterSpacing: 1 }}>HIDDEN</span>
+                    )}
+                  </td>
                   <td style={{ padding: '6px 10px', color: '#7A7D88', fontSize: 11 }}>{p.size}</td>
                   <td style={{ padding: '6px 10px', fontFamily: "'JetBrains Mono'", fontSize: 11, color: '#0072B5' }}>{p.sku}</td>
                   <td style={{ padding: '6px 10px', textAlign: 'right' }}>

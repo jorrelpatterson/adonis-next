@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { explainFor } from '../../../lib/constants/peptide-explanations';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -161,7 +162,12 @@ export default function PurchasesPage() {
                         const isDimmed = !!cheaperRow && !(Number(qty) > 0);
                         return (
                           <tr key={p.id} style={{borderBottom:'1px solid #F0F1F4',background:Number(qty) > 0 ? '#F0FDF4' : 'transparent',opacity:isDimmed?0.55:1}}>
-                            <td style={{padding:'8px 12px'}}>{p.name}</td>
+                            <td style={{padding:'8px 12px'}}>
+                              {p.name}
+                              {explainFor(p.name) && (
+                                <span title={explainFor(p.name)} style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 14, height: 14, borderRadius: '50%', background: '#E8F4FB', color: '#0072B5', fontSize: 10, fontWeight: 700, cursor: 'help', verticalAlign: 'middle' }}>?</span>
+                              )}
+                            </td>
                             <td style={{padding:'8px 12px',color:'#7A7D88',fontSize:11}}>{p.size}</td>
                             <td style={{padding:'8px 12px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{p.sku}</td>
                             <td style={{padding:'8px 12px',textAlign:'right'}}>
