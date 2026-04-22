@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { explainFor } from '../../../../lib/constants/peptide-explanations';
+import { explainFor, InfoIcon } from '../../../../lib/constants/peptide-explanations';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -224,9 +224,7 @@ export default function MultiVendorOrderPage() {
                 <tr key={p.id} style={{ borderBottom: '1px solid #F0F1F4', background: Number(qty) > 0 ? '#F0FDF4' : 'transparent' }}>
                   <td style={{ padding: '6px 10px', fontWeight: 500 }}>
                     {p.name}
-                    {explainFor(p.name) && (
-                      <span title={explainFor(p.name)} style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 14, height: 14, borderRadius: '50%', background: '#E8F4FB', color: '#0072B5', fontSize: 10, fontWeight: 700, cursor: 'help', verticalAlign: 'middle' }}>?</span>
-                    )}
+                    <InfoIcon text={explainFor(p.name)} />
                     {p.active === false && (
                       <span style={{ marginLeft: 6, padding: '1px 5px', background: '#FEE2E2', color: '#DC2626', fontSize: 9, fontWeight: 600, borderRadius: 3, letterSpacing: 1 }}>HIDDEN</span>
                     )}
