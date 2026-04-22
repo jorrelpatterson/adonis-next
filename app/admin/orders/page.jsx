@@ -135,7 +135,10 @@ export default function OrdersPage() {
                     <div style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:500,color:'#0072B5',minWidth:160}}>{order.order_id}</div>
                     <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{customerName}</div><div style={{fontSize:11,color:'#8C919E'}}>{order.email}</div></div>
                     {order.price_mismatch && <span style={{fontSize:10,background:'#FEF2F2',color:'#EF4444',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⚠ Price mismatch</span>}
-                    {order.ref_code && <span style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>ref: {order.ref_code}</span>}
+                    {order.discount_type === 'ambassador_first' && <span title="First sale to this customer — 15% off + 15% commission" style={{fontSize:10,background:'#FEF3C7',color:'#A16207',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎉 First Sale {order.discount_code}</span>}
+                    {order.discount_type === 'ambassador_repeat' && order.ref_code && <span title="Repeat customer — commission to original ambassador" style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>↻ {order.ref_code}</span>}
+                    {order.discount_type === 'promo' && <span style={{fontSize:10,background:'#F0FDF4',color:'#16A34A',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎫 {order.discount_code}</span>}
+                    {!order.discount_type && order.ref_code && <span style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>ref: {order.ref_code}</span>}
                   </div>
                   <div style={{display:'flex',gap:16,alignItems:'center'}}>
                     <div style={{fontFamily:"'JetBrains Mono'",fontSize:14,fontWeight:700}}>${parseFloat(order.total||0).toFixed(2)}</div>
@@ -155,6 +158,23 @@ export default function OrdersPage() {
                             <span style={{fontFamily:"'JetBrains Mono'",fontSize:12}}>${(item.price*item.qty).toFixed(2)}</span>
                           </div>
                         ))}
+                        {order.discount_amount > 0 && (() => {
+                          const total = parseFloat(order.total||0);
+                          const disc = parseFloat(order.discount_amount||0);
+                          const sub = total + disc;
+                          return (
+                            <>
+                              <div style={{display:'flex',justifyContent:'space-between',padding:'8px 0 0',borderTop:'1px solid #E4E7EC',marginTop:4,fontSize:12,color:'#7A7D88'}}>
+                                <span>Subtotal</span>
+                                <span style={{fontFamily:"'JetBrains Mono'"}}>${sub.toFixed(2)}</span>
+                              </div>
+                              <div style={{display:'flex',justifyContent:'space-between',padding:'4px 0',fontSize:12,color:'#16A34A'}}>
+                                <span>Discount {order.discount_code ? '('+order.discount_code+')' : ''}</span>
+                                <span style={{fontFamily:"'JetBrains Mono'"}}>-${disc.toFixed(2)}</span>
+                              </div>
+                            </>
+                          );
+                        })()}
                         <div style={{display:'flex',justifyContent:'space-between',padding:'10px 0 0',borderTop:'2px solid #E4E7EC',marginTop:4}}>
                           <span style={{fontSize:13,fontWeight:700}}>Total</span>
                           <span style={{fontFamily:"'JetBrains Mono'",fontSize:16,fontWeight:700}}>${parseFloat(order.total||0).toFixed(2)}</span>

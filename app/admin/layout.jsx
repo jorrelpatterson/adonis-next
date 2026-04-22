@@ -13,6 +13,7 @@ const NAV = [
   { href: '/admin/ambassadors',  label: 'Ambassadors',  icon: '🤝' },
   { href: '/admin/distributors', label: 'Distributors', icon: '🏭' },
   { href: '/admin/content',      label: 'Content',      icon: '📅' },
+  { href: '/admin/discount-codes', label: 'Discount Codes', icon: '🎫' },
 ];
 
 export default function AdminLayout({ children }) {

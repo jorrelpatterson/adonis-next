@@ -26,6 +26,36 @@ export default function AmbassadorsPage() {
   const [loading, setLoading]         = useState(true);
   const [search, setSearch]           = useState('');
   const [expandedId, setExpanded]     = useState(null);
+  const [attributedByAmb, setAttributedByAmb] = useState({});  // ambId -> { customers, ordersByPhone, loading }
+
+  const loadAttributed = async (ambId) => {
+    if (attributedByAmb[ambId] && !attributedByAmb[ambId].loading) return; // cached
+    setAttributedByAmb(prev => ({ ...prev, [ambId]: { ...(prev[ambId] || {}), loading: true } }));
+    try {
+      const [attrRes, ordersRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/customer_attribution?ambassador_id=eq.${ambId}&select=phone,first_order_id,attributed_at&order=attributed_at.desc`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }),
+        fetch(`${SUPABASE_URL}/rest/v1/orders?ref_code=eq.${encodeURIComponent((amb=>amb)({code:''}).code||'')}&select=order_id,attribution_phone,total,created_at,status`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }),
+      ]);
+      const customers = attrRes.ok ? await attrRes.json() : [];
+      // Re-fetch orders by ambassador's CODE (we need code from the ambassador list)
+      const amb = ambassadors.find(a => a.id === ambId);
+      let ordersByPhone = {};
+      if (amb) {
+        const oRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?ref_code=eq.${encodeURIComponent(amb.code)}&select=order_id,attribution_phone,total,created_at,status&order=created_at.desc`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } });
+        const orders = oRes.ok ? await oRes.json() : [];
+        orders.forEach(o => {
+          if (!o.attribution_phone) return;
+          if (!ordersByPhone[o.attribution_phone]) ordersByPhone[o.attribution_phone] = [];
+          ordersByPhone[o.attribution_phone].push(o);
+        });
+      }
+      setAttributedByAmb(prev => ({ ...prev, [ambId]: { customers, ordersByPhone, loading: false } }));
+    } catch(e) {
+      console.error('Attributed load error', e);
+      setAttributedByAmb(prev => ({ ...prev, [ambId]: { customers: [], ordersByPhone: {}, loading: false } }));
+    }
+  };
+
   const [activeTab, setActiveTab]     = useState({});
   const [editForm, setEditForm]       = useState({});
   const [saving, setSaving]           = useState({});
@@ -187,8 +217,8 @@ export default function AmbassadorsPage() {
               {ie && (
                 <div style={{borderTop:'1px solid #F0F1F4'}}>
                   <div style={{display:'flex',borderBottom:'1px solid #F0F1F4'}}>
-                    {[{key:'details',label:'Details'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'}].map(t=>(
-                      <button key={t.key} onClick={()=>{if(t.key==='edit')startEdit(amb);else setActiveTab(prev=>({...prev,[amb.id]:t.key}));}}
+                    {[{key:'details',label:'Details'},{key:'attributed',label:'👥 Attributed'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'}].map(t=>(
+                      <button key={t.key} onClick={()=>{if(t.key==='edit')startEdit(amb);else{setActiveTab(prev=>({...prev,[amb.id]:t.key})); if(t.key==='attributed') loadAttributed(amb.id);}}}
                         style={{padding:'10px 16px',border:'none',borderBottom:tab===t.key?'2px solid #0072B5':'2px solid transparent',background:'none',fontSize:12,fontWeight:tab===t.key?600:400,color:tab===t.key?'#0072B5':'#8C919E',cursor:'pointer'}}>
                         {t.label}
                       </button>
@@ -229,6 +259,52 @@ export default function AmbassadorsPage() {
                         </div>
                       </div>
                     )}
+                    {tab==='attributed' && (() => {
+                      const data = attributedByAmb[amb.id];
+                      if (!data || data.loading) return <div style={{color:'#8C919E',fontSize:13}}>Loading attributed customers...</div>;
+                      const customers = data.customers || [];
+                      const ordersByPhone = data.ordersByPhone || {};
+                      if (!customers.length) return <div style={{color:'#9CA3AF',fontSize:13,padding:'8px 0'}}>No attributed customers yet. Customers who use this ambassador's code at checkout will appear here.</div>;
+                      let totalRevenue = 0;
+                      customers.forEach(c => {
+                        const orders = ordersByPhone[c.phone] || [];
+                        orders.forEach(o => totalRevenue += parseFloat(o.total || 0));
+                      });
+                      return (
+                        <div>
+                          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16}}>
+                            <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed'"}}>{customers.length}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Attributed customers</div></div>
+                            <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#22C55E',fontFamily:"'Barlow Condensed'"}}>${totalRevenue.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Lifetime revenue</div></div>
+                            <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#0072B5',fontFamily:"'Barlow Condensed'"}}>{customers.length>0?(Object.values(ordersByPhone).reduce((s,a)=>s+a.length,0)/customers.length).toFixed(1):'0'}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Avg orders / customer</div></div>
+                          </div>
+                          <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                            <thead><tr style={{background:'#F7F8FA'}}>
+                              <th style={{padding:'8px 10px',textAlign:'left',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Phone</th>
+                              <th style={{padding:'8px 10px',textAlign:'left',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>First order</th>
+                              <th style={{padding:'8px 10px',textAlign:'right',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}># orders</th>
+                              <th style={{padding:'8px 10px',textAlign:'right',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Revenue</th>
+                              <th style={{padding:'8px 10px',textAlign:'left',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Attributed</th>
+                            </tr></thead>
+                            <tbody>
+                              {customers.map(c => {
+                                const orders = ordersByPhone[c.phone] || [];
+                                const rev = orders.reduce((s,o) => s + parseFloat(o.total||0), 0);
+                                const masked = c.phone ? '•••-•••-' + c.phone.slice(-4) : '—';
+                                return (
+                                  <tr key={c.phone} style={{borderBottom:'1px solid #F0F1F4'}}>
+                                    <td style={{padding:'6px 10px',fontFamily:"'JetBrains Mono'",fontSize:11}}>{masked}</td>
+                                    <td style={{padding:'6px 10px',fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5'}}>{c.first_order_id}</td>
+                                    <td style={{padding:'6px 10px',textAlign:'right',fontFamily:"'JetBrains Mono'",fontSize:11}}>{orders.length}</td>
+                                    <td style={{padding:'6px 10px',textAlign:'right',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>${rev.toFixed(2)}</td>
+                                    <td style={{padding:'6px 10px',fontSize:11,color:'#7A7D88'}}>{new Date(c.attributed_at).toLocaleDateString()}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                    })()}
                     {tab==='edit' && (
                       <div style={{maxWidth:400}}>
                         {[{label:'Name',key:'name',type:'text'},{label:'Email',key:'email',type:'email'},{label:'Phone',key:'phone',type:'text'},{label:'Code',key:'code',type:'text'}].map(({label,key,type})=>(
