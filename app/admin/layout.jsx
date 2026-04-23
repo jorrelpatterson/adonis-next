@@ -10,9 +10,8 @@ const NAV = [
   { href: '/admin/purchases',    label: 'Purchases',    icon: '📥' },
   { href: '/admin/orders',       label: 'Orders',       icon: '🛒' },
   { href: '/admin/pricing',      label: 'Pricing',      icon: '💰' },
-  { href: '/admin/ambassadors',  label: 'Ambassadors',  icon: '🤝' },
+  { href: '/admin/marketing',    label: 'Marketing',    icon: '📣' },
   { href: '/admin/distributors', label: 'Distributors', icon: '🏭' },
-  { href: '/admin/content',      label: 'Content',      icon: '📅' },
   { href: '/admin/discount-codes', label: 'Discount Codes', icon: '🎫' },
 ];
 

@@ -62,6 +62,8 @@ export default function AmbassadorsPage() {
   const [payout, setPayout]           = useState({});
   const [customMsg, setCustomMsg]     = useState({});
   const [sending, setSending]         = useState({});
+  const [genKit, setGenKit]           = useState({});
+  const [kitResult, setKitResult]     = useState({});
   const [period, setPeriod]           = useState(() => {
     const d = new Date(); d.setMonth(d.getMonth()-1);
     return d.toLocaleString('default',{month:'long',year:'numeric'});
@@ -191,6 +193,19 @@ export default function AmbassadorsPage() {
     setSending(prev=>({...prev,[amb.id+type]:false}));
   };
 
+  const regenerateKit = async (amb) => {
+    setGenKit(prev=>({...prev,[amb.id]:true}));
+    setKitResult(prev=>({...prev,[amb.id]:null}));
+    try {
+      const res = await fetch('/api/ambassador-images/personalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:amb.code,limit:10})});
+      const data = await res.json();
+      if (res.ok) setKitResult(prev=>({...prev,[amb.id]:data}));
+      else alert('Kit regen failed: ' + (data.error||res.status));
+    } catch(e) { alert('Error: '+e.message); }
+    setGenKit(prev=>({...prev,[amb.id]:false}));
+  };
+
+
   if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'50vh',color:'#8C919E'}}><div style={{textAlign:'center'}}><div style={{fontSize:32,marginBottom:8}}>🤝</div>Loading...</div></div>;
 
   return (
@@ -270,7 +285,7 @@ export default function AmbassadorsPage() {
               {ie && (
                 <div style={{borderTop:'1px solid #F0F1F4'}}>
                   <div style={{display:'flex',borderBottom:'1px solid #F0F1F4'}}>
-                    {[{key:'details',label:'Details'},{key:'attributed',label:'👥 Attributed'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'}].map(t=>(
+                    {[{key:'details',label:'Details'},{key:'attributed',label:'👥 Attributed'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'},{key:'assets',label:'🎨 Assets'}].map(t=>(
                       <button key={t.key} onClick={()=>{if(t.key==='edit')startEdit(amb);else{setActiveTab(prev=>({...prev,[amb.id]:t.key})); if(t.key==='attributed') loadAttributed(amb.id);}}}
                         style={{padding:'10px 16px',border:'none',borderBottom:tab===t.key?'2px solid #0072B5':'2px solid transparent',background:'none',fontSize:12,fontWeight:tab===t.key?600:400,color:tab===t.key?'#0072B5':'#8C919E',cursor:'pointer'}}>
                         {t.label}
@@ -436,6 +451,43 @@ export default function AmbassadorsPage() {
                           style={{...cs.btn,background:'#22C55E',color:'#fff',width:'100%',opacity:sending[amb.id+'payout']?0.5:1}}>
                           {sending[amb.id+'payout']?'Sending...':'💸 Send Payout Email'}
                         </button>
+                      </div>
+                    )}
+                    {tab==='assets' && (
+                      <div>
+                        <p style={{fontSize:13,color:'#8C919E',marginBottom:16,lineHeight:1.6}}>
+                          Regenerate personalized share images for {amb.name}. Stamps <code style={{fontFamily:"'JetBrains Mono'",background:'#F7F8FA',padding:'1px 6px',borderRadius:3}}>?ref={amb.code}</code> on the 10 most recent social posts and uploads them to Supabase Storage at <code style={{fontFamily:"'JetBrains Mono'",background:'#F7F8FA',padding:'1px 6px',borderRadius:3}}>ambassador-kits/{amb.code}/</code>. Takes ~30–60s.
+                        </p>
+                        <div style={{display:'flex',gap:12,marginBottom:16}}>
+                          <button onClick={()=>regenerateKit(amb)} disabled={genKit[amb.id]}
+                            style={{...cs.btn,background:'#00A0A8',color:'#fff',opacity:genKit[amb.id]?0.5:1}}>
+                            {genKit[amb.id]?'Generating…':'🎨 Regenerate personalized kit'}
+                          </button>
+                          <a href={'https://advncelabs.com/advnce-asset-kit.html?code='+amb.code} target="_blank" rel="noreferrer"
+                            style={{...cs.btn,background:'#F7F8FA',color:'#4A4F5C',border:'1px solid #E4E7EC',textDecoration:'none',display:'inline-flex',alignItems:'center'}}>
+                            ↗ Open asset-kit page
+                          </a>
+                        </div>
+                        {kitResult[amb.id] && (
+                          <div style={{padding:14,background:'#F7F8FA',border:'1px solid #E4E7EC',borderRadius:4,fontSize:12,color:'#4A4F5C',fontFamily:"'JetBrains Mono'"}}>
+                            <div style={{marginBottom:6,color:'#0F1928',fontWeight:600}}>
+                              ✓ Uploaded {kitResult[amb.id].uploaded_count}/{(kitResult[amb.id].uploaded_count||0)+(kitResult[amb.id].failed_count||0)} in {Math.round((kitResult[amb.id].elapsed_ms||0)/1000)}s
+                            </div>
+                            {kitResult[amb.id].images?.slice(0,5).map((im,i)=>(
+                              <div key={i} style={{fontSize:11,color:'#00A0A8'}}>
+                                <a href={im.url} target="_blank" rel="noreferrer" style={{color:'#00A0A8',textDecoration:'none'}}>{im.filename}</a>
+                              </div>
+                            ))}
+                            {kitResult[amb.id].images?.length > 5 && (
+                              <div style={{fontSize:11,color:'#8C919E',marginTop:4}}>+ {kitResult[amb.id].images.length - 5} more</div>
+                            )}
+                            {kitResult[amb.id].failed_count > 0 && (
+                              <div style={{fontSize:11,color:'#DC2626',marginTop:6}}>
+                                Failed: {kitResult[amb.id].failures?.map(f=>f.filename).join(', ')}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
