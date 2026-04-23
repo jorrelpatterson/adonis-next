@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '../../../lib/requireAdmin';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request) {
+  const unauth = requireAdmin(request); if (unauth) return unauth;
   try {
     const { ambassador } = await request.json();
     if (!ambassador) return NextResponse.json({ error:'Missing data' }, { status:400 });
-    const { name, email, code, period, l1_amount, l2_amount, l3_amount } = ambassador;
+    const { id: ambassadorId, name, email, code, period, l1_amount, l2_amount, l3_amount } = ambassador;
+    if (!ambassadorId || !UUID_RE.test(ambassadorId)) {
+      return NextResponse.json({ error:'Missing or invalid ambassador.id' }, { status:400 });
+    }
+    if (!period || typeof period !== 'string') {
+      return NextResponse.json({ error:'Missing period' }, { status:400 });
+    }
     const RESEND = process.env.RESEND_API_KEY;
     const fn = (name || '').split(' ')[0];
     const l1 = parseFloat(l1_amount||0), l2 = parseFloat(l2_amount||0), l3 = parseFloat(l3_amount||0);
@@ -45,7 +55,36 @@ export async function POST(request) {
     const res = await fetch('https://api.resend.com/emails', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+RESEND}, body: JSON.stringify({ from:'advnce labs <orders@advncelabs.com>', to:email, subject:'Your advnce labs payout for '+period+' — $'+total+'!', html }) });
     const data = await res.json();
     if (!res.ok) return NextResponse.json({ error:'Resend error', detail:data }, { status:500 });
-    return NextResponse.json({ success:true });
+
+    // Audit log insert (non-fatal — email has already sent)
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+    let warning = null;
+    try {
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/ambassador_payouts`, {
+        method:'POST',
+        headers:{
+          'apikey': SERVICE_KEY,
+          'Authorization': `Bearer ${SERVICE_KEY}`,
+          'Content-Type':'application/json',
+          'Prefer':'return=minimal',
+        },
+        body: JSON.stringify({
+          ambassador_id: ambassadorId,
+          period,
+          l1_amount: l1,
+          l2_amount: l2,
+          l3_amount: l3,
+          total: parseFloat(total),
+        }),
+      });
+      if (insertRes.status === 409) warning = `Payout already recorded for ${period}`;
+      else if (!insertRes.ok) warning = `Audit log insert failed: ${insertRes.status}`;
+    } catch(e) {
+      warning = `Audit log error: ${e.message}`;
+    }
+
+    return NextResponse.json({ success:true, warning });
   } catch(err) {
     return NextResponse.json({ error:err.message }, { status:500 });
   }
