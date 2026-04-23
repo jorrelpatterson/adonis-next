@@ -23,21 +23,20 @@ const cs = {
 export default function AmbassadorsPage() {
   const [ambassadors, setAmbassadors] = useState([]);
   const [commissions, setCommissions] = useState([]);
+  const [payouts, setPayouts]         = useState([]);
   const [loading, setLoading]         = useState(true);
   const [search, setSearch]           = useState('');
   const [expandedId, setExpanded]     = useState(null);
   const [attributedByAmb, setAttributedByAmb] = useState({});  // ambId -> { customers, ordersByPhone, loading }
+  const [statusUpdating, setStatusUpdating] = useState({});
 
   const loadAttributed = async (ambId) => {
     if (attributedByAmb[ambId] && !attributedByAmb[ambId].loading) return; // cached
     setAttributedByAmb(prev => ({ ...prev, [ambId]: { ...(prev[ambId] || {}), loading: true } }));
     try {
-      const [attrRes, ordersRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/customer_attribution?ambassador_id=eq.${ambId}&select=phone,first_order_id,attributed_at&order=attributed_at.desc`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }),
-        fetch(`${SUPABASE_URL}/rest/v1/orders?ref_code=eq.${encodeURIComponent((amb=>amb)({code:''}).code||'')}&select=order_id,attribution_phone,total,created_at,status`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }),
-      ]);
+      const attrRes = await fetch(`${SUPABASE_URL}/rest/v1/customer_attribution?ambassador_id=eq.${ambId}&select=phone,first_order_id,attributed_at&order=attributed_at.desc`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } });
       const customers = attrRes.ok ? await attrRes.json() : [];
-      // Re-fetch orders by ambassador's CODE (we need code from the ambassador list)
+      // Fetch orders by ambassador's CODE
       const amb = ambassadors.find(a => a.id === ambId);
       let ordersByPhone = {};
       if (amb) {
@@ -68,18 +67,23 @@ export default function AmbassadorsPage() {
     return d.toLocaleString('default',{month:'long',year:'numeric'});
   });
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [ambs, comms] = await Promise.all([
-          sbFetch('ambassadors','select=*&order=created_at.desc'),
-          sbFetch('referral_commissions','select=*'),
-        ]);
-        setAmbassadors(ambs); setCommissions(comms);
-      } catch(e) { console.error(e); } finally { setLoading(false); }
-    }
-    load();
-  }, []);
+  const loadData = async () => {
+    try {
+      const [ambs, comms, pays] = await Promise.all([
+        sbFetch('ambassadors','select=*&order=created_at.desc'),
+        sbFetch('referral_commissions','select=*'),
+        sbFetch('ambassador_payouts','select=ambassador_id,period,total,sent_at&order=sent_at.desc'),
+      ]);
+      setAmbassadors(ambs); setCommissions(comms); setPayouts(pays);
+    } catch(e) { console.error(e); } finally { setLoading(false); }
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const lastPayoutByAmb = payouts.reduce((acc, p) => {
+    if (!acc[p.ambassador_id]) acc[p.ambassador_id] = p; // payouts are sorted sent_at desc
+    return acc;
+  }, {});
 
   const getEarnings = (id) => ({
     l1: commissions.filter(c=>c.l1_ambassador_id===id).reduce((s,c)=>s+parseFloat(c.l1_amount||0),0),
@@ -117,6 +121,18 @@ export default function AmbassadorsPage() {
     setActiveTab(prev=>({...prev,[amb.id]:'details'}));
     setSaving(prev=>({...prev,[amb.id]:false}));
   };
+  const toggleStatus = async (amb) => {
+    const newStatus = amb.status === 'paused' ? 'active' : 'paused';
+    setStatusUpdating(prev => ({ ...prev, [amb.id]: true }));
+    const res = await fetch('/api/ambassador-write', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'update', id: amb.id, fields:{ status: newStatus } }),
+    });
+    setStatusUpdating(prev => ({ ...prev, [amb.id]: false }));
+    if (!res.ok) { const err = await res.json().catch(()=>({})); alert('Failed: '+(err.error||res.status)); return; }
+    setAmbassadors(prev => prev.map(a => a.id === amb.id ? { ...a, status: newStatus } : a));
+  };
+
   const deleteAmb = async (amb) => {
     if (!confirm(`Delete ${amb.name} (${amb.code})? Cannot be undone.`)) return;
     setDeleting(prev=>({...prev,[amb.id]:true}));
@@ -143,8 +159,13 @@ export default function AmbassadorsPage() {
     } else if (type==='payout') {
       const l1=parseFloat(payout[amb.id]?.l1||0),l2=parseFloat(payout[amb.id]?.l2||0),l3=parseFloat(payout[amb.id]?.l3||0);
       if (l1+l2+l3===0) { alert('Enter payout amounts first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
+      const lp = lastPayoutByAmb[amb.id];
+      if (lp && lp.period === period) {
+        const ok = confirm(`You already sent a payout for ${period} on ${new Date(lp.sent_at).toLocaleDateString()} totaling $${parseFloat(lp.total).toFixed(2)}. Send again?`);
+        if (!ok) { setSending(prev=>({...prev,[amb.id+type]:false})); return; }
+      }
       endpoint = '/api/ambassador-payout';
-      payload = { ambassador:{name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3} };
+      payload = { ambassador:{id:amb.id,name:amb.name,email:amb.email,code:amb.code,period,l1_amount:l1,l2_amount:l2,l3_amount:l3} };
     } else if (type==='custom') {
       const msg = customMsg[amb.id];
       if (!msg?.subject||!msg?.body) { alert('Enter subject and message first'); setSending(prev=>({...prev,[amb.id+type]:false})); return; }
@@ -154,8 +175,13 @@ export default function AmbassadorsPage() {
     try {
       const res = await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if (res.ok) {
-        alert(`Email sent to ${amb.email}`);
-        if (type==='payout') setPayout(prev=>({...prev,[amb.id]:{}}));
+        const data = await res.json().catch(()=>({}));
+        const suffix = data.warning ? ` — ${data.warning}` : '';
+        alert(`Email sent to ${amb.email}${suffix}`);
+        if (type==='payout') {
+          setPayout(prev=>({...prev,[amb.id]:{}}));
+          loadData(); // refresh payout history
+        }
         if (type==='custom') setCustomMsg(prev=>({...prev,[amb.id]:{subject:'',body:''}}));
       } else {
         const err = await res.json().catch(()=>({}));
@@ -204,11 +230,38 @@ export default function AmbassadorsPage() {
                   <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{amb.name}</div><div style={{fontSize:11,color:'#8C919E'}}>{amb.email}</div></div>
                   <span style={{fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5',background:'#EFF6FF',padding:'2px 8px',borderRadius:4}}>{amb.code}</span>
                   <span style={{fontSize:10,fontWeight:600,padding:'2px 8px',borderRadius:4,background:tc+'22',color:tc,textTransform:'uppercase',letterSpacing:1}}>{amb.tier}</span>
+                  {(() => {
+                    const s = amb.status || 'active';
+                    const colors = s === 'active'
+                      ? { fg:'#065F46', bg:'#D1FAE5' }
+                      : s === 'paused'
+                      ? { fg:'#92400E', bg:'#FEF3C7' }
+                      : { fg:'#991B1B', bg:'#FEE2E2' };
+                    return <span style={{fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:10,background:colors.bg,color:colors.fg,textTransform:'uppercase',letterSpacing:1}}>{s}</span>;
+                  })()}
+                  {amb.status !== 'banned' && (
+                    <button onClick={(e)=>{e.stopPropagation(); toggleStatus(amb);}} disabled={statusUpdating[amb.id]}
+                      style={{fontSize:10,padding:'2px 8px',border:'1px solid #E4E7EC',borderRadius:3,background:'#FAFBFC',color:'#4A4F5C',cursor:'pointer',opacity:statusUpdating[amb.id]?0.5:1}}>
+                      {statusUpdating[amb.id]?'…':(amb.status === 'paused' ? 'Resume' : 'Pause')}
+                    </button>
+                  )}
                 </div>
                 <div style={{display:'flex',gap:16,alignItems:'center'}}>
                   <div style={{textAlign:'right'}}>
                     <div style={{fontFamily:"'JetBrains Mono'",fontSize:14,fontWeight:700,color:'#22C55E'}}>${parseFloat(amb.total_earned||0).toFixed(2)}</div>
                     <div style={{fontSize:11,color:'#8C919E'}}>{amb.total_orders||0} orders</div>
+                  </div>
+                  <div style={{textAlign:'right',minWidth:120}}>
+                    {(() => {
+                      const lp = lastPayoutByAmb[amb.id];
+                      if (!lp) return <div style={{fontSize:11,color:'#9CA3AF',fontStyle:'italic'}}>Never paid</div>;
+                      return (
+                        <>
+                          <div style={{fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0F1928'}}>${parseFloat(lp.total).toFixed(2)}</div>
+                          <div style={{fontSize:10,color:'#8C919E'}}>Last · {lp.period}</div>
+                        </>
+                      );
+                    })()}
                   </div>
                   <div style={{fontSize:11,color:'#8C919E'}}>{new Date(amb.created_at).toLocaleDateString()}</div>
                   <div style={{fontSize:12,color:'#8C919E',transform:ie?'rotate(90deg)':'',transition:'transform 0.15s'}}>▶</div>
