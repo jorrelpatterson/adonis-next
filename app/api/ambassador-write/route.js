@@ -1,13 +1,18 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '../../../lib/requireAdmin';
 
 // Server-side proxy for ambassador UPDATE/DELETE — uses SUPABASE_SERVICE_KEY
 // to bypass RLS, which only allows anon INSERT + SELECT on ambassadors.
 
-const ALLOWED_FIELDS = ['name', 'email', 'phone', 'code', 'tier'];
+const ALLOWED_FIELDS = ['name', 'email', 'phone', 'code', 'tier', 'status'];
 const ALLOWED_TIERS = ['starter', 'builder', 'elite'];
+const ALLOWED_STATUSES = ['active', 'paused', 'banned'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request) {
+  const unauth = requireAdmin(request); if (unauth) return unauth;
+
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SUPABASE_URL || !SERVICE_KEY) {
@@ -43,7 +48,20 @@ export async function POST(request) {
     if (typeof v === 'string') v = v.trim();
     if (k === 'code' && typeof v === 'string') v = v.toUpperCase();
     if (k === 'tier' && !ALLOWED_TIERS.includes(v)) return NextResponse.json({ error: 'Invalid tier' }, { status: 400 });
-    if (k === 'phone' && v === '') v = null;
+    if (k === 'status' && !ALLOWED_STATUSES.includes(v)) return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+    if (k === 'email' && !EMAIL_RE.test(String(v))) return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
+    if (k === 'name') {
+      if (!v || v.length > 120) return NextResponse.json({ error: 'Name required (1–120 chars)' }, { status: 400 });
+    }
+    if (k === 'phone') {
+      if (v === '' || v == null) v = null;
+      else {
+        let digits = String(v).replace(/\D/g, '');
+        if (digits.length === 11 && digits.startsWith('1')) digits = digits.slice(1);
+        if (digits.length !== 10) return NextResponse.json({ error: 'Phone must be 10 digits' }, { status: 400 });
+        v = digits;
+      }
+    }
     patch[k] = v;
   }
   if (!Object.keys(patch).length) return NextResponse.json({ error: 'No valid fields' }, { status: 400 });
