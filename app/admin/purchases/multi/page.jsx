@@ -288,9 +288,17 @@ export default function MultiVendorOrderPage() {
                 const subtotal = g.items.reduce((s, it) => s + it.qty_ordered * it.unit_cost, 0);
                 const kits = g.items.reduce((s, it) => s + it.qty_ordered, 0);
                 return (
-                  <div key={vid} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span>• <strong>{g.vendor_name}</strong> — {g.items.length} line{g.items.length === 1 ? '' : 's'}, {kits} kit{kits === 1 ? '' : 's'}</span>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>${subtotal.toFixed(2)}</span>
+                  <div key={vid} style={{ borderLeft: '2px solid #00A0A8', paddingLeft: 12, marginBottom: 4 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
+                      <span>• <strong>{g.vendor_name}</strong> — {g.items.length} line{g.items.length === 1 ? '' : 's'}, {kits} kit{kits === 1 ? '' : 's'}</span>
+                      <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>${subtotal.toFixed(2)}</span>
+                    </div>
+                    {g.items.map(it => (
+                      <div key={it.product_id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#6B7A94', paddingLeft: 12, paddingTop: 2 }}>
+                        <span>{it.name} <span style={{ color: '#9CA3AF' }}>· {it.sku}</span> × {it.qty_ordered} kit{it.qty_ordered === 1 ? '' : 's'}</span>
+                        <span style={{ fontFamily: 'monospace' }}>${(it.qty_ordered * it.unit_cost).toFixed(2)}</span>
+                      </div>
+                    ))}
                   </div>
                 );
               })}
