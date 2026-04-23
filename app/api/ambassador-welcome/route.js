@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '../../../lib/requireAdmin';
 
 export async function POST(request) {
+  const unauth = requireAdmin(request); if (unauth) return unauth;
   try {
     const { ambassador } = await request.json();
     if (!ambassador) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
@@ -50,7 +52,7 @@ export async function POST(request) {
     const adminHtml = `<html><body style="font-family:monospace;padding:40px;background:#1A1C22;color:white"><h2 style="color:#00A0A8">New Ambassador: ${name}</h2><p>Email: ${email}</p><p>Code: <span style="color:#00A0A8;font-size:20px">${code}</span></p><p>Link: advncelabs.com?ref=${code}</p></body></html>`;
 
     const [a, b] = await Promise.all([
-      fetch('https://api.resend.com/emails', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+RESEND}, body: JSON.stringify({ from:'advnce labs <orders@advncelabs.com>', to:'jorrelpatterson@gmail.com', subject:'New Ambassador: '+name+' ('+code+')!', html:adminHtml }) }),
+      fetch('https://api.resend.com/emails', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+RESEND}, body: JSON.stringify({ from:'advnce labs <orders@advncelabs.com>', to: process.env.ADMIN_EMAIL || 'jorrelpatterson@gmail.com', subject:'New Ambassador: '+name+' ('+code+')!', html:adminHtml }) }),
       fetch('https://api.resend.com/emails', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+RESEND}, body: JSON.stringify({ from:'advnce labs <orders@advncelabs.com>', to:email, subject:'Your advnce labs ambassador link is live!', html }) })
     ]);
     const ad = await a.json(), bd = await b.json();
