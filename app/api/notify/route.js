@@ -1,100 +1,99 @@
 import { NextResponse } from 'next/server';
 
-// POST /api/notify — sends order notification email to Jorrel
+// POST /api/notify — sends order notification email to admin.
+// Internal-only, triggered from the Stripe webhook / admin order flow.
 export async function POST(request) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
   }
+  const adminEmail = process.env.ADMIN_EMAIL || 'jorrelpatterson@gmail.com';
 
   try {
     const { orderId, customer, email, items, subtotal, discount, discountLabel, total, shipping } = await request.json();
 
-    // Build item rows
-    const itemRows = items.map(i => 
+    const itemRows = items.map(i =>
       `<tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #E4E7EC;font-size:14px;color:#1C2028">${i.name}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #E4E7EC;font-size:14px;color:#6B7A94;text-align:center">${i.qty}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #E4E7EC;font-size:14px;color:#1C2028;text-align:right;font-weight:600">${i.price === 0 ? 'FREE' : '$' + (i.price * i.qty)}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${i.name}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7A7D88;text-align:center">${i.qty}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1C22;text-align:right;font-weight:700">${i.price === 0 ? 'FREE' : '$' + (i.price * i.qty)}</td>
       </tr>`
     ).join('');
 
     const ship = shipping || {};
+    const logo = '<svg viewBox="0 0 48 28" width="36" height="21" fill="none" style="vertical-align:middle;display:inline-block"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>';
 
-    const html = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#fff">
-      <!-- Header -->
-      <div style="background:#0F1928;padding:24px 32px;text-align:center">
-        <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:2px">ADONIS</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;margin-top:4px">NEW ORDER NOTIFICATION</div>
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <title>New Order ${orderId}</title>
+</head>
+<body style="margin:0;padding:0;background:#E8E6E2;font-family:Arial,Helvetica,sans-serif">
+<div style="max-width:600px;margin:0 auto;padding:24px 16px">
+
+  <div style="background:#F4F2EE;border-bottom:1px solid #E4E7EC;padding:20px 32px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px">
+    ${logo}
+    <span style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:300;letter-spacing:3px;color:#1A1C22;text-transform:lowercase">advnce <span style="color:#7A7D88;font-weight:300">labs</span></span>
+    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase">Order notification</span>
+  </div>
+
+  <div style="background:#F4F2EE;padding:40px 32px">
+
+    <div style="border:1px solid #E4E7EC;background:#FAFBFC;border-radius:4px;padding:24px;margin-bottom:28px;text-align:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">New order</div>
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:42px;font-weight:900;color:#00A0A8;letter-spacing:-1px;line-height:1;margin:4px 0">$${total}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7A7D88;letter-spacing:1px;margin-top:6px">${orderId}</div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Customer</div>
+      <div style="font-size:16px;font-weight:700;color:#1A1C22">${customer}</div>
+      ${email ? `<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7A7D88;margin-top:4px">${email}</div>` : ''}
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Items</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #E4E7EC;border-radius:4px;overflow:hidden">
+        <thead><tr style="background:#FAFBFC">
+          <th style="padding:10px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Item</th>
+          <th style="padding:10px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Qty</th>
+          <th style="padding:10px 12px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Price</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+
+      ${discount > 0 ? `<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FFFBEB;border-radius:3px;margin-top:10px"><span style="font-size:13px;font-weight:700;color:#A16207">${discountLabel || 'Discount'}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#A16207">-$${discount}</span></div>` : ''}
+
+      <div style="display:flex;justify-content:space-between;padding:14px 12px;background:#FAFBFC;border-radius:3px;margin-top:10px;border:1px solid #E4E7EC"><span style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:700;color:#1A1C22;letter-spacing:1px;text-transform:uppercase">Total</span><span style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:900;color:#00A0A8">$${total}</span></div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ship to</div>
+      <div style="border:1px solid #E4E7EC;background:#FAFBFC;border-radius:4px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1C22;line-height:1.8">
+        ${ship.name || customer}<br>
+        ${ship.address || 'No address provided'}<br>
+        ${ship.city || ''}${ship.state ? ', ' + ship.state : ''} ${ship.zip || ''}
+        ${ship.email ? '<br>' + ship.email : ''}
       </div>
+    </div>
 
-      <div style="padding:32px">
-        <!-- Order badge -->
-        <div style="background:#ECFDF5;border:1px solid #BBF7D0;border-radius:8px;padding:16px;margin-bottom:24px;text-align:center">
-          <div style="font-size:22px;font-weight:700;color:#15803D">💰 New Order!</div>
-          <div style="font-size:28px;font-weight:800;color:#0F1928;margin-top:4px">$${total}</div>
-          <div style="font-size:12px;color:#6B7A94;margin-top:4px">${orderId}</div>
-        </div>
+    <div style="text-align:center;margin-top:28px">
+      <a href="https://adonis.pro/admin/orders" style="display:inline-block;background:#00A0A8;color:#F4F2EE;font-family:'Barlow Condensed',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:14px 28px;border-radius:3px">View in admin &rarr;</a>
+    </div>
 
-        <!-- Customer -->
-        <div style="margin-bottom:24px">
-          <div style="font-size:11px;font-weight:700;color:#8C919E;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Customer</div>
-          <div style="font-size:16px;font-weight:600;color:#0F1928">${customer}</div>
-          ${email ? `<div style="font-size:13px;color:#6B7A94;margin-top:2px">${email}</div>` : ''}
-        </div>
+  </div>
 
-        <!-- Items -->
-        <div style="margin-bottom:24px">
-          <div style="font-size:11px;font-weight:700;color:#8C919E;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Items Ordered</div>
-          <table style="width:100%;border-collapse:collapse">
-            <thead>
-              <tr style="background:#F7F8FA">
-                <th style="padding:8px 12px;text-align:left;font-size:10px;font-weight:600;color:#8C919E;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid #E4E7EC">Item</th>
-                <th style="padding:8px 12px;text-align:center;font-size:10px;font-weight:600;color:#8C919E;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid #E4E7EC">Qty</th>
-                <th style="padding:8px 12px;text-align:right;font-size:10px;font-weight:600;color:#8C919E;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid #E4E7EC">Price</th>
-              </tr>
-            </thead>
-            <tbody>${itemRows}</tbody>
-          </table>
+  <div style="background:#1A1C22;padding:18px 32px;border-radius:0 0 6px 6px;text-align:center">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(244,242,238,0.35);letter-spacing:1.5px;line-height:2;margin:0;text-transform:uppercase">Adonis Admin &middot; advncelabs.com<br>Automated notification &middot; Do not reply</p>
+  </div>
 
-          ${discount > 0 ? `
-          <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#FFFBEB;border-radius:6px;margin-top:8px">
-            <span style="font-size:13px;font-weight:600;color:#A16207">${discountLabel || 'Discount'}</span>
-            <span style="font-size:13px;font-weight:700;color:#A16207">-$${discount}</span>
-          </div>` : ''}
+</div>
+</body>
+</html>`;
 
-          <div style="display:flex;justify-content:space-between;padding:12px;background:#F7F8FA;border-radius:6px;margin-top:8px">
-            <span style="font-size:15px;font-weight:700;color:#0F1928">Total</span>
-            <span style="font-size:18px;font-weight:800;color:#0F1928">$${total}</span>
-          </div>
-        </div>
-
-        <!-- Shipping -->
-        <div style="margin-bottom:24px">
-          <div style="font-size:11px;font-weight:700;color:#8C919E;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Ship To</div>
-          <div style="background:#F7F8FA;border:1px solid #E4E7EC;border-radius:8px;padding:16px;font-size:14px;color:#4A4F5C;line-height:1.7">
-            ${ship.name || customer}<br>
-            ${ship.address || 'No address provided'}<br>
-            ${ship.city || ''}${ship.state ? ', ' + ship.state : ''} ${ship.zip || ''}
-            ${ship.email ? '<br>' + ship.email : ''}
-          </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div style="text-align:center;margin-top:24px">
-          <a href="https://adonis-next-git-main-jorrelpattersons-projects.vercel.app/admin/orders" style="display:inline-block;padding:14px 32px;background:#0072B5;color:#fff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:700;letter-spacing:0.5px">View in Admin Panel →</a>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div style="background:#F7F8FA;border-top:1px solid #E4E7EC;padding:20px 32px;text-align:center">
-        <div style="font-size:11px;color:#8C919E">Adonis Protocol OS · Order Notification</div>
-        <div style="font-size:10px;color:#B0B4BC;margin-top:4px">This is an automated notification. Do not reply.</div>
-      </div>
-    </div>`;
-
-    // Send via Resend
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -102,10 +101,10 @@ export async function POST(request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Adonis Orders <onboarding@resend.dev>',
-        to: ['jorrelpatterson@gmail.com'],
-        subject: `🧪 New Order ${orderId} — $${total} from ${customer}`,
-        html: html,
+        from: 'advnce labs <orders@advncelabs.com>',
+        to: [adminEmail],
+        subject: `New order ${orderId} — $${total} from ${customer}`,
+        html,
       }),
     });
 
