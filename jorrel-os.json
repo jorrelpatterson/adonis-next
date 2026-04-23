@@ -35,9 +35,22 @@
       "Default retail prices on the 81 new Eve tablets are 2\u00d7 cost (placeholder) \u2014 need real market research before activation",
       "Vendor JSONs (eve-pricing.json) don't include the tablets sheet \u2014 only peptide vials"
     ],
-    "next_action": "Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. Multi-vendor order sheet at /admin/purchases/multi is ready to use for next restock \u2014 auto-routes everything to cheapest vendor and splits into multiple POs in one click.",
-    "last_session": "2026-04-21 (continued, session 3) \u2014 Built complete discount-codes + ambassador-lifetime-attribution system across both repos: 15% off + 15% L1 commission on first sale per phone-attributed customer; tier % commission on repeats. New discount_codes + customer_attribution Supabase tables, /api/discount-code-write CRUD, /admin/discount-codes UI, /admin/orders + /admin/ambassadors enriched. /api/send-order-email rewritten with phone normalization + attribution + code resolution + first-sale-bonus commission. Bac Water auto-add (1 per 100mg of injectable) on checkout with red AUTO badge + removable. Protocols-page checkout fixed (was placeholder alert) \u2014 now routes into standard Zelle flow with cart merge. Added Eve's 81 oral tablet SKUs (steroids/SARMs/PCT/pharma/oral peptides). Renamed SLU-PP-322\u2192332. Added 6-bucket type filter on order sheets (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic). Recategorized 12 misfits: Cock Bombs/Flibanserin/Dapoxetine/Melatonin \u2192 Pharma; Snap-8/Minoxidil/Finasteride 1mg/Dutasteride \u2192 Cosmetic; Methylene Blue/B12/DNP/Tesofensine \u2192 Pharma. Phone now required at checkout.",
+    "next_action": "Ambassador program is LIVE as of 2026-04-23. Recruit ambassadors via WhatsApp (use docs/ambassadors/recruitment-script.md). Content calendar publishes Mon Apr 27. After a week of real traffic, re-run `node scripts/smoke-ambassador-flow.js` to confirm order\u2192commission chain still works.",
+    "last_session": "2026-04-23 \u2014 Ambassador program launch hardening. Closed 9 launch-blocking defects: (1) auth-gated 6 admin API routes via new lib/requireAdmin cookie helper (previously publicly callable with SERVICE_KEY); (2) fixed broken ambassador-content-digest filter (active=is.true \u2192 status=eq.active \u2014 schema uses `status` text col, not `active` bool); (3) added status field + Pause/Resume to ambassador-write + admin UI; (4) HTML-escaped ambassador-message body; (5) ADMIN_EMAIL env var in 3 places (default = gmail, flip to info@ post-forwarding); (6) new ambassador_payouts audit table with UNIQUE(amb_id, period) + admin UI confirm dialog on duplicate period; (7) soft-delete on discount codes (active=false); (8) schema migration 2026-04-23_ambassadors_commissions_rpc.sql captures ambassadors + referral_commissions + increment_ambassador_stats RPC + adds missing orders.ref_code column (smoke test caught it \u2014 was breaking order inserts); (9) scripts/smoke-ambassador-flow.js runs 3 scenarios against prod Supabase (first ambassador conversion / repeat customer / promo-only) and asserts every row \u2014 ALL GREEN. Both repos pushed to main; Vercel auto-deploying.",
     "completed_today": [
+      "lib/requireAdmin.js \u2014 admin-cookie auth helper; applied to 6 /api/* routes in adonis-next (ambassador-welcome, ambassador-message, ambassador-payout, ambassador-write, ambassador-content-digest, discount-code-write)",
+      "Schema migration 2026-04-23_ambassadors_commissions_rpc.sql \u2014 CREATE IF NOT EXISTS for ambassadors + referral_commissions + new ambassador_payouts + RPC drop/create-with-defaults + ALTER orders ADD ref_code. Applied to prod.",
+      "ambassador-content-digest filter fix (active \u2192 status=eq.active) \u2014 was returning 0 ambassadors every call, so digest never sent",
+      "ambassador-write validation \u2014 status field (active/paused/banned), email regex, phone normalize to 10-digit, name 1\u2013120 chars",
+      "ambassador-message HTML escape \u2014 message/name/code all escaped before template insertion (defense in depth; admin-only after auth gate)",
+      "ambassador-payout hardening \u2014 requires ambassador.id UUID, inserts ambassador_payouts audit row, returns 409-as-warning on duplicate period",
+      "discount-code-write soft delete \u2014 delete action now PATCHes active=false instead of DELETE (preserves audit trail)",
+      "ADMIN_EMAIL env var \u2014 adonis-next/ambassador-welcome, advnce-site/send-order-email, advnce-site/ambassador-notify all read from process.env.ADMIN_EMAIL with jorrelpatterson@gmail.com fallback",
+      "Admin /admin/ambassadors UI \u2014 status pill (green/amber/red), Pause/Resume button (hidden for banned), Last-payout column (period + total), confirm dialog if payout period already paid, dead IIFE removed",
+      "scripts/smoke-ambassador-flow.js \u2014 e2e integration test: first-ambassador (15% discount + commission), repeat customer (tier rate, no discount), promo code (used_count increment). All 3 green against prod.",
+      "Both repos pushed to main. adonis-next: 12 new commits (spec + plan + code). advnce-site: 1 commit (ADMIN_EMAIL)."
+    ],
+    "_completed_2026_04_21": [
       "Multi-Vendor Order Sheet at /admin/purchases/multi \u2014 auto-routes to cheapest vendor, per-row + bulk override, summary panel, splits into multi-PO on submit",
       "Per-vendor PO catalog: rows where another vendor is cheaper now dim with '\u2193 Vendor $XX' subtitle",
       "Storefront product page: OOS items show 'This ships in 2-3 weeks' (amber) and Add-to-Order stays enabled (was hard-blocking)",
@@ -173,6 +186,41 @@
       "status": "open follow-up from 2026-04-21",
       "summary": "Migration captured the 81 tablet SKUs in the DB but the JSON source-of-truth (docs/vendors/eve-pricing.json) is peptide-vials-only. If the JSON is ever re-run as a seed source, the tablets won't be regenerated.",
       "next_step": "Extract tablet data from the migration into a structured JSON. One-time data work."
+    },
+    {
+      "id": "info-at-advncelabs-forwarding",
+      "title": "Set up info@advncelabs.com forwarding and flip ADMIN_EMAIL",
+      "status": "captured 2026-04-23, deferred (non-blocking)",
+      "summary": "Admin notification emails (new ambassador signups, new orders, admin flags) currently go to jorrelpatterson@gmail.com via ADMIN_EMAIL env var default. Code is already threaded — just need the mailbox. No Google Workspace set up.",
+      "next_step": "Cloudflare Email Routing is free and takes ~10 minutes if advncelabs.com DNS is on Cloudflare; otherwise most registrars (Porkbun, Namecheap) offer free forwarding built-in. Once forwarding works, set ADMIN_EMAIL=info@advncelabs.com on both Vercel projects (adonis-next + advnce-site). No redeploy needed — env vars propagate."
+    },
+    {
+      "id": "admin-service-key-to-jwt",
+      "title": "Migrate admin writes from SERVICE_KEY proxy to proper Supabase JWT + RLS",
+      "status": "captured 2026-04-23, explicitly deferred",
+      "summary": "Today's auth gate (lib/requireAdmin cookie check on API routes) closes the attack surface for admin-only API routes. But the writes themselves still use SUPABASE_SERVICE_KEY server-side. A cleaner architecture would be: admin authenticates via Supabase Auth → gets JWT → client calls Supabase REST directly with that JWT → RLS policies gate writes. Bigger rewrite but eliminates the 'route uses service key behind cookie' pattern entirely.",
+      "next_step": "Week-of-work refactor. Low priority — cookie gate is adequate while admin is solo-operated."
+    },
+    {
+      "id": "ambassador-api-rate-limit",
+      "title": "Rate-limit /api/ambassador-* endpoints",
+      "status": "captured 2026-04-23, deferred",
+      "summary": "After the cookie gate (today), only authenticated admins can hit these routes, so abuse vector is self-abuse (accidental double-clicks spamming welcome emails). Once admin count grows beyond 1, re-evaluate.",
+      "next_step": "Add Upstash Redis or similar; per-route sliding window. Out of scope while single-admin."
+    },
+    {
+      "id": "stripe-webhook-verification",
+      "title": "Implement Stripe webhook signature verification",
+      "status": "open, pre-existing",
+      "summary": "app/api/stripe/route.js in adonis-next has signature verification as a TODO comment. This route is for adonis.pro subscriptions (NOT the Zelle-based ambassador order path), so it doesn't block the ambassador program. But once subscriptions go live, unverified webhooks are a real vulnerability.",
+      "next_step": "Uncomment the constructEvent code + set STRIPE_WEBHOOK_SECRET env var on Vercel. Add real event handlers (currently all console.log stubs)."
+    },
+    {
+      "id": "order-cancellation-reversal",
+      "title": "Refund / commission-reversal workflow",
+      "status": "open follow-up (dupe of earlier commission-reversal-flow)",
+      "summary": "Duplicate of commission-reversal-flow above — keeping for visibility. Today's smoke test confirmed the happy path but there's no workflow to reverse attribution/commissions when an order is canceled.",
+      "next_step": "Add /api/order-refund that marks order status=refunded + inserts negative referral_commissions rows + decrements ambassador totals."
     }
   ],
   "setup": {
