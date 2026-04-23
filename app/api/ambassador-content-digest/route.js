@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '../../../lib/requireAdmin';
 
 // Sends a digest email to all active ambassadors with their personalized asset kit URL +
 // summary of latest social posts. Triggered manually from /admin/content for now.
@@ -55,6 +56,8 @@ function buildHtml(firstName, code, posts) {
 }
 
 export async function POST(request) {
+  const unauth = requireAdmin(request); if (unauth) return unauth;
+
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   const RESEND = process.env.RESEND_API_KEY;
@@ -63,7 +66,7 @@ export async function POST(request) {
   const headers = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` };
 
   // Load active ambassadors
-  const aRes = await fetch(`${SUPABASE_URL}/rest/v1/ambassadors?select=name,email,code&active=is.true`, { headers });
+  const aRes = await fetch(`${SUPABASE_URL}/rest/v1/ambassadors?select=name,email,code&status=eq.active`, { headers });
   const ambs = await aRes.json();
   if (!Array.isArray(ambs) || ambs.length === 0) return NextResponse.json({ error: 'No active ambassadors' }, { status: 400 });
 
