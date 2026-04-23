@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { requireAdminOrCron } from '../../../lib/requireAdminOrCron';
 
 export async function POST(request) {
+  const unauth = requireAdminOrCron(request); if (unauth) return unauth;
   try {
     const { email, first_name } = await request.json();
     if (!email) return NextResponse.json({ error: 'Missing email' }, { status: 400 });
