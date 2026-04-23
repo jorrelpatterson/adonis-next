@@ -43,6 +43,12 @@ CREATE TABLE IF NOT EXISTS ambassador_payouts (
   UNIQUE (ambassador_id, period)
 );
 
+-- Ensure orders.ref_code exists (used by advnce-site/api/send-order-email.js
+-- and /admin/ambassadors attributed-customers tab). Was missing from the
+-- 2026-04-21 attribution migration.
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS ref_code text;
+CREATE INDEX IF NOT EXISTS idx_orders_ref_code ON orders(ref_code);
+
 -- Recreate the RPC in a transaction so the brief drop+create is atomic.
 -- Defaults match production: only amb_id is required (per OpenAPI spec check 2026-04-23).
 BEGIN;
