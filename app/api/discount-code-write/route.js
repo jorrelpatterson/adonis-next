@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '../../../lib/requireAdmin';
 
 const ALLOWED_ACTIONS = new Set(['create', 'update', 'delete']);
 const ALLOWED_TYPES = new Set(['percent', 'fixed']);
 
 export async function POST(request) {
+  const unauth = requireAdmin(request); if (unauth) return unauth;
+
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SUPABASE_URL || !SERVICE_KEY) return NextResponse.json({ error: 'Server config missing' }, { status: 500 });
@@ -74,9 +77,13 @@ export async function POST(request) {
   }
 
   if (action === 'delete') {
+    // Soft delete: PATCH active=false so orders referencing the code keep their audit trail.
     if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/discount_codes?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers });
-    if (!r.ok) return NextResponse.json({ error: await r.text() || 'Delete failed' }, { status: 500 });
+    const softHeaders = { ...headers, 'Prefer': 'return=minimal' };
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/discount_codes?id=eq.${encodeURIComponent(id)}`, {
+      method: 'PATCH', headers: softHeaders, body: JSON.stringify({ active: false }),
+    });
+    if (!r.ok) return NextResponse.json({ error: await r.text() || 'Soft-delete failed' }, { status: 500 });
     return NextResponse.json({ success: true });
   }
 
