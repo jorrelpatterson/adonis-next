@@ -48,7 +48,7 @@ export default function NewInvoicePage() {
   }, [query]);
 
   function addItem(p) {
-    setItems([...items, { sku: p.sku, name: p.name, size: p.size, qty: 1, price: p.retail }]);
+    setItems([...items, { sku: p.sku, name: p.name, size: p.size, qty: 1, price: p.retail, stock: p.stock }]);
     setQuery(''); setResults([]);
   }
 
@@ -69,6 +69,7 @@ export default function NewInvoicePage() {
   const flatNum = parseFloat(discountFlat) || 0;
   const discountApplied = Math.min(subtotal, (subtotal * pctNum / 100) + flatNum);
   const total = subtotal - discountApplied;
+  const overStockItems = items.filter((it) => Number(it.qty) > Number(it.stock ?? 0));
 
   async function submit() {
     setError(null);
@@ -173,14 +174,21 @@ export default function NewInvoicePage() {
           <input style={cs.input} placeholder="Search product by name or SKU…" value={query} onChange={(e) => setQuery(e.target.value)} />
           {results.length > 0 && (
             <div style={cs.results}>
-              {results.map((p) => (
-                <div key={p.sku} style={cs.resultRow} onClick={() => addItem(p)}>
-                  <strong>{p.name}</strong>{' '}
-                  <span style={{ color: '#7A7D88', fontFamily: 'monospace', fontSize: 11 }}>
-                    {p.sku} · {p.size} · ${p.retail}{p.stock === 0 ? ' · OOS' : ''}
-                  </span>
-                </div>
-              ))}
+              {results.map((p) => {
+                const stockColor = p.stock === 0 ? '#DC2626' : p.stock < 5 ? '#E07C24' : '#10B981';
+                const stockLabel = p.stock === 0 ? 'OOS' : `${p.stock} in stock`;
+                return (
+                  <div key={p.sku} style={cs.resultRow} onClick={() => addItem(p)}>
+                    <strong>{p.name}</strong>{' '}
+                    <span style={{ color: '#7A7D88', fontFamily: 'monospace', fontSize: 11 }}>
+                      {p.sku} · {p.size} · ${p.retail}
+                    </span>
+                    <span style={{ color: stockColor, fontFamily: 'monospace', fontSize: 11, marginLeft: 8, fontWeight: 700 }}>
+                      · {stockLabel}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -190,18 +198,32 @@ export default function NewInvoicePage() {
             <div style={{ ...cs.itemRow, borderTop: 'none', fontFamily: 'monospace', fontSize: 9, color: '#7A7D88', letterSpacing: 2, textTransform: 'uppercase', paddingBottom: 6 }}>
               <div>Item</div><div>Qty</div><div>Unit $</div><div style={{ textAlign: 'right' }}>Line</div><div></div>
             </div>
-            {items.map((it, i) => (
-              <div key={i} style={cs.itemRow}>
-                <div>
-                  <div style={{ fontWeight: 700 }}>{it.name}</div>
-                  <div style={{ fontSize: 11, color: '#7A7D88', fontFamily: 'monospace' }}>{it.sku} · {it.size}</div>
+            {items.map((it, i) => {
+              const stock = Number(it.stock ?? 0);
+              const qty = Number(it.qty ?? 0);
+              const overBy = Math.max(0, qty - stock);
+              const stockColor = stock === 0 ? '#DC2626' : stock < 5 ? '#E07C24' : '#10B981';
+              const stockLabel = stock === 0 ? 'OOS' : `${stock} in stock`;
+              return (
+                <div key={i} style={cs.itemRow}>
+                  <div>
+                    <div style={{ fontWeight: 700 }}>{it.name}</div>
+                    <div style={{ fontSize: 11, color: '#7A7D88', fontFamily: 'monospace' }}>
+                      {it.sku} · {it.size} · <span style={{ color: stockColor, fontWeight: 700 }}>{stockLabel}</span>
+                      {overBy > 0 && (
+                        <span style={{ color: '#E07C24', fontWeight: 700, marginLeft: 6 }}>
+                          · {overBy} needs to be pre-ordered
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <input style={cs.input} type="number" min="1" value={it.qty} onChange={(e) => updateItem(i, 'qty', e.target.value)} />
+                  <input style={cs.input} type="number" step="0.01" value={it.price} onChange={(e) => updateItem(i, 'price', e.target.value)} />
+                  <div style={{ textAlign: 'right', fontFamily: 'monospace', fontWeight: 700 }}>${(it.price * it.qty).toFixed(2)}</div>
+                  <button style={cs.removeBtn} onClick={() => removeItem(i)}>×</button>
                 </div>
-                <input style={cs.input} type="number" min="1" value={it.qty} onChange={(e) => updateItem(i, 'qty', e.target.value)} />
-                <input style={cs.input} type="number" step="0.01" value={it.price} onChange={(e) => updateItem(i, 'price', e.target.value)} />
-                <div style={{ textAlign: 'right', fontFamily: 'monospace', fontWeight: 700 }}>${(it.price * it.qty).toFixed(2)}</div>
-                <button style={cs.removeBtn} onClick={() => removeItem(i)}>×</button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -228,6 +250,26 @@ export default function NewInvoicePage() {
           onChange={(e) => setNotes(e.target.value)}
         />
       </div>
+
+      {overStockItems.length > 0 && (
+        <div style={{ ...cs.section, background: '#FEF3C7', borderColor: '#F59E0B' }}>
+          <div style={{ fontFamily: 'monospace', fontSize: 10, color: '#92400E', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+            Stock warning
+          </div>
+          <div style={{ fontSize: 13, color: '#92400E', lineHeight: 1.5 }}>
+            {overStockItems.length === 1 ? 'This item has' : 'These items have'} less in stock than you're invoicing.
+            That's OK — the customer will get their order in two shipments (in-stock portion ships in 2–3 days,
+            remainder pre-orders in 2–3 weeks). Just confirming you know.
+            <ul style={{ marginTop: 6, paddingLeft: 18 }}>
+              {overStockItems.map((it) => (
+                <li key={it.sku} style={{ fontFamily: 'monospace', fontSize: 12 }}>
+                  {it.sku} — need {it.qty}, have {it.stock ?? 0}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
 
       <div style={{ ...cs.section, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>

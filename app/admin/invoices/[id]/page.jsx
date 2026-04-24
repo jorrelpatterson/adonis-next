@@ -46,8 +46,38 @@ export default function InvoiceDetail() {
     setLoading(false);
   }
 
+  async function checkStockForPaid() {
+    // Look up current stock for each SKU in the invoice and return any that would go below zero
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const warnings = [];
+    for (const it of (inv?.items || [])) {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/products?sku=eq.${encodeURIComponent(it.sku)}&select=stock`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } },
+      );
+      const rows = r.ok ? await r.json() : [];
+      const stock = Number(rows[0]?.stock ?? 0);
+      if (stock < it.qty) warnings.push({ sku: it.sku, name: it.name, qty: it.qty, stock });
+    }
+    return warnings;
+  }
+
   async function transition(newStatus, extra = {}) {
-    if (!confirm(`Transition this invoice to "${newStatus}"?`)) return;
+    if (newStatus === 'paid') {
+      const warnings = await checkStockForPaid();
+      if (warnings.length) {
+        const lines = warnings.map((w) => `  ${w.sku} (${w.name}): need ${w.qty}, have ${w.stock}`).join('\n');
+        if (!confirm(
+          `Marking paid will decrement stock. Some items don't have enough:\n\n${lines}\n\n` +
+          `Stock will floor at 0 — the remainder is effectively pre-ordered.\nProceed anyway?`,
+        )) return;
+      } else {
+        if (!confirm('Mark this invoice paid? This will decrement inventory.')) return;
+      }
+    } else {
+      if (!confirm(`Transition this invoice to "${newStatus}"?`)) return;
+    }
     setActing(true);
     const r = await fetch('/api/invoice-transition', {
       method: 'POST',
