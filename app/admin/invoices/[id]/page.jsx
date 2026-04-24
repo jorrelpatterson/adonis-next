@@ -170,7 +170,7 @@ export default function InvoiceDetail() {
           <div style={cs.section}>
             <div style={cs.label}>Customer</div>
             <div style={{ marginTop: 6, fontWeight: 700 }}>{inv.first_name} {inv.last_name}</div>
-            <div style={{ fontSize: 13 }}>{inv.email || '—'}</div>
+            <div style={{ fontSize: 13 }}>{inv.email && !inv.email.endsWith('@invoice.local') ? inv.email : '— (no email on file)'}</div>
             <div style={{ fontSize: 13 }}>{inv.phone || '—'}</div>
             <div style={{ fontSize: 13, color: '#7A7D88', marginTop: 6 }}>{inv.address}<br />{inv.city}, {inv.state} {inv.zip}</div>
           </div>

@@ -104,12 +104,19 @@ export async function POST(request) {
     return NextResponse.json({ error: 'image upload failed: ' + (await upRes.text()) }, { status: 500 });
   }
 
+  // email is NOT NULL in orders table (storefront requires it). For invoices
+  // where admin only has a phone, substitute a placeholder that clearly isn't
+  // a real mailbox. Outbound email helpers skip sending when they see this pattern.
+  const emailFilled = customer.email && customer.email.trim()
+    ? customer.email.trim()
+    : `no-email+${invoiceId}@invoice.local`;
+
   const orderPayload = {
     id: uuid,
     order_id: orderId,
     first_name: customer.name.split(' ')[0] || customer.name,
     last_name: customer.name.split(' ').slice(1).join(' ') || '',
-    email: customer.email || null,
+    email: emailFilled,
     phone: customer.phone || null,
     address: customer.address,
     city: customer.city,

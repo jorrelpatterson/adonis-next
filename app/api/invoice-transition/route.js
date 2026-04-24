@@ -132,9 +132,10 @@ export async function POST(request) {
     }
   }
 
-  // Customer emails
+  // Customer emails — skip if email is a placeholder (invoice had no real customer email)
+  const hasRealEmail = inv.email && !inv.email.endsWith('@invoice.local');
   const publicUrl = `https://www.advncelabs.com/invoice/${inv.id.slice(0, 8)}`;
-  if (status === 'shipped' && inv.email) {
+  if (status === 'shipped' && hasRealEmail) {
     try {
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -156,7 +157,7 @@ export async function POST(request) {
       console.error('ship email error:', e);
     }
   }
-  if (status === 'cancelled' && inv.email) {
+  if (status === 'cancelled' && hasRealEmail) {
     try {
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
