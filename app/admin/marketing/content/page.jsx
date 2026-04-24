@@ -12,6 +12,10 @@ const POST_TYPE_BADGE = {
   stack_carousel: { color:'#16A34A', bg:'#DCFCE7', label:'Stack' },
   research_quote: { color:'#A78BFA', bg:'#F5F3FF', label:'Quote' },
   standards_statement: { color:'#0F1928', bg:'#F3F4F6', label:'Standards' },
+  wordmark_hero: { color:'#1A1C22', bg:'#F4F2EE', label:'Wordmark' },
+  principles_carousel: { color:'#00A0A8', bg:'#E6FBFC', label:'Principles' },
+  positioning_manifesto: { color:'#E07C24', bg:'#FDF3EB', label:'Positioning' },
+  receipt_card: { color:'#A16207', bg:'#FEF3C7', label:'Receipt' },
 };
 
 const STATUS_BADGE = {

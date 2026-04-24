@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>advnce labs — wordmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100;200;300;400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .canvas {
+    width: 1080px; height: 1080px;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  /* Subtle ghost mark behind everything */
+  .ghost {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1200px;
+    color: rgba(26,28,34,0.025);
+    letter-spacing: -0.08em;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.cyan { background: #00A0A8; }
+  .dot.amber { background: #E07C24; }
+
+  .center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 56px;
+  }
+
+  .wordmark-big {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 210px;
+    letter-spacing: 0.08em;
+    color: #1A1C22;
+    text-transform: lowercase;
+    line-height: 1;
+  }
+  .wordmark-big em {
+    font-style: normal;
+    color: #7A7D88;
+    font-weight: 200;
+  }
+
+  .rule {
+    width: 120px; height: 2px; background: #00A0A8;
+  }
+
+  .manifesto {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    letter-spacing: 0.45em;
+    color: #1A1C22;
+    text-transform: uppercase;
+  }
+  .manifesto span { display: block; }
+  .manifesto span.accent { color: #00A0A8; }
+
+  .bottom-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .bottom-bar .url { color: #1A1C22; font-weight: 400; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="ghost">a</div>
+
+    <div class="top-bar">
+      <span>VOLUME 00 &middot; ARRIVAL</span>
+      <div class="dots"><span class="dot cyan"></span><span class="dot amber"></span></div>
+    </div>
+
+    <div class="center">
+      <div class="wordmark-big">advnce <em>labs</em></div>
+      <div class="rule"></div>
+      <div class="manifesto">
+        <span>Precision.</span>
+        <span class="accent">Purity.</span>
+        <span>Protocol.</span>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>RESEARCH USE ONLY</span>
+      <span class="url">advncelabs.com</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -140,7 +140,8 @@ function renderCarousel(post) {
   const base = output_filename.replace(/\.png$/i, '');
   let failed = 0;
 
-  for (let slide = 1; slide <= CAROUSEL_SLIDES; slide++) {
+  const slideCount = Number.isInteger(post.slides) && post.slides > 0 ? post.slides : CAROUSEL_SLIDES;
+  for (let slide = 1; slide <= slideCount; slide++) {
     const tmpFilename = `${id}-slide${slide}.html`;
     // Inject slide param in a way the template JS picks up
     const slideHtml = html + `<script>
@@ -167,13 +168,13 @@ function renderCarousel(post) {
 
   return {
     success: failed === 0,
-    total: CAROUSEL_SLIDES,
+    total: slideCount,
     failed,
   };
 }
 
 function renderPost(post) {
-  if (post.post_type === 'stack_carousel') return renderCarousel(post);
+  if (post.post_type === 'stack_carousel' || /_carousel$/.test(post.post_type) || (Number.isInteger(post.slides) && post.slides > 1)) return renderCarousel(post);
   return renderSingle(post);
 }
 

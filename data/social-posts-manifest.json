@@ -10,10 +10,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "BPC-157",
       "TAGLINE": "The body's own repair signal, amplified.",
-      "BULLET_1": "Activates VEGFR2 + Akt/eNOS pathway \u2014 drives new blood vessel growth at injury sites.",
+      "BULLET_1": "Activates VEGFR2 + Akt/eNOS pathway — drives new blood vessel growth at injury sites.",
       "BULLET_2": "Upregulates growth hormone receptor expression in tendon fibroblasts at mRNA + protein level.",
-      "BULLET_3": "Accelerates fibroblast migration via FAK-paxillin pathway \u2014 the cells that lay down collagen scaffolding.",
-      "CITATION_SHORT": "Sikiric et al \u00b7 2010 \u00b7 PMID 20388964"
+      "BULLET_3": "Accelerates fibroblast migration via FAK-paxillin pathway — the cells that lay down collagen scaffolding.",
+      "CITATION_SHORT": "Sikiric et al · 2010 · PMID 20388964"
     }
   },
   {
@@ -27,10 +27,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Tirzepatide",
       "TAGLINE": "GLP-1 + GIP. One molecule, two receptors.",
-      "BULLET_1": "Activates both GLP-1 and GIP receptors \u2014 first dual agonist in clinical use (Mounjaro, Zepbound).",
+      "BULLET_1": "Activates both GLP-1 and GIP receptors — first dual agonist in clinical use (Mounjaro, Zepbound).",
       "BULLET_2": "Slows gastric emptying while amplifying glucose-dependent insulin secretion in the pancreas.",
-      "BULLET_3": "Activates satiety circuits in the hypothalamus \u2014 research shows up to 22.5% body weight reduction over 72 weeks (SURMOUNT-1 trial).",
-      "CITATION_SHORT": "Jastreboff et al \u00b7 2022 \u00b7 NEJM 387:205"
+      "BULLET_3": "Activates satiety circuits in the hypothalamus — research shows up to 22.5% body weight reduction over 72 weeks (SURMOUNT-1 trial).",
+      "CITATION_SHORT": "Jastreboff et al · 2022 · NEJM 387:205"
     }
   },
   {
@@ -44,10 +44,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "NAD+",
       "TAGLINE": "The cellular currency of energy and repair.",
-      "BULLET_1": "Essential coenzyme for ATP production \u2014 depletes with age, stress, and oxidative load.",
+      "BULLET_1": "Essential coenzyme for ATP production — depletes with age, stress, and oxidative load.",
       "BULLET_2": "Activates sirtuin family proteins (SIRT1, SIRT3) involved in mitochondrial biogenesis and DNA repair.",
       "BULLET_3": "Substrate for PARP enzymes that respond to DNA damage and CD38 in immune signaling.",
-      "CITATION_SHORT": "Yoshino et al \u00b7 2018 \u00b7 Cell Metab 27(3)"
+      "CITATION_SHORT": "Yoshino et al · 2018 · Cell Metab 27(3)"
     }
   },
   {
@@ -61,10 +61,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "TB-500",
       "TAGLINE": "Synthetic Thymosin Beta-4. The body's actin organizer.",
-      "BULLET_1": "Binds G-actin to regulate cytoskeletal organization \u2014 fundamental to cell migration and tissue repair.",
+      "BULLET_1": "Binds G-actin to regulate cytoskeletal organization — fundamental to cell migration and tissue repair.",
       "BULLET_2": "Promotes angiogenesis, wound healing, and reduces inflammation in animal models of injury.",
       "BULLET_3": "Often paired with BPC-157 in research stacks for synergistic recovery effects.",
-      "CITATION_SHORT": "Goldstein et al \u00b7 2012 \u00b7 Ann NY Acad Sci 1269(1)"
+      "CITATION_SHORT": "Goldstein et al · 2012 · Ann NY Acad Sci 1269(1)"
     }
   },
   {
@@ -78,10 +78,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Semaglutide",
       "TAGLINE": "The molecule that redefined obesity research.",
-      "BULLET_1": "GLP-1 receptor agonist with extended half-life (~7 days) \u2014 once-weekly dosing in clinical protocols.",
-      "BULLET_2": "Slows gastric emptying, enhances satiety, improves insulin response \u2014 multiple mechanisms reinforce each other.",
+      "BULLET_1": "GLP-1 receptor agonist with extended half-life (~7 days) — once-weekly dosing in clinical protocols.",
+      "BULLET_2": "Slows gastric emptying, enhances satiety, improves insulin response — multiple mechanisms reinforce each other.",
       "BULLET_3": "STEP-1 trial: average 14.9% body weight reduction over 68 weeks vs 2.4% placebo.",
-      "CITATION_SHORT": "Wilding et al \u00b7 2021 \u00b7 NEJM 384:989"
+      "CITATION_SHORT": "Wilding et al · 2021 · NEJM 384:989"
     }
   },
   {
@@ -96,9 +96,9 @@
       "COMPOUND_NAME": "MOTS-c",
       "TAGLINE": "A peptide encoded inside mitochondrial DNA.",
       "BULLET_1": "Mitochondrial-derived peptide that improves insulin sensitivity in animal models of metabolic stress.",
-      "BULLET_2": "Activates AMPK signaling \u2014 the cellular energy sensor \u2014 to enhance glucose homeostasis.",
+      "BULLET_2": "Activates AMPK signaling — the cellular energy sensor — to enhance glucose homeostasis.",
       "BULLET_3": "Research links MOTS-c to exercise capacity, metabolic flexibility, and age-related decline pathways.",
-      "CITATION_SHORT": "Lee et al \u00b7 2015 \u00b7 Cell Metab 21(3)"
+      "CITATION_SHORT": "Lee et al · 2015 · Cell Metab 21(3)"
     }
   },
   {
@@ -112,10 +112,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Sermorelin",
       "TAGLINE": "GHRH analog. Triggers your pituitary to do its own work.",
-      "BULLET_1": "29-amino-acid GHRH analog \u2014 same pulsatile mechanism as endogenous GH-releasing hormone.",
+      "BULLET_1": "29-amino-acid GHRH analog — same pulsatile mechanism as endogenous GH-releasing hormone.",
       "BULLET_2": "Stimulates pituitary GH release rather than supplying exogenous GH.",
       "BULLET_3": "Research has explored applications in age-related GH decline, sleep architecture, and recovery markers.",
-      "CITATION_SHORT": "Vance et al \u00b7 1985 \u00b7 NEJM 312:1483"
+      "CITATION_SHORT": "Vance et al · 1985 · NEJM 312:1483"
     }
   },
   {
@@ -128,11 +128,11 @@
     "vars": {
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "KPV",
-      "TAGLINE": "The C-terminal of \u03b1-MSH. Anti-inflammatory in three letters.",
-      "BULLET_1": "Tripeptide (Lysine-Proline-Valine) \u2014 the active C-terminal fragment of alpha-melanocyte-stimulating hormone.",
-      "BULLET_2": "Research shows downregulation of NF-\u03baB signaling \u2014 a master regulator of inflammation pathways.",
+      "TAGLINE": "The C-terminal of α-MSH. Anti-inflammatory in three letters.",
+      "BULLET_1": "Tripeptide (Lysine-Proline-Valine) — the active C-terminal fragment of alpha-melanocyte-stimulating hormone.",
+      "BULLET_2": "Research shows downregulation of NF-κB signaling — a master regulator of inflammation pathways.",
       "BULLET_3": "Animal model studies explore applications in IBD, skin healing, and inflammatory bowel research.",
-      "CITATION_SHORT": "Brzoska et al \u00b7 2008 \u00b7 Endocrinology 149(4)"
+      "CITATION_SHORT": "Brzoska et al · 2008 · Endocrinology 149(4)"
     }
   },
   {
@@ -181,7 +181,7 @@
         {
           "name": "Cagrilintide",
           "role": "Amylin analog",
-          "explainer": "Long-acting amylin agonist explored in research as a complement to GLP-1 mechanisms \u2014 different appetite pathway."
+          "explainer": "Long-acting amylin agonist explored in research as a complement to GLP-1 mechanisms — different appetite pathway."
         },
         {
           "name": "Semaglutide",
@@ -270,7 +270,7 @@
         {
           "name": "Sermorelin",
           "role": "GHRH-driven recovery",
-          "explainer": "GHRH analog that triggers nocturnal GH pulses \u2014 well-documented to align with deep-sleep architecture."
+          "explainer": "GHRH analog that triggers nocturnal GH pulses — well-documented to align with deep-sleep architecture."
         }
       ]
     }
@@ -288,12 +288,12 @@
         {
           "name": "HCG",
           "role": "LH-mimicking glycoprotein",
-          "explainer": "Activates LH receptor on Leydig cells \u2014 central to reproductive endocrinology research and HPG axis studies."
+          "explainer": "Activates LH receptor on Leydig cells — central to reproductive endocrinology research and HPG axis studies."
         },
         {
           "name": "Kisspeptin-10",
           "role": "Upstream HPG axis trigger",
-          "explainer": "KISS1 receptor agonist \u2014 the gateway peptide that initiates the cascade triggering puberty and reproductive function."
+          "explainer": "KISS1 receptor agonist — the gateway peptide that initiates the cascade triggering puberty and reproductive function."
         },
         {
           "name": "PT-141",
@@ -354,7 +354,7 @@
         {
           "name": "KPV",
           "role": "Anti-inflammatory tripeptide",
-          "explainer": "C-terminal fragment of alpha-MSH. Downregulates NF-\u03baB pathway in inflammation research models."
+          "explainer": "C-terminal fragment of alpha-MSH. Downregulates NF-κB pathway in inflammation research models."
         }
       ]
     }
@@ -368,7 +368,7 @@
     "source_compound": "BPC-157",
     "vars": {
       "QUOTE": "Stable pentadecapeptide BPC 157 promotes healing of injured ligaments in rats with a dose-dependent effect.",
-      "CITATION_FULL": "Staresinic et al \u00b7 J Orthop Res \u00b7 2003"
+      "CITATION_FULL": "Staresinic et al · J Orthop Res · 2003"
     }
   },
   {
@@ -395,7 +395,7 @@
       "PATHWAY_LABEL": "NAD+ / SIRTUIN PATHWAY",
       "EXPLAINER_TEXT": "NAD+ serves as the substrate for sirtuin deacetylases, which regulate mitochondrial biogenesis, DNA repair, and metabolic adaptation in published longevity research.",
       "DIAGRAM_SVG": "<svg viewBox=\"0 0 400 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arr\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6\" fill=\"#00A0A8\"/></marker></defs><circle cx=\"60\" cy=\"100\" r=\"32\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"60\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"13\" fill=\"#1A1C22\">NAD+</text><line x1=\"92\" y1=\"100\" x2=\"148\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr)\"/><circle cx=\"180\" cy=\"100\" r=\"32\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"11\" fill=\"#1A1C22\">SIRT1/3</text><line x1=\"212\" y1=\"100\" x2=\"268\" y2=\"100\" stroke=\"#E07C24\" stroke-width=\"2\" marker-end=\"url(#arr)\"/><circle cx=\"300\" cy=\"100\" r=\"42\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\"/><text x=\"300\" y=\"100\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"10\" fill=\"#1A1C22\">DNA Repair</text><text x=\"300\" y=\"115\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"8\" fill=\"#7A7D88\">Mito biogenesis</text></svg>",
-      "CITATION_SHORT": "Yoshino et al \u00b7 2018 \u00b7 Cell Metabolism"
+      "CITATION_SHORT": "Yoshino et al · 2018 · Cell Metabolism"
     }
   },
   {
@@ -420,7 +420,7 @@
     "source_compound": "SM5",
     "vars": {
       "QUOTE": "Once-weekly subcutaneous semaglutide plus lifestyle intervention was associated with sustained, clinically relevant reduction in body weight.",
-      "CITATION_FULL": "Wilding et al \u00b7 STEP 1 \u00b7 NEJM 384:989 \u00b7 2021"
+      "CITATION_FULL": "Wilding et al · STEP 1 · NEJM 384:989 · 2021"
     }
   },
   {
@@ -432,9 +432,9 @@
     "source_compound": "MC10",
     "vars": {
       "PATHWAY_LABEL": "MOTS-c / AMPK PATHWAY",
-      "EXPLAINER_TEXT": "MOTS-c, encoded in mitochondrial DNA, activates AMPK signaling \u2014 improving glucose uptake, metabolic flexibility, and exercise capacity in published research.",
+      "EXPLAINER_TEXT": "MOTS-c, encoded in mitochondrial DNA, activates AMPK signaling — improving glucose uptake, metabolic flexibility, and exercise capacity in published research.",
       "DIAGRAM_SVG": "<svg viewBox=\"0 0 400 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arr2\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6\" fill=\"#00A0A8\"/></marker></defs><ellipse cx=\"60\" cy=\"100\" rx=\"40\" ry=\"26\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\"/><text x=\"60\" y=\"98\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"11\" fill=\"#1A1C22\">MITO-DNA</text><text x=\"60\" y=\"112\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"9\" fill=\"#7A7D88\">MOTS-c</text><line x1=\"100\" y1=\"100\" x2=\"148\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr2)\"/><circle cx=\"180\" cy=\"100\" r=\"30\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"13\" fill=\"#1A1C22\">AMPK</text><line x1=\"210\" y1=\"100\" x2=\"258\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr2)\"/><rect x=\"262\" y=\"74\" width=\"80\" height=\"52\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\" rx=\"4\"/><text x=\"302\" y=\"96\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"10\" fill=\"#1A1C22\">Glucose uptake</text><text x=\"302\" y=\"112\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"9\" fill=\"#7A7D88\">Metabolic flex</text></svg>",
-      "CITATION_SHORT": "Lee et al \u00b7 2015 \u00b7 Cell Metabolism"
+      "CITATION_SHORT": "Lee et al · 2015 · Cell Metabolism"
     }
   },
   {
@@ -447,7 +447,7 @@
     "vars": {
       "PRINCIPLE_NUMBER": "03",
       "PRINCIPLE_TITLE": "SUPPLIER DISCIPLINE",
-      "PRINCIPLE_BODY": "We source from a vetted set of manufacturers only. Not because we couldn't find more \u2014 because maintaining a short, auditable supply chain is more important than catalog breadth for its own sake."
+      "PRINCIPLE_BODY": "We source from a vetted set of manufacturers only. Not because we couldn't find more — because maintaining a short, auditable supply chain is more important than catalog breadth for its own sake."
     }
   },
   {
@@ -459,7 +459,32 @@
     "source_compound": "LL5",
     "vars": {
       "QUOTE": "LL-37 functions at the interface of innate and adaptive immunity, with broad-spectrum antimicrobial activity and immune-modulating signaling.",
-      "CITATION_FULL": "Vandamme et al \u00b7 Cell Mol Immunol \u00b7 2012"
+      "CITATION_FULL": "Vandamme et al · Cell Mol Immunol · 2012"
     }
+  },
+  {
+    "id": "launch-01-wordmark",
+    "post_type": "wordmark_hero",
+    "output_filename": "launch-01-wordmark.png",
+    "vars": {}
+  },
+  {
+    "id": "launch-02-principles",
+    "post_type": "principles_carousel",
+    "output_filename": "launch-02-principles.png",
+    "vars": {},
+    "slides": 3
+  },
+  {
+    "id": "launch-03-positioning",
+    "post_type": "positioning_manifesto",
+    "output_filename": "launch-03-positioning.png",
+    "vars": {}
+  },
+  {
+    "id": "launch-04-receipt",
+    "post_type": "receipt_card",
+    "output_filename": "launch-04-receipt.png",
+    "vars": {}
   }
 ]

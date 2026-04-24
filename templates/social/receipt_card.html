@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>The Receipt — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .canvas {
+    width: 1080px; height: 1080px;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+  .lockup { display: flex; align-items: center; gap: 10px; }
+  .lockup svg { height: 28px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 18px; letter-spacing: 0.3em;
+    color: #1A1C22;
+    text-transform: lowercase;
+  }
+  .wordmark em { font-style: normal; color: #7A7D88; }
+
+  .content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: center;
+    padding-top: 16px;
+  }
+
+  /* LEFT: Headline stack */
+  .left .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.45em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .left .headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 112px;
+    text-transform: uppercase;
+    color: #1A1C22;
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    margin-bottom: 32px;
+  }
+  .left .headline .match { color: #00A0A8; }
+  .left .body {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.4;
+    color: #1A1C22;
+    max-width: 540px;
+  }
+
+  /* RIGHT: COA card + Vial card */
+  .right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid #E4E7EC;
+    padding: 26px 28px;
+    box-shadow: 0 20px 40px -24px rgba(26,28,34,0.25);
+  }
+  .card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.4em;
+    color: #7A7D88;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .card .big {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 30px;
+    letter-spacing: 0.12em;
+    color: #00A0A8;
+    font-weight: 400;
+    word-break: break-all;
+  }
+  .card .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #4A4F5C;
+  }
+  .card .row strong {
+    color: #1A1C22;
+    font-weight: 400;
+  }
+
+  .bracket {
+    position: relative;
+    display: inline-block;
+    padding: 4px 10px;
+  }
+  .bracket::before, .bracket::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px; background: #E07C24;
+  }
+  .bracket::before { left: 0; }
+  .bracket::after  { right: 0; }
+
+  .vial-card .label-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .vial-card .compound {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 48px;
+    text-transform: uppercase;
+    color: #1A1C22;
+    letter-spacing: -0.01em;
+    line-height: 0.9;
+  }
+  .vial-card .size {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #7A7D88;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .connector {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #00A0A8;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .connector .line {
+    flex: 1; height: 1px; background: #00A0A8; opacity: 0.5;
+  }
+
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="top-bar">
+      <div class="lockup">
+        <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+        <span class="wordmark">advnce <em>labs</em></span>
+      </div>
+      <span>THE RECEIPT</span>
+    </div>
+
+    <div class="content">
+      <div class="left">
+        <div class="eyebrow">LOT TRACEABILITY</div>
+        <div class="headline">The lot <span class="match">matches.</span></div>
+        <div class="body">Purity stated. Method documented. Batch traceable. Ask for the COA &mdash; any compound, any time.</div>
+      </div>
+
+      <div class="right">
+        <div class="card">
+          <div class="label">CERTIFICATE OF ANALYSIS</div>
+          <div class="bracket"><div class="big">LOT A240318-03</div></div>
+          <div class="row"><span>Method</span><strong>HPLC</strong></div>
+          <div class="row"><span>Purity</span><strong>99.4%</strong></div>
+          <div class="row"><span>Issued</span><strong>2026-03-18</strong></div>
+        </div>
+
+        <div class="connector">
+          <span>MATCH</span>
+          <div class="line"></div>
+        </div>
+
+        <div class="card vial-card">
+          <div class="label-row">
+            <div class="label" style="margin-bottom:0">VIAL LABEL</div>
+            <div class="size">10 mg</div>
+          </div>
+          <div class="compound">BPC-157</div>
+          <div class="row"><span>Lot</span><strong style="color:#00A0A8">A240318-03</strong></div>
+          <div class="row"><span>Store</span><strong>2–8 &deg;C</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <span>COA ON REQUEST</span>
+      <span>advncelabs.com</span>
+    </div>
+  </div>
+</body>
+</html>

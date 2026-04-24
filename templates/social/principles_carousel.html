@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>Three Principles — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .slide {
+    width: 1080px; height: 1080px;
+    padding: 80px;
+    display: none;
+    flex-direction: column;
+    position: relative;
+  }
+  .slide:first-child { display: flex; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+  .lockup { display: flex; align-items: center; gap: 10px; }
+  .lockup svg { height: 28px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 18px; letter-spacing: 0.3em;
+    color: #1A1C22;
+    text-transform: lowercase;
+  }
+  .wordmark em { font-style: normal; color: #7A7D88; }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 24px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.45em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .number-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 240px;
+    color: #00A0A8;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+  .of {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; letter-spacing: 0.4em;
+    color: #7A7D88;
+    text-transform: uppercase;
+    padding-bottom: 28px;
+  }
+
+  .principle-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 88px;
+    text-transform: uppercase;
+    color: #1A1C22;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+
+  .divider {
+    width: 80px; height: 2px; background: #E07C24;
+    margin-bottom: 28px;
+  }
+
+  .body-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 34px;
+    line-height: 1.35;
+    color: #1A1C22;
+    max-width: 860px;
+  }
+
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+  .pager { display: flex; gap: 8px; }
+  .pip { width: 28px; height: 3px; background: rgba(26,28,34,0.12); }
+  .pip.on { background: #1A1C22; }
+</style>
+</head>
+<body>
+
+<div class="slide" id="slide-1">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+      <span class="wordmark">advnce <em>labs</em></span>
+    </div>
+    <span>VOLUME 01 &middot; PRINCIPLES</span>
+  </div>
+  <div class="content">
+    <div class="eyebrow">Three principles. No exceptions.</div>
+    <div class="number-row">
+      <div class="number">01</div>
+      <div class="of">OF THREE</div>
+    </div>
+    <div class="principle-title">Documentation<br>First.</div>
+    <div class="divider"></div>
+    <div class="body-text">Every compound ships with a manufacturer Certificate of Analysis available on request. Lot numbers are traceable. Purity is stated, not assumed. If we can't document it, we don't sell it.</div>
+  </div>
+  <div class="footer-bar">
+    <div class="pager"><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div>
+    <span>SWIPE &rarr;</span>
+  </div>
+</div>
+
+<div class="slide" id="slide-2">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+      <span class="wordmark">advnce <em>labs</em></span>
+    </div>
+    <span>VOLUME 01 &middot; PRINCIPLES</span>
+  </div>
+  <div class="content">
+    <div class="eyebrow">Three principles. No exceptions.</div>
+    <div class="number-row">
+      <div class="number">02</div>
+      <div class="of">OF THREE</div>
+    </div>
+    <div class="principle-title">Research<br>Integrity.</div>
+    <div class="divider"></div>
+    <div class="body-text">We don't make health claims. We don't imply therapeutic use. Every product description uses the language of research &mdash; because that is the only honest framing for what we supply.</div>
+  </div>
+  <div class="footer-bar">
+    <div class="pager"><span class="pip"></span><span class="pip on"></span><span class="pip"></span></div>
+    <span>SWIPE &rarr;</span>
+  </div>
+</div>
+
+<div class="slide" id="slide-3">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+      <span class="wordmark">advnce <em>labs</em></span>
+    </div>
+    <span>VOLUME 01 &middot; PRINCIPLES</span>
+  </div>
+  <div class="content">
+    <div class="eyebrow">Three principles. No exceptions.</div>
+    <div class="number-row">
+      <div class="number">03</div>
+      <div class="of">OF THREE</div>
+    </div>
+    <div class="principle-title">Supplier<br>Discipline.</div>
+    <div class="divider"></div>
+    <div class="body-text">We source from a vetted set of manufacturers only. Not because we couldn't find more &mdash; because a short, auditable supply chain matters more than catalog breadth.</div>
+  </div>
+  <div class="footer-bar">
+    <div class="pager"><span class="pip"></span><span class="pip"></span><span class="pip on"></span></div>
+    <span>advncelabs.com</span>
+  </div>
+</div>
+
+</body>
+</html>

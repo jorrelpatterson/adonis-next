@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>Positioning — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .canvas {
+    width: 1080px; height: 1080px;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+  .lockup { display: flex; align-items: center; gap: 10px; }
+  .lockup svg { height: 28px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 18px; letter-spacing: 0.3em;
+    color: #1A1C22;
+    text-transform: lowercase;
+  }
+  .wordmark em { font-style: normal; color: #7A7D88; }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.45em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .statement {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 1.25;
+    color: #1A1C22;
+    margin-bottom: 32px;
+    max-width: 920px;
+  }
+  .statement strong {
+    font-style: normal;
+    font-weight: 400;
+    color: #00A0A8;
+  }
+
+  .divider {
+    width: 100px; height: 2px; background: #1A1C22;
+    margin-bottom: 40px;
+  }
+
+  .not-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .not-list .row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7A7D88;
+  }
+  .not-list .row .strike {
+    position: relative;
+    display: inline-block;
+  }
+  .not-list .row .strike::after {
+    content: '';
+    position: absolute;
+    left: -4px; right: -4px;
+    top: 50%;
+    height: 2px;
+    background: #E07C24;
+    transform: translateY(-50%);
+    opacity: 0.85;
+  }
+  .not-list .row.final {
+    color: #1A1C22;
+    font-weight: 900;
+    font-size: 32px;
+  }
+  .not-list .row.final .mark {
+    color: #00A0A8;
+  }
+  .not-list .bullet {
+    width: 10px; height: 10px; background: #E07C24;
+    display: inline-block;
+    opacity: 0.6;
+  }
+  .not-list .bullet.cyan { background: #00A0A8; opacity: 1; }
+
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="top-bar">
+      <div class="lockup">
+        <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+        <span class="wordmark">advnce <em>labs</em></span>
+      </div>
+      <span>POSITIONING</span>
+    </div>
+
+    <div class="content">
+      <div class="eyebrow">WHAT WE ARE &middot; WHAT WE AREN'T</div>
+      <div class="statement">We supply research-grade peptide compounds to qualified investigators for in-vitro laboratory research purposes. <strong>Full stop.</strong></div>
+      <div class="divider"></div>
+      <div class="not-list">
+        <div class="row"><span class="bullet"></span><span class="strike">Not a compounding pharmacy</span></div>
+        <div class="row"><span class="bullet"></span><span class="strike">Not a supplement company</span></div>
+        <div class="row"><span class="bullet"></span><span class="strike">Not a wellness brand</span></div>
+        <div class="row"><span class="bullet"></span><span class="strike">Not a TRT clinic</span></div>
+        <div class="row final"><span class="bullet cyan"></span><span class="mark">A chemical supplier.</span></div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <span>RESEARCH USE ONLY</span>
+      <span>advncelabs.com</span>
+    </div>
+  </div>
+</body>
+</html>
