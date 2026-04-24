@@ -15,6 +15,7 @@ const NAV = [
   { href: '/admin/discount-codes', label: 'Discount Codes', icon: '🎫' },
   { href: '/admin/pre-sell',     label: 'Pre-sell',     icon: '⏳' },
   { href: '/admin/invoices',     label: 'Invoices',     icon: '📄' },
+  { href: '/admin/support-tickets', label: 'Support',   icon: '💬' },
 ];
 
 export default function AdminLayout({ children }) {

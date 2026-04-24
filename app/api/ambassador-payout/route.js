@@ -69,7 +69,7 @@ export async function POST(request) {
 
       <div style="height:1px;background:#E4E7EC;margin:30px 0"></div>
 
-      <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7A7D88;line-height:1.8;margin:0">Appreciate you grinding, ${fn}. See you at the top.<br><br>&mdash; Jorrel<br>advnce labs</p>
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7A7D88;line-height:1.8;margin:0">Appreciate you grinding, ${fn}. See you at the top.<br><br>&mdash; advnce labs</p>
 
     </div>
 

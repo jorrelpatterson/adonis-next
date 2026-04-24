@@ -7,7 +7,7 @@ export async function POST(request) {
   if (!apiKey) {
     return NextResponse.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
   }
-  const adminEmail = process.env.ADMIN_EMAIL || 'jorrelpatterson@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL;
 
   try {
     const { orderId, customer, email, items, subtotal, discount, discountLabel, total, shipping } = await request.json();

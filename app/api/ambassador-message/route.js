@@ -45,7 +45,7 @@ export async function POST(request) {
 
       <div style="height:1px;background:#E4E7EC;margin:28px 0"></div>
 
-      <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7A7D88;line-height:1.8;margin:0">&mdash; Jorrel<br>advnce labs</p>
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7A7D88;line-height:1.8;margin:0">&mdash; advnce labs</p>
     </div>
 
     <div style="background:#1A1C22;padding:20px 32px;border-radius:0 0 6px 6px;text-align:center">
