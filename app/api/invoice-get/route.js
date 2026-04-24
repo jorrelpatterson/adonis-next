@@ -23,7 +23,13 @@ export async function GET(request) {
   invoice.image_url = invoice.invoice_image_path
     ? `${SUPABASE_URL}/storage/v1/object/public/invoices/${encodeURIComponent(invoice.invoice_image_path)}`
     : null;
-  invoice.public_url = `https://www.advncelabs.com/invoice/${invoice.id.slice(0, 8)}`;
+
+  // Public URL format: /invoice/<seq>-<uuid-short>
+  // Parses seq from invoice_id ("AVL-INV-0001" → "0001"). Unguessable thanks
+  // to the UUID suffix; readable thanks to the sequence number prefix.
+  const seq = invoice.invoice_id ? invoice.invoice_id.split('-').pop() : invoice.id.slice(0, 4);
+  const uuidShort = invoice.id.slice(0, 8);
+  invoice.public_url = `https://www.advncelabs.com/invoice/${seq}-${uuidShort}`;
 
   return NextResponse.json({ invoice });
 }

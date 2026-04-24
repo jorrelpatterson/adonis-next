@@ -74,9 +74,15 @@ export async function POST(request) {
   const orderId = `AVL-${new Date().getUTCFullYear()}-${invoiceId.split('-').pop()}`;
   const issuedAt = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
+  // URL tail = <seq>-<uuid-short>. Parses the trailing sequence number from
+  // invoice_id ("AVL-INV-0001" → "0001") and suffixes 8 chars of the UUID.
+  // Readable on the customer's end ("invoice 0001") + unguessable.
+  const seq = invoiceId.split('-').pop();
+  const urlTail = `${seq}-${uuid.slice(0, 8)}`;
+
   const png = await renderInvoicePng({
     invoice_id: invoiceId,
-    uuid_short: uuid.slice(0, 8),
+    url_tail: urlTail,
     issued_at: issuedAt,
     customer: {
       name: customer.name,
