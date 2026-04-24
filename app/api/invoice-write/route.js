@@ -5,6 +5,22 @@ import { renderInvoicePng } from '../../../lib/invoiceImage';
 import { randomUUID } from 'node:crypto';
 
 export async function POST(request) {
+  try {
+    return await handleCreate(request);
+  } catch (err) {
+    console.error('invoice-write error:', err);
+    return NextResponse.json(
+      {
+        error: 'create failed: ' + (err?.message || String(err)),
+        name: err?.name,
+        stack: (err?.stack || '').split('\n').slice(0, 6),
+      },
+      { status: 500 },
+    );
+  }
+}
+
+async function handleCreate(request) {
   const unauth = requireAdmin(request); if (unauth) return unauth;
 
   const body = await request.json().catch(() => ({}));
