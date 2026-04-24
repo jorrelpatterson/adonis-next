@@ -280,7 +280,7 @@ export default function NewInvoicePage() {
         <div style={{ display: 'flex', gap: 10 }}>
           <button style={{ ...cs.btn, ...cs.btnSecondary }} onClick={() => router.push('/admin/invoices')}>Cancel</button>
           <button style={{ ...cs.btn, ...cs.btnPrimary }} onClick={submit} disabled={saving}>
-            {saving ? 'Creating…' : 'Create & send'}
+            {saving ? 'Creating…' : 'Create invoice'}
           </button>
         </div>
       </div>
