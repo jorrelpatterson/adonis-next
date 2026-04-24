@@ -54,7 +54,7 @@ export async function POST(request) {
   const unauth = requireAdmin(request); if (unauth) return unauth;
 
   const body = await request.json().catch(() => ({}));
-  const { id, status, tracking_number, tracking_carrier } = body;
+  const { id, status, tracking_number, tracking_carrier, notify_email } = body;
   if (!id || !status) return NextResponse.json({ error: 'id + status required' }, { status: 400 });
 
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -132,10 +132,13 @@ export async function POST(request) {
     }
   }
 
-  // Customer emails — skip if email is a placeholder (invoice had no real customer email)
+  // Customer emails — require explicit opt-in AND a real email address.
+  // Admin picks per-transition whether to email, so text-first workflows don't
+  // accidentally double-notify. No opt-in = no email, full stop.
   const hasRealEmail = inv.email && !inv.email.endsWith('@invoice.local');
+  const shouldEmail = hasRealEmail && notify_email === true;
   const publicUrl = `https://www.advncelabs.com/invoice/${inv.id.slice(0, 8)}`;
-  if (status === 'shipped' && hasRealEmail) {
+  if (status === 'shipped' && shouldEmail) {
     try {
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -157,7 +160,7 @@ export async function POST(request) {
       console.error('ship email error:', e);
     }
   }
-  if (status === 'cancelled' && hasRealEmail) {
+  if (status === 'cancelled' && shouldEmail) {
     try {
       await fetch('https://api.resend.com/emails', {
         method: 'POST',

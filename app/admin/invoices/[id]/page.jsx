@@ -91,18 +91,31 @@ export default function InvoiceDetail() {
     else alert('Error: ' + (body.error || r.status));
   }
 
+  const hasRealEmail = inv?.email && !inv.email.endsWith('@invoice.local');
+
   async function markShipped() {
     const tn = prompt('Tracking number (leave blank for "shipped without tracking"):');
     if (tn === null) return;
     const carrier = tn
       ? (prompt('Carrier? usps / ups / fedex / dhl', 'usps') || 'usps').toLowerCase()
       : null;
-    transition('shipped', { tracking_number: tn || null, tracking_carrier: carrier });
+    // Only ask about emailing if we actually have a real email on file
+    const notify_email = hasRealEmail && confirm(
+      `Auto-email ${inv.email} with the tracking info?\n\n` +
+      `OK = send the shipping email.\n` +
+      `Cancel = don't email (you'll text them the update).`,
+    );
+    transition('shipped', { tracking_number: tn || null, tracking_carrier: carrier, notify_email });
   }
 
-  function cancelInvoice() {
+  async function cancelInvoice() {
     if (!confirm('Cancel this invoice? If already paid, stock will be restored.')) return;
-    transition('cancelled');
+    const notify_email = hasRealEmail && confirm(
+      `Auto-email ${inv.email} the apology + refund-vs-credit prompt?\n\n` +
+      `OK = send the apology email.\n` +
+      `Cancel = don't email (you'll text them the update).`,
+    );
+    transition('cancelled', { notify_email });
   }
 
   function copyToClipboard(text) {
