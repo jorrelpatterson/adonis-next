@@ -9,3 +9,4 @@ next-env.d.ts
 # macOS AppleDouble / resource fork files
 ._*
 .DS_Store
+.superpowers/
