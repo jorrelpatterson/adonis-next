@@ -98,14 +98,26 @@ export async function POST(request) {
   });
 
   const objectPath = `${invoiceId}.png`;
-  const upRes = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/invoices/${encodeURIComponent(objectPath)}`,
-    {
-      method: 'POST',
-      headers: { ...headers, 'Content-Type': 'image/png', 'x-upsert': 'true' },
-      body: png,
+  const objectUrl = `${SUPABASE_URL}/storage/v1/object/invoices/${encodeURIComponent(objectPath)}`;
+
+  // Delete first (ignore 404) then POST fresh. `x-upsert: true` on POST was
+  // observed to silently no-op in prod — this belt-and-suspenders approach
+  // guarantees the new bytes land.
+  await fetch(objectUrl, {
+    method: 'DELETE',
+    headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
+  }).catch(() => {});
+
+  const upRes = await fetch(objectUrl, {
+    method: 'POST',
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      'Content-Type': 'image/png',
+      'x-upsert': 'true',
     },
-  );
+    body: png,
+  });
   if (!upRes.ok) {
     return NextResponse.json({ error: 'image upload failed: ' + (await upRes.text()) }, { status: 500 });
   }
