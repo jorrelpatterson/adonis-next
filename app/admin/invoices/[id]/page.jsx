@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const cs = {
-  wrap: { padding: 28, flex: 1, maxWidth: 1100 },
+  wrap: { flex: 1, maxWidth: 1100 },
   h1: { fontSize: 28, fontWeight: 700, color: '#0F1928', fontFamily: "'Barlow Condensed',sans-serif", marginBottom: 2 },
   sub: { fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#7A7D88', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 20 },
   twoCol: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 },
@@ -136,15 +136,15 @@ export default function InvoiceDetail() {
   return (
     <div style={cs.wrap}>
       <Link href="/admin/invoices" style={{ fontSize: 11, color: '#7A7D88', textDecoration: 'none', fontFamily: 'monospace', letterSpacing: 1 }}>← BACK</Link>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 12, gap: 12, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={cs.h1}>{inv.invoice_id}</h1>
-          <div style={cs.sub}>Created {new Date(inv.created_at).toLocaleString()}</div>
+          <h1 className="admin-page-h1" style={cs.h1}>{inv.invoice_id}</h1>
+          <div className="admin-page-sub" style={cs.sub}>Created {new Date(inv.created_at).toLocaleString()}</div>
         </div>
         <span style={{ ...cs.pill, background: sc.bg, color: sc.fg }}>{inv.status}</span>
       </div>
 
-      <div style={cs.twoCol}>
+      <div className="admin-split" style={cs.twoCol}>
         <div>
           <div style={cs.section}>
             <div style={cs.label}>Invoice image</div>

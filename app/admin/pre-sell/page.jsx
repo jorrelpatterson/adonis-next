@@ -89,9 +89,9 @@ export default function PreSellPage() {
   const totalRevenue = queue.reduce((s, g) => s + g.queued_revenue_cents, 0) / 100;
 
   return (
-    <div style={{ padding: 28, flex: 1 }}>
-      <h1 style={cs.h1}>Pre-sell Queue</h1>
-      <div style={cs.sub}>OOS orders awaiting vendor PO</div>
+    <div style={{ flex: 1 }}>
+      <h1 className="admin-page-h1" style={cs.h1}>Pre-sell Queue</h1>
+      <div className="admin-page-sub" style={cs.sub}>OOS orders awaiting vendor PO</div>
 
       {loading && <div style={cs.empty}>Loading…</div>}
       {error && <div style={{ ...cs.empty, color: '#DC2626' }}>Error: {error}</div>}
@@ -102,25 +102,26 @@ export default function PreSellPage() {
 
       {!loading && !error && queue.length > 0 && (
         <>
-          <div style={{ display: 'flex', gap: 16, marginBottom: 4 }}>
+          <div className="admin-tile-row" style={{ marginBottom: 4 }}>
             <div style={cs.tile}>
-              <div style={cs.tileLabel}>Open pre-orders</div>
-              <div style={{ ...cs.tileVal, color: '#00A0A8' }}>{totalOrders}</div>
+              <div className="admin-tile-label" style={cs.tileLabel}>Open pre-orders</div>
+              <div className="admin-tile-val" style={{ ...cs.tileVal, color: '#00A0A8' }}>{totalOrders}</div>
             </div>
             <div style={cs.tile}>
-              <div style={cs.tileLabel}>Units queued</div>
-              <div style={cs.tileVal}>{totalUnits}</div>
+              <div className="admin-tile-label" style={cs.tileLabel}>Units queued</div>
+              <div className="admin-tile-val" style={cs.tileVal}>{totalUnits}</div>
             </div>
             <div style={cs.tile}>
-              <div style={cs.tileLabel}>Revenue queued</div>
-              <div style={cs.tileVal}>${totalRevenue.toFixed(2)}</div>
+              <div className="admin-tile-label" style={cs.tileLabel}>Revenue queued</div>
+              <div className="admin-tile-val" style={cs.tileVal}>${totalRevenue.toFixed(2)}</div>
             </div>
             <div style={cs.tile}>
-              <div style={cs.tileLabel}>Unique SKUs</div>
-              <div style={cs.tileVal}>{queue.length}</div>
+              <div className="admin-tile-label" style={cs.tileLabel}>Unique SKUs</div>
+              <div className="admin-tile-val" style={cs.tileVal}>{queue.length}</div>
             </div>
           </div>
 
+          <div className="admin-table-scroll">
           <table style={cs.table}>
             <thead>
               <tr>
@@ -162,6 +163,7 @@ export default function PreSellPage() {
               })}
             </tbody>
           </table>
+          </div>
         </>
       )}
     </div>

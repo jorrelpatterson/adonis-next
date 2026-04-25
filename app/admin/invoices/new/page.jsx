@@ -11,11 +11,11 @@ const cs = {
   section: { background: '#fff', border: '1px solid #E4E7EC', borderRadius: 8, padding: 20, marginBottom: 16 },
   label: { fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: '#7A7D88', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6, display: 'block' },
   input: { width: '100%', padding: '9px 12px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 13, background: '#FAFBFC', outline: 'none', fontFamily: 'inherit' },
-  row:   { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 12 },
+  row:   { display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 12, marginBottom: 12 },
   btn:   { padding: '10px 18px', border: 'none', borderRadius: 4, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: 1, textTransform: 'uppercase' },
   btnPrimary: { background: '#00A0A8', color: '#fff' },
   btnSecondary: { background: '#fff', color: '#0F1928', border: '1px solid #E4E7EC' },
-  itemRow: { display: 'grid', gridTemplateColumns: '1fr 80px 110px 110px 30px', gap: 8, alignItems: 'center', padding: '8px 0', borderTop: '1px solid #F3F4F6' },
+  itemRow: { display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 70px 90px 90px 26px', gap: 8, alignItems: 'center', padding: '8px 0', borderTop: '1px solid #F3F4F6' },
   removeBtn: { background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', fontSize: 18, lineHeight: 1 },
   search: { position: 'relative' },
   results: { position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, background: '#fff', border: '1px solid #E4E7EC', borderRadius: 4, maxHeight: 280, overflow: 'auto', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.06)' },
@@ -121,11 +121,11 @@ export default function NewInvoicePage() {
   }
 
   return (
-    <div style={{ padding: 28, flex: 1, maxWidth: 900 }}>
-      <h1 style={cs.h1}>New Invoice</h1>
+    <div className="admin-form-grid" style={{ flex: 1, maxWidth: 900, display: 'block' }}>
+      <h1 className="admin-page-h1" style={cs.h1}>New Invoice</h1>
 
       <div style={cs.section}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
           <div style={cs.label}>Customer</div>
           <button
             style={{ ...cs.btn, ...cs.btnSecondary, padding: '5px 12px', fontSize: 10 }}
@@ -134,7 +134,7 @@ export default function NewInvoicePage() {
             Pick past customer
           </button>
         </div>
-        <div style={cs.row}>
+        <div className="admin-form-grid admin-form-grid-4" style={cs.row}>
           <div style={{ gridColumn: 'span 2' }}>
             <label style={cs.label}>Name</label>
             <input style={cs.input} value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} />
@@ -152,7 +152,7 @@ export default function NewInvoicePage() {
           <label style={cs.label}>Address</label>
           <input style={cs.input} value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} />
         </div>
-        <div style={cs.row}>
+        <div className="admin-form-grid admin-form-grid-4" style={cs.row}>
           <div style={{ gridColumn: 'span 2' }}>
             <label style={cs.label}>City</label>
             <input style={cs.input} value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} />
@@ -230,7 +230,7 @@ export default function NewInvoicePage() {
 
       <div style={cs.section}>
         <div style={cs.label}>Discount (optional)</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div className="admin-form-grid admin-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div>
             <label style={cs.label}>% off</label>
             <input style={cs.input} type="number" min="0" max="100" placeholder="e.g. 10" value={discountPct} onChange={(e) => setDiscountPct(e.target.value)} />
@@ -271,13 +271,13 @@ export default function NewInvoicePage() {
         </div>
       )}
 
-      <div style={{ ...cs.section, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ ...cs.section, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <div style={{ fontSize: 13, color: '#7A7D88' }}>Subtotal: ${subtotal.toFixed(2)}</div>
           {discountApplied > 0 && <div style={{ fontSize: 13, color: '#E07C24' }}>Discount: −${discountApplied.toFixed(2)}</div>}
           <div style={{ fontSize: 22, fontWeight: 700, color: '#00A0A8', fontFamily: 'monospace' }}>${total.toFixed(2)}</div>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button style={{ ...cs.btn, ...cs.btnSecondary }} onClick={() => router.push('/admin/invoices')}>Cancel</button>
           <button style={{ ...cs.btn, ...cs.btnPrimary }} onClick={submit} disabled={saving}>
             {saving ? 'Creating…' : 'Create invoice'}

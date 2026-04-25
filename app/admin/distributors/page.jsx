@@ -110,9 +110,9 @@ export default function DistributorsPage() {
 
   return (
     <div>
-      <h1 style={cs.h1}>Distributors</h1>
+      <h1 className="admin-page-h1" style={cs.h1}>Distributors</h1>
       <p style={{color:'#8C919E',fontSize:14,marginBottom:24}}>{distributors.length} applications · {approved} approved · {pending} pending</p>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+      <div className="admin-tile-row" style={{marginBottom:24}}>
         {[
           {l:'Total Applications',v:distributors.length,c:'#0F1928'},
           {l:'Approved',v:approved,c:'#22C55E'},
@@ -125,9 +125,9 @@ export default function DistributorsPage() {
           </div>
         ))}
       </div>
-      <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
-        <input style={{...cs.input,width:260}} placeholder="Search business, email, contact..." value={search} onChange={e=>setSearch(e.target.value)} />
-        <div style={{display:'flex',gap:4}}>
+      <div className="admin-filter-row" style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
+        <input style={{...cs.input,flex:'1 1 220px',minWidth:0,maxWidth:280}} placeholder="Search business, email, contact..." value={search} onChange={e=>setSearch(e.target.value)} />
+        <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
           {['all',...Object.keys(STATUS_COLOR)].map(s=>(
             <button key={s} onClick={()=>setFilter(s)} style={{...cs.btn,padding:'6px 12px',fontSize:11,background:filterStatus===s?'#0072B5':'#F7F8FA',color:filterStatus===s?'#fff':'#6B7A94',border:'1px solid '+(filterStatus===s?'#0072B5':'#E4E7EC')}}>{s==='all'?'All':STATUS_COLOR[s].label}</button>
           ))}
@@ -142,9 +142,9 @@ export default function DistributorsPage() {
           const form = approveForm[dist.id] || {};
           const isApproved = dist.status === 'approved';
           return (
-            <div key={dist.id} style={{...cs.card,border:dist.status==='pending'?'1px solid #FCD34D':'1px solid #E4E7EC'}}>
-              <div onClick={()=>setExpanded(ie?null:dist.id)} style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <div style={{display:'flex',gap:20,alignItems:'center'}}>
+            <div key={dist.id} className="admin-row-card" style={{...cs.card,border:dist.status==='pending'?'1px solid #FCD34D':'1px solid #E4E7EC'}}>
+              <div onClick={()=>setExpanded(ie?null:dist.id)} className="admin-row-head" style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+                <div style={{display:'flex',gap:20,alignItems:'center',flexWrap:'wrap',minWidth:0}}>
                   <div style={{width:36,height:36,borderRadius:8,background:'#F0FDF4',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,color:'#22C55E',flexShrink:0}}>{(dist.business_name||'?').charAt(0).toUpperCase()}</div>
                   <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{dist.business_name}</div><div style={{fontSize:11,color:'#8C919E'}}>{dist.contact_name} · {dist.email}</div></div>
                   <span style={{fontSize:10,color:'#8C919E',background:'#F7F8FA',padding:'2px 8px',borderRadius:4}}>{dist.market}</span>
@@ -159,7 +159,7 @@ export default function DistributorsPage() {
               </div>
               {ie && (
                 <div style={{padding:'0 20px 20px',borderTop:'1px solid #F0F1F4'}}>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:16}}>
+                  <div className="admin-split" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:16}}>
                     <div>
                       <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:12}}>Application Details</div>
                       {[{l:'Business',v:dist.business_name},{l:'Contact',v:dist.contact_name},{l:'Email',v:dist.email},{l:'Phone',v:dist.phone},{l:'Market',v:dist.market},{l:'Expected Vol.',v:dist.expected_volume+'+ vials/mo'},{l:'Website',v:dist.website||'—'}].map((x,i)=>(

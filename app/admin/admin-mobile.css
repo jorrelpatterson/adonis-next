@@ -1,0 +1,345 @@
+/* Admin portal mobile optimizations.
+ *
+ * Strategy: existing pages use heavy inline styles which can't be media-queried
+ * directly. This file targets utility classes added alongside those styles, and
+ * uses !important sparingly to override inline styles when the viewport
+ * crosses the breakpoint.
+ *
+ * Breakpoints:
+ *   Tablet down: <= 1024px
+ *   Mobile:      <= 768px
+ *   Tiny:        <= 480px
+ */
+
+/* ===========================================================================
+ * 1. LAYOUT — sidebar becomes a slide-in drawer on mobile
+ * ========================================================================= */
+
+.admin-mobile-topbar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #0F1928;
+  color: #fff;
+  padding: 10px 14px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-mobile-topbar .admin-mobile-hamburger {
+  background: none;
+  border: none;
+  color: #E8D5B7;
+  font-size: 22px;
+  padding: 6px 10px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.admin-mobile-topbar-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.admin-drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 60;
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 768px) {
+  .admin-mobile-topbar { display: flex; }
+  .admin-drawer-backdrop.open { display: block; }
+
+  /* Sidebar becomes off-canvas drawer */
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 260px !important;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease-out;
+    z-index: 70;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  }
+  .admin-sidebar.open { transform: translateX(0); }
+
+  /* Main content fills full width on mobile */
+  .admin-main {
+    padding: 16px 14px !important;
+  }
+}
+
+/* ===========================================================================
+ * 2. PAGE WRAPPERS — typography + spacing scale on mobile
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-page-h1 {
+    font-size: 22px !important;
+  }
+  .admin-page-sub {
+    font-size: 9px !important;
+    margin-bottom: 16px !important;
+  }
+}
+
+/* ===========================================================================
+ * 3. KPI TILE ROW — collapses to 2-col then 1-col
+ * ========================================================================= */
+
+.admin-tile-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.admin-tile-row > * {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-tile-row {
+    gap: 10px !important;
+  }
+  .admin-tile-row > * {
+    flex: 1 1 calc(50% - 5px) !important;
+    padding: 12px 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-tile-row > * {
+    flex: 1 1 100% !important;
+  }
+}
+
+/* ===========================================================================
+ * 4. TABLES — horizontal scroll wrapper for any table on mobile
+ * ========================================================================= */
+
+.admin-table-scroll {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .admin-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Subtle gradient hint that there's more to scroll */
+    background-image:
+      linear-gradient(to right, white 30%, rgba(255, 255, 255, 0)),
+      linear-gradient(to left, white 30%, rgba(255, 255, 255, 0));
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: 24px 100%, 24px 100%;
+    background-attachment: local, local;
+  }
+  .admin-table-scroll table {
+    min-width: 720px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-table-scroll table th,
+  .admin-table-scroll table td {
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ===========================================================================
+ * 5. FORM GRIDS — stack columns on mobile
+ * ========================================================================= */
+
+.admin-form-grid {
+  display: grid;
+  gap: 12px;
+}
+.admin-form-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.admin-form-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.admin-form-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+  .admin-form-grid-2,
+  .admin-form-grid-3,
+  .admin-form-grid-4 {
+    grid-template-columns: 1fr !important;
+  }
+  .admin-form-grid input[type="text"],
+  .admin-form-grid input[type="email"],
+  .admin-form-grid input[type="number"],
+  .admin-form-grid input[type="tel"],
+  .admin-form-grid input[type="search"],
+  .admin-form-grid select,
+  .admin-form-grid textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important; /* prevents iOS zoom on focus */
+  }
+}
+
+/* ===========================================================================
+ * 6. INPUTS — prevent iOS zoom-on-focus everywhere on mobile
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-main input[type="text"],
+  .admin-main input[type="email"],
+  .admin-main input[type="password"],
+  .admin-main input[type="tel"],
+  .admin-main input[type="number"],
+  .admin-main input[type="search"],
+  .admin-main input[type="url"],
+  .admin-main select,
+  .admin-main textarea {
+    font-size: 16px !important;
+    max-width: 100%;
+  }
+}
+
+/* ===========================================================================
+ * 7. BUTTONS — touch target minimums on mobile
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-main button,
+  .admin-main a.admin-btn {
+    min-height: 40px;
+    line-height: 1.2;
+  }
+  /* Compact buttons that don't need 40px minimum */
+  .admin-main button.admin-btn-compact,
+  .admin-main .admin-btn-compact button {
+    min-height: 28px;
+  }
+}
+
+/* ===========================================================================
+ * 8. FILTER ROWS — wrap and shrink button text
+ * ========================================================================= */
+
+.admin-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .admin-filter-row > button {
+    flex: 1 1 auto;
+    font-size: 10px !important;
+    padding: 8px 10px !important;
+  }
+}
+
+/* ===========================================================================
+ * 9. ROW CARDS — used by support-tickets, orders accordion, ambassadors, etc.
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-row-card {
+    padding: 14px 16px !important;
+  }
+  .admin-row-head {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+  .admin-row-head > * {
+    flex: 0 0 auto !important;
+  }
+  .admin-row-actions {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  .admin-row-actions > a,
+  .admin-row-actions > button {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* ===========================================================================
+ * 10. MODALS — full-screen on mobile
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-modal {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    inset: 0 !important;
+    margin: 0 !important;
+  }
+  .admin-modal-body {
+    padding: 16px !important;
+  }
+}
+
+/* ===========================================================================
+ * 11. SPLIT VIEWS — stack on mobile (orders details, invoice details, etc.)
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-split {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .admin-split > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ===========================================================================
+ * 12. TABS — horizontal scroll on mobile rather than wrap
+ * ========================================================================= */
+
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .admin-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+    white-space: nowrap;
+    padding-bottom: 4px;
+  }
+  .admin-tabs > button,
+  .admin-tabs > a {
+    flex-shrink: 0;
+  }
+}
+
+/* ===========================================================================
+ * 13. UTILITIES — hide on mobile / desktop only
+ * ========================================================================= */
+
+@media (max-width: 768px) {
+  .admin-hide-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .admin-show-mobile-only { display: none !important; }
+}
+
+/* Tighter type for KPI tiles on mobile */
+@media (max-width: 480px) {
+  .admin-tile-val { font-size: 18px !important; }
+  .admin-tile-label { font-size: 8px !important; }
+}

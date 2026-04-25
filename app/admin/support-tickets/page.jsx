@@ -97,11 +97,11 @@ export default function SupportTicketsPage() {
   const resolvedCount = counts.resolved || 0;
 
   return (
-    <div style={{ padding: 28, flex: 1 }}>
-      <h1 style={cs.h1}>Support Tickets</h1>
-      <div style={cs.sub}>Chat escalations from advncelabs.com</div>
+    <div style={{ flex: 1 }}>
+      <h1 className="admin-page-h1" style={cs.h1}>Support Tickets</h1>
+      <div className="admin-page-sub" style={cs.sub}>Chat escalations from advncelabs.com</div>
 
-      <div style={cs.filterRow}>
+      <div className="admin-filter-row" style={cs.filterRow}>
         {['open', 'in_progress', 'resolved', 'all'].map((s) => (
           <button key={s} style={cs.filterBtn(filter === s)} onClick={() => setFilter(s)}>
             {s.replace('_', ' ')}
@@ -127,8 +127,8 @@ export default function SupportTicketsPage() {
             const isExp = !!expanded[t.id];
             const hasTranscript = Array.isArray(t.chat_transcript) && t.chat_transcript.length > 0;
             return (
-              <div key={t.id} style={cs.row}>
-                <div style={cs.rowHead}>
+              <div key={t.id} className="admin-row-card" style={cs.row}>
+                <div className="admin-row-head" style={cs.rowHead}>
                   <div>
                     <div style={cs.who}>{t.name}</div>
                     <a href={`mailto:${t.email}?subject=Re: your message to advnce labs`} style={cs.email}>{t.email}</a>
@@ -167,7 +167,7 @@ export default function SupportTicketsPage() {
                   </>
                 )}
 
-                <div style={cs.actions}>
+                <div className="admin-row-actions" style={cs.actions}>
                   <a
                     href={`mailto:${t.email}?subject=Re: your message to advnce labs&body=Hi ${t.name.split(' ')[0] || ''},%0A%0A`}
                     style={{ ...cs.btn, ...cs.btnCyan, textDecoration: 'none' }}

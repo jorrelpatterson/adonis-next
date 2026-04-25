@@ -100,10 +100,10 @@ export default function MarketingHub() {
 
   return (
     <div>
-      <h1 style={s.h1}>Marketing</h1>
+      <h1 className="admin-page-h1" style={s.h1}>Marketing</h1>
       <p style={s.sub}>{loading ? 'Loading…' : `${stats.posts.total} posts · ${stats.ambassadors.total} ambassadors · ${stats.subs.total} subscribers`} · advnce labs</p>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:16, marginBottom:32 }}>
+      <div className="admin-tile-row" style={{ marginBottom:32 }}>
         {cards.map((c, i) => {
           const Card = c.soon ? 'div' : Link;
           return (
@@ -126,7 +126,7 @@ export default function MarketingHub() {
       {stats.upcoming.length > 0 && (
         <>
           <div style={s.sectionLabel}>Next up</div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12 }}>
+          <div className="admin-tile-row">
             {stats.upcoming.map((p, i) => (
               <Link key={i} href="/admin/marketing/content" style={{ ...s.card, padding:16 }}>
                 <div style={{ fontSize:10, color:'#8C919E', letterSpacing:1, textTransform:'uppercase', marginBottom:4 }}>{p.post_type.replace(/_/g,' ')}</div>

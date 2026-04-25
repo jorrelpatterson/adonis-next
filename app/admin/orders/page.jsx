@@ -96,9 +96,9 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <h1 style={cs.h1}>advnce labs Orders</h1>
+      <h1 className="admin-page-h1" style={cs.h1}>advnce labs Orders</h1>
       <p style={{color:'#8C919E',fontSize:14,marginBottom:24}}>{orders.length} orders · ${totalRevenue.toLocaleString('en-US',{minimumFractionDigits:2})} revenue · <span style={{color:'#22C55E'}}>Live</span></p>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+      <div className="admin-tile-row" style={{marginBottom:24}}>
         {[
           {l:'Total Orders',v:orders.length,c:'#0F1928'},
           {l:'Revenue',v:'$'+totalRevenue.toLocaleString('en-US',{minimumFractionDigits:2}),c:'#22C55E'},
@@ -106,14 +106,14 @@ export default function OrdersPage() {
           {l:'Avg Order',v:'$'+(orders.length>0?Math.round(totalRevenue/orders.length):0),c:'#0072B5'},
         ].map((x,i)=>(
           <div key={i} style={{...cs.card,padding:16}}>
-            <div style={{fontSize:22,fontWeight:700,color:x.c,fontFamily:"'Barlow Condensed'"}}>{x.v}</div>
-            <div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginTop:2}}>{x.l}</div>
+            <div className="admin-tile-val" style={{fontSize:22,fontWeight:700,color:x.c,fontFamily:"'Barlow Condensed'"}}>{x.v}</div>
+            <div className="admin-tile-label" style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginTop:2}}>{x.l}</div>
           </div>
         ))}
       </div>
       <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
-        <input style={{...cs.input,width:260}} placeholder="Search by name, email, order ID..." value={search} onChange={e=>setSearch(e.target.value)} />
-        <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
+        <input style={{...cs.input,flex:'1 1 240px',minWidth:0}} placeholder="Search by name, email, order ID..." value={search} onChange={e=>setSearch(e.target.value)} />
+        <div className="admin-filter-row" style={{display:'flex',gap:4,flexWrap:'wrap',marginBottom:0}}>
           {['all',...Object.keys(STATUS)].map(s=>(
             <button key={s} onClick={()=>setFilter(s)} style={{...cs.btn,padding:'6px 12px',fontSize:11,background:filterStatus===s?'#0072B5':'#F7F8FA',color:filterStatus===s?'#fff':'#6B7A94',border:'1px solid '+(filterStatus===s?'#0072B5':'#E4E7EC')}}>{s==='all'?'All':STATUS[s].label}</button>
           ))}
@@ -129,9 +129,9 @@ export default function OrdersPage() {
             const items = Array.isArray(order.items) ? order.items : [];
             const customerName = `${order.first_name||''} ${order.last_name||''}`.trim();
             return (
-              <div key={order.order_id} style={{...cs.card,border:order.price_mismatch?'1px solid #FCA5A5':'1px solid #E4E7EC'}}>
-                <div onClick={()=>setExpanded(ie?null:order.order_id)} style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div style={{display:'flex',gap:20,alignItems:'center'}}>
+              <div key={order.order_id} className="admin-row-card" style={{...cs.card,border:order.price_mismatch?'1px solid #FCA5A5':'1px solid #E4E7EC',padding:0}}>
+                <div onClick={()=>setExpanded(ie?null:order.order_id)} className="admin-row-head" style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+                  <div style={{display:'flex',gap:20,alignItems:'center',flexWrap:'wrap',minWidth:0}}>
                     <div style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:500,color:'#0072B5',minWidth:160}}>{order.order_id}</div>
                     <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{customerName}</div><div style={{fontSize:11,color:'#8C919E'}}>{order.email}</div></div>
                     {order.price_mismatch && <span style={{fontSize:10,background:'#FEF2F2',color:'#EF4444',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⚠ Price mismatch</span>}
@@ -149,7 +149,7 @@ export default function OrdersPage() {
                 </div>
                 {ie && (
                   <div style={{padding:'0 20px 20px',borderTop:'1px solid #F0F1F4'}}>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:16}}>
+                    <div className="admin-split" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:16}}>
                       <div>
                         <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Items</div>
                         {items.map((item,i)=>(

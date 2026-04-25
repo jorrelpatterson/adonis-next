@@ -79,9 +79,9 @@ export default function DiscountCodesPage() {
 
   return (
     <div>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20,gap:12,flexWrap:'wrap'}}>
         <div>
-          <h1 style={cs.h1}>Discount Codes</h1>
+          <h1 className="admin-page-h1" style={cs.h1}>Discount Codes</h1>
           <p style={{color:'#8C919E',fontSize:13,marginTop:4}}>{codes.length} codes · {codes.filter(c=>c.active).length} active · {codes.reduce((s,c)=>s+(c.used_count||0),0)} total uses</p>
           <p style={{color:'#A0A4AE',fontSize:11,marginTop:6}}>Standalone promo codes. (Ambassador codes are managed on the Ambassadors page; they auto-give 15% off to first-time customers.)</p>
         </div>
@@ -91,7 +91,7 @@ export default function DiscountCodesPage() {
       {showAdd && (
         <div style={{...cs.card, padding:20, marginBottom:20}}>
           <div style={{fontSize:14,fontWeight:700,color:'#0F1928',marginBottom:14}}>New Discount Code</div>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
+          <div className="admin-form-grid admin-form-grid-4" style={{display:'grid',gridTemplateColumns:'repeat(4,minmax(0,1fr))',gap:10}}>
             <div><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>Code (UPPERCASE)</label><input style={{...cs.input,textTransform:'uppercase'}} value={newC.code} onChange={e=>setNewC(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="LAUNCH25"/></div>
             <div><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>Type</label><select style={cs.input} value={newC.type} onChange={e=>setNewC(p=>({...p,type:e.target.value}))}><option value="percent">% off</option><option value="fixed">$ off</option></select></div>
             <div><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>Amount {newC.type==='percent'?'(%)':'($)'}</label><input style={cs.input} type="number" step="0.01" value={newC.amount} onChange={e=>setNewC(p=>({...p,amount:e.target.value}))} placeholder={newC.type==='percent'?'25':'10.00'}/></div>
@@ -108,16 +108,16 @@ export default function DiscountCodesPage() {
         </div>
       )}
 
-      <div style={{display:'flex',gap:12,marginBottom:14,flexWrap:'wrap'}}>
-        <input style={{...cs.input,maxWidth:280}} placeholder="Search code or notes..." value={search} onChange={e=>setSearch(e.target.value)}/>
-        <div style={{display:'flex',gap:4}}>
+      <div className="admin-filter-row" style={{display:'flex',gap:12,marginBottom:14,flexWrap:'wrap'}}>
+        <input style={{...cs.input,flex:'1 1 200px',minWidth:0,maxWidth:280}} placeholder="Search code or notes..." value={search} onChange={e=>setSearch(e.target.value)}/>
+        <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
           {[{k:'all',l:'All'},{k:'active',l:'Active'},{k:'inactive',l:'Inactive'}].map(f => (
             <button key={f.k} onClick={()=>setFilter(f.k)} style={{...cs.btn, padding:'6px 12px', fontSize:11, background:filter===f.k?'#0072B5':'#F7F8FA', color:filter===f.k?'#fff':'#6B7A94', border:'1px solid '+(filter===f.k?'#0072B5':'#E4E7EC')}}>{f.l}</button>
           ))}
         </div>
       </div>
 
-      <div style={{...cs.card, overflowX:'auto'}}>
+      <div className="admin-table-scroll" style={{...cs.card, overflowX:'auto'}}>
         <table style={{width:'100%', borderCollapse:'collapse', fontSize:13}}>
           <thead><tr style={{background:'#F7F8FA'}}>
             {['Code','Type','Amount','Used','Limit','Min order','Max disc.','Expires','Notes',''].map((h,i)=>(

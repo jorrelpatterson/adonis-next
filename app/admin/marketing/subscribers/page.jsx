@@ -84,10 +84,10 @@ export default function SubscribersPage() {
 
   return (
     <div>
-      <h1 style={s.h1}>Subscribers</h1>
+      <h1 className="admin-page-h1" style={s.h1}>Subscribers</h1>
       <p style={s.sub}>{loading ? 'Loading…' : `${data.stats.total} subscribers · welcome-email drip`}</p>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:12, marginBottom:24 }}>
+      <div className="admin-tile-row" style={{ marginBottom:24 }}>
         {[
           { label:'Total',          value:data.stats.total,          color:'#0F1928', key:'all' },
           { label:'Welcome 1 only', value:data.stats.welcome_1_only, color:'#A78BFA', key:'welcome_1' },
@@ -123,7 +123,7 @@ export default function SubscribersPage() {
         </div>
       )}
 
-      <div style={{ ...s.card, padding:0, overflow:'hidden' }}>
+      <div className="admin-table-scroll" style={{ ...s.card, padding:0, overflow:'hidden' }}>
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead>
             <tr>

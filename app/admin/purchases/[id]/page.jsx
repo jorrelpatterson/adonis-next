@@ -161,9 +161,9 @@ export default function PoDetailPage() {
   return (
     <div>
       <Link href="/admin/purchases" style={{color:'#8C919E',fontSize:12,textDecoration:'none'}}>← All purchases</Link>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginTop:8,marginBottom:24}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginTop:8,marginBottom:24,gap:12,flexWrap:'wrap'}}>
         <div>
-          <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:'monospace',letterSpacing:1}}>{po.po_number}</h1>
+          <h1 className="admin-page-h1" style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:'monospace',letterSpacing:1}}>{po.po_number}</h1>
           <p style={{color:'#8C919E',fontSize:14}}>Vendor: <strong>{po.vendor?.name}</strong> · Created {new Date(po.created_at).toLocaleString()}</p>
           {po.submitted_at && <p style={{color:'#8C919E',fontSize:12}}>Submitted: {new Date(po.submitted_at).toLocaleString()}</p>}
           {po.received_at && <p style={{color:'#8C919E',fontSize:12}}>Fully received: {new Date(po.received_at).toLocaleString()}</p>}
@@ -172,7 +172,7 @@ export default function PoDetailPage() {
         <span style={{padding:'4px 12px',borderRadius:6,fontSize:12,background:b.bg,color:b.fg,textTransform:'uppercase',letterSpacing:1,fontWeight:600}}>{po.status}</span>
       </div>
 
-      <div style={{display:'flex',gap:12,marginBottom:24}}>
+      <div style={{display:'flex',gap:12,marginBottom:24,flexWrap:'wrap'}}>
         {po.status === 'draft' && <button onClick={submit} disabled={busy} style={{padding:'10px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>Submit + Email Vendor</button>}
         {['submitted','partial'].includes(po.status) && <>
           <button onClick={openReceive} disabled={busy} style={{padding:'10px 20px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>Receive Shipment</button>
@@ -184,7 +184,7 @@ export default function PoDetailPage() {
         {po.status === 'draft' && <button onClick={cancel} disabled={busy} style={{padding:'10px 20px',background:'#FEE2E2',color:'#DC2626',border:'1px solid #FECACA',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Discard draft</button>}
       </div>
 
-      <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
+      <div className="admin-table-scroll" style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
         <table style={{width:'100%',borderCollapse:'collapse'}}>
           <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
             {['SKU','Product','Size','Ordered','Received','Unit cost','Line total'].map((h,i)=>(<th key={i} style={{padding:'12px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
@@ -215,9 +215,10 @@ export default function PoDetailPage() {
 
       {showReceive && (
         <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}} onClick={()=>setShowReceive(false)}>
-          <div style={{background:'white',borderRadius:8,maxWidth:800,width:'100%',maxHeight:'90vh',overflow:'auto',padding:24}} onClick={e=>e.stopPropagation()}>
-            <h2 style={{fontSize:20,fontWeight:700,color:'#0F1928',marginBottom:16}}>Receive Shipment</h2>
+          <div className="admin-modal" style={{background:'white',borderRadius:8,maxWidth:800,width:'100%',maxHeight:'90vh',overflow:'auto',padding:24}} onClick={e=>e.stopPropagation()}>
+            <h2 className="admin-page-h1" style={{fontSize:20,fontWeight:700,color:'#0F1928',marginBottom:16}}>Receive Shipment</h2>
             <p style={{color:'#7A7D88',fontSize:13,marginBottom:16}}>Enter what arrived per line. Edit the unit cost if the invoice differs from what was on the PO.</p>
+            <div className="admin-table-scroll">
             <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
               <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
                 {['Product','Ordered','So far','Receive now','Unit cost'].map((h,i)=>(<th key={i} style={{padding:'8px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}
@@ -238,7 +239,8 @@ export default function PoDetailPage() {
                 })}
               </tbody>
             </table>
-            <div style={{display:'flex',gap:12,marginTop:20,justifyContent:'flex-end'}}>
+            </div>
+            <div style={{display:'flex',gap:12,marginTop:20,justifyContent:'flex-end',flexWrap:'wrap'}}>
               <button onClick={()=>setShowReceive(false)} style={{padding:'10px 20px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>Cancel</button>
               <button onClick={submitReceipt} disabled={busy} style={{padding:'10px 20px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>Submit Receipt</button>
             </div>

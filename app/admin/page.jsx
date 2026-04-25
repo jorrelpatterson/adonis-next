@@ -37,12 +37,12 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 style={s.h1}>Dashboard</h1>
+      <h1 className="admin-page-h1" style={s.h1}>Dashboard</h1>
       <p style={{ color: '#8C919E', marginBottom: 32, fontSize: 14 }}>
         {loading ? 'Loading...' : 'Live from Supabase'} · Adonis Admin v3.0
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 16, marginBottom: 32 }}>
+      <div className="admin-tile-row" style={{ marginBottom: 32 }}>
         {[
           { label: 'Products', value: stats.products, icon: '🧪', color: '#00A0A8' },
           { label: 'Protocol Stacks', value: 18, icon: '📋', color: '#E07C24' },
@@ -54,8 +54,8 @@ export default function AdminDashboard() {
           <div key={i} style={{ ...s.card, borderTop: `3px solid ${item.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <div style={{ ...s.stat, color: item.color }}>{item.value}</div>
-                <div style={s.label}>{item.label}</div>
+                <div className="admin-tile-val" style={{ ...s.stat, color: item.color }}>{item.value}</div>
+                <div className="admin-tile-label" style={s.label}>{item.label}</div>
               </div>
               <span style={{ fontSize: 24 }}>{item.icon}</span>
             </div>
@@ -63,7 +63,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+      <div className="admin-tile-row">
         {[
           { href: '/admin/inventory', label: 'Manage Inventory', desc: 'Track stock, update quantities, add products', icon: '📦' },
           { href: '/admin/orders', label: 'View Orders', desc: 'Process and track customer orders', icon: '🛒' },

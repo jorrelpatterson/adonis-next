@@ -170,16 +170,16 @@ export default function MultiVendorOrderPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#0F1928', fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: 1 }}>Multi-Vendor Order Sheet</h1>
+          <h1 className="admin-page-h1" style={{ fontSize: 28, fontWeight: 700, color: '#0F1928', fontFamily: "'Barlow Condensed',sans-serif", letterSpacing: 1 }}>Multi-Vendor Order Sheet</h1>
           <p style={{ color: '#8C919E', fontSize: 13, marginTop: 4 }}>Set quantities — system auto-routes each line to the cheapest vendor and splits into separate POs on submit.</p>
         </div>
         <Link href="/admin/purchases" style={{ padding: '8px 16px', background: '#F7F8FA', color: '#6B7A94', border: '1px solid #E4E7EC', borderRadius: 6, fontSize: 13, textDecoration: 'none' }}>Cancel</Link>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search product or SKU..." style={{ padding: '8px 12px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 13, minWidth: 240 }} />
+      <div className="admin-filter-row" style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search product or SKU..." style={{ padding: '8px 12px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 13, flex: '1 1 200px', minWidth: 0 }} />
         <div style={{ display: 'flex', gap: 4 }}>
           {[
             { k: 'all', l: 'All', c: '#0072B5' },
@@ -211,7 +211,7 @@ export default function MultiVendorOrderPage() {
         ))}
       </div>
 
-      <div style={{ ...cardStyle, overflowX: 'auto', marginBottom: 20 }}>
+      <div className="admin-table-scroll" style={{ ...cardStyle, overflowX: 'auto', marginBottom: 20 }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900, fontSize: 13 }}>
           <thead>
             <tr style={{ background: '#F7F8FA' }}>

@@ -51,9 +51,9 @@ export default function VendorsPage() {
 
   return (
     <div>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,gap:12,flexWrap:'wrap'}}>
         <div>
-          <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Vendors</h1>
+          <h1 className="admin-page-h1" style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Vendors</h1>
           <p style={{color:'#8C919E',fontSize:14}}>{vendors.length} vendors</p>
         </div>
         <button onClick={()=>setShowAdd(s=>!s)} style={{padding:'10px 20px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>
@@ -62,7 +62,7 @@ export default function VendorsPage() {
       </div>
 
       {showAdd && (
-        <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,padding:20,marginBottom:20,display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12}}>
+        <div className="admin-form-grid admin-form-grid-2" style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,padding:20,marginBottom:20,display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12}}>
           {[
             {k:'name',l:'Name *',ph:'Eve'},
             {k:'contact_email',l:'Contact email',ph:'orders@vendor.com'},
@@ -83,7 +83,7 @@ export default function VendorsPage() {
         </div>
       )}
 
-      <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
+      <div className="admin-table-scroll" style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
         <table style={{width:'100%',borderCollapse:'collapse'}}>
           <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
             {['Name','Active','Contact','# Priced products',''].map((h,i)=>(<th key={i} style={{padding:'12px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}

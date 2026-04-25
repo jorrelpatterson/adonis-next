@@ -221,15 +221,15 @@ export default function InventoryPage() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
-        <div><h1 style={cs.h1}>Inventory</h1><p style={{ color:'#8C919E', fontSize:14 }}>{inventory.length} products · {inventory.reduce((s,p)=>s+p.stock,0)} vials · <span style={{color:'#22C55E'}}>Live</span></p></div>
-        <div style={{ display:'flex', gap:8 }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24, gap:12, flexWrap:'wrap' }}>
+        <div><h1 className="admin-page-h1" style={cs.h1}>Inventory</h1><p style={{ color:'#8C919E', fontSize:14 }}>{inventory.length} products · {inventory.reduce((s,p)=>s+p.stock,0)} vials · <span style={{color:'#22C55E'}}>Live</span></p></div>
+        <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
           <button onClick={fetchProducts} style={{ ...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC' }}>↻ Refresh</button>
           <button onClick={()=>setShowAdd(!showAdd)} style={{ ...cs.btn, background:'#0072B5', color:'#fff', padding:'10px 20px' }}>+ Add Product</button>
         </div>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:12, marginBottom:24 }}>
+      <div className="admin-tile-row" style={{ marginBottom:24 }}>
         <div style={{ ...cs.card, padding:16 }}>
           <div style={{ fontSize:18, fontWeight:700, color:'#0F1928', fontFamily:"'Barlow Condensed'" }}>${Math.round(spent).toLocaleString()} <span style={{color:'#8C919E',fontSize:14,fontWeight:400}}>/ ${Math.round(committed).toLocaleString()}</span></div>
           <div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>Spent / Committed</div>
@@ -259,7 +259,7 @@ export default function InventoryPage() {
 
       {showAdd&&<div style={{ ...cs.card, padding:20, marginBottom:20 }}>
         <div style={{ fontSize:14, fontWeight:700, color:'#0F1928', marginBottom:14 }}>Add New Product</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
+        <div className="admin-form-grid admin-form-grid-4" style={{ display:'grid', gridTemplateColumns:'repeat(4,minmax(0,1fr))', gap:10 }}>
           {[['name','Name','BPC-157'],['size','Size','10mg'],['sku','SKU','BC10']].map(([k,l,ph])=><div key={k}><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>{l}</label><input style={cs.input} value={newP[k]} onChange={e=>setNewP(p=>({...p,[k]:e.target.value}))} placeholder={ph}/></div>)}
           <div><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>Category</label><select style={cs.input} value={newP.cat} onChange={e=>setNewP(p=>({...p,cat:e.target.value}))}>{['Weight Loss','Recovery','Growth Hormone','Longevity','Cognitive','Sleep','Skin','Immune','Hormonal','Supplies'].map(c=><option key={c}>{c}</option>)}</select></div>
           {[['cost','Cost/Box','68'],['retail','Retail/Vial','49'],['stock','Stock','10']].map(([k,l,ph])=><div key={k}><label style={{fontSize:10,color:'#8C919E',display:'block',marginBottom:4}}>{l}</label><input style={cs.input} type="number" value={newP[k]} onChange={e=>setNewP(p=>({...p,[k]:e.target.value}))} placeholder={ph}/></div>)}
@@ -271,9 +271,9 @@ export default function InventoryPage() {
         </div>
       </div>}
 
-      <div style={{ display:'flex', gap:12, marginBottom:16, flexWrap:'wrap', alignItems:'center' }}>
-        <input style={{ ...cs.input, maxWidth:260 }} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)}/>
-        <div style={{ display:'flex', gap:4 }}>
+      <div className="admin-filter-row" style={{ display:'flex', gap:12, marginBottom:16, flexWrap:'wrap', alignItems:'center' }}>
+        <input style={{ ...cs.input, maxWidth:260, minWidth:160 }} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)}/>
+        <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
           {[
             {k:'all', l:'All', c:'#0072B5'},
             {k:'in_stock', l:'In stock', c:'#16A34A'},
@@ -288,7 +288,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <div style={{...cs.card, overflowX:'auto'}}>
+      <div className="admin-table-scroll" style={{...cs.card, overflowX:'auto'}}>
         <table style={{ width:'100%', borderCollapse:'collapse', minWidth:980 }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
             {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:110},{k:'cost',l:'Kit $',w:62},{k:'vial',l:'Vial $',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(

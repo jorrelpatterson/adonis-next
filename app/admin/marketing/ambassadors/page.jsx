@@ -210,9 +210,9 @@ export default function AmbassadorsPage() {
 
   return (
     <div>
-      <h1 style={cs.h1}>Ambassadors</h1>
+      <h1 className="admin-page-h1" style={cs.h1}>Ambassadors</h1>
       <p style={{color:'#8C919E',fontSize:14,marginBottom:24}}>{ambassadors.length} ambassadors · ${totalPaid.toFixed(2)} total earned · {totalOrders} referral orders</p>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+      <div className="admin-tile-row" style={{marginBottom:24}}>
         {[
           {l:'Total',v:ambassadors.length,c:'#0F1928'},
           {l:'Referral Orders',v:totalOrders,c:'#0072B5'},
@@ -225,9 +225,9 @@ export default function AmbassadorsPage() {
           </div>
         ))}
       </div>
-      <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:16}}>
-        <input style={{...cs.input,width:260}} placeholder="Search name, email, code..." value={search} onChange={e=>setSearch(e.target.value)} />
-        <div style={{display:'flex',gap:8,alignItems:'center',marginLeft:'auto'}}>
+      <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:16,flexWrap:'wrap'}}>
+        <input style={{...cs.input,flex:'1 1 220px',minWidth:0,maxWidth:280}} placeholder="Search name, email, code..." value={search} onChange={e=>setSearch(e.target.value)} />
+        <div style={{display:'flex',gap:8,alignItems:'center',marginLeft:'auto',flexWrap:'wrap'}}>
           <span style={{fontSize:12,color:'#8C919E'}}>Payout period:</span>
           <input style={{...cs.input,width:180}} value={period} onChange={e=>setPeriod(e.target.value)} />
         </div>
@@ -238,9 +238,9 @@ export default function AmbassadorsPage() {
           const earn=getEarnings(amb.id), tc=TIER_COLOR[amb.tier]||'#8C919E';
           const f=editForm[amb.id]||{}, cm2=customMsg[amb.id]||{subject:'',body:''};
           return (
-            <div key={amb.id} style={cs.card}>
-              <div onClick={()=>setExpanded(ie?null:amb.id)} style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <div style={{display:'flex',gap:20,alignItems:'center'}}>
+            <div key={amb.id} className="admin-row-card" style={cs.card}>
+              <div onClick={()=>setExpanded(ie?null:amb.id)} className="admin-row-head" style={{padding:'16px 20px',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+                <div style={{display:'flex',gap:20,alignItems:'center',flexWrap:'wrap',minWidth:0}}>
                   <div style={{width:36,height:36,borderRadius:'50%',background:'#EFF6FF',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,color:'#0072B5',flexShrink:0}}>{(amb.name||'?').charAt(0).toUpperCase()}</div>
                   <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{amb.name}</div><div style={{fontSize:11,color:'#8C919E'}}>{amb.email}</div></div>
                   <span style={{fontFamily:"'JetBrains Mono'",fontSize:11,color:'#0072B5',background:'#EFF6FF',padding:'2px 8px',borderRadius:4}}>{amb.code}</span>
@@ -284,7 +284,7 @@ export default function AmbassadorsPage() {
               </div>
               {ie && (
                 <div style={{borderTop:'1px solid #F0F1F4'}}>
-                  <div style={{display:'flex',borderBottom:'1px solid #F0F1F4'}}>
+                  <div className="admin-tabs" style={{display:'flex',borderBottom:'1px solid #F0F1F4'}}>
                     {[{key:'details',label:'Details'},{key:'attributed',label:'👥 Attributed'},{key:'edit',label:'✏ Edit'},{key:'emails',label:'✉ Emails'},{key:'payout',label:'💸 Payout'},{key:'assets',label:'🎨 Assets'}].map(t=>(
                       <button key={t.key} onClick={()=>{if(t.key==='edit')startEdit(amb);else{setActiveTab(prev=>({...prev,[amb.id]:t.key})); if(t.key==='attributed') loadAttributed(amb.id);}}}
                         style={{padding:'10px 16px',border:'none',borderBottom:tab===t.key?'2px solid #0072B5':'2px solid transparent',background:'none',fontSize:12,fontWeight:tab===t.key?600:400,color:tab===t.key?'#0072B5':'#8C919E',cursor:'pointer'}}>
@@ -294,7 +294,7 @@ export default function AmbassadorsPage() {
                   </div>
                   <div style={{padding:'20px'}}>
                     {tab==='details' && (
-                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
+                      <div className="admin-split" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
                         <div>
                           {[{l:'Name',v:amb.name},{l:'Email',v:amb.email},{l:'Phone',v:amb.phone||'—'},{l:'Code',v:amb.code},{l:'Tier',v:amb.tier},{l:'Joined',v:new Date(amb.created_at).toLocaleDateString()}].map((x,i)=>(
                             <div key={i} style={{display:'flex',gap:12,padding:'6px 0',borderBottom:'1px solid #F0F1F4',fontSize:13}}>
@@ -340,11 +340,12 @@ export default function AmbassadorsPage() {
                       });
                       return (
                         <div>
-                          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16}}>
+                          <div className="admin-form-grid admin-form-grid-3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16}}>
                             <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed'"}}>{customers.length}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Attributed customers</div></div>
                             <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#22C55E',fontFamily:"'Barlow Condensed'"}}>${totalRevenue.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Lifetime revenue</div></div>
                             <div style={{padding:12,background:'#F7F8FA',borderRadius:6}}><div style={{fontSize:18,fontWeight:700,color:'#0072B5',fontFamily:"'Barlow Condensed'"}}>{customers.length>0?(Object.values(ordersByPhone).reduce((s,a)=>s+a.length,0)/customers.length).toFixed(1):'0'}</div><div style={{fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Avg orders / customer</div></div>
                           </div>
+                          <div className="admin-table-scroll">
                           <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
                             <thead><tr style={{background:'#F7F8FA'}}>
                               <th style={{padding:'8px 10px',textAlign:'left',fontSize:10,color:'#8C919E',textTransform:'uppercase',letterSpacing:1}}>Phone</th>
@@ -370,6 +371,7 @@ export default function AmbassadorsPage() {
                               })}
                             </tbody>
                           </table>
+                          </div>
                         </div>
                       );
                     })()}
@@ -401,7 +403,7 @@ export default function AmbassadorsPage() {
                       </div>
                     )}
                     {tab==='emails' && (
-                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
+                      <div className="admin-split" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
                         <div style={{padding:16,background:'#F7F8FA',borderRadius:6}}>
                           <div style={{fontSize:12,fontWeight:600,color:'#0F1928',marginBottom:4}}>🎉 Welcome / Onboarding</div>
                           <p style={{fontSize:12,color:'#8C919E',marginBottom:12,lineHeight:1.6}}>Sends their referral link, ambassador code, dashboard link, and full commission structure.</p>

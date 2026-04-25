@@ -53,23 +53,23 @@ export default function InvoicesList() {
   }
 
   return (
-    <div style={{ padding: 28, flex: 1 }}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 6 }}>
+    <div style={{ flex: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 6, gap: 12, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={cs.h1}>Invoices</h1>
-          <div style={cs.sub}>admin-created orders</div>
+          <h1 className="admin-page-h1" style={cs.h1}>Invoices</h1>
+          <div className="admin-page-sub" style={cs.sub}>admin-created orders</div>
         </div>
         <Link href="/admin/invoices/new" style={cs.btn}>+ New invoice</Link>
       </div>
 
-      <div style={cs.bar}>
+      <div className="admin-filter-row" style={cs.bar}>
         {STATUSES.map((s) => (
           <button key={s} style={{ ...cs.chip, ...(statusFilter === s ? cs.chipActive : {}) }} onClick={() => setStatusFilter(s)}>
             {s}
           </button>
         ))}
         <input
-          style={{ ...cs.input, marginLeft: 'auto', width: 260 }}
+          style={{ ...cs.input, marginLeft: 'auto', flex: '1 1 220px', minWidth: 0 }}
           placeholder="Search name, email, invoice id"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -83,6 +83,7 @@ export default function InvoicesList() {
         </div>
       )}
       {!loading && invoices.length > 0 && (
+        <div className="admin-table-scroll">
         <table style={cs.table}>
           <thead>
             <tr>
@@ -117,6 +118,7 @@ export default function InvoicesList() {
             })}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );

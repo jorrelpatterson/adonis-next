@@ -103,9 +103,9 @@ export default function VendorDetailPage() {
   return (
     <div>
       <Link href="/admin/vendors" style={{color:'#8C919E',fontSize:12,textDecoration:'none'}}>← All vendors</Link>
-      <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1,marginTop:8}}>{vendor.name}</h1>
+      <h1 className="admin-page-h1" style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1,marginTop:8}}>{vendor.name}</h1>
 
-      <div style={{display:'flex',gap:16,borderBottom:'1px solid #E4E7EC',marginBottom:24,marginTop:20}}>
+      <div className="admin-tabs" style={{display:'flex',gap:16,borderBottom:'1px solid #E4E7EC',marginBottom:24,marginTop:20}}>
         {['details','pricing'].map(t => (
           <button key={t} onClick={()=>setTab(t)} style={{padding:'10px 4px',background:'none',border:'none',borderBottom:tab===t?'2px solid #0072B5':'2px solid transparent',color:tab===t?'#0072B5':'#8C919E',fontSize:13,fontWeight:tab===t?600:400,cursor:'pointer',textTransform:'capitalize'}}>{t === 'pricing' ? 'Pricing sheet' : t}</button>
         ))}
@@ -146,7 +146,7 @@ export default function VendorDetailPage() {
             <textarea style={{width:'100%',marginTop:8,padding:8,fontFamily:'monospace',fontSize:12,minHeight:120,border:'1px solid #E4E7EC',borderRadius:4}} placeholder="BP10,25&#10;TB50,28" value={bulkText} onChange={e=>setBulkText(e.target.value)} />
             <button onClick={bulkUpdate} style={{marginTop:8,padding:'8px 16px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:12,fontWeight:600,cursor:'pointer'}}>Apply bulk update</button>
           </details>
-          <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
+          <div className="admin-table-scroll" style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
             <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
               <thead><tr style={{background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
                 {['SKU','Product','Size','Cat','Cost / kit',''].map((h,i)=>(<th key={i} style={{padding:'8px 12px',textAlign:'left',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{h}</th>))}

@@ -102,12 +102,12 @@ export default function ContentPage() {
 
   return (
     <div>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,gap:12,flexWrap:'wrap'}}>
         <div>
-          <h1 style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Content Calendar</h1>
+          <h1 className="admin-page-h1" style={{fontSize:28,fontWeight:700,color:'#0F1928',fontFamily:"'Barlow Condensed',sans-serif",letterSpacing:1}}>Content Calendar</h1>
           <p style={{color:'#8C919E',fontSize:14}}>{stats.total} posts · {stats.scheduled} scheduled · {stats.posted} posted</p>
         </div>
-        <div style={{display:'flex',gap:8}}>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
           <button onClick={async () => {
             if (!confirm('Send a digest email to all active ambassadors with the current share library?')) return;
             const r = await fetch('/api/ambassador-content-digest', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
@@ -125,13 +125,13 @@ export default function ContentPage() {
         <button onClick={()=>setMonth(startOfMonth(new Date()))} style={{padding:'6px 12px',background:'#fff',border:'1px solid #E4E7EC',borderRadius:6,fontSize:12,cursor:'pointer',marginLeft:8}}>Today</button>
       </div>
 
-      <div style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
+      <div className="admin-table-scroll" style={{background:'#fff',border:'1px solid #E4E7EC',borderRadius:8,overflow:'hidden'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(80px,1fr))',background:'#FAFBFC',borderBottom:'1px solid #E4E7EC'}}>
           {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
             <div key={d} style={{padding:'10px 12px',fontSize:11,color:'#8C919E',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{d}</div>
           ))}
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,minmax(80px,1fr))'}}>
           {cells.map((d, i) => {
             const isToday = d && dateKey(d) === dateKey(new Date());
             const dayPosts = d ? (postsByDate[dateKey(d)] || []) : [];
