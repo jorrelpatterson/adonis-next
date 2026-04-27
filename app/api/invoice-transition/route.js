@@ -54,8 +54,15 @@ export async function POST(request) {
   const unauth = requireAdmin(request); if (unauth) return unauth;
 
   const body = await request.json().catch(() => ({}));
-  const { id, status, tracking_number, tracking_carrier, notify_email } = body;
+  const { id, status, tracking_number, tracking_carrier, notify_email, paid_amount } = body;
   if (!id || !status) return NextResponse.json({ error: 'id + status required' }, { status: 400 });
+
+  if (status === 'paid') {
+    const n = Number(paid_amount);
+    if (!Number.isFinite(n) || n <= 0) {
+      return NextResponse.json({ error: 'paid_amount must be a positive number' }, { status: 400 });
+    }
+  }
 
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -78,6 +85,9 @@ export async function POST(request) {
   }
 
   const patch = { status };
+  if (status === 'paid') {
+    patch.paid_amount = Number(paid_amount);
+  }
   if (status === 'shipped') {
     patch.shipped_at = new Date().toISOString();
     if (tracking_number) patch.tracking_number = tracking_number;
