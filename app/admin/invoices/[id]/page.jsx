@@ -33,6 +33,7 @@ export default function InvoiceDetail() {
   const [inv, setInv] = useState(null);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
+  const [payModal, setPayModal] = useState(null); // { paidAmount: string }
 
   useEffect(() => { load(); }, [id]);
 
@@ -64,18 +65,8 @@ export default function InvoiceDetail() {
   }
 
   async function transition(newStatus, extra = {}) {
-    if (newStatus === 'paid') {
-      const warnings = await checkStockForPaid();
-      if (warnings.length) {
-        const lines = warnings.map((w) => `  ${w.sku} (${w.name}): need ${w.qty}, have ${w.stock}`).join('\n');
-        if (!confirm(
-          `Marking paid will decrement stock. Some items don't have enough:\n\n${lines}\n\n` +
-          `Stock will floor at 0 — the remainder is effectively pre-ordered.\nProceed anyway?`,
-        )) return;
-      } else {
-        if (!confirm('Mark this invoice paid? This will decrement inventory.')) return;
-      }
-    } else {
+    // 'paid' has its own modal-driven flow (openPayModal) — never call transition('paid') directly.
+    if (newStatus !== 'paid') {
       if (!confirm(`Transition this invoice to "${newStatus}"?`)) return;
     }
     setActing(true);
@@ -87,6 +78,38 @@ export default function InvoiceDetail() {
     });
     const body = await r.json().catch(() => ({}));
     setActing(false);
+    if (r.ok) load();
+    else alert('Error: ' + (body.error || r.status));
+  }
+
+  async function openPayModal() {
+    const warnings = await checkStockForPaid();
+    if (warnings.length) {
+      const lines = warnings.map((w) => `  ${w.sku} (${w.name}): need ${w.qty}, have ${w.stock}`).join('\n');
+      if (!confirm(
+        `Marking paid will decrement stock. Some items don't have enough:\n\n${lines}\n\n` +
+        `Stock will floor at 0 — the remainder is effectively pre-ordered.\nProceed anyway?`,
+      )) return;
+    }
+    setPayModal({ paidAmount: (Number(inv.total) || 0).toFixed(2) });
+  }
+
+  async function confirmPaid() {
+    const n = Number(payModal.paidAmount);
+    if (!Number.isFinite(n) || n <= 0) {
+      alert('Enter a positive amount.');
+      return;
+    }
+    setActing(true);
+    const r = await fetch('/api/invoice-transition', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id, status: 'paid', paid_amount: n }),
+    });
+    const body = await r.json().catch(() => ({}));
+    setActing(false);
+    setPayModal(null);
     if (r.ok) load();
     else alert('Error: ' + (body.error || r.status));
   }
@@ -221,7 +244,7 @@ export default function InvoiceDetail() {
           <div style={cs.section}>
             <div style={cs.label}>Actions</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-              {canMarkPaid && <button style={{ ...cs.btn, ...cs.btnPrimary }} disabled={acting} onClick={() => transition('paid')}>Mark paid</button>}
+              {canMarkPaid && <button style={{ ...cs.btn, ...cs.btnPrimary }} disabled={acting} onClick={openPayModal}>Mark paid</button>}
               {canMarkShipped && <button style={{ ...cs.btn, ...cs.btnPrimary }} disabled={acting} onClick={markShipped}>Mark shipped</button>}
               {canMarkDelivered && <button style={{ ...cs.btn, ...cs.btnPrimary }} disabled={acting} onClick={() => transition('delivered')}>Mark delivered</button>}
               {canCancel && <button style={{ ...cs.btn, ...cs.btnDanger }} disabled={acting} onClick={cancelInvoice}>Cancel invoice</button>}
@@ -229,6 +252,67 @@ export default function InvoiceDetail() {
           </div>
         </div>
       </div>
+
+      {payModal && (
+        <div
+          onClick={() => setPayModal(null)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(15,25,40,0.55)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#fff', borderRadius: 8, padding: 24, width: 360, maxWidth: '92vw',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+            }}
+          >
+            <div style={{ ...cs.label, marginBottom: 12 }}>Mark {inv.invoice_id} paid</div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'monospace', fontSize: 14, marginBottom: 14 }}>
+              <span style={{ color: '#7A7D88' }}>Invoiced</span>
+              <span>${(Number(inv.total) || 0).toFixed(2)}</span>
+            </div>
+
+            <label style={{ ...cs.label, display: 'block', marginBottom: 6 }}>Amount received</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 10, top: 9, color: '#7A7D88', fontFamily: 'monospace' }}>$</span>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                autoFocus
+                value={payModal.paidAmount}
+                onChange={(e) => setPayModal({ paidAmount: e.target.value })}
+                onKeyDown={(e) => { if (e.key === 'Enter') confirmPaid(); }}
+                style={{ width: '100%', padding: '8px 12px 8px 22px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 14, fontFamily: 'monospace', boxSizing: 'border-box' }}
+              />
+            </div>
+
+            {(() => {
+              const total = Number(inv.total) || 0;
+              const paid = Number(payModal.paidAmount);
+              if (!Number.isFinite(paid)) return null;
+              const v = paid - total;
+              const color = v < 0 ? '#DC2626' : v > 0 ? '#16A34A' : '#7A7D88';
+              const tag = v < 0 ? ' (short)' : v > 0 ? ' (tip)' : '';
+              const sign = v < 0 ? '−' : v > 0 ? '+' : '';
+              return (
+                <div style={{ marginTop: 12, fontFamily: 'monospace', fontSize: 13, color, display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Variance</span>
+                  <span>{sign}${Math.abs(v).toFixed(2)}{tag}</span>
+                </div>
+              );
+            })()}
+
+            <div style={{ display: 'flex', gap: 8, marginTop: 20, justifyContent: 'flex-end' }}>
+              <button style={{ ...cs.btn, ...cs.btnSecondary }} onClick={() => setPayModal(null)} disabled={acting}>Cancel</button>
+              <button style={{ ...cs.btn, ...cs.btnPrimary }} onClick={confirmPaid} disabled={acting}>Confirm</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
