@@ -13,7 +13,7 @@ export async function GET(request) {
 
   const parts = ['is_invoice=eq.true', 'order=created_at.desc', 'limit=200'];
   if (status && status !== 'all') parts.push(`status=eq.${encodeURIComponent(status)}`);
-  const qs = parts.join('&') + '&select=id,invoice_id,first_name,last_name,email,phone,total,status,created_at,tracking_number,items,invoice_image_path';
+  const qs = parts.join('&') + '&select=id,invoice_id,first_name,last_name,email,phone,total,paid_amount,status,created_at,tracking_number,items,invoice_image_path';
 
   const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?${qs}`, {
     headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
