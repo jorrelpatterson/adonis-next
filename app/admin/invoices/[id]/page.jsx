@@ -228,10 +228,39 @@ export default function InvoiceDetail() {
                 <div style={{ fontFamily: 'monospace' }}>−${(subtotal - inv.total).toFixed(2)}</div>
               </div>
             )}
-            <div style={{ borderTop: '2px solid #0F1928', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontFamily: 'monospace', fontSize: 18 }}>
-              <div>Total</div>
-              <div style={{ color: '#00A0A8' }}>${inv.total?.toFixed?.(2) || inv.total}</div>
-            </div>
+            {(() => {
+              const total = Number(inv.total) || 0;
+              const paid = inv.paid_amount == null ? null : Number(inv.paid_amount);
+              const showVariance = paid != null && Math.abs(paid - total) >= 0.005;
+              if (!showVariance) {
+                return (
+                  <div style={{ borderTop: '2px solid #0F1928', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontFamily: 'monospace', fontSize: 18 }}>
+                    <div>Total</div>
+                    <div style={{ color: '#00A0A8' }}>${total.toFixed(2)}</div>
+                  </div>
+                );
+              }
+              const v = paid - total;
+              const color = v < 0 ? '#DC2626' : '#16A34A';
+              const tag = v < 0 ? ' (short)' : ' (tip)';
+              const sign = v < 0 ? '−' : '+';
+              return (
+                <div style={{ borderTop: '2px solid #0F1928', marginTop: 10, paddingTop: 10, fontFamily: 'monospace', fontSize: 14 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+                    <span style={{ color: '#7A7D88' }}>Invoiced</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontWeight: 700, fontSize: 16, color: '#00A0A8' }}>
+                    <span style={{ color: '#0F1928' }}>Received</span>
+                    <span>${paid.toFixed(2)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', color }}>
+                    <span>Variance</span>
+                    <span>{sign}${Math.abs(v).toFixed(2)}{tag}</span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {inv.tracking_number && (
