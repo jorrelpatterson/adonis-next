@@ -255,7 +255,10 @@ export default function InvoiceDetail() {
 
       {payModal && (
         <div
-          onClick={() => setPayModal(null)}
+          onClick={() => { if (!acting) setPayModal(null); }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="pay-modal-title"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(15,25,40,0.55)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
@@ -268,24 +271,28 @@ export default function InvoiceDetail() {
               boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
             }}
           >
-            <div style={{ ...cs.label, marginBottom: 12 }}>Mark {inv.invoice_id} paid</div>
+            <div id="pay-modal-title" style={{ ...cs.label, marginBottom: 12 }}>Mark {inv.invoice_id} paid</div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'monospace', fontSize: 14, marginBottom: 14 }}>
               <span style={{ color: '#7A7D88' }}>Invoiced</span>
               <span>${(Number(inv.total) || 0).toFixed(2)}</span>
             </div>
 
-            <label style={{ ...cs.label, display: 'block', marginBottom: 6 }}>Amount received</label>
+            <label htmlFor="pay-modal-amount" style={{ ...cs.label, display: 'block', marginBottom: 6 }}>Amount received</label>
             <div style={{ position: 'relative' }}>
               <span style={{ position: 'absolute', left: 10, top: 9, color: '#7A7D88', fontFamily: 'monospace' }}>$</span>
               <input
+                id="pay-modal-amount"
                 type="number"
                 step="0.01"
                 min="0"
                 autoFocus
                 value={payModal.paidAmount}
                 onChange={(e) => setPayModal({ paidAmount: e.target.value })}
-                onKeyDown={(e) => { if (e.key === 'Enter') confirmPaid(); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !acting) confirmPaid();
+                  if (e.key === 'Escape') setPayModal(null);
+                }}
                 style={{ width: '100%', padding: '8px 12px 8px 22px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 14, fontFamily: 'monospace', boxSizing: 'border-box' }}
               />
             </div>
