@@ -66,6 +66,60 @@ function daysBetween(later, earlier) {
   return Math.floor((new Date(later).getTime() - new Date(earlier).getTime()) / 86400000);
 }
 
+const esc = (s) =>
+  String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function reminderEmailHtml({ firstName, type, items, catalogUrl }) {
+  const isUrgent = type === '3d';
+  const headline = isUrgent
+    ? 'Running low.'
+    : 'Planning ahead.';
+  const accent = isUrgent ? '#E07C24' : '#00A0A8';
+  const lead = isUrgent
+    ? `You're likely to run out in the next few days.`
+    : `Based on typical use, your supply runs low in about two weeks.`;
+  const greeting = firstName ? `Hi ${esc(firstName)},` : 'Hi —';
+  const itemList = items.map((i) =>
+    `<li style="margin-bottom:6px"><strong>${esc(i.name)}</strong></li>`,
+  ).join('');
+  const ctaLabel = isUrgent ? 'Order now →' : 'Reorder →';
+
+  return `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#E8E6E2;margin:0;padding:24px">
+<div style="max-width:600px;margin:0 auto;background:#F4F2EE;padding:40px 32px;border-radius:6px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px">Heads up</div>
+<h1 style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:32px;font-weight:900;color:#1A1C22;text-transform:uppercase;letter-spacing:-0.5px;line-height:1;margin:0 0 20px">${headline.replace(/\.$/, '')}<span style="color:${accent}">.</span></h1>
+<p style="font-size:15px;line-height:1.65;color:#1A1C22;margin:0 0 16px">${greeting}</p>
+<p style="font-size:15px;line-height:1.65;color:#1A1C22;margin:0 0 16px">${lead}</p>
+<ul style="font-size:15px;line-height:1.6;color:#1A1C22;margin:0 0 24px;padding-left:20px">${itemList}</ul>
+<p style="margin:0 0 28px"><a href="${esc(catalogUrl)}" style="display:inline-block;padding:12px 24px;background:${accent};color:#fff;text-decoration:none;font-family:'Barlow Condensed',Arial,sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:4px;font-size:13px">${ctaLabel}</a></p>
+<div style="border-top:1px solid #E4E7EC;padding-top:20px">
+<p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#7A7D88;letter-spacing:2px;line-height:1.8;margin:0;text-transform:uppercase">advncelabs.com · all products are for research and laboratory use · not for human consumption · not evaluated by the fda</p>
+</div>
+</div></body></html>`;
+}
+
+async function sendReminderEmail(toEmail, firstName, type, items) {
+  const catalogUrl = 'https://www.advncelabs.com/advnce-catalog.html';
+  const productsLabel = items.length === 1
+    ? items[0].name
+    : `${items[0].name} + ${items.length - 1} more`;
+  const subject = type === '3d'
+    ? `Running low on ${productsLabel} — quick reorder?`
+    : `Planning ahead — your ${productsLabel} runs low in about two weeks`;
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${RESEND_KEY}` },
+    body: JSON.stringify({
+      from: 'advnce labs <orders@advncelabs.com>',
+      to: toEmail,
+      subject,
+      html: reminderEmailHtml({ firstName, type, items, catalogUrl }),
+    }),
+  });
+  return r.ok;
+}
+
 export async function POST(request) {
   const unauth = requireAdminOrCron(request);
   if (unauth) return unauth;
@@ -126,20 +180,46 @@ export async function POST(request) {
     }
   }
 
+  let sent = 0, failed = 0, skipped_no_email = 0;
+  const failures = [];
+
+  for (const { order, type, items } of plan) {
+    const toEmail = order.email;
+    if (!toEmail || toEmail.endsWith('@invoice.local')) {
+      skipped_no_email += 1;
+      continue;
+    }
+
+    const ok = await sendReminderEmail(toEmail, order.first_name || '', type, items);
+    if (!ok) {
+      failed += 1;
+      failures.push({ order_id: order.id, type, reason: 'resend send failed' });
+      continue;
+    }
+
+    const stampRows = items.map((it) => ({
+      order_id: order.id,
+      sku: it.sku,
+      reminder_type: type,
+      email_to: toEmail,
+    }));
+    const stamped = await sbInsert('/reorder_reminders_sent', stampRows);
+    if (!stamped) {
+      failed += 1;
+      failures.push({ order_id: order.id, type, reason: 'email sent but stamp failed' });
+      continue;
+    }
+
+    sent += 1;
+  }
+
   return NextResponse.json({
     ran_at: new Date().toISOString(),
-    loaded: {
-      orders: orders.length,
-      products: products.length,
-      sent_rows: sentRows.length,
-    },
-    planned_sends: plan.map(p => ({
-      order_id: p.order.id,
-      invoice_id: p.order.invoice_id,
-      to: p.order.email,
-      type: p.type,
-      items: p.items,
-    })),
+    orders_scanned: orders.length,
+    sent,
+    failed,
+    skipped_no_email,
+    failures,
   });
 }
 
