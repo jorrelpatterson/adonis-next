@@ -187,13 +187,16 @@ export default function InventoryPage() {
 
   const saveEdit = async () => {
     setSaving(true);
+    const tdsRaw = editData.typical_days_supply;
+    const tds = tdsRaw === '' || tdsRaw == null ? null : Math.max(0, parseInt(tdsRaw, 10) || 0);
     const { error } = await supabase.from('products').update({
       name: editData.name, size: editData.size, sku: editData.sku,
       cost: Number(editData.cost), retail: Number(editData.retail), stock: Number(editData.stock),
+      typical_days_supply: tds,
       updated_at: new Date().toISOString()
     }).eq('id', editId);
     if (error) alert('Save failed: ' + error.message);
-    else { setInventory(prev => prev.map(p => p.id === editId ? { ...p, ...editData, cost: Number(editData.cost), retail: Number(editData.retail), stock: Number(editData.stock) } : p)); setEditId(null); }
+    else { setInventory(prev => prev.map(p => p.id === editId ? { ...p, ...editData, cost: Number(editData.cost), retail: Number(editData.retail), stock: Number(editData.stock), typical_days_supply: tds } : p)); setEditId(null); }
     setSaving(false);
   };
 
@@ -289,10 +292,10 @@ export default function InventoryPage() {
       </div>
 
       <div className="admin-table-scroll" style={{...cs.card, overflowX:'auto'}}>
-        <table style={{ width:'100%', borderCollapse:'collapse', minWidth:980 }}>
+        <table style={{ width:'100%', borderCollapse:'collapse', minWidth:1052 }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:110},{k:'cost',l:'Kit $',w:62},{k:'vial',l:'Vial $',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
-              <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&c.k!=='vial'&&handleSort(c.k)} style={{ padding:'8px 8px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:(c.k!=='actions'&&c.k!=='vial')?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
+            {[{k:'risk',l:'',w:28},{k:'name',l:'Product',w:80},{k:'size',l:'Size',w:64},{k:'cat',l:'Category',w:96},{k:'vendor',l:'Vendor',w:110},{k:'cost',l:'Kit $',w:62},{k:'vial',l:'Vial $',w:58},{k:'retail',l:'Retail',w:58},{k:'stock',l:'Stock',w:56},{k:'days',l:'Days supply',w:72},{k:'margin',l:'Margin',w:58},{k:'actions',l:'',w:138}].map(c=>(
+              <th key={c.k} onClick={()=>c.k!=='actions'&&c.k!=='risk'&&c.k!=='vial'&&c.k!=='days'&&handleSort(c.k)} style={{ padding:'8px 8px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC', cursor:(c.k!=='actions'&&c.k!=='vial'&&c.k!=='days')?'pointer':'default', width:c.w||'auto', userSelect:'none' }}>{c.l}<SI col={c.k}/></th>
             ))}
           </tr></thead>
           <tbody>
@@ -342,6 +345,7 @@ export default function InventoryPage() {
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12,color:'#6B7A94'}} title="Per-vial cost (kit ÷ 10)">{`$${(Number(p.cost)/10).toFixed(2)}`}</td>
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.retail} onChange={e=>setEditData(d=>({...d,retail:e.target.value}))}/>:`$${p.retail}`}</td>
                   <td style={{padding:'6px 8px'}}>{ie?<input style={{...cs.input,width:55,padding:'4px 6px'}} type="number" value={editData.stock} onChange={e=>setEditData(d=>({...d,stock:e.target.value}))}/>:(<div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'flex-start'}}><span style={{fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:sc}}>{p.stock}</span>{(p.stock||0)===0 && (() => { const pend = pendingPOs.filter(x=>x.product_id===p.id); if(!pend.length) return null; const totalKits = pend.reduce((s,x)=>s+x.kits_pending,0); const poNums = [...new Set(pend.map(x=>x.po_number))].join(', '); return <span title={'Pending: '+poNums} style={{fontFamily:"'JetBrains Mono'",fontSize:9,fontWeight:600,padding:'1px 5px',background:'#FEF3C7',color:'#A16207',borderRadius:3,letterSpacing:0.5,whiteSpace:'nowrap'}}>PEND {totalKits*10}v</span>; })()}</div>)}</td>
+                  <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:12,textAlign:'center'}} title="Manual override: typical days a single vial lasts at protocol dose. Leave blank to auto-derive from peptide constants.">{ie?<input style={{...cs.input,width:60,padding:'4px 6px',fontSize:13,textAlign:'center'}} type="number" min="0" value={editData.typical_days_supply ?? ''} onChange={e=>setEditData(d=>({...d,typical_days_supply:e.target.value}))}/>:<span style={{color:p.typical_days_supply==null?'#A0A4AE':'#0F1928'}}>{p.typical_days_supply==null?'—':p.typical_days_supply}</span>}</td>
                   <td style={{padding:'6px 8px',fontFamily:"'JetBrains Mono'",fontSize:11,color:Number(mg)>=80?'#22C55E':Number(mg)>=60?'#F59E0B':'#DC2626'}}>{mg}%</td>
                   <td style={{padding:'6px 8px'}}>
                     {ie?<div style={{display:'flex',gap:4}}><button onClick={saveEdit} disabled={saving} style={{...cs.btn,background:'#0072B5',color:'#fff',padding:'4px 10px',fontSize:11}}>{saving?'...':'Save'}</button><button onClick={()=>setEditId(null)} title="Cancel" style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 10px',fontSize:11,border:'1px solid #E4E7EC'}}>✕</button></div>
