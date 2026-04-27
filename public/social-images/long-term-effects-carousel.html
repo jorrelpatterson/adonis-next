@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>advnce labs — Long-Term Effects carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#F4F2EE;
+    --ink:#1A1C22;
+    --navy:#0A0D14;
+    --cyan:#00A0A8;
+    --amber:#E07C24;
+    --dim:#7A7D88;
+    --rule:rgba(0,0,0,0.08);
+    --rule-inv:rgba(255,255,255,0.12);
+    --fn:'Barlow Condensed',sans-serif;
+    --fd:'Cormorant Garamond',serif;
+    --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#222;
+    color:#eee;
+    font-family:var(--fm);
+    padding:40px;
+    min-height:100vh;
+  }
+  .toolbar{
+    max-width:1080px;
+    margin:0 auto 32px;
+    padding:20px 24px;
+    background:#111;
+    border:1px solid #333;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .toolbar h1{font-family:var(--fn);font-weight:300;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:#aaa;}
+  .toolbar p{font-size:11px;color:#888;line-height:1.5;}
+  .toolbar button{
+    align-self:flex-start;
+    padding:10px 18px;
+    background:var(--cyan);
+    color:#fff;
+    border:none;
+    font-family:var(--fn);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-size:12px;
+    cursor:pointer;
+  }
+  .toolbar button:hover{background:#00808a;}
+
+  .slide-wrap{
+    max-width:1080px;
+    margin:0 auto 48px;
+  }
+  .slide-label{
+    font-family:var(--fm);
+    font-size:11px;
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .slide-label button{
+    padding:6px 12px;
+    background:transparent;
+    color:var(--cyan);
+    border:1px solid var(--cyan);
+    font-family:var(--fm);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    cursor:pointer;
+  }
+  .slide-label button:hover{background:var(--cyan);color:#fff;}
+
+  .slide{
+    width:1080px;
+    height:1080px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .cream{background:var(--cream);color:var(--ink);}
+  .navy{background:var(--navy);color:var(--cream);}
+
+  /* Logo lockup (corner mark) */
+  .corner-mark{
+    position:absolute;
+    bottom:48px;
+    right:48px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:10px;
+  }
+  .corner-mark .wm{
+    font-family:var(--fn);
+    font-weight:300;
+    text-transform:lowercase;
+    letter-spacing:1px;
+    font-size:18px;
+  }
+  .navy .corner-mark .wm{color:var(--cream);}
+  .cream .corner-mark .wm{color:var(--ink);}
+  .navy .corner-mark .wm em{color:var(--dim);font-style:normal;}
+  .cream .corner-mark .wm em{color:var(--dim);font-style:normal;}
+
+  /* Slide 1 */
+  .s1 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s1 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:48px;
+  }
+  .s1 .question{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:88px;
+    line-height:1.05;
+    color:var(--cream);
+    max-width:820px;
+    margin-bottom:56px;
+  }
+  .s1 .answer{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:72px;
+    color:var(--cyan);
+    text-transform:lowercase;
+    letter-spacing:-1px;
+  }
+  .s1 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* Slide 2 */
+  .s2 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s2 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--amber);
+    margin-bottom:48px;
+  }
+  .s2 .rule{
+    width:120px;
+    height:3px;
+    background:var(--amber);
+    margin-bottom:48px;
+  }
+  .s2 .question{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:88px;
+    line-height:1.05;
+    color:var(--ink);
+    max-width:840px;
+    margin-bottom:56px;
+  }
+  .s2 .answer{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:72px;
+    color:var(--ink);
+    text-transform:lowercase;
+    letter-spacing:-1px;
+  }
+  .s2 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* Slide 3 — three big stats */
+  .s3 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:96px 96px 140px;
+  }
+  .s3 .heading{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:64px;
+  }
+  .s3 .stat{
+    border-top:1px solid var(--rule);
+    padding:32px 0;
+    display:flex;
+    flex-direction:row;
+    align-items:flex-end;
+    gap:40px;
+  }
+  .s3 .stat:last-child{border-bottom:1px solid var(--rule);}
+  .s3 .num{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:140px;
+    line-height:0.9;
+    color:var(--cyan);
+    letter-spacing:-3px;
+    flex:0 0 auto;
+    min-width:280px;
+  }
+  .s3 .body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding-bottom:14px;
+  }
+  .s3 .label{
+    font-family:var(--fn);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:22px;
+    color:var(--ink);
+  }
+  .s3 .cite{
+    font-family:var(--fm);
+    font-size:12px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+  }
+
+  /* Slide 4 — six-row stat list */
+  .s4 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:96px 96px 140px;
+  }
+  .s4 .heading{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:48px;
+  }
+  .s4 .row{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    border-top:1px solid var(--rule);
+    padding:22px 0;
+    gap:28px;
+  }
+  .s4 .row:last-child{border-bottom:1px solid var(--rule);}
+  .s4 .mult{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:64px;
+    color:var(--cyan);
+    line-height:1;
+    letter-spacing:-1px;
+    flex:0 0 220px;
+  }
+  .s4 .desc{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:32px;
+    color:var(--ink);
+    line-height:1.2;
+  }
+
+  /* Slide 5 — declarative pivot */
+  .s5 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    padding:0 96px;
+  }
+  .s5 .line{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:108px;
+    line-height:1.05;
+    color:var(--cream);
+    margin-bottom:32px;
+  }
+  .s5 .line.amber{color:var(--amber);}
+  .s5 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* Slide 6 — close */
+  .s6 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s6 .eyebrow{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:40px;
+  }
+  .s6 .line{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:64px;
+    line-height:1.15;
+    color:var(--ink);
+    max-width:880px;
+    margin-bottom:96px;
+  }
+  .s6 .lockup{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .s6 .wordmark{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:46px;
+    color:var(--ink);
+    text-transform:lowercase;
+    letter-spacing:1px;
+  }
+  .s6 .wordmark em{color:var(--dim);font-style:normal;}
+  .s6 .manifesto{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+  }
+  .s6 .url{
+    font-family:var(--fm);
+    font-size:12px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:3px;
+    margin-top:24px;
+  }
+
+  /* SVG logo */
+  .logo-svg{display:block;}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>advnce labs / long-term effects — 6-slide carousel</h1>
+  <p>Each slide is exactly 1080×1080. Use the per-slide download buttons, or "Download all" to grab the full set as PNG. Disclaimer goes in the IG caption, not on the image.</p>
+  <button id="download-all">Download all 6 as PNG</button>
+</div>
+
+<!-- ─────────────── Slide 1 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>01 — hook (deep navy)</span>
+    <button class="dl" data-slide="s1" data-name="advnce-longterm-01-hook">Download PNG</button>
+  </div>
+  <div class="slide s1 navy" id="s1">
+    <div class="stage">
+      <div class="eyebrow">On the subject of long-term risk</div>
+      <div class="question">"What are the long-term effects of peptides?"</div>
+      <div class="answer">we don't know yet.</div>
+    </div>
+    <div class="footer">Ongoing research · Incomplete data</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 2 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>02 — pivot (cream)</span>
+    <button class="dl" data-slide="s2" data-name="advnce-longterm-02-pivot">Download PNG</button>
+  </div>
+  <div class="slide s2 cream" id="s2">
+    <div class="stage">
+      <div class="eyebrow">By contrast</div>
+      <div class="rule"></div>
+      <div class="question">"What are the long-term effects of obesity?"</div>
+      <div class="answer">the literature is settled.</div>
+    </div>
+    <div class="footer">Decades of peer-reviewed evidence</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 3 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>03 — three headline stats (cream)</span>
+    <button class="dl" data-slide="s3" data-name="advnce-longterm-03-stats">Download PNG</button>
+  </div>
+  <div class="slide s3 cream" id="s3">
+    <div class="stage">
+      <div class="heading">The known costs · I</div>
+      <div class="stat">
+        <div class="num">−14</div>
+        <div class="body">
+          <div class="label">Years of life expectancy lost</div>
+          <div class="cite">Class III obesity vs. healthy BMI · NEJM, 2014</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="num">13</div>
+        <div class="body">
+          <div class="label">Cancers causally linked</div>
+          <div class="cite">National Cancer Institute, 2022</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="num">+58%</div>
+        <div class="body">
+          <div class="label">All-cause mortality</div>
+          <div class="cite">Global BMI Mortality Collaboration · Lancet, 2016</div>
+        </div>
+      </div>
+    </div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 4 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>04 — six-row stat list (cream)</span>
+    <button class="dl" data-slide="s4" data-name="advnce-longterm-04-list">Download PNG</button>
+  </div>
+  <div class="slide s4 cream" id="s4">
+    <div class="stage">
+      <div class="heading">The known costs · II</div>
+      <div class="row"><div class="mult">4×</div><div class="desc">risk of type 2 diabetes</div></div>
+      <div class="row"><div class="mult">2–3×</div><div class="desc">cardiovascular disease</div></div>
+      <div class="row"><div class="mult">70%</div><div class="desc">of all NAFLD cases — leading liver-transplant cause in U.S. women</div></div>
+      <div class="row"><div class="mult">+35%</div><div class="desc">midlife dementia risk</div></div>
+      <div class="row"><div class="mult">2.6×</div><div class="desc">risk of erectile dysfunction</div></div>
+      <div class="row"><div class="mult">+50%</div><div class="desc">risk of severe depression</div></div>
+    </div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 5 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>05 — declarative (deep navy)</span>
+    <button class="dl" data-slide="s5" data-name="advnce-longterm-05-declarative">Download PNG</button>
+  </div>
+  <div class="slide s5 navy" id="s5">
+    <div class="stage">
+      <div class="line">The unknown is uncomfortable.</div>
+      <div class="line amber">The known is worse.</div>
+    </div>
+    <div class="footer">— advnce labs, on weighing risk</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 6 ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>06 — close (cream, lockup)</span>
+    <button class="dl" data-slide="s6" data-name="advnce-longterm-06-close">Download PNG</button>
+  </div>
+  <div class="slide s6 cream" id="s6">
+    <div class="stage">
+      <div class="eyebrow">In closing</div>
+      <div class="line">"Research continues. So does the disease."</div>
+      <div class="lockup">
+        <span class="wordmark">advnce <em>labs</em></span>
+        <span class="manifesto">Precision · Purity · Protocol</span>
+        <span class="url">advncelabs.com</span>
+      </div>
+    </div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function download(slideId, fileName){
+    const el = document.getElementById(slideId);
+    const canvas = await html2canvas(el, {
+      width:1080, height:1080,
+      windowWidth:1080, windowHeight:1080,
+      scale:1,
+      useCORS:true,
+      backgroundColor:null,
+    });
+    const a = document.createElement('a');
+    a.download = fileName + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  }
+
+  document.querySelectorAll('.dl').forEach(btn => {
+    btn.addEventListener('click', () => {
+      download(btn.dataset.slide, btn.dataset.name);
+    });
+  });
+
+  document.getElementById('download-all').addEventListener('click', async () => {
+    const slides = [
+      ['s1','advnce-longterm-01-hook'],
+      ['s2','advnce-longterm-02-pivot'],
+      ['s3','advnce-longterm-03-stats'],
+      ['s4','advnce-longterm-04-list'],
+      ['s5','advnce-longterm-05-declarative'],
+      ['s6','advnce-longterm-06-close'],
+    ];
+    for (const [id,name] of slides) {
+      await download(id, name);
+      await new Promise(r => setTimeout(r, 250));
+    }
+  });
+</script>
+
+</body>
+</html>

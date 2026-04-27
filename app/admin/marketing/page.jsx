@@ -87,6 +87,16 @@ export default function MarketingHub() {
       tag: `W2: ${stats.subs.stage2} · W3: ${stats.subs.stage3}`,
     },
     {
+      href:'/admin/marketing/post-builder',
+      icon:'🎨',
+      color:'#00A0A8',
+      label:'Post Builder',
+      desc:'Pre-built IG carousels — render & download',
+      stat: 1,
+      statLabel: 'available',
+      tag: 'Long-Term Effects',
+    },
+    {
       href:'/admin/marketing/campaigns',
       icon:'🎯',
       color:'#E07C24',
