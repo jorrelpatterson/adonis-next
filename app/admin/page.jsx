@@ -2,6 +2,7 @@
 export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
+import { totalCollectedRevenue } from '../../lib/revenue';
 import Link from 'next/link';
 
 const s = {
@@ -25,7 +26,7 @@ export default function AdminDashboard() {
       setStats({
         products: p.length,
         orders: o.length,
-        revenue: o.reduce((s, x) => s + Number(x.total || 0), 0),
+        revenue: totalCollectedRevenue(o),
         lowStock: p.filter(x => x.stock <= 3 && x.cat !== 'Supplies').length,
         openPos: (openPos || []).length,
         inTransitValue: (openPos || []).reduce((s, p) => s + Number(p.total_cost || 0), 0),
