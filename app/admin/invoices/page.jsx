@@ -110,7 +110,23 @@ export default function InvoicesList() {
                     <div style={{ fontSize: 11, color: '#7A7D88' }}>{inv.email || inv.phone || ''}</div>
                   </td>
                   <td style={{ ...cs.td, fontSize: 12, color: '#374151' }}>{itemsSummary}</td>
-                  <td style={cs.td}><strong>${inv.total?.toFixed?.(2) || inv.total}</strong></td>
+                  <td style={cs.td}>
+                    <strong>${(Number(inv.total) || 0).toFixed(2)}</strong>
+                    {(() => {
+                      const total = Number(inv.total) || 0;
+                      const paid = inv.paid_amount == null ? null : Number(inv.paid_amount);
+                      if (paid == null || Math.abs(paid - total) < 0.005) return null;
+                      const v = paid - total;
+                      const color = v < 0 ? '#991B1B' : '#065F46';
+                      const bg = v < 0 ? '#FEE2E2' : '#D1FAE5';
+                      const sign = v < 0 ? '−' : '+';
+                      return (
+                        <span style={{ marginLeft: 8, padding: '2px 7px', borderRadius: 999, background: bg, color, fontFamily: 'monospace', fontSize: 10, letterSpacing: 1 }}>
+                          {sign}${Math.abs(v).toFixed(2)}
+                        </span>
+                      );
+                    })()}
+                  </td>
                   <td style={cs.td}><span style={{ ...cs.pill, background: sc.bg, color: sc.fg }}>{inv.status}</span></td>
                   <td style={{ ...cs.td, color: '#7A7D88', fontFamily: 'monospace', fontSize: 11 }}>{ageDays(inv.created_at)}d</td>
                 </tr>
