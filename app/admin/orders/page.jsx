@@ -1,6 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
+import { totalCollectedRevenue } from '../../../lib/revenue';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -60,7 +61,8 @@ export default function OrdersPage() {
     return ms && (filterStatus === 'all' || o.status === filterStatus);
   }), [orders, search, filterStatus]);
 
-  const totalRevenue = orders.reduce((s,o) => s + Number(o.total||0), 0);
+  const totalRevenue = totalCollectedRevenue(orders);
+  const settledCount = orders.filter(o => ['confirmed', 'processing', 'shipped', 'delivered'].includes(o.status)).length;
   const pending = orders.filter(o => o.status === 'pending_payment' || o.status === 'confirmed').length;
 
   const updateStatus = async (orderId, newStatus) => {
@@ -103,7 +105,7 @@ export default function OrdersPage() {
           {l:'Total Orders',v:orders.length,c:'#0F1928'},
           {l:'Revenue',v:'$'+totalRevenue.toLocaleString('en-US',{minimumFractionDigits:2}),c:'#22C55E'},
           {l:'Pending',v:pending,c:'#F59E0B'},
-          {l:'Avg Order',v:'$'+(orders.length>0?Math.round(totalRevenue/orders.length):0),c:'#0072B5'},
+          {l:'Avg Order',v:'$'+(settledCount>0?Math.round(totalRevenue/settledCount):0),c:'#0072B5'},
         ].map((x,i)=>(
           <div key={i} style={{...cs.card,padding:16}}>
             <div className="admin-tile-val" style={{fontSize:22,fontWeight:700,color:x.c,fontFamily:"'Barlow Condensed'"}}>{x.v}</div>
