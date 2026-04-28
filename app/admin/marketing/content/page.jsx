@@ -92,6 +92,40 @@ export default function ContentPage() {
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
 
+  // Resolve a post's full slide list. Carousel post types render as -1, -2, -3
+  // PNGs at /social-images/. The catalog-opener launch post is a special case
+  // — its caption lists 5 named compound images.
+  const getSlides = (post) => {
+    if (!post) return [];
+    const base = post.image_path;
+    if (!base) return [];
+    if (post.post_type === 'principles_carousel' && /-1\.png$/i.test(base)) {
+      return [1,2,3].map(n => base.replace(/-1\.png$/i, `-${n}.png`));
+    }
+    if (post.post_type === 'stack_carousel' && /-1\.png$/i.test(base)) {
+      return [1,2,3,4,5].map(n => base.replace(/-1\.png$/i, `-${n}.png`));
+    }
+    // Catalog-opener (launch Day 5): 5-image compound carousel
+    if (post.id === 'b0000000-0000-0000-0000-000000000005') {
+      return [
+        '/social-images/compound-bp10.png',
+        '/social-images/compound-tb10.png',
+        '/social-images/compound-tz10.png',
+        '/social-images/compound-na500.png',
+        '/social-images/compound-sr10.png',
+      ];
+    }
+    return [base];
+  };
+
+  const downloadAllSlides = (post) => {
+    const slides = getSlides(post);
+    slides.forEach((path, i) => {
+      // Stagger so the browser doesn't block sequential downloads
+      setTimeout(() => downloadImage(path), i * 200);
+    });
+  };
+
   if (loading) return <div style={{padding:32,color:'#8C919E'}}>Loading content calendar...</div>;
 
   const stats = {
@@ -186,9 +220,36 @@ export default function ContentPage() {
                 <button onClick={closeModal} style={{background:'none',border:'none',fontSize:20,cursor:'pointer',color:'#8C919E'}}>×</button>
               </div>
 
-              <div style={{marginBottom:16,textAlign:'center',background:'#FAFBFC',padding:12,borderRadius:6}}>
-                <img src={selected.image_path} alt="post preview" style={{maxWidth:'100%',maxHeight:480,borderRadius:4,boxShadow:'0 2px 8px rgba(0,0,0,0.08)'}} onError={(e)=>{e.target.style.display='none';e.target.parentElement.innerHTML += '<div style="padding:40px;color:#9CA3AF;font-size:13px">Image not yet rendered: <code style="font-family:monospace">'+selected.image_path+'</code></div>';}} />
-              </div>
+              {(() => {
+                const slides = getSlides(selected);
+                const isCarousel = slides.length > 1;
+                return (
+                  <div style={{marginBottom:16,background:'#FAFBFC',padding:12,borderRadius:6}}>
+                    {isCarousel && (
+                      <div style={{fontSize:11,color:'#8C919E',letterSpacing:1,textTransform:'uppercase',fontWeight:600,marginBottom:8,textAlign:'center'}}>
+                        Carousel · {slides.length} slides — upload all in order
+                      </div>
+                    )}
+                    <div style={{display:'flex',gap:10,overflowX:'auto',paddingBottom:isCarousel?8:0,justifyContent:isCarousel?'flex-start':'center'}}>
+                      {slides.map((path, i) => (
+                        <div key={path} style={{flex:'0 0 auto',position:'relative',textAlign:'center'}}>
+                          <img
+                            src={path}
+                            alt={`slide ${i+1}`}
+                            style={{maxHeight:380,maxWidth:isCarousel?320:'100%',borderRadius:4,boxShadow:'0 2px 8px rgba(0,0,0,0.08)',display:'block'}}
+                            onError={(e)=>{e.target.style.display='none';e.target.parentElement.innerHTML += '<div style="padding:40px;color:#9CA3AF;font-size:12px;background:#fff;border:1px dashed #E4E7EC;border-radius:4">Not rendered yet:<br><code style="font-family:monospace;font-size:11px">'+path+'</code></div>';}}
+                          />
+                          {isCarousel && (
+                            <div style={{fontSize:10,color:'#4A4F5C',marginTop:6,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>
+                              {i+1} / {slides.length}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div style={{marginBottom:12}}>
                 <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4,fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>Caption</label>
@@ -208,7 +269,7 @@ export default function ContentPage() {
 
               <div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:16}}>
                 <button onClick={()=>copy(selected.caption)} style={{padding:'10px 16px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>📋 Copy caption</button>
-                <button onClick={()=>downloadImage(selected.image_path)} style={{padding:'10px 16px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>⬇ Download image</button>
+                <button onClick={()=>downloadAllSlides(selected)} style={{padding:'10px 16px',background:'#22C55E',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>⬇ {getSlides(selected).length > 1 ? `Download all ${getSlides(selected).length} slides` : 'Download image'}</button>
                 {selected.status !== 'posted' && <button onClick={markPosted} disabled={busy} style={{padding:'10px 16px',background:'#16A34A',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>✓ Mark as posted</button>}
                 {!editing && <button onClick={()=>setEditing(true)} style={{padding:'10px 16px',background:'#F3F4F6',border:'1px solid #E4E7EC',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer'}}>✏ Edit</button>}
                 {editing && <button onClick={saveEdit} disabled={busy} style={{padding:'10px 16px',background:'#0072B5',color:'white',border:'none',borderRadius:6,fontSize:13,fontWeight:600,cursor:'pointer',opacity:busy?0.5:1}}>{busy?'Saving...':'✓ Save'}</button>}
