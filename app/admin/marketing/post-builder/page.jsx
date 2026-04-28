@@ -37,12 +37,23 @@ const carousels = [
   {
     id: 'long-term-effects',
     href: '/social-images/long-term-effects-carousel.html',
-    title: 'Long-Term Effects',
+    title: 'Long-Term Effects · Carousel',
     desc: 'Edgy 6-slide carousel — peptide unknowns vs. obesity literature. Editorial cream/navy palette, RUO-safe.',
-    slides: 6,
+    slides: '6 slides · 1080×1080',
     tone: 'Edgy / Editorial',
     thumbBg: '#0A0D14',
     thumbText: '"The unknown is uncomfortable.\nThe known is worse."',
+    created: '2026-04-27',
+  },
+  {
+    id: 'long-term-effects-single',
+    href: '/social-images/long-term-effects-single.html',
+    title: 'Long-Term Effects · Single',
+    desc: '"What are the long-term effects?" · Of peptides? Unknown. · Of obesity? Known. — followed by 9 visceral stats clustered For Men · Mortality · Disease.',
+    slides: '1 image · 1080×1350',
+    tone: 'Edgy / Editorial',
+    thumbBg: '#0A0D14',
+    thumbText: '"The known is worse."',
     created: '2026-04-27',
   },
 ];
@@ -62,7 +73,7 @@ export default function PostBuilder() {
                 <div key={i}>{line}</div>
               ))}
             </div>
-            <div style={s.meta}>{c.slides} slides · {c.tone}</div>
+            <div style={s.meta}>{c.slides} · {c.tone}</div>
             <div style={s.title}>{c.title}</div>
             <div style={s.desc}>{c.desc}</div>
             <div style={s.pill}>Open renderer</div>

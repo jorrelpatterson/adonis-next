@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>advnce labs — Long-Term Effects (single)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#F4F2EE;
+    --ink:#1A1C22;
+    --navy:#0A0D14;
+    --cyan:#00A0A8;
+    --amber:#E07C24;
+    --dim:#7A7D88;
+    --rule:rgba(0,0,0,0.08);
+    --rule-inv:rgba(255,255,255,0.10);
+    --fn:'Barlow Condensed',sans-serif;
+    --fd:'Cormorant Garamond',serif;
+    --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#222;
+    color:#eee;
+    font-family:var(--fm);
+    padding:40px;
+    min-height:100vh;
+  }
+  .toolbar{
+    max-width:1080px;
+    margin:0 auto 32px;
+    padding:20px 24px;
+    background:#111;
+    border:1px solid #333;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .toolbar h1{font-family:var(--fn);font-weight:300;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:#aaa;}
+  .toolbar p{font-size:11px;color:#888;line-height:1.5;}
+  .toolbar .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .toolbar button{
+    padding:10px 18px;
+    background:var(--cyan);
+    color:#fff;
+    border:none;
+    font-family:var(--fn);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-size:12px;
+    cursor:pointer;
+  }
+  .toolbar button:hover{background:#00808a;}
+  .toolbar .ratio{
+    font-family:var(--fm);font-size:10px;color:#888;
+    text-transform:uppercase;letter-spacing:2px;
+  }
+
+  .frame{
+    width:1080px;
+    margin:0 auto 48px;
+    box-shadow:0 6px 32px rgba(0,0,0,0.45);
+  }
+
+  /* 1080×1350 portrait */
+  .post{
+    width:1080px;
+    height:1350px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ─────────── TOP — navy. Big question + Peptide answer */
+  .top{
+    background:var(--navy);
+    color:var(--cream);
+    flex:0 0 380px;
+    padding:36px 80px 28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    position:relative;
+  }
+  .kicker{
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:5px;
+    color:var(--cyan);
+    margin-bottom:18px;
+  }
+  .headline{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:400;
+    font-size:80px;
+    line-height:1;
+    color:var(--cream);
+    letter-spacing:-2px;
+    margin-bottom:32px;
+    max-width:920px;
+  }
+  .answer-rule{
+    width:100%;
+    height:1px;
+    background:var(--rule-inv);
+    margin-bottom:22px;
+  }
+  .answer-line{
+    display:flex;
+    flex-direction:row;
+    align-items:baseline;
+    gap:24px;
+  }
+  .answer-q{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:60px;
+    line-height:1;
+    color:var(--cream);
+    letter-spacing:-1px;
+  }
+  .answer-sep{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:60px;
+    line-height:1;
+    color:var(--dim);
+  }
+  .answer-a{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:64px;
+    line-height:1;
+    color:var(--cyan);
+    text-transform:uppercase;
+    letter-spacing:-1.5px;
+  }
+  .top .answer-a{color:var(--cyan);}
+  .gloss{
+    margin-top:14px;
+    font-family:var(--fm);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ─────────── MID — cream. Obesity answer + dread-list */
+  .mid{
+    background:var(--cream);
+    color:var(--ink);
+    flex:1;
+    padding:24px 80px 10px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .mid .answer-q{color:var(--ink);}
+  .mid .answer-sep{color:var(--dim);}
+  .mid .answer-a{color:var(--ink);}
+
+  .cluster{
+    margin-top:10px;
+  }
+  .cluster:first-of-type{margin-top:14px;}
+  .cluster-head{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:14px;
+    margin-bottom:4px;
+  }
+  .cluster-head .label{
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--ink);
+    font-weight:500;
+  }
+  .cluster-head .rule{
+    flex:1;
+    height:1px;
+    background:var(--rule);
+  }
+  .cluster.feature .cluster-head .label{color:var(--amber);}
+
+  .row-stat{
+    display:flex;
+    flex-direction:row;
+    align-items:baseline;
+    gap:20px;
+    padding:3px 0;
+  }
+  .row-stat .num{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:38px;
+    line-height:1;
+    color:var(--cyan);
+    letter-spacing:-1px;
+    flex:0 0 130px;
+  }
+  .cluster.feature .row-stat .num{color:var(--amber);}
+  .row-stat .copy{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:400;
+    font-size:24px;
+    line-height:1.2;
+    color:var(--ink);
+    flex:1;
+  }
+
+  .sources{
+    margin-top:auto;
+    padding-top:12px;
+    font-family:var(--fm);
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:2.5px;
+    color:var(--dim);
+    line-height:1.5;
+  }
+
+  /* ─────────── BOTTOM — navy. Punchline + lockup */
+  .bottom{
+    background:var(--navy);
+    color:var(--cream);
+    flex:0 0 320px;
+    padding:36px 80px 32px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border-top:1px solid var(--rule-inv);
+  }
+  .punch-block{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .punch-1{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:54px;
+    line-height:1.05;
+    color:var(--cream);
+    margin-bottom:4px;
+  }
+  .punch-2{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:400;
+    font-size:72px;
+    line-height:1;
+    color:var(--amber);
+    letter-spacing:-1px;
+  }
+  .lockup{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .lockup .wm-block{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .lockup .wm{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:14px;
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:36px;
+    color:var(--cream);
+    text-transform:lowercase;
+    letter-spacing:1px;
+    line-height:1;
+  }
+  .lockup .wm em{color:var(--dim);font-style:normal;}
+  .lockup .manifesto{
+    font-family:var(--fm);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+  }
+  .lockup .cta{
+    font-family:var(--fn);
+    font-weight:400;
+    font-size:18px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:var(--cyan);
+    text-decoration:none;
+  }
+  .logo-svg{display:block;}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>advnce labs / long-term effects — single (Unknown / Known)</h1>
+  <p>1080×1350 portrait. One question, two parallel answers. Top: peptides — Unknown. Bottom: obesity — Known, with the dread-list as the literal proof. Punchline closes the loop with the same two words. Disclaimer goes in IG caption.</p>
+  <div class="row" style="display:flex;gap:12px;align-items:center;">
+    <button id="download-png">Download PNG</button>
+    <span class="ratio">1080 × 1350 · 4:5 portrait</span>
+  </div>
+</div>
+
+<div class="frame">
+  <div class="post" id="post">
+
+    <!-- ─────────── TOP: question + peptide unknown ─────────── -->
+    <div class="top">
+      <div class="kicker">For the skeptic</div>
+      <div class="headline">What are the long-term effects?</div>
+      <div class="answer-rule"></div>
+      <div class="answer-line">
+        <div class="answer-q">Of peptides?</div>
+        <div class="answer-sep">—</div>
+        <div class="answer-a">Unknown.</div>
+      </div>
+      <div class="gloss">Long-term human data still incomplete · Research ongoing</div>
+    </div>
+
+    <!-- ─────────── MID: obesity known + dread-list ─────────── -->
+    <div class="mid">
+      <div class="answer-line">
+        <div class="answer-q">Of obesity?</div>
+        <div class="answer-sep">—</div>
+        <div class="answer-a">Known.</div>
+      </div>
+
+      <div class="cluster feature">
+        <div class="cluster-head">
+          <span class="label">For men, specifically</span>
+          <span class="rule"></span>
+        </div>
+        <div class="row-stat">
+          <span class="num">−25%</span>
+          <span class="copy">Testosterone — lost by BMI 30.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">2.6×</span>
+          <span class="copy">Erectile dysfunction. Likely, not possible.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">+35%</span>
+          <span class="copy">Midlife dementia — your mind ages out.</span>
+        </div>
+      </div>
+
+      <div class="cluster">
+        <div class="cluster-head">
+          <span class="label">Mortality</span>
+          <span class="rule"></span>
+        </div>
+        <div class="row-stat">
+          <span class="num">−14</span>
+          <span class="copy">Years of life. Sixty, instead of seventy-four.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">+58%</span>
+          <span class="copy">All-cause mortality. Every year, every year.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">13</span>
+          <span class="copy">Cancers — causally linked, not correlated.</span>
+        </div>
+      </div>
+
+      <div class="cluster">
+        <div class="cluster-head">
+          <span class="label">Disease</span>
+          <span class="rule"></span>
+        </div>
+        <div class="row-stat">
+          <span class="num">4×</span>
+          <span class="copy">Type 2 diabetes. Insulin gives up.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">2–3×</span>
+          <span class="copy">Cardiovascular disease.</span>
+        </div>
+        <div class="row-stat">
+          <span class="num">70%</span>
+          <span class="copy">Of NAFLD — #1 liver-transplant cause in U.S. women.</span>
+        </div>
+      </div>
+
+      <div class="sources">
+        Sources · NEJM 2014 · Lancet 2016, 2020 · NCI 2022 · CDC 2023 · AHA 2023 · J Clin Endo 2017 · J Sex Med 2018 · AASLD 2023
+      </div>
+    </div>
+
+    <!-- ─────────── BOTTOM: punchline + lockup ─────────── -->
+    <div class="bottom">
+      <div class="punch-block">
+        <div class="punch-1">The unknown is uncomfortable.</div>
+        <div class="punch-2">The known is worse.</div>
+      </div>
+      <div class="lockup">
+        <div class="wm-block">
+          <div class="wm">
+            <svg class="logo-svg" width="58" height="34" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+              <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+              <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+              <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+            </svg>
+            <span>advnce <em>labs</em></span>
+          </div>
+          <div class="manifesto">Precision · Purity · Protocol</div>
+        </div>
+        <a class="cta" href="#">advncelabs.com →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.getElementById('download-png').addEventListener('click', async () => {
+    const el = document.getElementById('post');
+    const canvas = await html2canvas(el, {
+      width:1080, height:1350,
+      windowWidth:1080, windowHeight:1350,
+      scale:1,
+      useCORS:true,
+      backgroundColor:null,
+    });
+    const a = document.createElement('a');
+    a.download = 'advnce-longterm-single.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+</script>
+
+</body>
+</html>
