@@ -24,7 +24,7 @@ async function loadData() {
     sb('/post_drafts?status=eq.needs_legal_review&order=created_at.desc'),
     sb('/post_drafts?status=in.(posted,skipped)&order=created_at.desc&limit=30'),
     sb('/source_health?order=source_name.asc'),
-    sb('/news_candidates?select=id,source_url,source_name,tier,topic_tags,title,status,published_at,scraped_at&order=scraped_at.desc&limit=100'),
+    sb('/news_candidates?select=id,source_url,source_name,tier,topic_tags,title,status,published_at,scraped_at,flagged_for_curate,flagged_at&order=flagged_for_curate.desc,flagged_at.desc.nullslast,scraped_at.desc&limit=100'),
   ]);
   return { ready, legal, recent, health, candidates };
 }
