@@ -25,8 +25,8 @@ const campaigns = [
     title: "There's a peptide for that",
     desc: 'Apple-riff Instagram series. Layman hooks ("Knees hurt?", "Wake up tired?") → research-grade reveal slides on 46 peptides. Weekly Fridays.',
     posts: 46,
-    cadence: 'Mon · Wed · Fri (mixed with routine)',
-    runtime: '2026-05-04 → 2026-10-05',
+    cadence: 'Mon + Fri (Wed = routine)',
+    runtime: '2026-05-04 → 2026-10-09',
     status: 'active',
   },
 ];

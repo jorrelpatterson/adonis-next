@@ -26,7 +26,14 @@ const STATUS_BADGE = {
 function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
 function addMonths(d, n) { return new Date(d.getFullYear(), d.getMonth()+n, 1); }
 function fmtMonth(d) { return d.toLocaleString('default',{month:'long',year:'numeric'}); }
-function dateKey(d) { return d.toISOString().slice(0,10); }
+function dateKey(d) {
+  // Use local components, not toISOString — toISOString returns UTC and shifts
+  // the date forward for any local time after ~5pm Pacific.
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
 export default function ContentPage() {
   const [posts, setPosts] = useState([]);
