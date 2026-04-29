@@ -10,10 +10,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "BPC-157",
       "TAGLINE": "The body's own repair signal, amplified.",
-      "BULLET_1": "Activates VEGFR2 + Akt/eNOS pathway — drives new blood vessel growth at injury sites.",
+      "BULLET_1": "Activates VEGFR2 + Akt/eNOS pathway \u2014 drives new blood vessel growth at injury sites.",
       "BULLET_2": "Upregulates growth hormone receptor expression in tendon fibroblasts at mRNA + protein level.",
-      "BULLET_3": "Accelerates fibroblast migration via FAK-paxillin pathway — the cells that lay down collagen scaffolding.",
-      "CITATION_SHORT": "Sikiric et al · 2010 · PMID 20388964"
+      "BULLET_3": "Accelerates fibroblast migration via FAK-paxillin pathway \u2014 the cells that lay down collagen scaffolding.",
+      "CITATION_SHORT": "Sikiric et al \u00b7 2010 \u00b7 PMID 20388964"
     }
   },
   {
@@ -27,10 +27,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Tirzepatide",
       "TAGLINE": "GLP-1 + GIP. One molecule, two receptors.",
-      "BULLET_1": "Activates both GLP-1 and GIP receptors — first dual agonist in clinical use (Mounjaro, Zepbound).",
+      "BULLET_1": "Activates both GLP-1 and GIP receptors \u2014 first dual agonist in clinical use (Mounjaro, Zepbound).",
       "BULLET_2": "Slows gastric emptying while amplifying glucose-dependent insulin secretion in the pancreas.",
-      "BULLET_3": "Activates satiety circuits in the hypothalamus — research shows up to 22.5% body weight reduction over 72 weeks (SURMOUNT-1 trial).",
-      "CITATION_SHORT": "Jastreboff et al · 2022 · NEJM 387:205"
+      "BULLET_3": "Activates satiety circuits in the hypothalamus \u2014 research shows up to 22.5% body weight reduction over 72 weeks (SURMOUNT-1 trial).",
+      "CITATION_SHORT": "Jastreboff et al \u00b7 2022 \u00b7 NEJM 387:205"
     }
   },
   {
@@ -44,10 +44,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "NAD+",
       "TAGLINE": "The cellular currency of energy and repair.",
-      "BULLET_1": "Essential coenzyme for ATP production — depletes with age, stress, and oxidative load.",
+      "BULLET_1": "Essential coenzyme for ATP production \u2014 depletes with age, stress, and oxidative load.",
       "BULLET_2": "Activates sirtuin family proteins (SIRT1, SIRT3) involved in mitochondrial biogenesis and DNA repair.",
       "BULLET_3": "Substrate for PARP enzymes that respond to DNA damage and CD38 in immune signaling.",
-      "CITATION_SHORT": "Yoshino et al · 2018 · Cell Metab 27(3)"
+      "CITATION_SHORT": "Yoshino et al \u00b7 2018 \u00b7 Cell Metab 27(3)"
     }
   },
   {
@@ -61,10 +61,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "TB-500",
       "TAGLINE": "Synthetic Thymosin Beta-4. The body's actin organizer.",
-      "BULLET_1": "Binds G-actin to regulate cytoskeletal organization — fundamental to cell migration and tissue repair.",
+      "BULLET_1": "Binds G-actin to regulate cytoskeletal organization \u2014 fundamental to cell migration and tissue repair.",
       "BULLET_2": "Promotes angiogenesis, wound healing, and reduces inflammation in animal models of injury.",
       "BULLET_3": "Often paired with BPC-157 in research stacks for synergistic recovery effects.",
-      "CITATION_SHORT": "Goldstein et al · 2012 · Ann NY Acad Sci 1269(1)"
+      "CITATION_SHORT": "Goldstein et al \u00b7 2012 \u00b7 Ann NY Acad Sci 1269(1)"
     }
   },
   {
@@ -78,10 +78,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Semaglutide",
       "TAGLINE": "The molecule that redefined obesity research.",
-      "BULLET_1": "GLP-1 receptor agonist with extended half-life (~7 days) — once-weekly dosing in clinical protocols.",
-      "BULLET_2": "Slows gastric emptying, enhances satiety, improves insulin response — multiple mechanisms reinforce each other.",
+      "BULLET_1": "GLP-1 receptor agonist with extended half-life (~7 days) \u2014 once-weekly dosing in clinical protocols.",
+      "BULLET_2": "Slows gastric emptying, enhances satiety, improves insulin response \u2014 multiple mechanisms reinforce each other.",
       "BULLET_3": "STEP-1 trial: average 14.9% body weight reduction over 68 weeks vs 2.4% placebo.",
-      "CITATION_SHORT": "Wilding et al · 2021 · NEJM 384:989"
+      "CITATION_SHORT": "Wilding et al \u00b7 2021 \u00b7 NEJM 384:989"
     }
   },
   {
@@ -96,9 +96,9 @@
       "COMPOUND_NAME": "MOTS-c",
       "TAGLINE": "A peptide encoded inside mitochondrial DNA.",
       "BULLET_1": "Mitochondrial-derived peptide that improves insulin sensitivity in animal models of metabolic stress.",
-      "BULLET_2": "Activates AMPK signaling — the cellular energy sensor — to enhance glucose homeostasis.",
+      "BULLET_2": "Activates AMPK signaling \u2014 the cellular energy sensor \u2014 to enhance glucose homeostasis.",
       "BULLET_3": "Research links MOTS-c to exercise capacity, metabolic flexibility, and age-related decline pathways.",
-      "CITATION_SHORT": "Lee et al · 2015 · Cell Metab 21(3)"
+      "CITATION_SHORT": "Lee et al \u00b7 2015 \u00b7 Cell Metab 21(3)"
     }
   },
   {
@@ -112,10 +112,10 @@
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "Sermorelin",
       "TAGLINE": "GHRH analog. Triggers your pituitary to do its own work.",
-      "BULLET_1": "29-amino-acid GHRH analog — same pulsatile mechanism as endogenous GH-releasing hormone.",
+      "BULLET_1": "29-amino-acid GHRH analog \u2014 same pulsatile mechanism as endogenous GH-releasing hormone.",
       "BULLET_2": "Stimulates pituitary GH release rather than supplying exogenous GH.",
       "BULLET_3": "Research has explored applications in age-related GH decline, sleep architecture, and recovery markers.",
-      "CITATION_SHORT": "Vance et al · 1985 · NEJM 312:1483"
+      "CITATION_SHORT": "Vance et al \u00b7 1985 \u00b7 NEJM 312:1483"
     }
   },
   {
@@ -128,11 +128,11 @@
     "vars": {
       "EYEBROW_TAG": "MECHANISM MONDAY",
       "COMPOUND_NAME": "KPV",
-      "TAGLINE": "The C-terminal of α-MSH. Anti-inflammatory in three letters.",
-      "BULLET_1": "Tripeptide (Lysine-Proline-Valine) — the active C-terminal fragment of alpha-melanocyte-stimulating hormone.",
-      "BULLET_2": "Research shows downregulation of NF-κB signaling — a master regulator of inflammation pathways.",
+      "TAGLINE": "The C-terminal of \u03b1-MSH. Anti-inflammatory in three letters.",
+      "BULLET_1": "Tripeptide (Lysine-Proline-Valine) \u2014 the active C-terminal fragment of alpha-melanocyte-stimulating hormone.",
+      "BULLET_2": "Research shows downregulation of NF-\u03baB signaling \u2014 a master regulator of inflammation pathways.",
       "BULLET_3": "Animal model studies explore applications in IBD, skin healing, and inflammatory bowel research.",
-      "CITATION_SHORT": "Brzoska et al · 2008 · Endocrinology 149(4)"
+      "CITATION_SHORT": "Brzoska et al \u00b7 2008 \u00b7 Endocrinology 149(4)"
     }
   },
   {
@@ -181,7 +181,7 @@
         {
           "name": "Cagrilintide",
           "role": "Amylin analog",
-          "explainer": "Long-acting amylin agonist explored in research as a complement to GLP-1 mechanisms — different appetite pathway."
+          "explainer": "Long-acting amylin agonist explored in research as a complement to GLP-1 mechanisms \u2014 different appetite pathway."
         },
         {
           "name": "Semaglutide",
@@ -270,7 +270,7 @@
         {
           "name": "Sermorelin",
           "role": "GHRH-driven recovery",
-          "explainer": "GHRH analog that triggers nocturnal GH pulses — well-documented to align with deep-sleep architecture."
+          "explainer": "GHRH analog that triggers nocturnal GH pulses \u2014 well-documented to align with deep-sleep architecture."
         }
       ]
     }
@@ -288,12 +288,12 @@
         {
           "name": "HCG",
           "role": "LH-mimicking glycoprotein",
-          "explainer": "Activates LH receptor on Leydig cells — central to reproductive endocrinology research and HPG axis studies."
+          "explainer": "Activates LH receptor on Leydig cells \u2014 central to reproductive endocrinology research and HPG axis studies."
         },
         {
           "name": "Kisspeptin-10",
           "role": "Upstream HPG axis trigger",
-          "explainer": "KISS1 receptor agonist — the gateway peptide that initiates the cascade triggering puberty and reproductive function."
+          "explainer": "KISS1 receptor agonist \u2014 the gateway peptide that initiates the cascade triggering puberty and reproductive function."
         },
         {
           "name": "PT-141",
@@ -354,7 +354,7 @@
         {
           "name": "KPV",
           "role": "Anti-inflammatory tripeptide",
-          "explainer": "C-terminal fragment of alpha-MSH. Downregulates NF-κB pathway in inflammation research models."
+          "explainer": "C-terminal fragment of alpha-MSH. Downregulates NF-\u03baB pathway in inflammation research models."
         }
       ]
     }
@@ -368,7 +368,7 @@
     "source_compound": "BPC-157",
     "vars": {
       "QUOTE": "Stable pentadecapeptide BPC 157 promotes healing of injured ligaments in rats with a dose-dependent effect.",
-      "CITATION_FULL": "Staresinic et al · J Orthop Res · 2003"
+      "CITATION_FULL": "Staresinic et al \u00b7 J Orthop Res \u00b7 2003"
     }
   },
   {
@@ -395,7 +395,7 @@
       "PATHWAY_LABEL": "NAD+ / SIRTUIN PATHWAY",
       "EXPLAINER_TEXT": "NAD+ serves as the substrate for sirtuin deacetylases, which regulate mitochondrial biogenesis, DNA repair, and metabolic adaptation in published longevity research.",
       "DIAGRAM_SVG": "<svg viewBox=\"0 0 400 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arr\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6\" fill=\"#00A0A8\"/></marker></defs><circle cx=\"60\" cy=\"100\" r=\"32\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"60\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"13\" fill=\"#1A1C22\">NAD+</text><line x1=\"92\" y1=\"100\" x2=\"148\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr)\"/><circle cx=\"180\" cy=\"100\" r=\"32\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"11\" fill=\"#1A1C22\">SIRT1/3</text><line x1=\"212\" y1=\"100\" x2=\"268\" y2=\"100\" stroke=\"#E07C24\" stroke-width=\"2\" marker-end=\"url(#arr)\"/><circle cx=\"300\" cy=\"100\" r=\"42\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\"/><text x=\"300\" y=\"100\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"10\" fill=\"#1A1C22\">DNA Repair</text><text x=\"300\" y=\"115\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"8\" fill=\"#7A7D88\">Mito biogenesis</text></svg>",
-      "CITATION_SHORT": "Yoshino et al · 2018 · Cell Metabolism"
+      "CITATION_SHORT": "Yoshino et al \u00b7 2018 \u00b7 Cell Metabolism"
     }
   },
   {
@@ -420,7 +420,7 @@
     "source_compound": "SM5",
     "vars": {
       "QUOTE": "Once-weekly subcutaneous semaglutide plus lifestyle intervention was associated with sustained, clinically relevant reduction in body weight.",
-      "CITATION_FULL": "Wilding et al · STEP 1 · NEJM 384:989 · 2021"
+      "CITATION_FULL": "Wilding et al \u00b7 STEP 1 \u00b7 NEJM 384:989 \u00b7 2021"
     }
   },
   {
@@ -432,9 +432,9 @@
     "source_compound": "MC10",
     "vars": {
       "PATHWAY_LABEL": "MOTS-c / AMPK PATHWAY",
-      "EXPLAINER_TEXT": "MOTS-c, encoded in mitochondrial DNA, activates AMPK signaling — improving glucose uptake, metabolic flexibility, and exercise capacity in published research.",
+      "EXPLAINER_TEXT": "MOTS-c, encoded in mitochondrial DNA, activates AMPK signaling \u2014 improving glucose uptake, metabolic flexibility, and exercise capacity in published research.",
       "DIAGRAM_SVG": "<svg viewBox=\"0 0 400 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arr2\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6\" fill=\"#00A0A8\"/></marker></defs><ellipse cx=\"60\" cy=\"100\" rx=\"40\" ry=\"26\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\"/><text x=\"60\" y=\"98\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"11\" fill=\"#1A1C22\">MITO-DNA</text><text x=\"60\" y=\"112\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"9\" fill=\"#7A7D88\">MOTS-c</text><line x1=\"100\" y1=\"100\" x2=\"148\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr2)\"/><circle cx=\"180\" cy=\"100\" r=\"30\" fill=\"none\" stroke=\"#00A0A8\" stroke-width=\"2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"13\" fill=\"#1A1C22\">AMPK</text><line x1=\"210\" y1=\"100\" x2=\"258\" y2=\"100\" stroke=\"#00A0A8\" stroke-width=\"2\" marker-end=\"url(#arr2)\"/><rect x=\"262\" y=\"74\" width=\"80\" height=\"52\" fill=\"none\" stroke=\"#E07C24\" stroke-width=\"2\" rx=\"4\"/><text x=\"302\" y=\"96\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"700\" font-size=\"10\" fill=\"#1A1C22\">Glucose uptake</text><text x=\"302\" y=\"112\" text-anchor=\"middle\" font-family=\"Barlow Condensed\" font-weight=\"400\" font-size=\"9\" fill=\"#7A7D88\">Metabolic flex</text></svg>",
-      "CITATION_SHORT": "Lee et al · 2015 · Cell Metabolism"
+      "CITATION_SHORT": "Lee et al \u00b7 2015 \u00b7 Cell Metabolism"
     }
   },
   {
@@ -447,7 +447,7 @@
     "vars": {
       "PRINCIPLE_NUMBER": "03",
       "PRINCIPLE_TITLE": "SUPPLIER DISCIPLINE",
-      "PRINCIPLE_BODY": "We source from a vetted set of manufacturers only. Not because we couldn't find more — because maintaining a short, auditable supply chain is more important than catalog breadth for its own sake."
+      "PRINCIPLE_BODY": "We source from a vetted set of manufacturers only. Not because we couldn't find more \u2014 because maintaining a short, auditable supply chain is more important than catalog breadth for its own sake."
     }
   },
   {
@@ -459,7 +459,7 @@
     "source_compound": "LL5",
     "vars": {
       "QUOTE": "LL-37 functions at the interface of innate and adaptive immunity, with broad-spectrum antimicrobial activity and immune-modulating signaling.",
-      "CITATION_FULL": "Vandamme et al · Cell Mol Immunol · 2012"
+      "CITATION_FULL": "Vandamme et al \u00b7 Cell Mol Immunol \u00b7 2012"
     }
   },
   {
@@ -486,5 +486,649 @@
     "post_type": "receipt_card",
     "output_filename": "launch-04-receipt.png",
     "vars": {}
+  },
+  {
+    "id": "ptt-knees-hurt",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-knees-hurt.png",
+    "image_path": "/social-images/ptt-knees-hurt-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Knees hurt?",
+      "COMPOUND": "BPC-157",
+      "SUMMARY": "BPC-157 \u2014 a stomach-derived pentadecapeptide \u2014 has decades of research on tissue repair, fibroblast migration, and blood vessel growth at injury sites.",
+      "CITATION": "Sikiric et al \u00b7 J Orthop Res 2003"
+    }
+  },
+  {
+    "id": "ptt-wake-up-tired",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-wake-up-tired.png",
+    "image_path": "/social-images/ptt-wake-up-tired-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Wake up tired?",
+      "COMPOUND": "DSIP",
+      "SUMMARY": "Delta-Sleep-Inducing Peptide has been studied for sleep architecture, slow-wave amplification, and REM modulation in animal and human models.",
+      "CITATION": "Schoenenberger \u00b7 Eur J Pharmacol 1977"
+    }
+  },
+  {
+    "id": "ptt-brain-fog",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-brain-fog.png",
+    "image_path": "/social-images/ptt-brain-fog-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Brain fog?",
+      "COMPOUND": "Selank",
+      "SUMMARY": "Selank is a Russian-developed peptide investigated for cognitive markers, attention, and GABAergic signaling. Not a stimulant \u2014 a regulatory peptide.",
+      "CITATION": "Kozlovskaya et al \u00b7 2003"
+    }
+  },
+  {
+    "id": "ptt-going-bald",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-going-bald.png",
+    "image_path": "/social-images/ptt-going-bald-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Going bald?",
+      "COMPOUND": "GHK-Cu",
+      "SUMMARY": "GHK-Cu is a copper-binding tripeptide researched for follicular response, dermal regeneration, and collagen synthesis. Multi-decade literature.",
+      "CITATION": "Pickart \u00b7 BioMed Res Int 2008"
+    }
+  },
+  {
+    "id": "ptt-two-day-hangovers",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-two-day-hangovers.png",
+    "image_path": "/social-images/ptt-two-day-hangovers-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Two-day hangovers?",
+      "COMPOUND": "NAD+",
+      "SUMMARY": "NAD+ is a coenzyme central to mitochondrial function and metabolic recovery. Research investigates sirtuin pathways and oxidative-stress repair.",
+      "CITATION": "Yoshino et al \u00b7 Cell Metab 2018"
+    }
+  },
+  {
+    "id": "ptt-sore-for-days",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-sore-for-days.png",
+    "image_path": "/social-images/ptt-sore-for-days-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Sore for days?",
+      "COMPOUND": "TB-500",
+      "SUMMARY": "TB-500 is a fragment of thymosin beta-4. Research investigates actin organization, angiogenesis, and wound healing.",
+      "CITATION": "Goldstein et al \u00b7 Ann NY Acad Sci 2012"
+    }
+  },
+  {
+    "id": "ptt-always-tired",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-always-tired.png",
+    "image_path": "/social-images/ptt-always-tired-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Always tired?",
+      "COMPOUND": "MOTS-c",
+      "SUMMARY": "MOTS-c is a mitochondrial-derived peptide. Research investigates cellular energy metabolism, AMPK signaling, and exercise capacity.",
+      "CITATION": "Lee et al \u00b7 Cell Metab 2015"
+    }
+  },
+  {
+    "id": "ptt-wrinkles-showing-up",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-wrinkles-showing-up.png",
+    "image_path": "/social-images/ptt-wrinkles-showing-up-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Wrinkles showing up?",
+      "COMPOUND": "Snap-8",
+      "SUMMARY": "Snap-8 (acetyl octapeptide-3) has been studied as a topical research compound for acetylcholine-release modulation in facial muscles.",
+      "CITATION": "Blanes-Mira et al \u00b7 Int J Cosmet Sci 2002"
+    }
+  },
+  {
+    "id": "ptt-always-sick",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-always-sick.png",
+    "image_path": "/social-images/ptt-always-sick-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Always sick?",
+      "COMPOUND": "Thymosin \u03b1-1",
+      "SUMMARY": "Thymosin alpha-1 is a 28-amino-acid peptide. Research investigates T-cell maturation, immune signaling, and cytokine modulation.",
+      "CITATION": "Goldstein \u00b7 Ann NY Acad Sci 2008"
+    }
+  },
+  {
+    "id": "ptt-dead-bedroom",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-dead-bedroom.png",
+    "image_path": "/social-images/ptt-dead-bedroom-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Dead bedroom?",
+      "COMPOUND": "PT-141",
+      "SUMMARY": "PT-141 (bremelanotide) is a melanocortin-receptor agonist. Research investigates MC3R/MC4R central pathways involved in sexual response.",
+      "CITATION": "Diamond 2004 \u00b7 Pfaus 2007 \u00b7 Caruso 2014"
+    }
+  },
+  {
+    "id": "ptt-not-yourself",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-not-yourself.png",
+    "image_path": "/social-images/ptt-not-yourself-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Not yourself?",
+      "COMPOUND": "Sermorelin",
+      "SUMMARY": "Sermorelin is a GHRH analog studied for the growth-hormone axis and downstream endocrine cascade \u2014 research, not replacement.",
+      "CITATION": "Walker \u00b7 J Clin Endocrinol Metab 1994"
+    }
+  },
+  {
+    "id": "ptt-mind-won-t-shut-up",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-mind-won-t-shut-up.png",
+    "image_path": "/social-images/ptt-mind-won-t-shut-up-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Mind won't shut up?",
+      "COMPOUND": "Selank",
+      "SUMMARY": "Selank has been investigated for anxiolytic markers, monoamine modulation, and stress-response in research models.",
+      "CITATION": "Semenova et al \u00b7 2012"
+    }
+  },
+  {
+    "id": "ptt-lifting-more-growing-less",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-lifting-more-growing-less.png",
+    "image_path": "/social-images/ptt-lifting-more-growing-less-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Lifting more, growing less?",
+      "COMPOUND": "Ipamorelin",
+      "SUMMARY": "Ipamorelin is a selective GH-secretagogue researched for its clean GH-pulse profile \u2014 without the cortisol or appetite spikes of older compounds.",
+      "CITATION": "Raun et al \u00b7 Eur J Endocrinol 1998"
+    }
+  },
+  {
+    "id": "ptt-looking-older",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-looking-older.png",
+    "image_path": "/social-images/ptt-looking-older-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Looking older?",
+      "COMPOUND": "GHK-Cu",
+      "SUMMARY": "GHK-Cu has been studied for collagen synthesis, fibroblast activation, dermal regeneration, and anti-glycation markers across hundreds of papers.",
+      "CITATION": "Pickart \u00b7 BioMed Res Int 2018"
+    }
+  },
+  {
+    "id": "ptt-always-bloated",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-always-bloated.png",
+    "image_path": "/social-images/ptt-always-bloated-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Always bloated?",
+      "COMPOUND": "BPC-157",
+      "SUMMARY": "BPC-157 has a substantial literature for gastric protection, GI tissue repair, and mucosal integrity in animal models.",
+      "CITATION": "Sikiric et al \u00b7 J Physiol Paris 2010"
+    }
+  },
+  {
+    "id": "ptt-can-t-focus",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-can-t-focus.png",
+    "image_path": "/social-images/ptt-can-t-focus-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Can't focus?",
+      "COMPOUND": "Semax",
+      "SUMMARY": "Semax is a synthetic ACTH-fragment derivative studied for nootropic effects, dopaminergic activity, and attention markers.",
+      "CITATION": "Kaplan et al \u00b7 1996"
+    }
+  },
+  {
+    "id": "ptt-memory-slipping",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-memory-slipping.png",
+    "image_path": "/social-images/ptt-memory-slipping-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Memory slipping?",
+      "COMPOUND": "Cerebrolysin",
+      "SUMMARY": "Cerebrolysin is a porcine-brain-derived peptide preparation investigated for neurotrophic factors, BDNF activity, and neuroprotection.",
+      "CITATION": "Plosker \u00b7 Drugs 2009"
+    }
+  },
+  {
+    "id": "ptt-lost-the-connection",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-lost-the-connection.png",
+    "image_path": "/social-images/ptt-lost-the-connection-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Lost the connection?",
+      "COMPOUND": "Oxytocin",
+      "SUMMARY": "Oxytocin has a deep literature on bonding, social cognition, and anxiolytic markers in research contexts.",
+      "CITATION": "Carter \u00b7 Annu Rev Psychol 2014"
+    }
+  },
+  {
+    "id": "ptt-t-levels-low",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-t-levels-low.png",
+    "image_path": "/social-images/ptt-t-levels-low-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "T levels low?",
+      "COMPOUND": "Kisspeptin-10",
+      "SUMMARY": "Kisspeptin-10 acts on the HPG axis. Research investigates LH/FSH signaling and testicular function in animal and human models.",
+      "CITATION": "Dhillo et al \u00b7 J Clin Endocrinol Metab 2005"
+    }
+  },
+  {
+    "id": "ptt-body-wearing-out",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-body-wearing-out.png",
+    "image_path": "/social-images/ptt-body-wearing-out-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Body wearing out?",
+      "COMPOUND": "Glutathione",
+      "SUMMARY": "Glutathione is the body's master antioxidant. Research investigates oxidative-stress repair and cellular detoxification across decades.",
+      "CITATION": "Sies \u00b7 Free Radic Biol Med 1999"
+    }
+  },
+  {
+    "id": "ptt-belly-won-t-budge",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-belly-won-t-budge.png",
+    "image_path": "/social-images/ptt-belly-won-t-budge-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Belly won't budge?",
+      "COMPOUND": "Tesamorelin",
+      "SUMMARY": "Tesamorelin is a GHRH analog with a substantial literature on visceral fat metabolism in clinical research.",
+      "CITATION": "Falutz et al \u00b7 NEJM 2007"
+    }
+  },
+  {
+    "id": "ptt-achy-all-the-time",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-achy-all-the-time.png",
+    "image_path": "/social-images/ptt-achy-all-the-time-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Achy all the time?",
+      "COMPOUND": "KPV",
+      "SUMMARY": "KPV is an anti-inflammatory tripeptide derived from \u03b1-MSH. Research investigates the melanocortin pathway and inflammatory markers.",
+      "CITATION": "Brzoska et al \u00b7 Endocr Rev 2008"
+    }
+  },
+  {
+    "id": "ptt-aging-too-fast",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-aging-too-fast.png",
+    "image_path": "/social-images/ptt-aging-too-fast-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Aging too fast?",
+      "COMPOUND": "Epitalon",
+      "SUMMARY": "Epitalon is a pineal-gland-derived peptide investigated for telomere length and cellular-aging markers.",
+      "CITATION": "Khavinson et al \u00b7 Bull Exp Biol Med 2003"
+    }
+  },
+  {
+    "id": "ptt-drained-doing-nothing",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-drained-doing-nothing.png",
+    "image_path": "/social-images/ptt-drained-doing-nothing-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Drained doing nothing?",
+      "COMPOUND": "SS-31",
+      "SUMMARY": "SS-31 (elamipretide) is a mitochondria-targeted antioxidant studied for ATP synthesis and mitochondrial integrity.",
+      "CITATION": "Birk et al \u00b7 J Am Soc Nephrol 2014"
+    }
+  },
+  {
+    "id": "ptt-pale-year-round",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-pale-year-round.png",
+    "image_path": "/social-images/ptt-pale-year-round-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Pale year-round?",
+      "COMPOUND": "Melanotan I",
+      "SUMMARY": "Melanotan I is an \u03b1-MSH analog investigated for melanogenesis, photoprotection, and pigment-cell signaling.",
+      "CITATION": "Dorr et al \u00b7 2004"
+    }
+  },
+  {
+    "id": "ptt-can-t-tan-just-burn",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-can-t-tan-just-burn.png",
+    "image_path": "/social-images/ptt-can-t-tan-just-burn-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Can't tan, just burn?",
+      "COMPOUND": "Melanotan II",
+      "SUMMARY": "Melanotan II is a non-selective \u03b1-MSH analog with research on melanogenesis and additional MC4R-related pathways.",
+      "CITATION": "Dorr et al \u00b7 2004"
+    }
+  },
+  {
+    "id": "ptt-forgetting-names",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-forgetting-names.png",
+    "image_path": "/social-images/ptt-forgetting-names-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Forgetting names?",
+      "COMPOUND": "Pinealon",
+      "SUMMARY": "Pinealon is a tripeptide derived from pineal-gland research. Studies investigate neuroprotection and cognitive-aging markers.",
+      "CITATION": "Khavinson et al \u00b7 2011"
+    }
+  },
+  {
+    "id": "ptt-numbness-or-nerve-pain",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-numbness-or-nerve-pain.png",
+    "image_path": "/social-images/ptt-numbness-or-nerve-pain-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Numbness or nerve pain?",
+      "COMPOUND": "ARA-290",
+      "SUMMARY": "ARA-290 (cibinetide) is a tissue-protective EPO derivative. Research investigates peripheral neuropathy and small-fiber response.",
+      "CITATION": "Brines et al \u00b7 Mol Med 2008"
+    }
+  },
+  {
+    "id": "ptt-workouts-not-landing",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-workouts-not-landing.png",
+    "image_path": "/social-images/ptt-workouts-not-landing-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Workouts not landing?",
+      "COMPOUND": "AICAR",
+      "SUMMARY": "AICAR is an AMPK activator studied as an exercise mimetic in metabolic research.",
+      "CITATION": "Narkar et al \u00b7 Cell 2008"
+    }
+  },
+  {
+    "id": "ptt-always-inflamed",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-always-inflamed.png",
+    "image_path": "/social-images/ptt-always-inflamed-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Always inflamed?",
+      "COMPOUND": "VIP",
+      "SUMMARY": "Vasoactive Intestinal Peptide research has investigated neuroinflammation and CIRS-related immune signaling.",
+      "CITATION": "Delgado et al \u00b7 Pharmacol Rev 2008"
+    }
+  },
+  {
+    "id": "ptt-body-falling-apart",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-body-falling-apart.png",
+    "image_path": "/social-images/ptt-body-falling-apart-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Body falling apart?",
+      "COMPOUND": "Glow Plus",
+      "SUMMARY": "A research-grade blend of BPC-157, GHK-Cu, and TB-500 \u2014 three compounds with non-redundant repair mechanisms (vasculature, matrix, cell migration).",
+      "CITATION": "Pickart 2018 \u00b7 Goldstein 2012 \u00b7 Sikiric 2003"
+    }
+  },
+  {
+    "id": "ptt-run-down-for-weeks",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-run-down-for-weeks.png",
+    "image_path": "/social-images/ptt-run-down-for-weeks-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Run down for weeks?",
+      "COMPOUND": "Thymalin",
+      "SUMMARY": "Thymalin is a thymic-peptide preparation investigated for T-cell maturation and immune restoration in clinical research.",
+      "CITATION": "Khavinson \u00b7 2012"
+    }
+  },
+  {
+    "id": "ptt-brain-not-what-it-was",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-brain-not-what-it-was.png",
+    "image_path": "/social-images/ptt-brain-not-what-it-was-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Brain not what it was?",
+      "COMPOUND": "Dihexa",
+      "SUMMARY": "Dihexa is a BDNF analog researched for hippocampal synaptogenesis and cognitive markers in animal models.",
+      "CITATION": "McCoy et al \u00b7 2013"
+    }
+  },
+  {
+    "id": "ptt-train-hard-look-bad",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-train-hard-look-bad.png",
+    "image_path": "/social-images/ptt-train-hard-look-bad-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Train hard, look bad?",
+      "COMPOUND": "Glow",
+      "SUMMARY": "A streamlined recovery + skin research blend \u2014 for the literature on collagen, matrix, and tissue-level repair.",
+      "CITATION": "Pickart 2018"
+    }
+  },
+  {
+    "id": "ptt-tired-and-foggy",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-tired-and-foggy.png",
+    "image_path": "/social-images/ptt-tired-and-foggy-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Tired and foggy?",
+      "COMPOUND": "B12",
+      "SUMMARY": "B12 (methylcobalamin) is essential to methylation, nerve function, and energy metabolism.",
+      "CITATION": "(general nutritional research)"
+    }
+  },
+  {
+    "id": "ptt-can-t-fall-asleep",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-can-t-fall-asleep.png",
+    "image_path": "/social-images/ptt-can-t-fall-asleep-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Can't fall asleep?",
+      "COMPOUND": "Melatonin",
+      "SUMMARY": "Melatonin is a pineal hormone with extensive research on circadian regulation and sleep-onset markers.",
+      "CITATION": "Brzezinski \u00b7 NEJM 1997"
+    }
+  },
+  {
+    "id": "ptt-body-hurts-everywhere",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-body-hurts-everywhere.png",
+    "image_path": "/social-images/ptt-body-hurts-everywhere-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Body hurts everywhere?",
+      "COMPOUND": "BPC + TB-500",
+      "SUMMARY": "BPC-157 and TB-500 are frequently studied together \u2014 overlapping but non-redundant mechanisms for tissue repair.",
+      "CITATION": "Sikiric 2003 \u00b7 Goldstein 2012"
+    }
+  },
+  {
+    "id": "ptt-wounds-heal-slow",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-wounds-heal-slow.png",
+    "image_path": "/social-images/ptt-wounds-heal-slow-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Wounds heal slow?",
+      "COMPOUND": "LL-37",
+      "SUMMARY": "LL-37 (cathelicidin) is the human antimicrobial peptide. Research investigates wound-defense, immune signaling, and skin response.",
+      "CITATION": "D\u00fcrr et al \u00b7 Biochim Biophys Acta 2006"
+    }
+  },
+  {
+    "id": "ptt-recovery-off-across-the-board",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-recovery-off-across-the-board.png",
+    "image_path": "/social-images/ptt-recovery-off-across-the-board-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Recovery off across the board?",
+      "COMPOUND": "KLOW",
+      "SUMMARY": "KLOW is a multi-compound research blend formulated for comprehensive recovery research.",
+      "CITATION": "(component literature)"
+    }
+  },
+  {
+    "id": "ptt-can-t-train-like-before",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-can-t-train-like-before.png",
+    "image_path": "/social-images/ptt-can-t-train-like-before-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Can't train like before?",
+      "COMPOUND": "SLU-PP-332",
+      "SUMMARY": "SLU-PP-332 is an ERR-\u03b1 agonist investigated as an exercise mimetic \u2014 research has shown mitochondrial biogenesis and metabolic adaptations.",
+      "CITATION": "Billon et al \u00b7 2024"
+    }
+  },
+  {
+    "id": "ptt-gym-and-sleep-both-off",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-gym-and-sleep-both-off.png",
+    "image_path": "/social-images/ptt-gym-and-sleep-both-off-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Gym and sleep, both off?",
+      "COMPOUND": "CJC + Ipamorelin",
+      "SUMMARY": "Combined GHRH (CJC-1295) and GH-secretagogue (Ipamorelin) research investigates pulsatile GH release and downstream effects.",
+      "CITATION": "Sigalos \u00b7 J Sex Med 2018"
+    }
+  },
+  {
+    "id": "ptt-body-slowing-down",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-body-slowing-down.png",
+    "image_path": "/social-images/ptt-body-slowing-down-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Body slowing down?",
+      "COMPOUND": "CJC-1295",
+      "SUMMARY": "CJC-1295 is a GHRH analog researched for pulsatile GH release and the half-life of endogenous secretion patterns.",
+      "CITATION": "Teichman et al \u00b7 J Clin Endocrinol Metab 2006"
+    }
+  },
+  {
+    "id": "ptt-all-over-wear-and-tear",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-all-over-wear-and-tear.png",
+    "image_path": "/social-images/ptt-all-over-wear-and-tear-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "All-over wear and tear?",
+      "COMPOUND": "GKP Blend",
+      "SUMMARY": "A multi-compound research blend designed for comprehensive recovery investigation.",
+      "CITATION": "(component literature)"
+    }
+  },
+  {
+    "id": "ptt-can-t-eat-enough",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-can-t-eat-enough.png",
+    "image_path": "/social-images/ptt-can-t-eat-enough-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Can't eat enough?",
+      "COMPOUND": "GHRP-6",
+      "SUMMARY": "GHRP-6 is a ghrelin-receptor agonist studied for GH pulse and appetite regulation in research models.",
+      "CITATION": "Bowers \u00b7 J Clin Endocrinol Metab 1991"
+    }
+  },
+  {
+    "id": "ptt-same-plateau-smaller-doses",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-same-plateau-smaller-doses.png",
+    "image_path": "/social-images/ptt-same-plateau-smaller-doses-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Same plateau, smaller doses?",
+      "COMPOUND": "IGF-DES",
+      "SUMMARY": "IGF-DES is a truncated IGF-1 variant with research on localized anabolic signaling and receptor binding.",
+      "CITATION": "Yamamoto et al \u00b7 1991"
+    }
+  },
+  {
+    "id": "ptt-gains-plateau",
+    "post_type": "peptide_for_that",
+    "scheduled_date": null,
+    "output_filename": "ptt-gains-plateau.png",
+    "image_path": "/social-images/ptt-gains-plateau-1.png",
+    "slides": 2,
+    "vars": {
+      "HOOK": "Gains plateau?",
+      "COMPOUND": "IGF-1 LR3",
+      "SUMMARY": "IGF-1 LR3 is a long-acting IGF-1 variant with research on anabolic signaling and growth-factor receptor activity.",
+      "CITATION": "Tomas et al \u00b7 J Endocrinol 1993"
+    }
   }
 ]
