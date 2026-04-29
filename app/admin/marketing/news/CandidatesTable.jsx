@@ -1,0 +1,111 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+
+const FILTERS = [
+  { key: 'all',      label: 'All' },
+  { key: 'new',      label: 'New' },
+  { key: 'picked',   label: 'Picked' },
+  { key: 'skipped',  label: 'Skipped' },
+  { key: 'cooldown', label: 'Cooldown' },
+  { key: 'cultural', label: 'Cultural-moment' },
+];
+
+const TIER_BG = { A: '#1A1C22', B: '#7A7D88', C: '#E07C24' };
+
+export default function CandidatesTable({ candidates }) {
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+
+  const filtered = useMemo(() => {
+    let rows = candidates;
+    if (filter === 'cultural') {
+      rows = rows.filter((r) => Array.isArray(r.topic_tags) && r.topic_tags.includes('cultural'));
+    } else if (filter !== 'all') {
+      rows = rows.filter((r) => r.status === filter);
+    }
+    const q = search.trim().toLowerCase();
+    if (q) {
+      rows = rows.filter((r) =>
+        r.title?.toLowerCase().includes(q) ||
+        r.source_name?.toLowerCase().includes(q));
+    }
+    return rows;
+  }, [candidates, filter, search]);
+
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+        {FILTERS.map((f) => {
+          const count = f.key === 'all'
+            ? candidates.length
+            : f.key === 'cultural'
+              ? candidates.filter((r) => Array.isArray(r.topic_tags) && r.topic_tags.includes('cultural')).length
+              : candidates.filter((r) => r.status === f.key).length;
+          const active = filter === f.key;
+          return (
+            <button key={f.key} onClick={() => setFilter(f.key)}
+              style={{
+                padding: '4px 10px',
+                background: active ? '#1A1C22' : 'transparent',
+                color: active ? '#F4F2EE' : '#1A1C22',
+                border: '1px solid rgba(0,0,0,0.16)',
+                fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', cursor: 'pointer',
+              }}>
+              {f.label} ({count})
+            </button>
+          );
+        })}
+        <input value={search} onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search title or source…"
+          style={{ padding: '4px 10px', fontSize: 12, border: '1px solid rgba(0,0,0,0.16)',
+                   marginLeft: 'auto', minWidth: 220 }} />
+      </div>
+
+      {filtered.length === 0 && (
+        <div style={{ padding: 18, color: '#7A7D88', fontStyle: 'italic', fontSize: 13 }}>
+          No candidates match this filter.
+        </div>
+      )}
+
+      {filtered.length > 0 && (
+        <div style={{ border: '1px solid rgba(0,0,0,0.08)', maxHeight: 480, overflowY: 'auto' }}>
+          {filtered.map((c, i) => (
+            <a key={c.id}
+              href={c.source_url} target="_blank" rel="noreferrer"
+              style={{
+                display: 'flex', flexDirection: 'column', gap: 4,
+                padding: '10px 14px',
+                borderBottom: i === filtered.length - 1 ? 'none' : '1px solid rgba(0,0,0,0.06)',
+                color: '#1A1C22', textDecoration: 'none',
+                background: c.status === 'picked' ? '#F4F2EE' : '#fff',
+              }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#7A7D88', letterSpacing: 1, textTransform: 'uppercase' }}>
+                <span style={{
+                  background: TIER_BG[c.tier] || '#7A7D88', color: '#fff',
+                  padding: '1px 6px', fontSize: 10, letterSpacing: 1.5,
+                }}>{c.tier}</span>
+                <span>{c.source_name}</span>
+                <span>·</span>
+                <span style={{ color: c.status === 'new' ? '#00A0A8' : c.status === 'picked' ? '#1A1C22' : '#7A7D88' }}>
+                  {c.status}
+                </span>
+                {Array.isArray(c.topic_tags) && c.topic_tags.includes('cultural') && (
+                  <span style={{ background: '#E07C24', color: '#fff', padding: '1px 6px', fontSize: 10 }}>cultural</span>
+                )}
+                <span style={{ marginLeft: 'auto', color: '#7A7D88' }}>
+                  {c.published_at ? new Date(c.published_at).toLocaleDateString() : ''}
+                </span>
+              </div>
+              <div style={{ fontSize: 14, lineHeight: 1.35 }}>{c.title}</div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8, fontSize: 11, color: '#7A7D88', letterSpacing: 1 }}>
+        Showing {filtered.length} of {candidates.length} most-recent candidates · click any row to open source ↗
+      </div>
+    </div>
+  );
+}

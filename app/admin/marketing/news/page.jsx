@@ -4,6 +4,7 @@
 
 import DraftCard from './DraftCard';
 import ScrapeButton from './ScrapeButton';
+import CandidatesTable from './CandidatesTable';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -18,19 +19,20 @@ async function sb(path) {
 }
 
 async function loadData() {
-  const [ready, legal, recent, health] = await Promise.all([
+  const [ready, legal, recent, health, candidates] = await Promise.all([
     sb('/post_drafts?status=in.(ready_for_review,render_failed)&order=slot_date.asc'),
     sb('/post_drafts?status=eq.needs_legal_review&order=created_at.desc'),
     sb('/post_drafts?status=in.(posted,skipped)&order=created_at.desc&limit=30'),
     sb('/source_health?order=source_name.asc'),
+    sb('/news_candidates?select=id,source_url,source_name,tier,topic_tags,title,status,published_at,scraped_at&order=scraped_at.desc&limit=100'),
   ]);
-  return { ready, legal, recent, health };
+  return { ready, legal, recent, health, candidates };
 }
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewsAdminPage() {
-  const { ready, legal, recent, health } = await loadData();
+  const { ready, legal, recent, health, candidates } = await loadData();
   const downCount = health.filter((h) => h.consecutive_failures >= 3).length;
   const totalSources = health.length;
 
@@ -59,6 +61,10 @@ export default async function NewsAdminPage() {
       <Section title={`Recent (last 30)`}>
         {recent.length === 0 && <Empty>None yet.</Empty>}
         {recent.map((d) => <DraftCard key={d.id} draft={d} mode="recent" />)}
+      </Section>
+
+      <Section title={`Scraped candidates (last 100) — pool the curator picks from`}>
+        <CandidatesTable candidates={candidates} />
       </Section>
 
       <details style={{ marginTop: 32, fontSize: 12, color: '#7A7D88' }}>
