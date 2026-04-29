@@ -5,7 +5,7 @@
 <title>advnce labs — IG profile pack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400;700;900&family=Cormorant+Garamond:ital,wght@1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
   :root{
@@ -67,7 +67,7 @@
     display:flex;align-items:center;justify-content:center;
   }
   .profile-photo .mark svg{
-    width:680px;height:auto;
+    width:600px;height:350px;display:block;
   }
 
   /* ─────────── HIGHLIGHT COVER (1080×1080) ─────────── */
@@ -113,11 +113,15 @@
     width:280px;height:280px;display:flex;align-items:center;justify-content:center;
   }
   .icon-press{
-    width:280px;height:280px;display:flex;align-items:center;justify-content:center;
-    font-family:'Barlow Condensed',sans-serif;font-weight:200;
-    color:var(--cyan);font-size:280px;line-height:0.8;
-    letter-spacing:-0.05em;
+    width:280px;height:280px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;
+    font-weight:400;font-style:italic;
+    font-size:340px;line-height:1;
+    letter-spacing:-0.04em;
   }
+  .icon-press .q-left{color:var(--cyan);}
+  .icon-press .q-right{color:var(--amber);}
 </style>
 </head>
 <body>
@@ -207,10 +211,12 @@
     </div>
     <div class="canvas">
       <div class="cover" id="cov-stacks">
-        <div class="icon icon-stacks">
-          <div class="stack cyan"></div>
-          <div class="stack ink"></div>
-          <div class="stack amber"></div>
+        <div class="icon">
+          <svg viewBox="0 0 280 280" width="280" height="280">
+            <rect x="40" y="100" width="200" height="24" fill="#00A0A8"/>
+            <rect x="40" y="138" width="200" height="24" fill="#1A1C22"/>
+            <rect x="40" y="176" width="200" height="24" fill="#E07C24"/>
+          </svg>
         </div>
         <div class="label">Stacks</div>
       </div>
@@ -245,10 +251,7 @@
     <div class="canvas">
       <div class="cover" id="cov-press">
         <div class="icon icon-press">
-          <svg viewBox="0 0 100 100" width="280" height="280" fill="none">
-            <text x="20" y="78" font-family="'Cormorant Garamond', Georgia, serif" font-style="italic" font-size="120" fill="#00A0A8" stroke="none">"</text>
-            <text x="38" y="78" font-family="'Cormorant Garamond', Georgia, serif" font-style="italic" font-size="120" fill="#E07C24" stroke="none">"</text>
-          </svg>
+          <span class="q-left">&ldquo;</span><span class="q-right">&rdquo;</span>
         </div>
         <div class="label">Press</div>
       </div>
