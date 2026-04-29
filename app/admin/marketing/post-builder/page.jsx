@@ -35,6 +35,17 @@ const s = {
 
 const carousels = [
   {
+    id: 'ig-profile-pack',
+    href: '/social-images/ig-profile-assets.html',
+    title: 'IG Profile Pack',
+    desc: 'Profile photo + 5 highlight covers (Compounds · Research · Stacks · Standards · Press). All 1080×1080, brand-aligned cream/cyan/amber. One-time setup pack for the @advncelabs Instagram profile.',
+    slides: '6 PNGs · 1080×1080',
+    tone: 'Brand · One-time setup',
+    thumbBg: '#1A1C22',
+    thumbText: 'advnce labs\n— profile + 5 highlights',
+    created: '2026-04-29',
+  },
+  {
     id: 'fda-approval',
     href: '/social-images/fda-approval-carousel.html',
     title: 'FDA Approval · Carousel',
