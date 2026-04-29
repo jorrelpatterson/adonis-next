@@ -101,10 +101,10 @@ export default function MarketingHub() {
       icon:'🎯',
       color:'#E07C24',
       label:'Campaigns',
-      desc:'Seasonal pushes, OOS pre-sell, promos',
-      stat: '—',
-      statLabel: 'coming soon',
-      soon: true,
+      desc:'"There\'s a peptide for that" + future series',
+      stat: 1,
+      statLabel: 'active',
+      tag: '46 posts queued',
     },
   ];
 
