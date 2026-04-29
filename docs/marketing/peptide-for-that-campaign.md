@@ -15,7 +15,7 @@ A long-running Instagram series riffing on Apple's "There's an app for that." Ea
 | **Format** | 2-slide carousel, 1080×1080 each. Slide 1 = hook (deep navy bg). Slide 2 = research reveal (cream bg). |
 | **Voice shift** | Hook = colloquial, brand-warm. Body / slide 2 / caption = research-grade editorial. The contrast is the strategy. |
 | **RUO compliance** | Eyebrow + footer always frame as "what the literature is looking at." No outcome claims, no therapeutic implications, no "you will…" Always: *"What you do with the research is up to you and your clinician."* |
-| **Cadence** | Mon/Wed/Fri starting 2026-05-04 — campaign content replaces the routine compound queue (which moves to Aug 19 onward as Phase 2). Campaign runs through 2026-08-17. |
+| **Cadence** | Mon+Wed = Campaign · Fri = routine deep-dive · for 21 weeks (2026-05-04 → 2026-09-25). Trailing 4 campaign posts in weeks 22-23 (Sep 28 → Oct 5). Audience gets 2 hooks + 1 substantive deep-dive every week. |
 | **Mod-risk handling** | Sexual-health, GH, IGF, AICAR, Tesamorelin posts use stricter framing. Weight-loss compounds skipped on IG entirely (email-only). |
 
 ---
@@ -191,11 +191,11 @@ consumption. Not evaluated by the FDA.
 
 ## Schedule overview
 
-**Compressed to Mon/Wed/Fri pace** (2026-04-28 decision).
+**Interleaved 3x/week rotation** (2026-04-28 decision).
 
-- 2026-04-28 → 2026-05-02 — Launch series (5 daily posts, separate from this campaign)
-- **2026-05-04 → 2026-08-17 — "There's a peptide for that" Phase 1** (46 posts, Mon/Wed/Fri)
-- 2026-08-19 → 2026-10-05 — Routine compound deep-dives Phase 2 (21 posts, Mon/Wed/Fri)
+- 2026-04-28 → 2026-05-02 — Launch series (5 daily posts)
+- **2026-05-04 → 2026-09-25 — Campaign + routine interleaved** at Mon+Wed=Campaign / Fri=Routine deep-dive (21 weeks)
+- 2026-09-28 → 2026-10-05 — Trailing 4 campaign posts (week 22 M/W/F + week 23 M)
 
 See `/admin/marketing/campaigns/peptide-for-that` for the full calendar with status (drafted / scheduled / posted).
 
