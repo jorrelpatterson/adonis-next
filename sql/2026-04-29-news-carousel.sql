@@ -93,6 +93,9 @@ values ('news-slides', 'news-slides', true)
 on conflict (id) do nothing;
 
 -- Anyone can read; only service-role can write.
-create policy if not exists "news-slides public read"
+-- (drop+create instead of "if not exists" since CREATE POLICY IF NOT EXISTS
+-- is PostgreSQL 15+ only — Supabase legacy projects may be on PG 14.)
+drop policy if exists "news-slides public read" on storage.objects;
+create policy "news-slides public read"
   on storage.objects for select
   using (bucket_id = 'news-slides');
