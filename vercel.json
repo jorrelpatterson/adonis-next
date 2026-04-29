@@ -4,6 +4,8 @@
   ],
   "crons": [
     { "path": "/api/cron/welcome-emails", "schedule": "0 17 * * *" },
-    { "path": "/api/cron/reorder-reminders", "schedule": "0 12 * * *" }
+    { "path": "/api/cron/reorder-reminders", "schedule": "0 12 * * *" },
+    { "path": "/api/cron/news-scrape", "schedule": "0 11 * * *" },
+    { "path": "/api/cron/news-curate", "schedule": "0 4 * * 1" }
   ]
 }
