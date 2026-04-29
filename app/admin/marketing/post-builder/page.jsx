@@ -35,6 +35,17 @@ const s = {
 
 const carousels = [
   {
+    id: 'fda-approval',
+    href: '/social-images/fda-approval-carousel.html',
+    title: 'FDA Approval · Carousel',
+    desc: 'Reframes the "not FDA approved" objection — supplements, cosmetics, off-label scripts, compounded meds. 7 slides, RUO-safe.',
+    slides: '7 slides · 1080×1080',
+    tone: 'Educational / Reframe',
+    thumbBg: '#0A0D14',
+    thumbText: '"Things that aren\'t\nFDA approved."',
+    created: '2026-04-28',
+  },
+  {
     id: 'long-term-effects',
     href: '/social-images/long-term-effects-carousel.html',
     title: 'Long-Term Effects · Carousel',

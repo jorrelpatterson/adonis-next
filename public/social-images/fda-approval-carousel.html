@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>advnce labs — FDA Approval carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#F4F2EE;
+    --ink:#1A1C22;
+    --navy:#0A0D14;
+    --cyan:#00A0A8;
+    --amber:#E07C24;
+    --dim:#7A7D88;
+    --rule:rgba(0,0,0,0.08);
+    --rule-inv:rgba(255,255,255,0.12);
+    --fn:'Barlow Condensed',sans-serif;
+    --fd:'Cormorant Garamond',serif;
+    --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#222;
+    color:#eee;
+    font-family:var(--fm);
+    padding:40px;
+    min-height:100vh;
+  }
+  .toolbar{
+    max-width:1080px;
+    margin:0 auto 32px;
+    padding:20px 24px;
+    background:#111;
+    border:1px solid #333;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .toolbar h1{font-family:var(--fn);font-weight:300;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:#aaa;}
+  .toolbar p{font-size:11px;color:#888;line-height:1.5;}
+  .toolbar button{
+    align-self:flex-start;
+    padding:10px 18px;
+    background:var(--cyan);
+    color:#fff;
+    border:none;
+    font-family:var(--fn);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-size:12px;
+    cursor:pointer;
+  }
+  .toolbar button:hover{background:#00808a;}
+
+  .slide-wrap{
+    max-width:1080px;
+    margin:0 auto 48px;
+  }
+  .slide-label{
+    font-family:var(--fm);
+    font-size:11px;
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .slide-label button{
+    padding:6px 12px;
+    background:transparent;
+    color:var(--cyan);
+    border:1px solid var(--cyan);
+    font-family:var(--fm);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    cursor:pointer;
+  }
+  .slide-label button:hover{background:var(--cyan);color:#fff;}
+
+  .slide{
+    width:1080px;
+    height:1080px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .cream{background:var(--cream);color:var(--ink);}
+  .navy{background:var(--navy);color:var(--cream);}
+
+  /* Logo lockup (corner mark) */
+  .corner-mark{
+    position:absolute;
+    bottom:48px;
+    right:48px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:10px;
+  }
+  .corner-mark .wm{
+    font-family:var(--fn);
+    font-weight:300;
+    text-transform:lowercase;
+    letter-spacing:1px;
+    font-size:18px;
+  }
+  .navy .corner-mark .wm{color:var(--cream);}
+  .cream .corner-mark .wm{color:var(--ink);}
+  .navy .corner-mark .wm em{color:var(--dim);font-style:normal;}
+  .cream .corner-mark .wm em{color:var(--dim);font-style:normal;}
+
+  /* ── Slide 1 — hook (navy) ── */
+  .s1 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s1 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:48px;
+  }
+  .s1 .headline{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:118px;
+    line-height:0.9;
+    letter-spacing:-2px;
+    text-transform:uppercase;
+    color:var(--cream);
+    margin-bottom:48px;
+  }
+  .s1 .headline em{
+    font-style:normal;
+    color:var(--amber);
+  }
+  .s1 .sub{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:38px;
+    line-height:1.2;
+    color:var(--dim);
+    max-width:780px;
+  }
+  .s1 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ── Slide 2 — supplements stat (cream) ── */
+  .s2 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s2 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:32px;
+  }
+  .s2 .num{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:300px;
+    line-height:0.85;
+    letter-spacing:-8px;
+    color:var(--ink);
+    margin-bottom:32px;
+  }
+  .s2 .num em{
+    font-style:normal;
+    color:var(--cyan);
+  }
+  .s2 .label{
+    font-family:var(--fn);
+    font-weight:700;
+    font-size:44px;
+    text-transform:uppercase;
+    letter-spacing:-0.5px;
+    color:var(--ink);
+    margin-bottom:20px;
+  }
+  .s2 .body{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:30px;
+    line-height:1.3;
+    color:var(--dim);
+    max-width:760px;
+  }
+  .s2 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ── Slide 3 — six-row list (cream) ── */
+  .s3 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:96px 96px 140px;
+  }
+  .s3 .heading{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:14px;
+  }
+  .s3 .subheading{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:64px;
+    line-height:1;
+    letter-spacing:-1px;
+    text-transform:uppercase;
+    color:var(--ink);
+    margin-bottom:48px;
+  }
+  .s3 .row{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    border-top:1px solid var(--rule);
+    padding:22px 0;
+    gap:28px;
+  }
+  .s3 .row:last-child{border-bottom:1px solid var(--rule);}
+  .s3 .idx{
+    font-family:var(--fm);
+    font-weight:500;
+    font-size:14px;
+    color:var(--dim);
+    flex:0 0 60px;
+    letter-spacing:2px;
+  }
+  .s3 .name{
+    font-family:var(--fn);
+    font-weight:700;
+    font-size:38px;
+    color:var(--ink);
+    text-transform:uppercase;
+    letter-spacing:-0.5px;
+    flex:0 0 380px;
+  }
+  .s3 .desc{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:26px;
+    color:var(--dim);
+    line-height:1.25;
+    flex:1;
+  }
+
+  /* ── Slide 4 — off-label drugs (navy) ── */
+  .s4 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s4 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--amber);
+    margin-bottom:40px;
+  }
+  .s4 .stat{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:160px;
+    line-height:0.9;
+    letter-spacing:-3px;
+    color:var(--cream);
+    margin-bottom:24px;
+  }
+  .s4 .stat em{
+    font-style:normal;
+    color:var(--amber);
+  }
+  .s4 .lede{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:42px;
+    line-height:1.2;
+    color:var(--cream);
+    max-width:840px;
+    margin-bottom:60px;
+  }
+  .s4 .examples{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border-top:1px solid var(--rule-inv);
+    padding-top:32px;
+    max-width:760px;
+  }
+  .s4 .ex{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:24px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+  .s4 .ex strong{
+    color:var(--cream);
+    font-weight:700;
+  }
+  .s4 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ── Slide 5 — reframe (navy) ── */
+  .s5 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s5 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:60px;
+  }
+  .s5 .line{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:88px;
+    line-height:1.1;
+    letter-spacing:-1px;
+    color:var(--cream);
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .s5 .line strong{
+    font-weight:900;
+    color:var(--cream);
+  }
+  .s5 .line.amber strong{color:var(--amber);}
+  .s5 .gap{height:48px;}
+  .s5 .closer{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:38px;
+    line-height:1.3;
+    color:var(--dim);
+    max-width:820px;
+    border-top:1px solid var(--rule-inv);
+    padding-top:32px;
+  }
+  .s5 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ── Slide 6 — what advnce is (cream) ── */
+  .s6 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s6 .eyebrow{
+    font-family:var(--fm);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:40px;
+  }
+  .s6 .rule{
+    width:120px;
+    height:3px;
+    background:var(--cyan);
+    margin-bottom:48px;
+  }
+  .s6 .lede{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:78px;
+    line-height:0.95;
+    letter-spacing:-1.5px;
+    text-transform:uppercase;
+    color:var(--ink);
+    margin-bottom:48px;
+  }
+  .s6 .body{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:36px;
+    line-height:1.3;
+    color:var(--dim);
+    max-width:860px;
+  }
+  .s6 .footer{
+    position:absolute;
+    bottom:48px;
+    left:96px;
+    font-family:var(--fm);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dim);
+  }
+
+  /* ── Slide 7 — close (cream, lockup) ── */
+  .s7 .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 96px;
+  }
+  .s7 .eyebrow{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+    margin-bottom:40px;
+  }
+  .s7 .line{
+    font-family:var(--fd);
+    font-style:italic;
+    font-weight:300;
+    font-size:68px;
+    line-height:1.15;
+    color:var(--ink);
+    max-width:880px;
+    margin-bottom:96px;
+  }
+  .s7 .lockup{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .s7 .wordmark{
+    font-family:var(--fn);
+    font-weight:300;
+    font-size:46px;
+    color:var(--ink);
+    text-transform:lowercase;
+    letter-spacing:1px;
+  }
+  .s7 .wordmark em{color:var(--dim);font-style:normal;}
+  .s7 .manifesto{
+    font-family:var(--fm);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:var(--cyan);
+  }
+  .s7 .url{
+    font-family:var(--fm);
+    font-size:12px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:3px;
+    margin-top:24px;
+  }
+
+  .logo-svg{display:block;}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>advnce labs / FDA approval — 7-slide carousel</h1>
+  <p>Each slide is exactly 1080×1080. Use the per-slide download buttons, or "Download all" to grab the full set as PNG. Caption with disclaimer goes in IG, not on the image.</p>
+  <button id="download-all">Download all 7 as PNG</button>
+</div>
+
+<!-- ─────────────── Slide 1 — hook (navy) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>01 — hook (deep navy)</span>
+    <button class="dl" data-slide="s1" data-name="advnce-fda-01-hook">Download PNG</button>
+  </div>
+  <div class="slide s1 navy" id="s1">
+    <div class="stage">
+      <div class="eyebrow">On the subject of regulatory approval</div>
+      <div class="headline">Things that <em>aren't</em><br>FDA approved.</div>
+      <div class="sub">You probably use most of them every day.</div>
+    </div>
+    <div class="footer">A short list · Read in order</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 2 — supplements stat (cream) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>02 — supplements stat (cream)</span>
+    <button class="dl" data-slide="s2" data-name="advnce-fda-02-supplements">Download PNG</button>
+  </div>
+  <div class="slide s2 cream" id="s2">
+    <div class="stage">
+      <div class="eyebrow">Exhibit A</div>
+      <div class="num"><em>$50B</em></div>
+      <div class="label">The U.S. supplement industry.</div>
+      <div class="body">Vitamins, creatine, pre-workout, melatonin, protein powder, probiotics. The FDA does not pre-approve any of it. They regulate post-market — meaning they only intervene after something goes wrong.</div>
+    </div>
+    <div class="footer">DSHEA, 1994 — Dietary Supplement framework</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 3 — six-row list (cream) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>03 — six unapproved categories (cream)</span>
+    <button class="dl" data-slide="s3" data-name="advnce-fda-03-list">Download PNG</button>
+  </div>
+  <div class="slide s3 cream" id="s3">
+    <div class="stage">
+      <div class="heading">More things in your house · Not FDA approved</div>
+      <div class="subheading">The list keeps going.</div>
+      <div class="row">
+        <div class="idx">01</div>
+        <div class="name">Cosmetics</div>
+        <div class="desc">lipstick, mascara, moisturizer, shampoo — none pre-approved</div>
+      </div>
+      <div class="row">
+        <div class="idx">02</div>
+        <div class="name">Tattoo ink</div>
+        <div class="desc">permanently embedded in 1 in 3 Americans</div>
+      </div>
+      <div class="row">
+        <div class="idx">03</div>
+        <div class="name">EU sunscreens</div>
+        <div class="desc">superior UVA filters — illegal to sell in the U.S.</div>
+      </div>
+      <div class="row">
+        <div class="idx">04</div>
+        <div class="name">Compounded meds</div>
+        <div class="desc">your doctor's TRT, semaglutide, growth-hormone peptides</div>
+      </div>
+      <div class="row">
+        <div class="idx">05</div>
+        <div class="name">Homeopathy</div>
+        <div class="desc">sold at every CVS, Walgreens, Whole Foods</div>
+      </div>
+      <div class="row">
+        <div class="idx">06</div>
+        <div class="name">Essential oils</div>
+        <div class="desc">a $20B industry — zero pre-market review</div>
+      </div>
+    </div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 4 — off-label (navy) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>04 — off-label prescriptions (deep navy)</span>
+    <button class="dl" data-slide="s4" data-name="advnce-fda-04-offlabel">Download PNG</button>
+  </div>
+  <div class="slide s4 navy" id="s4">
+    <div class="stage">
+      <div class="eyebrow">Even your doctor does this</div>
+      <div class="stat"><em>1 in 5</em></div>
+      <div class="lede">prescriptions written today is "off-label" — meaning the drug is approved for one thing and prescribed for another.</div>
+      <div class="examples">
+        <div class="ex"><strong>Neurotoxin injections</strong> — approved for eye spasms · prescribed for migraines</div>
+        <div class="ex"><strong>GLP-1 agonists</strong> — approved for diabetes · prescribed for weight loss</div>
+        <div class="ex"><strong>PDE5 inhibitors</strong> — developed for chest pain · used for ED</div>
+      </div>
+    </div>
+    <div class="footer">Radley et al., Arch Intern Med · ongoing</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 5 — reframe (navy) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>05 — the reframe (deep navy)</span>
+    <button class="dl" data-slide="s5" data-name="advnce-fda-05-reframe">Download PNG</button>
+  </div>
+  <div class="slide s5 navy" id="s5">
+    <div class="stage">
+      <div class="eyebrow">The point</div>
+      <div class="line">FDA approved <strong>≠ safe.</strong></div>
+      <div class="line amber">Not approved <strong>≠ unsafe.</strong></div>
+      <div class="gap"></div>
+      <div class="closer">"Approval" is a regulatory pathway — not a verdict on a substance. Most things humans put in or on their body have never gone through it. By design.</div>
+    </div>
+    <div class="footer">— advnce labs, on regulatory literacy</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 6 — what advnce is (cream) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>06 — what advnce is (cream)</span>
+    <button class="dl" data-slide="s6" data-name="advnce-fda-06-what-we-are">Download PNG</button>
+  </div>
+  <div class="slide s6 cream" id="s6">
+    <div class="stage">
+      <div class="eyebrow">Where we fit</div>
+      <div class="rule"></div>
+      <div class="lede">advnce labs sells research-use compounds.</div>
+      <div class="body">Same regulatory category as a large portion of what's sold without FDA approval — supplements, cosmetics, compounded medications, and research compounds alike. Not pre-approved. Not unsafe. Sold for research — exactly as the law requires.</div>
+    </div>
+    <div class="footer">RUO — Research Use Only</div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── Slide 7 — close (cream, lockup) ─────────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>07 — close (cream, lockup)</span>
+    <button class="dl" data-slide="s7" data-name="advnce-fda-07-close">Download PNG</button>
+  </div>
+  <div class="slide s7 cream" id="s7">
+    <div class="stage">
+      <div class="eyebrow">In closing</div>
+      <div class="line">"Research smart. The bar isn't approval — it's evidence."</div>
+      <div class="lockup">
+        <span class="wordmark">advnce <em>labs</em></span>
+        <span class="manifesto">Precision · Purity · Protocol</span>
+        <span class="url">advncelabs.com</span>
+      </div>
+    </div>
+    <div class="corner-mark">
+      <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wm">advnce <em>labs</em></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function download(slideId, fileName){
+    const el = document.getElementById(slideId);
+    const canvas = await html2canvas(el, {
+      width:1080, height:1080,
+      windowWidth:1080, windowHeight:1080,
+      scale:1,
+      useCORS:true,
+      backgroundColor:null,
+    });
+    const a = document.createElement('a');
+    a.download = fileName + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  }
+
+  document.querySelectorAll('.dl').forEach(btn => {
+    btn.addEventListener('click', () => {
+      download(btn.dataset.slide, btn.dataset.name);
+    });
+  });
+
+  document.getElementById('download-all').addEventListener('click', async () => {
+    const slides = [
+      ['s1','advnce-fda-01-hook'],
+      ['s2','advnce-fda-02-supplements'],
+      ['s3','advnce-fda-03-list'],
+      ['s4','advnce-fda-04-offlabel'],
+      ['s5','advnce-fda-05-reframe'],
+      ['s6','advnce-fda-06-what-we-are'],
+      ['s7','advnce-fda-07-close'],
+    ];
+    for (const [id,name] of slides) {
+      await download(id, name);
+      await new Promise(r => setTimeout(r, 250));
+    }
+  });
+</script>
+
+</body>
+</html>

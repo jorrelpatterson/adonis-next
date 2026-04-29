@@ -92,9 +92,9 @@ export default function MarketingHub() {
       color:'#00A0A8',
       label:'Post Builder',
       desc:'Pre-built IG carousels — render & download',
-      stat: 1,
+      stat: 2,
       statLabel: 'available',
-      tag: 'Long-Term Effects',
+      tag: 'FDA Approval · Long-Term Effects',
     },
     {
       href:'/admin/marketing/campaigns',
