@@ -15,7 +15,7 @@ A long-running Instagram series riffing on Apple's "There's an app for that." Ea
 | **Format** | 2-slide carousel, 1080×1080 each. Slide 1 = hook (deep navy bg). Slide 2 = research reveal (cream bg). |
 | **Voice shift** | Hook = colloquial, brand-warm. Body / slide 2 / caption = research-grade editorial. The contrast is the strategy. |
 | **RUO compliance** | Eyebrow + footer always frame as "what the literature is looking at." No outcome claims, no therapeutic implications, no "you will…" Always: *"What you do with the research is up to you and your clinician."* |
-| **Cadence** | Mon+Wed = Campaign · Fri = routine deep-dive · for 21 weeks (2026-05-04 → 2026-09-25). Trailing 4 campaign posts in weeks 22-23 (Sep 28 → Oct 5). Audience gets 2 hooks + 1 substantive deep-dive every week. |
+| **Cadence** | Mon · Wed · Fri at 3 posts/week. Campaign hooks and routine deep-dives are interleaved throughout — no two posts about the same compound within 3 slots, and categories (recovery, cognitive, sleep, longevity, sexual, etc.) rotate each post. Greedy-balanced 2026-04-28. Runs 2026-05-04 → 2026-10-05. |
 | **Mod-risk handling** | Sexual-health, GH, IGF, AICAR, Tesamorelin posts use stricter framing. Weight-loss compounds skipped on IG entirely (email-only). |
 
 ---
