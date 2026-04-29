@@ -10,3 +10,4 @@ next-env.d.ts
 ._*
 .DS_Store
 .superpowers/
+.claude/worktrees/
