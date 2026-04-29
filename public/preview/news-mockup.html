@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>advnce news carousel — mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F2EE;
+    --bg2:#ECEAE4;
+    --ink:#1A1C22;
+    --dim:#7A7D88;
+    --rule:rgba(0,0,0,0.08);
+    --cyan:#00A0A8;
+    --amber:#E07C24;
+    --fn:'Barlow Condensed',sans-serif;
+    --fm:'JetBrains Mono',monospace;
+    --fd:'Cormorant Garamond',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#222;
+    font-family:var(--fn);
+    color:#eee;
+    padding:48px 24px;
+    min-height:100vh;
+  }
+  .page-title{
+    font-family:var(--fm);
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#999;
+    text-align:center;
+    margin-bottom:8px;
+  }
+  .page-sub{
+    font-family:var(--fd);
+    font-style:italic;
+    font-size:18px;
+    color:#bbb;
+    text-align:center;
+    margin-bottom:48px;
+  }
+  .carousel{
+    display:flex;
+    gap:24px;
+    justify-content:center;
+    flex-wrap:wrap;
+    max-width:2400px;
+    margin:0 auto;
+  }
+  /* each slide is the real 1080x1350 size, scaled down via CSS transform for screen view */
+  .slide-wrap{
+    width:540px;          /* 1080 * 0.5 */
+    height:675px;         /* 1350 * 0.5 */
+    overflow:hidden;
+    position:relative;
+    border-radius:8px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  }
+  .slide{
+    width:1080px;
+    height:1350px;
+    transform:scale(0.5);
+    transform-origin:top left;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* SLIDE 1 — dark cover */
+  .s1{
+    background:var(--ink);
+    color:#fff;
+    padding:64px 72px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .s1-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--fm);
+    font-size:18px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.5);
+  }
+  .brandmark{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#fff;
+  }
+  .logo-mark{
+    width:48px;height:48px;
+    background:var(--bg);
+    border-radius:8px;
+    padding:6px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .logo-mark svg{width:100%;height:100%;display:block;}
+  .brand-name{
+    font-family:var(--fn);
+    font-weight:900;
+    letter-spacing:6px;
+    color:#fff;
+    font-size:22px;
+  }
+  .brand-name .lbs{font-weight:400;color:rgba(255,255,255,0.5);}
+  .s1-headline{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:152px;
+    line-height:0.92;
+    text-transform:uppercase;
+    letter-spacing:-2px;
+    color:#fff;
+  }
+  .s1-headline .hi-teal{color:var(--cyan);}
+  .s1-headline .hi-amber{color:var(--amber);}
+  .s1-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--fm);
+    font-size:18px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.5);
+  }
+  .s1-swipe{display:flex;align-items:center;gap:10px;}
+  .s1-swipe .arr{font-size:24px;}
+  .s1-swipe .arr-teal{color:var(--cyan);}
+  .s1-swipe .arr-amber{color:var(--amber);}
+
+  /* CREAM SLIDES (2,3,4) */
+  .cream{
+    background:var(--bg);
+    color:var(--ink);
+    padding:64px 72px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .cream-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--fm);
+    font-size:18px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--dim);
+  }
+  .kicker{font-family:var(--fm);font-size:18px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);}
+  .cream-bottom{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:var(--ink);
+  }
+  .cream .logo-mark{background:transparent;padding:0;}
+  .cream .brand-name{color:var(--ink);font-size:22px;}
+  .cream .brand-name .lbs{color:var(--dim);}
+
+  /* SLIDE 2 — finding */
+  .s2-mid{
+    display:flex;
+    flex-direction:column;
+    gap:48px;
+  }
+  .s2-cmpd{
+    font-family:var(--fn);
+    font-weight:900;
+    font-size:128px;
+    line-height:0.9;
+    letter-spacing:-1px;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .teal-rule{
+    width:80px;
+    height:3px;
+    background:var(--cyan);
+    margin-top:16px;
+  }
+  .amber-rule{
+    width:80px;
+    height:3px;
+    background:var(--amber);
+    margin-top:16px;
+  }
+  .s2-sub{
+    font-family:var(--fd);
+    font-style:italic;
+    font-size:30px;
+    color:var(--dim);
+    margin-top:18px;
+  }
+  .s2-body{
+    font-family:var(--fd);
+    font-size:48px;
+    line-height:1.25;
+    color:var(--ink);
+    max-width:920px;
+  }
+
+  /* SLIDE 3 — mechanism */
+  .s3-mid{
+    display:flex;
+    flex-direction:column;
+    gap:48px;
+  }
+  .s3-body{
+    font-family:var(--fd);
+    font-size:42px;
+    line-height:1.3;
+    color:var(--ink);
+    max-width:920px;
+  }
+  .mech-box{
+    border:1px solid var(--rule);
+    background:var(--bg2);
+    padding:32px 40px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    font-family:var(--fm);
+    font-size:24px;
+    color:var(--ink);
+    letter-spacing:1px;
+  }
+  .mech-arrow{color:var(--cyan);font-size:28px;}
+  .citation{
+    border-top:1px solid var(--rule);
+    padding-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-family:var(--fm);
+    color:var(--dim);
+  }
+  .cite-label{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);}
+  .cite-body{font-size:18px;color:var(--ink);letter-spacing:0.5px;}
+
+  /* SLIDE 4 — takeaway + CTA */
+  .s4-body{
+    font-family:var(--fd);
+    font-size:48px;
+    line-height:1.25;
+    color:var(--ink);
+    max-width:920px;
+  }
+  .ruo{
+    font-family:var(--fm);
+    font-size:14px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--dim);
+    margin-top:24px;
+  }
+  .cta-card{
+    background:var(--ink);
+    color:var(--bg);
+    padding:32px 40px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    margin-top:32px;
+  }
+  .cta-card .m-mark{
+    width:56px;height:56px;font-size:40px;
+    background:var(--cyan);color:var(--ink);
+  }
+  .cta-text{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .cta-kicker{
+    font-family:var(--fm);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);
+  }
+  .cta-line{
+    font-family:var(--fn);font-weight:900;font-size:32px;letter-spacing:1px;text-transform:uppercase;color:var(--bg);
+  }
+  .cta-arr{margin-left:auto;font-size:32px;color:var(--cyan);}
+
+  .footnote{
+    text-align:center;
+    margin-top:48px;
+    font-family:var(--fm);
+    font-size:11px;
+    letter-spacing:2px;
+    color:#888;
+  }
+  .label{
+    text-align:center;
+    margin-top:12px;
+    font-family:var(--fm);
+    font-size:10px;
+    letter-spacing:2px;
+    color:#666;
+    text-transform:uppercase;
+  }
+  .slide-col{display:flex;flex-direction:column;align-items:center;}
+</style>
+</head>
+<body>
+
+<div class="page-title">advnce labs — news carousel mockup</div>
+<div class="page-sub">4 slides at 1080×1350, shown half-size · sample story for visual evaluation only</div>
+
+<div class="carousel">
+
+  <!-- SLIDE 1 — TEAL VARIANT (post N) -->
+  <div class="slide-col">
+    <div class="slide-wrap">
+      <div class="slide s1">
+        <div class="s1-top">
+          <div class="brandmark">
+            <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+            <div class="brand-name">ADVNCE <span class="lbs">LABS</span></div>
+          </div>
+          <div>1 / 4</div>
+        </div>
+        <div class="s1-headline">
+          BPC-157 ACCELERATED TENDON HEALING BY <span class="hi-teal">47%</span> IN A <span class="hi-teal">2024</span> RAT MODEL
+        </div>
+        <div class="s1-bottom">
+          <div class="s1-swipe">SWIPE <span class="arr arr-teal">→</span></div>
+          <div>RESEARCH · A</div>
+        </div>
+      </div>
+    </div>
+    <div class="label">slide 1 — cover · TEAL accent (post N)</div>
+  </div>
+
+  <!-- SLIDE 1 — AMBER VARIANT (post N+1) -->
+  <div class="slide-col">
+    <div class="slide-wrap">
+      <div class="slide s1">
+        <div class="s1-top">
+          <div class="brandmark">
+            <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+            <div class="brand-name">ADVNCE <span class="lbs">LABS</span></div>
+          </div>
+          <div>1 / 4</div>
+        </div>
+        <div class="s1-headline">
+          FDA JUST CLEARED A <span class="hi-amber">NEW GLP-1</span> COMPOUNDING PATHWAY FOR <span class="hi-amber">2026</span>
+        </div>
+        <div class="s1-bottom">
+          <div class="s1-swipe">SWIPE <span class="arr arr-amber">→</span></div>
+          <div>REGULATORY · A</div>
+        </div>
+      </div>
+    </div>
+    <div class="label">slide 1 — cover · AMBER accent (post N+1)</div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide-col">
+    <div class="slide-wrap">
+      <div class="slide cream">
+        <div class="cream-top">
+          <div class="kicker">Finding</div>
+          <div>2 / 4</div>
+        </div>
+        <div class="s2-mid">
+          <div>
+            <div class="s2-cmpd">BPC-157</div>
+            <div class="teal-rule"></div>
+            <div class="s2-sub">pentadecapeptide, gastric origin</div>
+          </div>
+          <div class="s2-body">
+            In a 2024 study from the University of Zagreb, tendon-collagen synthesis in injured rats accelerated 47% over 14 days versus saline control.
+          </div>
+        </div>
+        <div class="cream-bottom">
+          <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+          <div class="brand-name">ADVNCE <span class="lbs">LABS</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="label">slide 2 — cream finding</div>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide-col">
+    <div class="slide-wrap">
+      <div class="slide cream">
+        <div class="cream-top">
+          <div class="kicker">Mechanism</div>
+          <div>3 / 4</div>
+        </div>
+        <div class="s3-mid">
+          <div class="s3-body">
+            Hypothesized to upregulate VEGFR2 and accelerate angiogenesis at the injury site, increasing fibroblast migration into damaged tissue.
+          </div>
+          <div class="mech-box">
+            <div>injury site</div>
+            <div class="mech-arrow">↓</div>
+            <div>VEGFR2 upregulation</div>
+            <div class="mech-arrow">↓</div>
+            <div>angiogenesis + fibroblast migration</div>
+          </div>
+          <div class="citation">
+            <div class="cite-label">Source</div>
+            <div class="cite-body">Sikiric et al · J Pharm Pharmacol · 2024</div>
+            <div class="cite-body" style="color:var(--dim);font-size:15px;">PMID 12345678</div>
+          </div>
+        </div>
+        <div class="cream-bottom">
+          <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+          <div class="brand-name">ADVNCE <span class="lbs">LABS</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="label">slide 3 — cream mechanism + citation</div>
+  </div>
+
+  <!-- SLIDE 4 -->
+  <div class="slide-col">
+    <div class="slide-wrap">
+      <div class="slide cream">
+        <div class="cream-top">
+          <div class="kicker">What This Means</div>
+          <div>4 / 4</div>
+        </div>
+        <div>
+          <div class="s4-body">
+            Adds to a growing body of preclinical evidence that BPC-157 modulates tissue repair pathways beyond the gut — though human-trial data remains limited.
+          </div>
+          <div class="amber-rule"></div>
+          <div class="ruo">For research use only · not medical advice</div>
+          <div class="cta-card">
+            <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+            <div class="cta-text">
+              <div class="cta-kicker">Research-grade peptides</div>
+              <div class="cta-line">ADVNCELABS.COM</div>
+            </div>
+            <div class="cta-arr">→</div>
+          </div>
+        </div>
+        <div class="cream-bottom">
+          <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F4F2EE" rx="12"/><path d="M8 48L18 38L28 43L38 28L46 33L54 18" fill="none" stroke="#00A0A8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="33" r="4" fill="#00A0A8"/><circle cx="54" cy="18" r="4.5" fill="#E07C24"/><circle cx="54" cy="18" r="7.5" fill="none" stroke="#E07C24" stroke-width="1.5"/></svg></div>
+          <div class="brand-name">ADVNCE <span class="lbs">LABS</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="label">slide 4 — cream takeaway + CTA</div>
+  </div>
+
+</div>
+
+<div class="footnote">
+  Real renders will be 1080×1350 PNGs via Satori · this preview is HTML/CSS-rendered for layout evaluation
+</div>
+
+</body>
+</html>
