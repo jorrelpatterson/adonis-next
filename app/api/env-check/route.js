@@ -10,6 +10,9 @@ export async function GET() {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? 'present (len='+process.env.ADMIN_PASSWORD.length+')' : 'MISSING',
     SHIPPING_ADDRESS: process.env.SHIPPING_ADDRESS ? 'present (len='+process.env.SHIPPING_ADDRESS.length+')' : 'MISSING',
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'present (len='+process.env.STRIPE_SECRET_KEY.length+')' : 'MISSING',
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY ? 'present (len='+process.env.ANTHROPIC_API_KEY.length+')' : 'MISSING',
+    CRON_SECRET: process.env.CRON_SECRET ? 'present (len='+process.env.CRON_SECRET.length+')' : 'MISSING',
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL ? 'present (len='+process.env.ADMIN_EMAIL.length+')' : 'MISSING',
     NODE_ENV: process.env.NODE_ENV,
   });
 }
