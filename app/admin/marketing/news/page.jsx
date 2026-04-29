@@ -3,6 +3,7 @@
 // hands per-draft data to <DraftCard /> client component.
 
 import DraftCard from './DraftCard';
+import ScrapeButton from './ScrapeButton';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -42,13 +43,7 @@ export default async function NewsAdminPage() {
             Source health: {totalSources - downCount} / {totalSources} ✓ {downCount > 0 ? `· ${downCount} down` : ''}
           </div>
         </div>
-        <form action="/api/cron/news-scrape" method="POST">
-          <button type="submit"
-            style={{ padding: '10px 18px', background: '#1A1C22', color: '#F4F2EE',
-                     border: 0, fontSize: 12, letterSpacing: 2, textTransform: 'uppercase', cursor: 'pointer' }}>
-            Run scrape now
-          </button>
-        </form>
+        <ScrapeButton />
       </header>
 
       <Section title={`Ready for review (${ready.length})`}>
