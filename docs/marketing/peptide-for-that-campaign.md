@@ -15,7 +15,7 @@ A long-running Instagram series riffing on Apple's "There's an app for that." Ea
 | **Format** | 2-slide carousel, 1080×1080 each. Slide 1 = hook (deep navy bg). Slide 2 = research reveal (cream bg). |
 | **Voice shift** | Hook = colloquial, brand-warm. Body / slide 2 / caption = research-grade editorial. The contrast is the strategy. |
 | **RUO compliance** | Eyebrow + footer always frame as "what the literature is looking at." No outcome claims, no therapeutic implications, no "you will…" Always: *"What you do with the research is up to you and your clinician."* |
-| **Cadence** | Weekly Fridays. 4 replacement slots in May-June (replacing standards_statement posts), then continuous from 2026-07-03. |
+| **Cadence** | Mon/Wed/Fri starting 2026-05-04 — campaign content replaces the routine compound queue (which moves to Aug 19 onward as Phase 2). Campaign runs through 2026-08-17. |
 | **Mod-risk handling** | Sexual-health, GH, IGF, AICAR, Tesamorelin posts use stricter framing. Weight-loss compounds skipped on IG entirely (email-only). |
 
 ---
@@ -191,14 +191,13 @@ consumption. Not evaluated by the FDA.
 
 ## Schedule overview
 
-**Phase A — Replacement slots in current routine queue:**
-- 2026-05-15 (Fri) → Knees hurt? (BPC-157)
-- 2026-05-29 (Fri) → Wake up tired? (DSIP)
-- 2026-06-12 (Fri) → Brain fog? (Selank)
-- 2026-06-19 (Fri) → Going bald? (GHK-Cu)
+**Compressed to Mon/Wed/Fri pace** (2026-04-28 decision).
 
-**Phase B — Continuous from 2026-07-03:**
-42 weekly Friday posts running through 2027-04-16. See `/admin/marketing/campaigns/peptide-for-that` for the full calendar with status (drafted / scheduled / posted).
+- 2026-04-28 → 2026-05-02 — Launch series (5 daily posts, separate from this campaign)
+- **2026-05-04 → 2026-08-17 — "There's a peptide for that" Phase 1** (46 posts, Mon/Wed/Fri)
+- 2026-08-19 → 2026-10-05 — Routine compound deep-dives Phase 2 (21 posts, Mon/Wed/Fri)
+
+See `/admin/marketing/campaigns/peptide-for-that` for the full calendar with status (drafted / scheduled / posted).
 
 ---
 
