@@ -29,6 +29,7 @@ export async function POST(request, { params }) {
       status: 'rendering',
       needs_legal_review: false,
       image_urls: null,
+      approved_at: new Date().toISOString(),
     }),
   });
   await renderDraft(params.draftId);

@@ -18,9 +18,9 @@ async function sb(path) {
 
 async function loadData() {
   const [ready, legal, recent, health] = await Promise.all([
-    sb('/post_drafts?status=eq.ready_for_review&order=slot_date.asc'),
+    sb('/post_drafts?status=in.(ready_for_review,render_failed)&order=slot_date.asc'),
     sb('/post_drafts?status=eq.needs_legal_review&order=created_at.desc'),
-    sb('/post_drafts?status=in.(posted,skipped,render_failed)&order=created_at.desc&limit=30'),
+    sb('/post_drafts?status=in.(posted,skipped)&order=created_at.desc&limit=30'),
     sb('/source_health?order=source_name.asc'),
   ]);
   return { ready, legal, recent, health };

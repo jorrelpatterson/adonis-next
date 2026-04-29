@@ -17,6 +17,14 @@ export default function DraftCard({ draft, mode }) {
     } finally { setBusy(null); }
   }
 
+  // Wraps an action so failures surface to the user instead of silent rejections.
+  function safe(fn) {
+    return async () => {
+      try { await fn(); }
+      catch (e) { alert('Action failed: ' + (e.message || String(e))); }
+    };
+  }
+
   async function approveAndDownload() {
     const res = await call(`/api/admin/news/approve/${draft.id}`);
     const blob = await res.blob();
@@ -95,18 +103,18 @@ export default function DraftCard({ draft, mode }) {
 
       {mode === 'ready' && (
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button onClick={approveAndDownload} disabled={busy} style={btnPrimary}>
+          <button onClick={safe(approveAndDownload)} disabled={busy} style={btnPrimary}>
             {busy === `/api/admin/news/approve/${draft.id}` ? 'Zipping…' : 'Approve & Download'}
           </button>
           <button onClick={() => setEditing(true)} disabled={busy} style={btnGhost}>Edit caption</button>
-          <button onClick={() => call(`/api/admin/news/regenerate/${draft.id}`).then(() => location.reload())}
+          <button onClick={safe(async () => { await call(`/api/admin/news/regenerate/${draft.id}`); location.reload(); })}
             disabled={busy} style={btnGhost}>Regenerate</button>
-          <button onClick={() => call(`/api/admin/news/flip-color/${draft.id}`).then(() => location.reload())}
+          <button onClick={safe(async () => { await call(`/api/admin/news/flip-color/${draft.id}`); location.reload(); })}
             disabled={busy} style={btnGhost}>Flip color</button>
-          <button onClick={() => call(`/api/admin/news/skip/${draft.id}`).then(() => location.reload())}
+          <button onClick={safe(async () => { await call(`/api/admin/news/skip/${draft.id}`); location.reload(); })}
             disabled={busy} style={btnGhost}>Skip</button>
           {draft.status === 'render_failed' && (
-            <button onClick={() => call(`/api/admin/news/render/${draft.id}`).then(() => location.reload())}
+            <button onClick={safe(async () => { await call(`/api/admin/news/render/${draft.id}`); location.reload(); })}
               disabled={busy} style={btnGhost}>Retry render</button>
           )}
         </div>
@@ -114,9 +122,9 @@ export default function DraftCard({ draft, mode }) {
 
       {mode === 'legal' && (
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => call(`/api/admin/news/force-approve/${draft.id}`).then(() => location.reload())}
+          <button onClick={safe(async () => { await call(`/api/admin/news/force-approve/${draft.id}`); location.reload(); })}
             style={btnPrimary}>Force-approve</button>
-          <button onClick={() => call(`/api/admin/news/skip/${draft.id}`).then(() => location.reload())}
+          <button onClick={safe(async () => { await call(`/api/admin/news/skip/${draft.id}`); location.reload(); })}
             style={btnGhost}>Drop</button>
         </div>
       )}
