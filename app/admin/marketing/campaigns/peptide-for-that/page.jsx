@@ -146,54 +146,37 @@ export default function PeptideForThatCampaign() {
         ))}
       </div>
 
-      <table style={s.table}>
-        <thead>
-          <tr>
-            <th style={s.th}>Date</th>
-            <th style={s.th}>Hook</th>
-            <th style={s.th}>Compound</th>
-            <th style={s.th}>Status</th>
-            <th style={s.th}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map(p => {
-            const hook = p.caption.split('\n')[0];
-            const risk = getRiskLevel(hook);
-            const compoundLine = (p.caption.match(/(?:^|\n)([A-Z][^.\n]{0,80})\s+(?:is|has|are)/m) || [])[1];
-            return (
-              <tr key={p.id}>
-                <td style={s.td}>
-                  <div style={{ fontWeight:600 }}>{fmtDate(p.scheduled_date)}</div>
-                  <div style={{ fontSize:11, color:'#8C919E', fontFamily:"'JetBrains Mono',monospace" }}>{p.scheduled_date}</div>
-                </td>
-                <td style={s.td}>
-                  <div style={s.hook}>
-                    {hook}
-                    {risk !== 'low' && <span style={{...s.modPill, ...getRiskStyle(risk)}}>{risk} mod risk</span>}
-                  </div>
-                </td>
-                <td style={s.td}>
-                  <span style={{ fontSize:12, color:'#4A4F5C', fontFamily:"'JetBrains Mono',monospace" }}>
-                    {p.source_compound || '—'}
-                  </span>
-                </td>
-                <td style={s.td}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:18 }}>
+        {filtered.map(p => {
+          const hook = p.caption.split('\n')[0];
+          const risk = getRiskLevel(hook);
+          const slide2 = p.image_path && p.image_path.replace(/-1\.png$/, '-2.png');
+          return (
+            <div key={p.id} style={{ background:'#fff', border:'1px solid #E4E7EC', borderRadius:8, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+              {/* Two slides side-by-side */}
+              <div style={{ display:'flex', background:'#0A0D14' }}>
+                <img src={p.image_path} alt={`slide 1: ${hook}`} style={{ width:'50%', height:130, objectFit:'cover', objectPosition:'left center' }} onError={(e)=>{e.target.style.display='none'}} />
+                <img src={slide2} alt={`slide 2`} style={{ width:'50%', height:130, objectFit:'cover', objectPosition:'left center' }} onError={(e)=>{e.target.style.display='none'}} />
+              </div>
+              <div style={{ padding:'14px 16px', flex:1, display:'flex', flexDirection:'column' }}>
+                <div style={{ fontSize:10, color:'#8C919E', letterSpacing:1, textTransform:'uppercase', fontFamily:"'JetBrains Mono',monospace", marginBottom:4 }}>
+                  {fmtDate(p.scheduled_date)} · {p.source_compound || '—'}
+                </div>
+                <div style={{ ...s.hook, marginBottom:10 }}>
+                  {hook}
+                  {risk !== 'low' && <span style={{...s.modPill, ...getRiskStyle(risk)}}>{risk}</span>}
+                </div>
+                <div style={{ marginTop:'auto', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <span style={{...s.status, ...(s[p.status] || s.scheduled)}}>{p.status}</span>
-                </td>
-                <td style={s.td}>
-                  <Link
-                    href={`/admin/marketing/content`}
-                    style={{ color:'#0072B5', fontSize:12, textDecoration:'none' }}
-                  >
+                  <Link href={`/admin/marketing/content`} style={{ color:'#0072B5', fontSize:11, textDecoration:'none', fontWeight:600 }}>
                     edit →
                   </Link>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       <div style={{ marginTop:32, padding:18, background:'#F9FAFB', border:'1px solid #E4E7EC', borderRadius:6, fontSize:13, color:'#4A4F5C', lineHeight:1.6 }}>
         <strong style={{ color:'#0F1928' }}>How this works</strong>

@@ -105,6 +105,10 @@ export default function ContentPage() {
     if (post.post_type === 'stack_carousel' && /-1\.png$/i.test(base)) {
       return [1,2,3,4,5].map(n => base.replace(/-1\.png$/i, `-${n}.png`));
     }
+    // "There's a peptide for that" campaign — 2-slide carousel (hook → reveal)
+    if (/\/ptt-[^/]+-1\.png$/i.test(base)) {
+      return [1,2].map(n => base.replace(/-1\.png$/i, `-${n}.png`));
+    }
     // Catalog-opener (launch Day 5): 5-image compound carousel
     if (post.id === 'b0000000-0000-0000-0000-000000000005') {
       return [
