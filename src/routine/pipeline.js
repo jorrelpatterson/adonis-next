@@ -34,6 +34,20 @@ export function buildDailyRoutine({
 }) {
   const allTasks = collectTasks(goals, protocolMap, profile, day);
 
+  // System protocols (domain: '_system') run independently of goals.
+  // Currently: daily check-in. They emit tasks once per day, not per-goal.
+  if (goals.length > 0) {
+    for (const proto of Object.values(protocolMap)) {
+      if (proto.domain !== '_system' || typeof proto.getTasks !== 'function') continue;
+      if (typeof proto.canServe === 'function' && !proto.canServe()) continue;
+      const sysState = proto.getState ? proto.getState(profile, logs) : {};
+      const sysTasks = proto.getTasks(sysState, profile, day);
+      for (const task of sysTasks) {
+        allTasks.push({ ...task, protocolId: proto.id });
+      }
+    }
+  }
+
   const goalPriorities = {};
   for (const goal of goals) {
     goalPriorities[goal.id] = goal.priority || goals.indexOf(goal) + 1;

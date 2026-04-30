@@ -10,6 +10,7 @@ import { getAllProtocols } from '../protocols/registry';
 import GoalSetup from '../goals/GoalSetup';
 import RoutineView from '../routine/RoutineView';
 import TabNav from './TabNav';
+import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
   const [viewDay, setViewDay] = useState(new Date());
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
+  const [showCheckin, setShowCheckin] = useState(false);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -52,6 +54,14 @@ export default function App() {
       : [...current, taskId];
     log('routine', { ...logs.routine, [todayKey]: updated });
   }, [logs.routine, todayKey, log]);
+
+  const handleTaskTap = useCallback((task) => {
+    if (task.type === 'check-in') setShowCheckin(true);
+  }, []);
+
+  const handleSaveCheckin = useCallback((ratings) => {
+    log('checkins', { ...logs.checkins, [todayKey]: ratings });
+  }, [logs.checkins, todayKey, log]);
 
   const handleCreateGoal = useCallback((goal) => {
     // Prevent duplicate goals from same template
@@ -144,6 +154,7 @@ export default function App() {
             <RoutineView
               routine={routine}
               onCheckTask={handleCheckTask}
+              onTaskTap={handleTaskTap}
               completedTasks={completedTasks}
               day={viewDay}
               goals={activeGoals}
@@ -360,6 +371,14 @@ export default function App() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           domains={profile.domains || ['body']}
+        />
+      )}
+
+      {/* Check-in modal */}
+      {showCheckin && (
+        <CheckinModal
+          onSave={handleSaveCheckin}
+          onClose={() => setShowCheckin(false)}
         />
       )}
     </div>

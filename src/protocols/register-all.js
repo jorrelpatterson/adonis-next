@@ -1,4 +1,5 @@
 import { registerProtocol } from './registry';
+import checkinProtocol from './_system/checkin/index';
 import workoutProtocol from './body/workout/index';
 import peptideProtocol from './body/peptides/index';
 import nutritionProtocol from './body/nutrition/index';
@@ -11,6 +12,7 @@ import purposeProtocol from './purpose/index';
 import environmentProtocol from './environment/index';
 import communityProtocol from './community/index';
 
+registerProtocol(checkinProtocol);
 registerProtocol(workoutProtocol);
 registerProtocol(peptideProtocol);
 registerProtocol(nutritionProtocol);

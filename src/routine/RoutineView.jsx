@@ -4,7 +4,7 @@ import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
 
-export default function RoutineView({ routine, onCheckTask, completedTasks = [], day, goals = [], onDayChange }) {
+export default function RoutineView({ routine, onCheckTask, onTaskTap, completedTasks = [], day, goals = [], onDayChange }) {
   const dayIdx = day.getDay();
   const completed = new Set(Array.isArray(completedTasks) ? completedTasks : []);
 
@@ -73,17 +73,26 @@ export default function RoutineView({ routine, onCheckTask, completedTasks = [],
             const catIcon = CAT_ICONS[task.category] || '';
             const isRec = task.type === 'recommendation';
             const isAuto = task.type === 'automated';
+            const isTappable = task.type === 'check-in' && onTaskTap;
 
             return (
-              <div key={task.id} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 10,
-                padding: '10px 14px',
-                borderBottom: i < routine.scheduled.length - 1 ? '1px solid ' + P.bd : 'none',
-                opacity: isDone ? 0.5 : isRec ? 0.7 : 1,
-                background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
-              }}>
+              <div key={task.id}
+                onClick={isTappable ? () => onTaskTap(task) : undefined}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 10,
+                  padding: '10px 14px',
+                  borderBottom: i < routine.scheduled.length - 1 ? '1px solid ' + P.bd : 'none',
+                  opacity: isDone ? 0.5 : isRec ? 0.7 : 1,
+                  background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
+                  cursor: isTappable ? 'pointer' : 'default',
+                }}>
                 {/* Checkbox */}
-                <button onClick={() => !isAuto && onCheckTask && onCheckTask(task.id)}
+                <button
+                  onClick={(e) => {
+                    if (isAuto) return;
+                    if (isTappable) { e.stopPropagation(); onTaskTap(task); return; }
+                    onCheckTask && onCheckTask(task.id);
+                  }}
                   style={{
                     width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
                     border: isDone ? 'none' : ('1.5px solid ' + (isAuto ? P.ok : catColor + '44')),
