@@ -6,6 +6,7 @@ node_modules/
 next-env.d.ts
 .vercel
 dist/
+public/v2/
 
 # macOS AppleDouble / resource fork files
 ._*
