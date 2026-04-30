@@ -5,6 +5,7 @@ node_modules/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+dist/
 
 # macOS AppleDouble / resource fork files
 ._*
