@@ -1,5 +1,5 @@
 // src/views/ImageView.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
@@ -27,13 +27,22 @@ function abbreviate(active) {
 }
 
 const GROOMING_SEED = [
-  { id: 'haircut',   name: 'Haircut',          icon: '✂️',  cadence: 21, last: 14 },
-  { id: 'beard',     name: 'Beard trim',       icon: '\u{1F9D4}',     cadence: 7,  last: 3  },
-  { id: 'nails',     name: 'Nails',            icon: '\u{1F485}',     cadence: 10, last: 6  },
-  { id: 'brows',     name: 'Eyebrow shape',    icon: '\u{1F441}️', cadence: 14, last: 7  },
-  { id: 'body',      name: 'Body hair',        icon: '\u{1FA92}',     cadence: 14, last: 9  },
-  { id: 'teeth',     name: 'Teeth whitening',  icon: '\u{1F9B7}',     cadence: 30, last: 18 },
+  { id: 'haircut',   name: 'Haircut',          icon: '✂️',  cadence: 21 },
+  { id: 'beard',     name: 'Beard trim',       icon: '\u{1F9D4}',     cadence: 7  },
+  { id: 'nails',     name: 'Nails',            icon: '\u{1F485}',     cadence: 10 },
+  { id: 'brows',     name: 'Eyebrow shape',    icon: '\u{1F441}️', cadence: 14 },
+  { id: 'body',      name: 'Body hair',        icon: '\u{1FA92}',     cadence: 14 },
+  { id: 'teeth',     name: 'Teeth whitening',  icon: '\u{1F9B7}',     cadence: 30 },
 ];
+
+// Days between two ISO date strings (YYYY-MM-DD). Returns null if `from` is falsy.
+function daysSince(fromISO, todayISO) {
+  if (!fromISO) return null;
+  const a = new Date(fromISO + 'T00:00:00');
+  const b = new Date(todayISO + 'T00:00:00');
+  const diff = Math.round((b - a) / (1000 * 60 * 60 * 24));
+  return diff < 0 ? 0 : diff;
+}
 
 const WARDROBE = [
   { id: 'shirts',     name: 'Shirts',      have: 8, target: 8 },
@@ -88,6 +97,7 @@ function ProductRow({ label, isToday, checked, onToggle }) {
 export default function ImageView({
   profile,
   protocolStates,
+  setProtocolState,
   domainGoals = [],
   domainTasks = [],
   completedTasks = [],
@@ -96,18 +106,35 @@ export default function ImageView({
 }) {
   const today = new Date();
   const dayIdx = today.getDay();
-
-  // Local-only check state for skincare products (resets on remount)
-  const [checked, setChecked] = useState({});
-  const toggle = (id) => setChecked((c) => ({ ...c, [id]: !c[id] }));
-
-  // Local-only grooming "last done" tracking
-  const [grooming, setGrooming] = useState(GROOMING_SEED);
-  const markGroomingDone = (id) =>
-    setGrooming((items) => items.map((it) => (it.id === id ? { ...it, last: 0 } : it)));
+  const todayISO = today.toISOString().slice(0, 10);
 
   const skin = protocolStates?.skincare || {};
   const hasSkinProfile = !!(skin.skinType || (skin.concerns && skin.concerns.length));
+
+  // Persisted: per-item ISO date when last marked done, e.g. { haircut: '2026-04-25' }
+  const groomingLastDone = skin.groomingLastDone || {};
+
+  // Persisted: array of date-keyed skincare check keys, e.g. ['2026-04-29:am:0', '2026-04-29:pm:1']
+  const skincareDoneDates = skin.skincareDoneDates || [];
+
+  const isSkincareDone = (period, idx) =>
+    skincareDoneDates.includes(todayISO + ':' + period + ':' + idx);
+
+  const toggleSkincare = (period, idx) => {
+    if (!setProtocolState) return;
+    const key = todayISO + ':' + period + ':' + idx;
+    const next = skincareDoneDates.includes(key)
+      ? skincareDoneDates.filter((k) => k !== key)
+      : [...skincareDoneDates, key];
+    setProtocolState('skincare', { skincareDoneDates: next });
+  };
+
+  const markGroomingDone = (id) => {
+    if (!setProtocolState) return;
+    setProtocolState('skincare', {
+      groomingLastDone: { ...groomingLastDone, [id]: todayISO },
+    });
+  };
 
   const amActive = SKIN_AM[dayIdx];
   const pmActive = SKIN_PM[dayIdx];
@@ -153,8 +180,8 @@ export default function ImageView({
                 key={id}
                 label={step}
                 isToday={false}
-                checked={!!checked[id]}
-                onToggle={() => toggle(id)}
+                checked={isSkincareDone('am', i)}
+                onToggle={() => toggleSkincare('am', i)}
               />
             );
           })}
@@ -163,8 +190,8 @@ export default function ImageView({
               key="am-active"
               label={amActive}
               isToday
-              checked={!!checked['am-active']}
-              onToggle={() => toggle('am-active')}
+              checked={isSkincareDone('am', SKIN_AM_BASE.length)}
+              onToggle={() => toggleSkincare('am', SKIN_AM_BASE.length)}
             />
           )}
           {!amActive && (
@@ -196,8 +223,8 @@ export default function ImageView({
                 key={id}
                 label={step}
                 isToday={false}
-                checked={!!checked[id]}
-                onToggle={() => toggle(id)}
+                checked={isSkincareDone('pm', i)}
+                onToggle={() => toggleSkincare('pm', i)}
               />
             );
           })}
@@ -206,8 +233,8 @@ export default function ImageView({
               key="pm-active"
               label={pmActive}
               isToday
-              checked={!!checked['pm-active']}
-              onToggle={() => toggle('pm-active')}
+              checked={isSkincareDone('pm', SKIN_PM_BASE.length)}
+              onToggle={() => toggleSkincare('pm', SKIN_PM_BASE.length)}
             />
           )}
         </div>
@@ -301,14 +328,21 @@ export default function ImageView({
           <div style={{ ...s.lab, marginBottom: 0 }}>Grooming</div>
           <span style={{ fontSize: 16 }}>{'\u{1F485}'}</span>
         </div>
-        {grooming.map((item, i) => {
-          const ratio = Math.min(1, item.last / item.cadence);
+        {GROOMING_SEED.map((item, i) => {
+          const lastISO = groomingLastDone[item.id];
+          const days = daysSince(lastISO, todayISO);
+          const ratio = days === null ? 1 : Math.min(1, days / item.cadence);
           let barColor = P.ok;
           if (ratio > 0.8) barColor = P.err;
           else if (ratio > 0.5) barColor = P.warn;
+          let lastLabel;
+          if (days === null) lastLabel = 'never';
+          else if (days === 0) lastLabel = 'today';
+          else if (days === 1) lastLabel = '1 day ago';
+          else lastLabel = days + ' days ago';
           return (
             <div key={item.id} style={{
-              padding: '10px 0', borderBottom: i < grooming.length - 1 ? '1px solid ' + P.bd : 'none',
+              padding: '10px 0', borderBottom: i < GROOMING_SEED.length - 1 ? '1px solid ' + P.bd : 'none',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
@@ -316,8 +350,7 @@ export default function ImageView({
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, color: P.txS, fontWeight: 600 }}>{item.name}</div>
                     <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
-                      Every {item.cadence} days {'·'} Last:{' '}
-                      {item.last === 0 ? 'today' : item.last + ' days ago'}
+                      Every {item.cadence} days {'·'} Last: {lastLabel}
                     </div>
                   </div>
                 </div>

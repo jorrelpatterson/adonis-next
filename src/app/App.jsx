@@ -479,6 +479,7 @@ export default function App() {
               <View
                 profile={profile}
                 protocolStates={protocolStates}
+                setProtocolState={setProtocolState}
                 logs={logs}
                 domainGoals={domainGoals}
                 domainTasks={domainTasks}

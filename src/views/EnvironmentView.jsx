@@ -1,8 +1,9 @@
 // src/views/EnvironmentView.jsx
 // Environment domain tab — 36-item daily checklist (6 areas x 6 items),
 // progress ring, living-situation summary, goals, today's tasks.
-// Local UI state only — no persistence.
-import React, { useState, useMemo } from 'react';
+// Persists today's checks via protocolStates.environment.checklistByDate;
+// auto-resets each morning since `today` is computed per render.
+import React, { useMemo } from 'react';
 import { P, FN, FM, grad } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
@@ -211,6 +212,7 @@ function ChecklistRow({ id, label, checked, onToggle, last }) {
 export default function EnvironmentView({
   profile,
   protocolStates = {},
+  setProtocolState,
   domainGoals = [],
   domainTasks = [],
   completedTasks = [],
@@ -222,12 +224,29 @@ export default function EnvironmentView({
   const priorityArea = env.priorityArea;
   const hasLiving = !!livingSituation;
 
-  // Local-only checklist state. Keys are `${areaKey}:${itemIdx}`.
-  const [checked, setChecked] = useState({});
+  // Persisted checklist state. Keyed by ISO date so it auto-resets each morning.
+  // Per-date map: `${areaKey}:${itemIdx}` -> true/false.
+  const checklistByDate = env.checklistByDate || {};
+  const today = new Date().toISOString().slice(0, 10);
+  const checked = checklistByDate[today] || {};
 
   const toggle = (areaKey, idx) => {
     const k = `${areaKey}:${idx}`;
-    setChecked((prev) => ({ ...prev, [k]: !prev[k] }));
+    const newToday = { ...checked, [k]: !checked[k] };
+
+    // Trim to today + last 7 days to avoid storage bloat.
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 7);
+    const cutoffStr = cutoff.toISOString().slice(0, 10);
+    const trimmed = {};
+    for (const [date, checks] of Object.entries(checklistByDate)) {
+      if (date >= cutoffStr) trimmed[date] = checks;
+    }
+    trimmed[today] = newToday;
+
+    if (setProtocolState) {
+      setProtocolState('environment', { checklistByDate: trimmed });
+    }
   };
 
   const checkedCount = useMemo(

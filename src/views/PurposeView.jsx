@@ -5,9 +5,11 @@
 // core values (pick 5), an 8-category bucket-list preview, yearly
 // goals with progress bars, and the standard goals + tasks rails.
 //
-// All interactive state is local — no persistence, no upstream writes.
+// Life Wheel scores and Core Values selection are persisted to
+// state.protocolState.purpose via setProtocolState (lifeWheelScores +
+// coreValuesSelected). Bucket list and yearly goals are placeholders.
 // Onboarding focus areas come in via protocolStates.purpose.lifeAreas.
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
@@ -63,14 +65,16 @@ function defaultWheel() {
 export default function PurposeView({
   profile,
   protocolStates,
+  setProtocolState,
   domainGoals = [],
   domainTasks = [],
   completedTasks = [],
   onCheckTask,
   onAddGoal,
 }) {
-  const [wheel, setWheel] = useState(defaultWheel);
-  const [selectedValues, setSelectedValues] = useState([]);
+  const purposeState = protocolStates?.purpose || {};
+  const wheel = purposeState.lifeWheelScores || defaultWheel();
+  const selectedValues = purposeState.coreValuesSelected || [];
 
   const avg = useMemo(() => {
     const vals = LIFE_AREAS.map(a => wheel[a.id] || 0);
@@ -78,15 +82,20 @@ export default function PurposeView({
     return (sum / vals.length).toFixed(1);
   }, [wheel]);
 
-  const focusAreaIds = (protocolStates?.purpose?.lifeAreas) || [];
+  const focusAreaIds = purposeState.lifeAreas || [];
   const focusAreas = LIFE_AREAS.filter(a => focusAreaIds.includes(a.id));
 
+  const updateLifeWheel = (areaId, score) => {
+    if (!setProtocolState) return;
+    setProtocolState('purpose', { lifeWheelScores: { ...wheel, [areaId]: score } });
+  };
+
   const toggleValue = (v) => {
-    setSelectedValues(prev => {
-      if (prev.includes(v)) return prev.filter(x => x !== v);
-      if (prev.length >= 5) return prev;
-      return [...prev, v];
-    });
+    if (!setProtocolState) return;
+    const next = selectedValues.includes(v)
+      ? selectedValues.filter(x => x !== v)
+      : (selectedValues.length >= 5 ? selectedValues : [...selectedValues, v]);
+    setProtocolState('purpose', { coreValuesSelected: next });
   };
 
   return (
@@ -123,7 +132,7 @@ export default function PurposeView({
                   max={10}
                   step={1}
                   value={score}
-                  onChange={e => setWheel({ ...wheel, [area.id]: parseInt(e.target.value, 10) })}
+                  onChange={e => updateLifeWheel(area.id, parseInt(e.target.value, 10))}
                   style={{
                     flex: 1,
                     height: 4,

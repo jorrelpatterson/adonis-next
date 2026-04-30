@@ -286,13 +286,18 @@ function BreathworkCard() {
   );
 }
 
-function GratitudeCard() {
+function GratitudeCard({ gratitudeEntries, onSave }) {
   const [g1, setG1] = useState('');
   const [g2, setG2] = useState('');
   const [g3, setG3] = useState('');
   const [showToast, setShowToast] = useState(false);
 
+  const today = new Date().toISOString().slice(0, 10);
+  const savedToday = (gratitudeEntries && gratitudeEntries[today]) || null;
+
   const handleSave = () => {
+    const entries = [g1.trim(), g2.trim(), g3.trim()];
+    if (onSave) onSave(entries);
     setG1(''); setG2(''); setG3('');
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
@@ -339,6 +344,36 @@ function GratitudeCard() {
         }}>
         Save
       </button>
+
+      {savedToday && Array.isArray(savedToday) && savedToday.some(e => e && e.trim()) && (
+        <div style={{
+          marginTop: 14, paddingTop: 12,
+          borderTop: '1px solid ' + P.bd,
+        }}>
+          <div style={{
+            fontSize: 9, color: P.txD, letterSpacing: 1.5,
+            textTransform: 'uppercase', fontWeight: 700, marginBottom: 8,
+          }}>
+            Saved earlier today
+          </div>
+          {savedToday.map((entry, i) => (
+            entry && entry.trim() ? (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'flex-start', gap: 8,
+                padding: '4px 0', fontSize: 12, color: P.txM, lineHeight: 1.5,
+              }}>
+                <span style={{
+                  fontFamily: FD, color: P.gW, fontStyle: 'italic',
+                  minWidth: 14,
+                }}>
+                  {i + 1}.
+                </span>
+                <span>{entry}</span>
+              </div>
+            ) : null
+          ))}
+        </div>
+      )}
 
       {showToast && (
         <div style={{
@@ -388,10 +423,12 @@ function FocusAreasCard({ focusAreas }) {
   );
 }
 
-function NootropicsCard() {
-  const [active, setActive] = useState({});
+function NootropicsCard({ nootropicsActive, onToggle }) {
+  const active = nootropicsActive || {};
 
-  const toggle = id => setActive(a => ({ ...a, [id]: !a[id] }));
+  const toggle = id => {
+    if (onToggle) onToggle(id);
+  };
 
   return (
     <div style={{ ...s.card, marginBottom: 12 }}>
@@ -545,6 +582,7 @@ function TasksCard({ domainTasks, completedTasks, onCheckTask }) {
 export default function MindView({
   profile,
   protocolStates,
+  setProtocolState,
   domainGoals = [],
   domainTasks = [],
   completedTasks = [],
@@ -554,6 +592,24 @@ export default function MindView({
   const mindState = (protocolStates && protocolStates.mind) || {};
   const focusAreas = mindState.focusAreas || [];
   const nootropicsOpen = mindState.nootropicsOpen === true;
+  const nootropicsActive = mindState.nootropicsActive || {};
+  const gratitudeEntries = mindState.gratitudeEntries || {};
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const handleToggleNootropic = (id) => {
+    if (!setProtocolState) return;
+    setProtocolState('mind', {
+      nootropicsActive: { ...nootropicsActive, [id]: !nootropicsActive[id] },
+    });
+  };
+
+  const handleSaveGratitude = (entries) => {
+    if (!setProtocolState) return;
+    setProtocolState('mind', {
+      gratitudeEntries: { ...gratitudeEntries, [today]: entries },
+    });
+  };
 
   return (
     <div>
@@ -561,9 +617,17 @@ export default function MindView({
 
       <MeditationCard />
       <BreathworkCard />
-      <GratitudeCard />
+      <GratitudeCard
+        gratitudeEntries={gratitudeEntries}
+        onSave={handleSaveGratitude}
+      />
       <FocusAreasCard focusAreas={focusAreas} />
-      {nootropicsOpen && <NootropicsCard />}
+      {nootropicsOpen && (
+        <NootropicsCard
+          nootropicsActive={nootropicsActive}
+          onToggle={handleToggleNootropic}
+        />
+      )}
       <GoalsCard domainGoals={domainGoals} onAddGoal={onAddGoal} />
       <TasksCard
         domainTasks={domainTasks}
