@@ -4,6 +4,7 @@ import { useAppState } from '../state/store';
 import { loadLiveCatalog } from '../services/peptide-catalog';
 import { useAuth } from '../services/useAuth';
 import AuthScreen from '../auth/AuthScreen';
+import ProfileSetup, { isProfileIncomplete } from '../auth/ProfileSetup';
 import { redirectToCheckout } from '../services/upgrade';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
@@ -134,6 +135,12 @@ export default function App() {
   }
   if (!user) {
     return <AuthScreen />;
+  }
+  // PROFILE GATE — capture basics (age, weight, height, activity) before
+  // letting the user into the routine. The adaptive calorie/intensity
+  // engines need these or they'd give generic advice.
+  if (isProfileIncomplete(profile)) {
+    return <ProfileSetup onSave={(data) => setProfile(data)} />;
   }
 
   return (
