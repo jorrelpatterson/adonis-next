@@ -8,8 +8,10 @@ const workoutProtocol = {
 
   canServe(goal) { return goal?.domain === 'body'; },
 
-  getState(profile, logs, goal) {
-    const goalName = profile?.primary || 'Wellness';
+  getState(profile, logs, goal, protocolState) {
+    // Onboarding writes `primary` into protocolState.workout.primary.
+    // Fall back to profile.primary for backwards-compat with v1 data shape.
+    const goalName = protocolState?.primary || profile?.primary || 'Wellness';
     return { goal: goalName, program: getProgram(goalName) };
   },
 
@@ -56,6 +58,62 @@ const workoutProtocol = {
   getAutomations() { return []; },
   getRecommendations() { return []; },
   getUpsells() { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'primary',
+        type: 'select',
+        label: 'Primary fitness goal',
+        subtitle: 'Drives your workout split + meal plan',
+        required: true,
+        options: [
+          { value: 'Fat Loss', label: 'Lose fat', sub: 'Cut while preserving muscle' },
+          { value: 'Muscle Gain', label: 'Build muscle', sub: 'Bulk with structured progression' },
+          { value: 'Recomposition', label: 'Recomp', sub: 'Lose fat + gain muscle simultaneously' },
+          { value: 'Aesthetics', label: 'Aesthetics', sub: 'Symmetry, proportion, V-taper' },
+          { value: 'Wellness', label: 'General wellness', sub: 'Health-first, no aggressive goal' },
+        ],
+      },
+      {
+        id: 'trainPref',
+        type: 'select',
+        label: 'When do you train?',
+        required: true,
+        options: [
+          { value: 'morning', label: 'Morning' },
+          { value: 'midday', label: 'Midday' },
+          { value: 'evening', label: 'Evening' },
+        ],
+      },
+      {
+        id: 'equipment',
+        type: 'select',
+        label: 'What equipment do you have?',
+        required: true,
+        options: [
+          { value: 'gym', label: 'Full gym', sub: 'Barbell, rack, machines, cables' },
+          { value: 'home', label: 'Home gym', sub: 'Dumbbells + adjustable bench' },
+          { value: 'minimal', label: 'Minimal', sub: 'Bodyweight + bands' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const goalLabel = profile?.primary || 'Wellness';
+    const program = getProgram(goalLabel);
+    const trainingDays = program ? program.filter(d => d.dur > 0).length : 6;
+    return {
+      title: 'Train',
+      icon: '\u{1F3CB}️',
+      lines: [
+        `Program: ${goalLabel} · ${trainingDays} training days/week`,
+        `Time slot: ${profile?.trainPref || 'morning'} · ${profile?.equipment || 'gym'} setup`,
+      ],
+      emphasis: goalLabel,
+    };
+  },
 };
 
 export default workoutProtocol;

@@ -113,6 +113,50 @@ const creditProtocol = {
     }
     return [];
   },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'creditScoreRange',
+        type: 'select',
+        label: 'Where\'s your credit score?',
+        subtitle: 'Drives which strategy fits',
+        required: true,
+        options: [
+          { value: 'rebuild', label: 'Below 600', sub: 'Repair phase' },
+          { value: '600_700', label: '600-700', sub: 'Building' },
+          { value: '700_800', label: '700-800', sub: 'Optimizing' },
+          { value: '800_plus', label: '800+', sub: 'Stacking + travel hacking' },
+        ],
+      },
+      {
+        id: 'primaryFocus',
+        type: 'select',
+        label: 'Primary focus',
+        required: true,
+        options: [
+          { value: 'repair', label: 'Repair my credit', sub: 'Disputes, paydowns, factor improvement' },
+          { value: 'build', label: 'Build credit', sub: 'New accounts, mix optimization' },
+          { value: 'stack', label: 'Card stacking', sub: 'Signup bonuses, points, 5/24 strategy' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const focus = state?.primaryFocus;
+    const labels = { repair: 'Credit repair plan', build: 'Credit building plan', stack: 'Card stacking strategy' };
+    return {
+      title: 'Money',
+      icon: '\u{1F4B3}',
+      lines: [
+        labels[focus] || 'Credit strategy ready',
+        state?.creditScoreRange === 'rebuild' ? 'Dispute engine activated' :
+        state?.creditScoreRange === '800_plus' ? 'Stacking + travel hacking unlocked' :
+        'Score analysis + factor improvements queued',
+      ],
+    };
+  },
 };
 
 export default creditProtocol;

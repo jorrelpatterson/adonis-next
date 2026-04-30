@@ -10,7 +10,7 @@
  * @param {Date}   day         - the day being assembled
  * @param {Object} logs        - state.logs (passed to proto.getState)
  */
-export function collectTasks(goals, protocolMap, profile, day, logs = {}) {
+export function collectTasks(goals, protocolMap, profile, day, logs = {}, protocolStates = {}) {
   const collected = [];
 
   for (const goal of goals) {
@@ -21,7 +21,7 @@ export function collectTasks(goals, protocolMap, profile, day, logs = {}) {
       if (!proto) continue;
 
       // Get protocol state, then ask for tasks
-      const state = proto.getState(profile, logs, goal);
+      const state = proto.getState(profile, logs, goal, protocolStates[proto.id]);
       const tasks = proto.getTasks(state, profile, day);
       const recs = proto.getRecommendations(state, profile, goal);
 

@@ -110,7 +110,51 @@ const skincareProtocol = {
 
   getAutomations() {
     return [];
-  }
+  },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'skinType',
+        type: 'select',
+        label: 'Skin type',
+        required: true,
+        options: [
+          { value: 'normal', label: 'Normal' },
+          { value: 'dry', label: 'Dry' },
+          { value: 'oily', label: 'Oily' },
+          { value: 'combination', label: 'Combination' },
+          { value: 'sensitive', label: 'Sensitive' },
+        ],
+      },
+      {
+        id: 'concerns',
+        type: 'multi',
+        label: 'Top concerns',
+        subtitle: 'Pick all that apply',
+        options: [
+          { value: 'acne', label: 'Acne' },
+          { value: 'aging', label: 'Anti-aging / wrinkles' },
+          { value: 'dark_spots', label: 'Dark spots / hyperpigmentation' },
+          { value: 'redness', label: 'Redness / inflammation' },
+          { value: 'texture', label: 'Texture / pores' },
+          { value: 'dullness', label: 'Dullness / lack of glow' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const lines = ['7-day rotation: Vitamin C, niacinamide, retinol nights'];
+    if (state?.concerns && state.concerns.length) {
+      lines.push(`Targeted: ${state.concerns.join(', ').replace(/_/g, ' ')}`);
+    }
+    return {
+      title: 'Image',
+      icon: '✨',
+      lines,
+    };
+  },
 };
 
 export default skincareProtocol;

@@ -157,6 +157,69 @@ const peptideProtocol = {
       },
     ];
   },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'peptideInterest',
+        type: 'select',
+        label: 'Peptides',
+        subtitle: 'Adonis recommends — advnce labs sells. Your call.',
+        required: true,
+        options: [
+          { value: 'curious', label: 'Curious — show me what fits', sub: 'Get research-backed protocol suggestions' },
+          { value: 'active', label: 'Already running peptides', sub: 'Track what I\'m on, optimize stack' },
+          { value: 'skip', label: 'Not for me', sub: 'Skip peptide protocols' },
+        ],
+      },
+      {
+        id: 'needleComfort',
+        type: 'select',
+        label: 'Comfortable with needles?',
+        subtitle: 'Some peptides only ship as injectables; others come oral or intranasal',
+        required: true,
+        dependsOn: { field: 'peptideInterest', value: 'curious', protocolId: 'peptides' },
+        options: [
+          { value: 'all', label: 'Anything works', sub: 'Including subcutaneous injection' },
+          { value: 'oral_intranasal', label: 'No needles', sub: 'Oral or intranasal only' },
+        ],
+      },
+      {
+        id: 'budget',
+        type: 'select',
+        label: 'Monthly peptide budget',
+        subtitle: 'Determines what we recommend — we\'ll never push beyond this',
+        required: true,
+        dependsOn: { field: 'peptideInterest', value: 'curious', protocolId: 'peptides' },
+        options: [
+          { value: 'under_100', label: 'Under $100' },
+          { value: '100_300', label: '$100-300' },
+          { value: '300_plus', label: '$300+' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const interest = state?.peptideInterest;
+    if (interest === 'skip') return null;
+    if (interest === 'active') {
+      return {
+        title: 'Peptides',
+        icon: '\u{1F489}',
+        lines: ['Tracking your active stack', 'Adaptive adjustments after 5+ daily check-ins'],
+      };
+    }
+    return {
+      title: 'Peptides',
+      icon: '\u{1F489}',
+      lines: [
+        'Goal-matched stack suggestions ready',
+        'Budget tier: ' + (state?.budget || 'unset').replace('_', ' ').replace('plus', '+'),
+      ],
+      emphasis: 'Recommendations link out to advnce labs',
+    };
+  },
 };
 
 export default peptideProtocol;

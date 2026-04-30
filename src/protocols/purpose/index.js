@@ -42,6 +42,39 @@ const purposeProtocol = {
   getAutomations() { return []; },
   getRecommendations() { return []; },
   getUpsells() { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'lifeAreas',
+        type: 'multi',
+        label: 'Which areas need the most focus?',
+        subtitle: 'Pick 2-3',
+        required: true,
+        options: [
+          { value: 'health', label: 'Health' },
+          { value: 'wealth', label: 'Wealth' },
+          { value: 'mind', label: 'Mind' },
+          { value: 'relationships', label: 'Relationships' },
+          { value: 'adventure', label: 'Adventure' },
+          { value: 'environment', label: 'Environment' },
+          { value: 'inner_peace', label: 'Inner peace' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const areas = state?.lifeAreas || [];
+    return {
+      title: 'Purpose',
+      icon: '\u{1F9ED}',
+      lines: [
+        areas.length ? `Focus areas: ${areas.slice(0, 3).join(', ').replace(/_/g, ' ')}` : 'Life wheel + bucket list ready',
+        '20 core values, yearly goals, life audit',
+      ],
+    };
+  },
 };
 
 export default purposeProtocol;

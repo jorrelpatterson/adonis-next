@@ -4,7 +4,10 @@ import { useAppState } from '../state/store';
 import { loadLiveCatalog } from '../services/peptide-catalog';
 import { useAuth } from '../services/useAuth';
 import AuthScreen from '../auth/AuthScreen';
-import ProfileSetup, { isProfileIncomplete } from '../auth/ProfileSetup';
+import { isProfileIncomplete } from '../auth/ProfileSetup';
+import OnboardingFlow from '../onboarding/OnboardingFlow';
+import CalculatingScreen from '../onboarding/CalculatingScreen';
+import GamePlanScreen from '../onboarding/GamePlanScreen';
 import { redirectToCheckout } from '../services/upgrade';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
@@ -20,7 +23,7 @@ import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useAuth();
-  const { state, addGoal, removeGoal, setProfile, log, updateGoal } = useAppState();
+  const { state, addGoal, removeGoal, setProfile, log, updateGoal, setProtocolState } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
 
   // Sync server-side tier into local profile when auth profile resolves.
@@ -41,6 +44,8 @@ export default function App() {
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
   const [showCheckin, setShowCheckin] = useState(false);
+  // Onboarding state machine — 'profile' | 'calculating' | 'gameplan' | 'app'
+  const [onboardingPhase, setOnboardingPhase] = useState('profile');
 
   // Load live peptide catalog from Supabase on mount.
   // Merges live commerce data (price, stock, active) onto v2's protocol metadata.
@@ -136,11 +141,40 @@ export default function App() {
   if (!user) {
     return <AuthScreen />;
   }
-  // PROFILE GATE — capture basics (age, weight, height, activity) before
-  // letting the user into the routine. The adaptive calorie/intensity
-  // engines need these or they'd give generic advice.
-  if (isProfileIncomplete(profile)) {
-    return <ProfileSetup onSave={(data) => setProfile(data)} />;
+
+  // ─── ONBOARDING SALES FUNNEL ──────────────────────────────────────────
+  // Phase 1.5 port from v1: multi-step wizard → calculating animation →
+  // game plan summary → main app. Conversion-critical UX.
+  if (isProfileIncomplete(profile) && onboardingPhase === 'profile') {
+    return (
+      <OnboardingFlow
+        initialProfile={profile}
+        onComplete={(profileUpdates, protocolStateUpdates) => {
+          setProfile(profileUpdates);
+          for (const [protocolId, answers] of Object.entries(protocolStateUpdates)) {
+            setProtocolState(protocolId, answers);
+          }
+          setOnboardingPhase('calculating');
+        }}
+      />
+    );
+  }
+  if (onboardingPhase === 'calculating') {
+    return (
+      <CalculatingScreen
+        profile={profile}
+        onComplete={() => setOnboardingPhase('gameplan')}
+      />
+    );
+  }
+  if (onboardingPhase === 'gameplan') {
+    return (
+      <GamePlanScreen
+        profile={profile}
+        protocolStates={protocolStates}
+        onStart={() => setOnboardingPhase('app')}
+      />
+    );
   }
 
   return (
