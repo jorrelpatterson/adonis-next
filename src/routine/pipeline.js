@@ -32,7 +32,7 @@ export function buildDailyRoutine({
   day = new Date(),
   today = new Date().toISOString().slice(0, 10),
 }) {
-  const allTasks = collectTasks(goals, protocolMap, profile, day);
+  const allTasks = collectTasks(goals, protocolMap, profile, day, logs);
 
   // System protocols (domain: '_system') run independently of goals.
   // Currently: daily check-in. They emit tasks once per day, not per-goal.

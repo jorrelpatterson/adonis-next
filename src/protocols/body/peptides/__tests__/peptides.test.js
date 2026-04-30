@@ -47,6 +47,35 @@ describe('peptide protocol', () => {
     expect(recs).toEqual([]);
   });
 
+  it('getRecommendations switches to adaptive (check-in driven) when averages indicate low sleep', () => {
+    const checkinAverages = { mood: 3, energy: 3, sleep: 2, focus: 3, stress: 3, appetite: 3, skin: 3, soreness: 3, _count: 7 };
+    const state = { activePeptides: [], stackNames: [], checkinAverages };
+    const recs = peptideProtocol.getRecommendations(state, { tier: 'pro' }, { domain: 'body', templateId: 'lose-weight' });
+
+    expect(recs.length).toBeGreaterThan(0);
+    const dsipRec = recs.find(r => r.name && r.name.startsWith('DSIP'));
+    expect(dsipRec).toBeTruthy();
+    expect(dsipRec.data.adaptive).toBe(true);
+    expect(dsipRec.data.reason).toMatch(/sleep/i);
+  });
+
+  it('getState computes checkinAverages from logs', () => {
+    const logs = {
+      checkins: {
+        '2026-04-25': { mood: 3, energy: 3, sleep: 2, focus: 3 },
+        '2026-04-26': { mood: 3, energy: 3, sleep: 2, focus: 3 },
+        '2026-04-27': { mood: 3, energy: 3, sleep: 2, focus: 3 },
+        '2026-04-28': { mood: 3, energy: 3, sleep: 2, focus: 3 },
+        '2026-04-29': { mood: 3, energy: 3, sleep: 2, focus: 3 },
+      },
+    };
+    const profile = { activePeptides: [{ id: 9, name: 'Tirz 10mg' }] };
+    const state = peptideProtocol.getState(profile, logs, { domain: 'body' });
+    expect(state.checkinAverages).not.toBeNull();
+    expect(state.checkinAverages.sleep).toBe(2);
+    expect(state.stackNames).toEqual(['Tirz 10mg']);
+  });
+
   it('getUpsells flags low supply', () => {
     const state = { supplyDaysLeft: 3, activeProduct: { name: 'Tirz', price: 99 } };
     const upsells = peptideProtocol.getUpsells(state, {}, {});

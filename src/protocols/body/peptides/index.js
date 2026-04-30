@@ -1,5 +1,7 @@
 // src/protocols/body/peptides/index.js
-import { getPeptidesByGoal } from './catalog.js';
+import { getPeptidesByGoal, PEPTIDES } from './catalog.js';
+import { getCheckinAverages } from '../../_system/checkin/selectors.js';
+import { getStackAdjustments } from './stack-adjustments.js';
 
 // Determine if a peptide should be shown today based on frequency
 // dayIdx: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
@@ -42,10 +44,15 @@ const peptideProtocol = {
   },
 
   getState(profile, logs, goal) {
+    const activePeptides = profile?.activePeptides || [];
+    const stackNames = activePeptides.map(p => p.name).filter(Boolean);
+    const checkinAverages = getCheckinAverages(logs);
     return {
-      activePeptides: profile?.activePeptides || [],
+      activePeptides,
+      stackNames,
       supplyDaysLeft: profile?.supplyDaysLeft ?? null,
       activeProduct: profile?.activeProduct ?? null,
+      checkinAverages,
     };
   },
 
@@ -77,6 +84,30 @@ const peptideProtocol = {
   getRecommendations(state, profile, goal) {
     if (!profile || profile.tier === 'free') return [];
 
+    // Adaptive recommendations based on 7-day check-in averages.
+    // When the user has 5+ days of check-ins, these take precedence over
+    // generic goal-based suggestions because they're personalized.
+    const adjustments = getStackAdjustments(
+      state?.checkinAverages,
+      state?.stackNames || [],
+      PEPTIDES,
+    );
+
+    const adaptiveRecs = adjustments
+      .filter(adj => adj.type === 'add')
+      .map(adj => ({
+        type: 'product',
+        id: 'peptide-adaptive-' + adj.peptide.id,
+        name: adj.peptide.name,
+        description: adj.reason,
+        price: adj.peptide.price,
+        revenue: { model: 'direct', margin: adj.peptide.margin },
+        data: { peptide: adj.peptide, adaptive: true, reason: adj.reason },
+      }));
+
+    if (adaptiveRecs.length > 0) return adaptiveRecs;
+
+    // Fallback: goal-based catalog recommendations
     const templateId = goal?.templateId;
     const catalogGoal = GOAL_TEMPLATE_MAP[templateId];
     if (!catalogGoal) return [];

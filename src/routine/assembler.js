@@ -3,8 +3,14 @@
 
 /**
  * Collects tasks from all active protocols across all goals.
+ *
+ * @param {Array}  goals       - active goal objects
+ * @param {Object} protocolMap - { protocolId: protocolInstance }
+ * @param {Object} profile     - user profile
+ * @param {Date}   day         - the day being assembled
+ * @param {Object} logs        - state.logs (passed to proto.getState)
  */
-export function collectTasks(goals, protocolMap, profile, day) {
+export function collectTasks(goals, protocolMap, profile, day, logs = {}) {
   const collected = [];
 
   for (const goal of goals) {
@@ -15,7 +21,7 @@ export function collectTasks(goals, protocolMap, profile, day) {
       if (!proto) continue;
 
       // Get protocol state, then ask for tasks
-      const state = proto.getState(profile, {}, goal);
+      const state = proto.getState(profile, logs, goal);
       const tasks = proto.getTasks(state, profile, day);
       const recs = proto.getRecommendations(state, profile, goal);
 
