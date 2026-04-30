@@ -10,6 +10,8 @@ import CalculatingScreen from '../onboarding/CalculatingScreen';
 import GamePlanScreen from '../onboarding/GamePlanScreen';
 import { buildInitialGoals } from '../onboarding/initial-goals';
 import { redirectToCheckout } from '../services/upgrade';
+import { recommendStack } from '../protocols/body/peptides/recommend-stack';
+import { PEPTIDES } from '../protocols/body/peptides/catalog';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
@@ -445,10 +447,80 @@ export default function App() {
               const proto = protocolMap[t.protocolId];
               return proto && proto.domain === activeTab;
             });
+
+            // Body-specific: surface the recommended peptide stack from
+            // the user's Peptide Finder answers. Conversion to advnce labs.
+            const liveCatalog = (logs.peptideCatalog && logs.peptideCatalog.length) ? logs.peptideCatalog : PEPTIDES;
+            const peptideStack = activeTab === 'body'
+              ? recommendStack(protocolStates.peptides || {}, liveCatalog)
+              : [];
+
             return (
               <div>
                 <H t={(domain?.icon || '') + ' ' + (domain?.name || activeTab)}
                   sub={domain?.sub || ''} />
+
+                {/* Recommended peptide stack — Body domain only */}
+                {activeTab === 'body' && peptideStack.length > 0 && (
+                  <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                      <div>
+                        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: P.gW }}>
+                          Your Peptide Stack
+                        </div>
+                        <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
+                          {peptideStack.length} compound{peptideStack.length === 1 ? '' : 's'} matched to your goals
+                        </div>
+                      </div>
+                      <span style={{ fontSize: 22 }}>{'\u{1F489}'}</span>
+                    </div>
+                    {peptideStack.map(({ peptide, reason }) => {
+                      const buyUrl = 'https://advncelabs.com/?q=' + encodeURIComponent(peptide.name);
+                      return (
+                        <div key={peptide.id} style={{
+                          padding: '10px 0', borderTop: '1px solid ' + P.bd,
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>
+                                {peptide.name}
+                              </div>
+                              <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
+                                {peptide.dose} · {peptide.tod || 'AM'} · {peptide.dur || 'as prescribed'}
+                              </div>
+                              <div style={{ fontSize: 10, color: P.gW, marginTop: 4, fontStyle: 'italic' }}>
+                                {reason}
+                              </div>
+                              {peptide.inStock === false && (
+                                <div style={{ fontSize: 9, color: P.warn || '#F59E0B', marginTop: 4, fontWeight: 600 }}>
+                                  · Out of stock — pre-sell available
+                                </div>
+                              )}
+                            </div>
+                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                              <div style={{ fontFamily: FN, fontSize: 14, fontWeight: 700, color: P.gW }}>
+                                ${peptide.price}
+                              </div>
+                              <a href={buyUrl} target="_blank" rel="noopener noreferrer"
+                                style={{
+                                  display: 'inline-block', marginTop: 4,
+                                  fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                                  color: P.gW, textDecoration: 'none',
+                                  border: '1px solid ' + P.gW + '44',
+                                  padding: '4px 10px', borderRadius: 6,
+                                }}>
+                                View on advnce labs →
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div style={{ marginTop: 10, padding: '8px 10px', borderRadius: 6, background: 'rgba(232,213,183,0.04)', fontSize: 9, color: P.txD, lineHeight: 1.5 }}>
+                      Adonis recommends · advnce labs sells · Research compounds, not medical advice
+                    </div>
+                  </div>
+                )}
 
                 {/* Domain Goals */}
                 {domainGoals.length > 0 ? (
