@@ -2,6 +2,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useAppState } from '../state/store';
 import { loadLiveCatalog } from '../services/peptide-catalog';
+import { useAuth } from '../services/useAuth';
+import AuthScreen from '../auth/AuthScreen';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
@@ -15,8 +17,19 @@ import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
+  const { user, profile: authProfile, loading: authLoading, signOut } = useAuth();
   const { state, addGoal, removeGoal, setProfile, log, updateGoal } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
+
+  // Sync server-side tier into local profile when auth profile resolves.
+  // Server is the source of truth for tier (Stripe-controlled); localStorage caches it.
+  useEffect(() => {
+    if (authProfile && authProfile.tier && authProfile.tier !== profile.tier) {
+      setProfile({ tier: authProfile.tier });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authProfile?.tier]);
+
   const tierInfo = SUB_TIERS[profile.tier] || SUB_TIERS.free;
 
   const [activeTab, setActiveTab] = useState('routine');
@@ -104,6 +117,24 @@ export default function App() {
 
   const activeGoals = goals.filter(g => g.status === 'active');
 
+  // AUTH GATE — show loading while session resolves, login screen if no user
+  if (authLoading) {
+    return (
+      <div style={{
+        fontFamily: FN, background: P.bg, color: P.tx,
+        position: 'fixed', inset: 0, display: 'flex',
+        alignItems: 'center', justifyContent: 'center',
+        fontSize: 11, letterSpacing: 2, textTransform: 'uppercase',
+        color: P.txD,
+      }}>
+        Loading...
+      </div>
+    );
+  }
+  if (!user) {
+    return <AuthScreen />;
+  }
+
   return (
     <div className="adn-noise" style={{
       fontFamily: FN, background: P.bg, color: P.tx,
@@ -176,7 +207,21 @@ export default function App() {
           </div>
         ) : activeTab === 'profile' ? (
           <div>
-            <H t="Profile" sub={profile.name || 'Set up your profile'} />
+            <H t="Profile" sub={profile.name || user.email || 'Set up your profile'} />
+
+            {/* Account */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Account</div>
+              <div style={{ fontSize: 13, color: P.txS, marginBottom: 8 }}>
+                {user.email}
+              </div>
+              <button
+                onClick={signOut}
+                style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px', minHeight: 32 }}
+              >
+                Sign out
+              </button>
+            </div>
 
             {/* Name */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
