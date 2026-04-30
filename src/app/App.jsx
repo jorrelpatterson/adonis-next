@@ -4,6 +4,7 @@ import { useAppState } from '../state/store';
 import { loadLiveCatalog } from '../services/peptide-catalog';
 import { useAuth } from '../services/useAuth';
 import AuthScreen from '../auth/AuthScreen';
+import { redirectToCheckout } from '../services/upgrade';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
@@ -215,6 +216,9 @@ export default function App() {
               <div style={{ fontSize: 13, color: P.txS, marginBottom: 8 }}>
                 {user.email}
               </div>
+              <div style={{ fontSize: 10, color: P.txD, marginBottom: 10 }}>
+                Tier: <span style={{ fontWeight: 700, color: tierInfo.color }}>{tierInfo.name}</span>
+              </div>
               <button
                 onClick={signOut}
                 style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px', minHeight: 32 }}
@@ -222,6 +226,40 @@ export default function App() {
                 Sign out
               </button>
             </div>
+
+            {/* Subscription tier upgrade — show only if not already at Elite */}
+            {profile.tier !== 'elite' && (
+              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 8 }}>
+                  {profile.tier === 'pro' ? 'Upgrade to Elite' : 'Upgrade'}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {profile.tier !== 'pro' && profile.tier !== 'elite' && (
+                    <button
+                      onClick={() => redirectToCheckout('pro', user)}
+                      style={{ ...s.btn, ...s.pri, width: '100%', justifyContent: 'space-between' }}
+                    >
+                      <span>Pro · all 8 domains</span>
+                      <span style={{ opacity: 0.7 }}>$14.99/mo</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => redirectToCheckout('elite', user)}
+                    style={{
+                      ...s.btn, ...s.out,
+                      width: '100%', justifyContent: 'space-between',
+                      borderColor: 'rgba(184,196,208,0.3)',
+                    }}
+                  >
+                    <span>Elite · adaptive engine + AI</span>
+                    <span style={{ color: P.txD }}>$29.99/mo</span>
+                  </button>
+                </div>
+                <div style={{ fontSize: 10, color: P.txD, marginTop: 8, lineHeight: 1.5 }}>
+                  Cancel anytime. Tier updates automatically after payment.
+                </div>
+              </div>
+            )}
 
             {/* Name */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
