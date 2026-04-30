@@ -481,6 +481,7 @@ export default function App() {
                 protocolStates={protocolStates}
                 setProtocolState={setProtocolState}
                 logs={logs}
+                log={log}
                 domainGoals={domainGoals}
                 domainTasks={domainTasks}
                 completedTasks={completedTasks}

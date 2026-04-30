@@ -4,9 +4,10 @@ import { s } from '../design/styles';
 import { H } from '../design/components';
 import { recommendStack } from '../protocols/body/peptides/recommend-stack';
 import { PEPTIDES } from '../protocols/body/peptides/catalog';
+import WorkoutLogger from './components/WorkoutLogger';
 
 export default function BodyView({
-  profile, protocolStates, logs,
+  profile, protocolStates, logs, log,
   domainGoals, domainTasks, completedTasks,
   onCheckTask, onAddGoal,
 }) {
@@ -16,6 +17,14 @@ export default function BodyView({
   return (
     <div>
       <H t="🏋️ Body" sub="Peptides, fitness, nutrition, longevity" />
+
+      {/* Workout Logger — set logging + PR detection */}
+      <WorkoutLogger
+        profile={profile}
+        protocolStates={protocolStates}
+        logs={logs}
+        log={log}
+      />
 
       {/* Recommended peptide stack */}
       {peptideStack.length > 0 && (
