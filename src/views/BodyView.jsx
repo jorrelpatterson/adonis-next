@@ -5,6 +5,7 @@ import { H } from '../design/components';
 import { recommendStack } from '../protocols/body/peptides/recommend-stack';
 import { PEPTIDES } from '../protocols/body/peptides/catalog';
 import WorkoutLogger from './components/WorkoutLogger';
+import FoodLogger from './components/FoodLogger';
 
 export default function BodyView({
   profile, protocolStates, logs, log,
@@ -20,6 +21,14 @@ export default function BodyView({
 
       {/* Workout Logger — set logging + PR detection */}
       <WorkoutLogger
+        profile={profile}
+        protocolStates={protocolStates}
+        logs={logs}
+        log={log}
+      />
+
+      {/* Food Logger — calorie + macro tracking */}
+      <FoodLogger
         profile={profile}
         protocolStates={protocolStates}
         logs={logs}
