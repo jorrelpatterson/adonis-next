@@ -158,64 +158,103 @@ const peptideProtocol = {
     ];
   },
 
+  // Peptide Finder — 5-question wizard ported from v1 (the conversion moment).
+  // Drives personalized peptide stack recommendations that link to advncelabs.com.
   getOnboardingQuestions() {
     return [
       {
-        id: 'peptideInterest',
-        type: 'select',
-        label: 'Peptides',
-        subtitle: 'Adonis recommends — advnce labs sells. Your call.',
+        id: 'optimizeFor',
+        type: 'multi',
+        label: 'What are you trying to optimize?',
+        subtitle: 'Select all that apply — we\'ll match peptides to your goals',
         required: true,
         options: [
-          { value: 'curious', label: 'Curious — show me what fits', sub: 'Get research-backed protocol suggestions' },
-          { value: 'active', label: 'Already running peptides', sub: 'Track what I\'m on, optimize stack' },
-          { value: 'skip', label: 'Not for me', sub: 'Skip peptide protocols' },
+          { value: 'fat_loss',  label: '\u{1F525} Drop body fat' },
+          { value: 'muscle',    label: '\u{1F4AA} Build muscle' },
+          { value: 'mind',      label: '\u{1F9E0} Sharpen my mind' },
+          { value: 'sleep',     label: '\u{1F319} Fix my sleep' },
+          { value: 'injury',    label: '\u{1FA79} Heal an injury' },
+          { value: 'aging',     label: '⏳ Slow aging' },
+          { value: 'immune',    label: '\u{1F6E1}️ Boost immunity' },
+          { value: 'skin',      label: '✨ Improve my skin' },
+          { value: 'libido',    label: '\u{1F49C} Boost libido' },
+          { value: 'hormones',  label: '⚖️ Balance hormones' },
+          { value: 'everything', label: '\u{1F454} Maximize everything' },
         ],
       },
       {
-        id: 'needleComfort',
+        id: 'experience',
         type: 'select',
-        label: 'Comfortable with needles?',
-        subtitle: 'Some peptides only ship as injectables; others come oral or intranasal',
+        label: 'Have you used peptides before?',
         required: true,
-        dependsOn: { field: 'peptideInterest', value: 'curious', protocolId: 'peptides' },
         options: [
-          { value: 'all', label: 'Anything works', sub: 'Including subcutaneous injection' },
-          { value: 'oral_intranasal', label: 'No needles', sub: 'Oral or intranasal only' },
+          { value: 'beginner',     label: 'Never — I\'m new to this',  sub: 'We\'ll start you with simpler protocols' },
+          { value: 'intermediate', label: 'I\'ve tried a few',          sub: 'You\'ll get the full recommended stacks' },
+          { value: 'advanced',     label: 'I run protocols regularly',  sub: 'Premium stacks + advanced compounds' },
+        ],
+      },
+      {
+        id: 'glp1Status',
+        type: 'select',
+        label: 'Are you currently taking any GLP-1 medication?',
+        subtitle: 'Critical for safe stack building',
+        required: true,
+        options: [
+          { value: 'no',          label: 'No' },
+          { value: 'prescribed',  label: 'Yes — prescribed (Ozempic, Mounjaro, etc.)' },
+          { value: 'research',    label: 'Yes — research peptide (Sema, Tirz, Reta)' },
         ],
       },
       {
         id: 'budget',
         type: 'select',
-        label: 'Monthly peptide budget',
-        subtitle: 'Determines what we recommend — we\'ll never push beyond this',
+        label: 'Monthly budget for peptides?',
+        subtitle: 'We\'ll never recommend beyond this',
         required: true,
-        dependsOn: { field: 'peptideInterest', value: 'curious', protocolId: 'peptides' },
         options: [
-          { value: 'under_100', label: 'Under $100' },
-          { value: '100_300', label: '$100-300' },
-          { value: '300_plus', label: '$300+' },
+          { value: 'low',     label: 'Under $150/mo',  sub: 'SLEEP, EDGE, BALANCE, DRIVE stacks' },
+          { value: 'mid',     label: '$150-300/mo',    sub: 'SHRED, SCULPT, PRIME, RESTORE stacks' },
+          { value: 'high',    label: '$300-500/mo',    sub: 'EXECUTIVE, APEX premium stacks' },
+          { value: 'premium', label: '$500+/mo',       sub: 'Custom protocols, advanced compounds' },
+        ],
+      },
+      {
+        id: 'needleComfort',
+        type: 'select',
+        label: 'How do you feel about injections?',
+        required: true,
+        options: [
+          { value: 'fine',  label: 'Fine with daily SubQ',     sub: 'Tiny insulin needles, painless' },
+          { value: 'fewer', label: 'Prefer fewer injections',  sub: 'We\'ll favor weekly protocols' },
+          { value: 'avoid', label: 'I\'d rather avoid needles', sub: 'Oral + intranasal options only' },
         ],
       },
     ];
   },
 
   getOnboardingSummary(profile, state) {
-    const interest = state?.peptideInterest;
-    if (interest === 'skip') return null;
-    if (interest === 'active') {
+    if (!state?.optimizeFor || !state.optimizeFor.length) {
       return {
         title: 'Peptides',
         icon: '\u{1F489}',
-        lines: ['Tracking your active stack', 'Adaptive adjustments after 5+ daily check-ins'],
+        lines: ['Goal-matched stack suggestions ready when you want them'],
       };
     }
+    const goalLabels = {
+      fat_loss: 'Fat loss', muscle: 'Muscle', mind: 'Cognitive', sleep: 'Sleep',
+      injury: 'Recovery', aging: 'Longevity', immune: 'Immune', skin: 'Skin',
+      libido: 'Libido', hormones: 'Hormonal', everything: 'Optimization',
+    };
+    const goals = state.optimizeFor.slice(0, 3).map(g => goalLabels[g] || g).join(', ');
+    const budgetLabel = {
+      low: '<$150/mo', mid: '$150-300/mo', high: '$300-500/mo', premium: '$500+/mo',
+    }[state.budget] || '';
     return {
       title: 'Peptides',
       icon: '\u{1F489}',
       lines: [
-        'Goal-matched stack suggestions ready',
-        'Budget tier: ' + (state?.budget || 'unset').replace('_', ' ').replace('plus', '+'),
+        `Targeting: ${goals}`,
+        budgetLabel ? `Budget: ${budgetLabel}` : 'Stack ready — see Body tab',
       ],
       emphasis: 'Recommendations link out to advnce labs',
     };

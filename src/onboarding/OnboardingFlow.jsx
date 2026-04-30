@@ -36,6 +36,12 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
     ...initialProfile,
   });
   const [protocolAnswers, setProtocolAnswers] = useState({});
+  const [schedule, setSchedule] = useState({
+    workMode: '',
+    workStart: '09:00',
+    workEnd: '17:00',
+    restDay: 'sun',
+  });
   const [error, setError] = useState('');
 
   const setField = (k, v) => setProfileLocal(p => ({ ...p, [k]: v }));
@@ -51,8 +57,9 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
     return collectOnboardingQuestions(protos, profile);
   }, [profile.domains]);
 
-  // Total step count: 2 fixed (basics, domains) + 1 per protocol section
-  const totalSteps = 2 + sections.length;
+  // Total step count: 2 fixed (basics, domains) + N protocol sections + 1 schedule
+  const totalSteps = 2 + sections.length + 1;
+  const scheduleStepIdx = 2 + sections.length;
 
   const onBasicsNext = () => {
     setError('');
@@ -102,19 +109,27 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
         return;
       }
     }
-    if (step + 1 >= totalSteps) {
-      // Finish: coerce numeric profile fields and flush
-      const finalProfile = {
-        ...profile,
-        age: Number(profile.age),
-        weight: Number(profile.weight),
-        hFt: Number(profile.hFt),
-        hIn: Number(profile.hIn || 0),
-      };
-      onComplete(finalProfile, protocolAnswers);
+    setStep(step + 1);  // advances to next protocol page or to schedule step
+  };
+
+  const onScheduleNext = () => {
+    setError('');
+    if (!schedule.workMode) {
+      setError('Pick how you work — drives when we schedule training');
       return;
     }
-    setStep(step + 1);
+    const finalProfile = {
+      ...profile,
+      age: Number(profile.age),
+      weight: Number(profile.weight),
+      hFt: Number(profile.hFt),
+      hIn: Number(profile.hIn || 0),
+      workMode: schedule.workMode,
+      workStart: schedule.workStart,
+      workEnd: schedule.workEnd,
+      restDay: schedule.restDay,
+    };
+    onComplete(finalProfile, protocolAnswers);
   };
 
   const goBack = () => {
@@ -220,14 +235,16 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
               What do you want to optimize?
             </div>
             <div style={{ fontSize: 11, color: P.txD, lineHeight: 1.6, marginBottom: 18 }}>
-              Body is always free. Pick anything else you want — we'll set up the protocols.
-              Locked domains require Pro after onboarding.
+              <strong style={{ color: P.txM }}>Body is free, forever.</strong> Add any others you want
+              configured — Pro/Elite unlocks them all. Locked domains stay set up,
+              ready to activate when you upgrade.
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {DOMAINS.map(d => {
                 const isOn = (profile.domains || []).includes(d.id);
                 const isBody = d.id === 'body';
+                const isPaywalled = !isBody;  // Body is the only free domain
                 return (
                   <button
                     key={d.id}
@@ -237,6 +254,7 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
                       textAlign: 'left',
                       padding: '12px 12px',
                       borderRadius: 12,
+                      position: 'relative',
                       background: isOn ? 'rgba(232,213,183,0.08)' : 'transparent',
                       border: '1.5px solid ' + (isOn ? P.gW : P.bd),
                       color: isOn ? P.txS : P.txM,
@@ -245,25 +263,108 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
                       opacity: isBody ? 0.95 : 1,
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontSize: 18 }}>{d.icon}</span>
-                      <span style={{ fontSize: 13, fontWeight: 700 }}>{d.name}</span>
-                      {isBody && (
+                    {/* Tier badge — top-right corner */}
+                    <div style={{ position: 'absolute', top: 8, right: 8 }}>
+                      {isBody ? (
                         <span style={{
                           fontSize: 7, padding: '2px 6px', borderRadius: 4,
-                          background: P.ok + '20', color: P.ok, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                          background: P.ok + '20', color: P.ok,
+                          fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
                         }}>Free</span>
+                      ) : (
+                        <span style={{
+                          fontSize: 7, padding: '2px 6px', borderRadius: 4,
+                          background: 'rgba(232,213,183,0.08)', color: P.gW,
+                          fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                          display: 'inline-flex', alignItems: 'center', gap: 3,
+                        }}>
+                          <span style={{ fontSize: 8 }}>{'\u{1F512}'}</span>
+                          Pro
+                        </span>
                       )}
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, paddingRight: 36 }}>
+                      <span style={{ fontSize: 18 }}>{d.icon}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700 }}>{d.name}</span>
                     </div>
                     <div style={{ fontSize: 10, color: P.txD, lineHeight: 1.4 }}>{d.sub}</div>
                   </button>
                 );
               })}
             </div>
+
+            <div style={{
+              marginTop: 14, padding: '10px 12px', borderRadius: 8,
+              background: 'rgba(232,213,183,0.04)',
+              border: '1px solid rgba(232,213,183,0.08)',
+              fontSize: 10, color: P.txD, lineHeight: 1.5,
+            }}>
+              <strong style={{ color: P.gW }}>Tip:</strong> answer for every domain you're curious about.
+              Locked ones stay configured — when you upgrade, your routine activates instantly.
+            </div>
           </div>
         )}
 
-        {/* ─── step 2..N: Protocol questions ─── */}
+        {/* ─── step N (last): Schedule ─── */}
+        {step === scheduleStepIdx && (
+          <div style={{ ...s.card, padding: 22 }}>
+            <div style={{ fontSize: 18, fontWeight: 600, color: P.txS, marginBottom: 6 }}>
+              Your schedule
+            </div>
+            <div style={{ fontSize: 11, color: P.txD, lineHeight: 1.6, marginBottom: 18 }}>
+              Drives when we schedule training, meals, and routine tasks. You can change all of this later.
+            </div>
+
+            <label style={s.lab}>How do you work?</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
+              {[
+                { value: 'employee',     label: 'Employee', sub: 'Fixed hours, structured day' },
+                { value: 'entrepreneur', label: 'Entrepreneur / self-employed', sub: 'Flexible hours' },
+                { value: 'shift',        label: 'Shift work', sub: 'Variable schedule, rotating shifts' },
+              ].map(opt => {
+                const sel = schedule.workMode === opt.value;
+                return (
+                  <button key={opt.value} type="button" onClick={() => setSchedule(prev => ({ ...prev, workMode: opt.value }))}
+                    style={{
+                      textAlign: 'left', padding: '10px 12px', borderRadius: 10,
+                      background: sel ? 'rgba(232,213,183,0.08)' : 'transparent',
+                      border: '1px solid ' + (sel ? P.gW : P.bd),
+                      color: sel ? P.txS : P.txM, cursor: 'pointer', fontFamily: FN,
+                    }}>
+                    <div style={{ fontSize: 12, fontWeight: 600 }}>{opt.label}</div>
+                    <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>{opt.sub}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+              <div>
+                <label style={s.lab}>Work start</label>
+                <input type="time" value={schedule.workStart}
+                  onChange={e => setSchedule(prev => ({ ...prev, workStart: e.target.value }))}
+                  style={{ ...s.inp, fontFamily: FN }} />
+              </div>
+              <div>
+                <label style={s.lab}>Work end</label>
+                <input type="time" value={schedule.workEnd}
+                  onChange={e => setSchedule(prev => ({ ...prev, workEnd: e.target.value }))}
+                  style={{ ...s.inp, fontFamily: FN }} />
+              </div>
+            </div>
+
+            <label style={s.lab}>Primary rest day</label>
+            <select value={schedule.restDay} onChange={e => setSchedule(prev => ({ ...prev, restDay: e.target.value }))} style={s.sel}>
+              <option value="sun">Sunday</option>
+              <option value="sat">Saturday</option>
+              <option value="mon">Monday</option>
+              <option value="any">Floating — pick weekly</option>
+            </select>
+          </div>
+        )}
+
+        {/* ─── step 2..N-1: Protocol questions ─── */}
         {step >= 2 && step < 2 + sections.length && (() => {
           const section = sections[step - 2];
           if (!section) return null;
@@ -325,11 +426,12 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
             onClick={
               step === 0 ? onBasicsNext :
               step === 1 ? onDomainsNext :
+              step === scheduleStepIdx ? onScheduleNext :
               onProtocolNext
             }
             style={{ ...s.btn, ...s.pri, flex: 2, justifyContent: 'center' }}
           >
-            {step + 1 >= totalSteps ? 'Build my protocol' : 'Continue'}
+            {step === scheduleStepIdx ? 'Build my protocol' : 'Continue'}
           </button>
         </div>
 
