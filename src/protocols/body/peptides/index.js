@@ -3,6 +3,15 @@ import { getPeptidesByGoal, PEPTIDES } from './catalog.js';
 import { getCheckinAverages } from '../../_system/checkin/selectors.js';
 import { getStackAdjustments } from './stack-adjustments.js';
 
+// Returns the live peptide catalog if loaded into logs, otherwise falls back
+// to the static v2 catalog. The live catalog is populated on app mount by
+// src/services/peptide-catalog.js → App.jsx (logs.peptideCatalog).
+function resolveCatalog(logs) {
+  return (logs && Array.isArray(logs.peptideCatalog) && logs.peptideCatalog.length > 0)
+    ? logs.peptideCatalog
+    : PEPTIDES;
+}
+
 // Determine if a peptide should be shown today based on frequency
 // dayIdx: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
 function pepShowsToday(freq, dayIdx) {
@@ -47,12 +56,14 @@ const peptideProtocol = {
     const activePeptides = profile?.activePeptides || [];
     const stackNames = activePeptides.map(p => p.name).filter(Boolean);
     const checkinAverages = getCheckinAverages(logs);
+    const catalog = resolveCatalog(logs);
     return {
       activePeptides,
       stackNames,
       supplyDaysLeft: profile?.supplyDaysLeft ?? null,
       activeProduct: profile?.activeProduct ?? null,
       checkinAverages,
+      catalog,
     };
   },
 
@@ -84,13 +95,15 @@ const peptideProtocol = {
   getRecommendations(state, profile, goal) {
     if (!profile || profile.tier === 'free') return [];
 
+    const catalog = state?.catalog || PEPTIDES;
+
     // Adaptive recommendations based on 7-day check-in averages.
     // When the user has 5+ days of check-ins, these take precedence over
     // generic goal-based suggestions because they're personalized.
     const adjustments = getStackAdjustments(
       state?.checkinAverages,
       state?.stackNames || [],
-      PEPTIDES,
+      catalog,
     );
 
     const adaptiveRecs = adjustments
@@ -102,17 +115,21 @@ const peptideProtocol = {
         description: adj.reason,
         price: adj.peptide.price,
         revenue: { model: 'direct', margin: adj.peptide.margin },
-        data: { peptide: adj.peptide, adaptive: true, reason: adj.reason },
+        data: { peptide: adj.peptide, adaptive: true, reason: adj.reason, inStock: adj.peptide.inStock },
       }));
 
     if (adaptiveRecs.length > 0) return adaptiveRecs;
 
-    // Fallback: goal-based catalog recommendations
+    // Fallback: goal-based catalog recommendations.
+    // Uses the live catalog if loaded; otherwise falls back to the static one.
     const templateId = goal?.templateId;
     const catalogGoal = GOAL_TEMPLATE_MAP[templateId];
     if (!catalogGoal) return [];
 
-    const peptides = getPeptidesByGoal(catalogGoal).slice(0, 3);
+    const peptides = catalog
+      .filter(p => Array.isArray(p.goals) && p.goals.includes(catalogGoal))
+      .slice(0, 3);
+
     return peptides.map(p => ({
       type: 'product',
       id: 'peptide-rec-' + p.id,
@@ -120,7 +137,7 @@ const peptideProtocol = {
       description: p.desc,
       price: p.price,
       revenue: { model: 'direct', margin: p.margin },
-      data: { peptide: p },
+      data: { peptide: p, inStock: p.inStock },
     }));
   },
 

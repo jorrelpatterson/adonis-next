@@ -1,6 +1,7 @@
 // src/app/App.jsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useAppState } from '../state/store';
+import { loadLiveCatalog } from '../services/peptide-catalog';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
@@ -25,6 +26,18 @@ export default function App() {
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
   const [showCheckin, setShowCheckin] = useState(false);
+
+  // Load live peptide catalog from Supabase on mount.
+  // Merges live commerce data (price, stock, active) onto v2's protocol metadata.
+  // On Supabase failure, falls back gracefully to the static catalog.
+  useEffect(() => {
+    let cancelled = false;
+    loadLiveCatalog().then(catalog => {
+      if (!cancelled) log('peptideCatalog', catalog);
+    });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
