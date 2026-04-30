@@ -14,13 +14,20 @@
 
 import { supabase } from './supabase.js';
 
+// Build a redirect URL that points back to the v2 app, not the marketing
+// root. Without /v2/ users land on the landing page after email confirm
+// or OAuth callback.
+function v2RedirectUrl() {
+  if (typeof window === 'undefined') return undefined;
+  return window.location.origin + '/v2/';
+}
+
 export async function signUpWithEmail(email, password) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      // Disable email confirmation for MVP — toggle on later in Supabase dashboard
-      emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+      emailRedirectTo: v2RedirectUrl(),
     },
   });
   if (error) return { user: null, error: error.message };
@@ -37,7 +44,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+      redirectTo: v2RedirectUrl(),
     },
   });
   if (error) return { error: error.message };
