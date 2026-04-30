@@ -1,12 +1,29 @@
 import React from 'react';
-import { P, FN, FD } from '../design/theme';
+import { P, FN, FD, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
+import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert } from './intelligence';
 
-export default function RoutineView({ routine, onCheckTask, onTaskTap, completedTasks = [], day, goals = [], onDayChange }) {
+const TONE_STYLES = {
+  warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
+  info: { border: 'rgba(168,188,208,0.18)', bg: 'rgba(168,188,208,0.05)', accent: '#A8BCD0' },
+  good: { border: 'rgba(52,211,153,0.18)', bg: 'rgba(52,211,153,0.05)', accent: '#34D399' },
+};
+
+export default function RoutineView({
+  routine, onCheckTask, onTaskTap, completedTasks = [],
+  day, goals = [], onDayChange,
+  logs = {}, profile = {}, today,
+}) {
   const dayIdx = day.getDay();
   const completed = new Set(Array.isArray(completedTasks) ? completedTasks : []);
+
+  // ─── Intelligence cards (only on today's view) ────────────────────────
+  const isToday = today && day.toISOString().slice(0, 10) === today;
+  const recap = isToday ? buildYesterdayRecap(logs, today) : null;
+  const checkinAlerts = isToday ? buildCheckinAlerts(logs) : [];
+  const weightAlert = isToday ? buildWeightTrendAlert(logs, profile) : null;
 
   return (
     <div>
@@ -32,6 +49,103 @@ export default function RoutineView({ routine, onCheckTask, onTaskTap, completed
           );
         })}
       </div>
+
+      {/* Yesterday recap — only renders when there's data */}
+      {recap && (
+        <div style={{ ...s.card, padding: 12, marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: P.gW }}>
+              Yesterday
+            </div>
+            {recap.weightDelta != null && (
+              <div style={{
+                fontFamily: FM, fontSize: 11, fontWeight: 700,
+                color: recap.weightDelta < 0 ? P.ok : (recap.weightDelta > 0 ? '#F59E0B' : P.txM),
+              }}>
+                {recap.weightDelta > 0 ? '+' : ''}{recap.weightDelta} lbs
+              </div>
+            )}
+          </div>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            {recap.tasksDone > 0 && (
+              <div>
+                <div style={{ fontFamily: FM, fontSize: 16, fontWeight: 700, color: P.txS }}>
+                  {recap.tasksDone}
+                </div>
+                <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  Tasks done
+                </div>
+              </div>
+            )}
+            {recap.calorieTotal > 0 && (
+              <div>
+                <div style={{ fontFamily: FM, fontSize: 16, fontWeight: 700, color: P.txS }}>
+                  {recap.calorieTotal}
+                </div>
+                <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  Calories
+                </div>
+              </div>
+            )}
+            {recap.exerciseCount > 0 && (
+              <div>
+                <div style={{ fontFamily: FM, fontSize: 16, fontWeight: 700, color: P.txS }}>
+                  {recap.exerciseCount}{recap.prCount > 0 && <span style={{ fontSize: 11, color: P.gW, marginLeft: 4 }}>({recap.prCount} PR)</span>}
+                </div>
+                <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  Exercises
+                </div>
+              </div>
+            )}
+            {recap.checkin?.mood != null && (
+              <div>
+                <div style={{ fontFamily: FM, fontSize: 16, fontWeight: 700, color: P.txS }}>
+                  {recap.checkin.mood}/5
+                </div>
+                <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  Mood
+                </div>
+              </div>
+            )}
+            {recap.checkin?.energy != null && (
+              <div>
+                <div style={{ fontFamily: FM, fontSize: 16, fontWeight: 700, color: P.txS }}>
+                  {recap.checkin.energy}/5
+                </div>
+                <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  Energy
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Check-in alerts + weight trend */}
+      {(checkinAlerts.length > 0 || weightAlert) && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+          {[weightAlert, ...checkinAlerts].filter(Boolean).map((alert, i) => {
+            const tone = TONE_STYLES[alert.tone] || TONE_STYLES.info;
+            return (
+              <div key={i} style={{
+                padding: '10px 12px', borderRadius: 10,
+                background: tone.bg, border: '1px solid ' + tone.border,
+                display: 'flex', alignItems: 'flex-start', gap: 10,
+              }}>
+                <span style={{ fontSize: 16, lineHeight: 1, marginTop: 1 }}>{alert.icon}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: tone.accent, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+                    {alert.title}
+                  </div>
+                  <div style={{ fontSize: 11, color: P.txM, lineHeight: 1.5, marginTop: 2 }}>
+                    {alert.body}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Goal Progress Summary */}
       {goals.length > 0 && (

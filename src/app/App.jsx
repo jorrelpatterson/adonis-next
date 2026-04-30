@@ -271,6 +271,9 @@ export default function App() {
               day={viewDay}
               goals={activeGoals}
               onDayChange={setViewDay}
+              logs={logs}
+              profile={profile}
+              today={today}
             />
           </div>
         ) : activeTab === 'profile' ? (
