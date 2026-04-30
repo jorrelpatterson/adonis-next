@@ -8,6 +8,7 @@ import { isProfileIncomplete } from '../auth/ProfileSetup';
 import OnboardingFlow from '../onboarding/OnboardingFlow';
 import CalculatingScreen from '../onboarding/CalculatingScreen';
 import GamePlanScreen from '../onboarding/GamePlanScreen';
+import { buildInitialGoals } from '../onboarding/initial-goals';
 import { redirectToCheckout } from '../services/upgrade';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
@@ -153,6 +154,12 @@ export default function App() {
           setProfile(profileUpdates);
           for (const [protocolId, answers] of Object.entries(protocolStateUpdates)) {
             setProtocolState(protocolId, answers);
+          }
+          // Auto-create initial goals so the user lands in a populated routine
+          // instead of "No tasks yet · Add a goal."
+          const initialGoals = buildInitialGoals(profileUpdates, protocolStateUpdates);
+          for (const goal of initialGoals) {
+            addGoal(goal);
           }
           setOnboardingPhase('calculating');
         }}
