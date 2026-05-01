@@ -70,7 +70,7 @@ describe('groupTasksByTimeBlock', () => {
     expect(allTasks.every(i => i.kind === 'task')).toBe(true);
   });
 
-  it('groups peptides separately by time block', () => {
+  it('does NOT group peptides — each renders individually for visibility', () => {
     const tasks = [
       { id: 'p1', title: 'Semax', category: 'peptide', tod: 'morning' },
       { id: 'p2', title: 'Selank', category: 'peptide', tod: 'morning' },
@@ -80,11 +80,21 @@ describe('groupTasksByTimeBlock', () => {
     const out = groupTasksByTimeBlock(tasks);
     const morning = out.find(b => b.block === 'morning');
     const evening = out.find(b => b.block === 'evening');
-    expect(morning.items.length).toBe(1);
-    expect(morning.items[0].kind).toBe('group');
-    expect(morning.items[0].tasks.length).toBe(2);
-    expect(evening.items.length).toBe(1);
-    expect(evening.items[0].tasks.length).toBe(2);
+    expect(morning.items.length).toBe(2);
+    expect(morning.items.every(i => i.kind === 'task')).toBe(true);
+    expect(evening.items.length).toBe(2);
+    expect(evening.items.every(i => i.kind === 'task')).toBe(true);
+  });
+
+  it('does NOT group peptide_rec (suggestion) tasks — keeps Browse → CTAs visible', () => {
+    const tasks = [
+      { id: 's1', title: 'Reta', category: 'peptide_rec', type: 'browse' },
+      { id: 's2', title: 'KLOW', category: 'peptide_rec', type: 'browse' },
+      { id: 's3', title: 'CJC/Ipa', category: 'peptide_rec', type: 'browse' },
+    ];
+    const out = groupTasksByTimeBlock(tasks);
+    const allItems = out.flatMap(b => b.items);
+    expect(allItems.every(i => i.kind === 'task')).toBe(true);
   });
 
   it('preserves block order: morning → night', () => {

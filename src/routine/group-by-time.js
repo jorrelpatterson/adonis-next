@@ -54,7 +54,12 @@ function blockFromHour(hour) {
 // Categories that should collapse into one expandable group when 2+ are
 // present in the same time block. Each task in such a group gets shown
 // when the user taps to expand the parent.
-const GROUPABLE_CATEGORIES = new Set(['training', 'peptide', 'peptide_rec', 'supplement', 'skincare']);
+//
+// NOTE: peptides (both active and suggested) are intentionally NOT grouped.
+// They're individual products with their own dose data and Browse → links;
+// hiding them under a collapsed header reduces visibility/conversion. Only
+// training collapses (a typical workout is 6-8 exercises = real bloat).
+const GROUPABLE_CATEGORIES = new Set(['training']);
 
 /**
  * Group tasks by time block, then within each block collapse groupable
