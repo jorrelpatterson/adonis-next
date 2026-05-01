@@ -1,69 +1,434 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Adonis Design System — Motion + Materiality
+   ─────────────────────────────────────────────────────────────────────────
+   Authored as a coherent system, not a grab bag. Every animation has a job:
+   - Anticipation (button press → tactile feedback)
+   - Continuity (tab switch → cross-fade via View Transitions API)
+   - Hierarchy (stagger reveals to guide the eye)
+   - Delight (PR celebration, streak milestones)
+   - Information (count-up on stat changes signals "this just changed")
+   ───────────────────────────────────────────────────────────────────────── */
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-* { touch-action: manipulation; }
-input, select, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100%; }
-@media (min-width: 420px) { input, select, textarea { font-size: inherit !important; } }
+/* Design tokens — single source of truth for motion + materiality */
+:root {
+  /* Easing curves */
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);  /* overshoot, iOS-like */
+  --ease-soft:      cubic-bezier(0.16, 1, 0.3, 1);      /* deceleration, no overshoot */
+  --ease-snap:      cubic-bezier(0.4, 0, 0.2, 1);       /* material standard */
+  --ease-stiff:     cubic-bezier(0.6, 0, 0.4, 1);       /* abrupt, for state changes */
 
-@keyframes springIn {
-  0% { opacity:0; transform:translateY(32px) scale(0.96); }
-  40% { opacity:1; transform:translateY(-4px) scale(1.005); }
-  70% { transform:translateY(2px) scale(0.998); }
-  100% { opacity:1; transform:translateY(0) scale(1); }
+  /* Durations — premium apps use shorter than you think */
+  --t-instant:      0.12s;
+  --t-quick:        0.2s;
+  --t-base:         0.35s;
+  --t-slow:         0.6s;
+  --t-cinema:       1.2s;
+
+  /* Surface tokens — layered shadow + inner highlight = premium glass */
+  --surface-card:        rgba(14,16,22,0.55);
+  --surface-elevated:    rgba(20,22,30,0.65);
+  --surface-hover:       rgba(24,26,36,0.75);
+  --shadow-card:         0 1px 0 0 rgba(255,255,255,0.04) inset,
+                         0 0 0 0.5px rgba(232,213,183,0.04),
+                         0 4px 12px rgba(0,0,0,0.18),
+                         0 16px 48px rgba(0,0,0,0.28);
+  --shadow-elevated:     0 1px 0 0 rgba(255,255,255,0.06) inset,
+                         0 0 0 0.5px rgba(232,213,183,0.08),
+                         0 8px 24px rgba(0,0,0,0.32),
+                         0 24px 64px rgba(0,0,0,0.42);
+  --shadow-pressed:      0 1px 0 0 rgba(255,255,255,0.02) inset,
+                         0 1px 4px rgba(0,0,0,0.4);
+
+  /* Border tokens */
+  --border-glass:        1px solid rgba(232,213,183,0.06);
+  --border-active:       1px solid rgba(232,213,183,0.18);
+  --border-gradient:     linear-gradient(135deg, rgba(232,213,183,0.25), rgba(184,196,208,0.08));
+
+  /* Radii */
+  --r-pill:    100px;
+  --r-card:    18px;
+  --r-button:  12px;
+  --r-input:   14px;
+  --r-tag:     8px;
 }
 
-@keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(232,213,183,0); } 50% { box-shadow: 0 0 20px 4px rgba(232,213,183,0.08); } }
-@keyframes countUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-@keyframes slideInRight { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
-@keyframes slideInLeft { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
-@keyframes ripple { 0% { transform:scale(0.8); opacity:0.5; } 100% { transform:scale(2.5); opacity:0; } }
-@keyframes breathe { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
+/* ─── Globals ───────────────────────────────────────────────────────────── */
+
+* {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html { color-scheme: dark; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
+  font-variant-ligatures: common-ligatures contextual;
+}
+
+input, select, textarea {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100%;
+}
+@media (min-width: 420px) {
+  input, select, textarea { font-size: inherit !important; }
+}
+
+/* Tabular numerals — apply wherever numbers compare or align.
+   Rule: if a digit could change in place, it should be tabular. */
+.adn-num,
+.adn-num * {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────────────────── */
+
+@keyframes springIn {
+  0%   { opacity: 0; transform: translateY(32px) scale(0.96); }
+  40%  { opacity: 1; transform: translateY(-4px) scale(1.005); }
+  70%  { transform: translateY(2px) scale(0.998); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes springScale {
+  0%   { opacity: 0; transform: scale(0.92); }
+  60%  { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,213,183,0); } 50% { box-shadow: 0 0 32px 8px rgba(232,213,183,0.12); } }
+@keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideUpIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ripple { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2.5); opacity: 0; } }
+@keyframes breathe { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-@keyframes popIn { 0% { transform:scale(0); opacity:0; } 60% { transform:scale(1.15); } 100% { transform:scale(1); opacity:1; } }
-@keyframes checkDraw { 0% { stroke-dashoffset: 20; } 100% { stroke-dashoffset: 0; } }
+@keyframes popIn { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes checkDraw { 0% { stroke-dashoffset: 24; } 100% { stroke-dashoffset: 0; } }
+@keyframes toastSlideIn { 0% { opacity: 0; transform: translateY(-20px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastSlideOut { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-20px) scale(0.96); } }
+@keyframes glowPulse { 0%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); } 50% { filter: brightness(1.1) drop-shadow(0 0 12px var(--glow-color, rgba(232,213,183,0.4))); } }
+@keyframes confettiBurst {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--cx, 0), var(--cy, -200px)) rotate(var(--cr, 720deg)) scale(0.5); }
+}
+@keyframes ringDraw { from { stroke-dashoffset: var(--ring-circumference, 283); } to { stroke-dashoffset: var(--ring-target, 0); } }
+@keyframes flameFlicker {
+  0%, 100% { transform: scaleY(1)    rotate(-1deg); filter: brightness(1); }
+  25%      { transform: scaleY(1.05) rotate(2deg);  filter: brightness(1.1); }
+  50%      { transform: scaleY(0.95) rotate(-2deg); filter: brightness(0.95); }
+  75%      { transform: scaleY(1.08) rotate(1deg);  filter: brightness(1.15); }
+}
 
-.adn-stat-pop { animation: countUp 0.6s cubic-bezier(0.16,1,0.3,1) both; }
-.adn-stat-pop:nth-child(2) { animation-delay: 0.08s; }
-.adn-stat-pop:nth-child(3) { animation-delay: 0.16s; }
-.adn-stat-pop:nth-child(4) { animation-delay: 0.24s; }
+/* ─── Honor reduced-motion preference ────────────────────────────────────
+   Premium ≠ noisy. People with vestibular sensitivities turn motion off,
+   and we respect that — every decorative animation gets neutralized. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
-.adn-card-press { transition: all 0.2s cubic-bezier(0.16,1,0.3,1); }
-.adn-card-press:active { transform: scale(0.97); filter: brightness(0.95); }
+/* ─── Reveals — apply to view roots for staggered screen entry ─────────── */
 
-.adn-check-draw svg polyline { stroke-dasharray: 20; stroke-dashoffset: 20; animation: checkDraw 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@media (prefers-reduced-motion: no-preference) {
+  .adn-reveal { animation: slideUpIn var(--t-base) var(--ease-soft) both; }
+  .adn-reveal > * { animation: slideUpIn var(--t-base) var(--ease-soft) both; opacity: 0; }
+  .adn-reveal > *:nth-child(1) { animation-delay: 0.04s; }
+  .adn-reveal > *:nth-child(2) { animation-delay: 0.08s; }
+  .adn-reveal > *:nth-child(3) { animation-delay: 0.12s; }
+  .adn-reveal > *:nth-child(4) { animation-delay: 0.16s; }
+  .adn-reveal > *:nth-child(5) { animation-delay: 0.20s; }
+  .adn-reveal > *:nth-child(6) { animation-delay: 0.24s; }
+  .adn-reveal > *:nth-child(7) { animation-delay: 0.28s; }
+  .adn-reveal > *:nth-child(8) { animation-delay: 0.32s; }
+  .adn-reveal > *:nth-child(9) { animation-delay: 0.36s; }
+  .adn-reveal > *:nth-child(n+10) { animation-delay: 0.40s; }
+}
+
+/* ─── Number count-up for stat displays ─────────────────────────────────── */
+
+.adn-stat-pop {
+  animation: countUp var(--t-slow) var(--ease-soft) both;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ─── Tactile press — apply to anything tappable ────────────────────────── */
+
+/* Default: every button gets a subtle press response. Apps that opted out can
+   set transform manually. The transition is inherited from the button's own
+   transition prop where present, falls back to var(--ease-soft). */
+@media (prefers-reduced-motion: no-preference) {
+  button:not(:disabled):not(.adn-no-press):active {
+    transform: scale(0.97);
+    filter: brightness(0.92);
+  }
+
+  button {
+    transition:
+      transform var(--t-instant) var(--ease-soft),
+      filter var(--t-instant) var(--ease-soft),
+      box-shadow var(--t-quick) var(--ease-soft),
+      background var(--t-base) var(--ease-soft),
+      color var(--t-base) var(--ease-soft),
+      border-color var(--t-base) var(--ease-soft);
+  }
+}
+
+.adn-press {
+  transition:
+    transform var(--t-instant) var(--ease-soft),
+    filter var(--t-instant) var(--ease-soft),
+    box-shadow var(--t-quick) var(--ease-soft);
+  will-change: transform;
+}
+.adn-press:active {
+  transform: scale(0.97);
+  filter: brightness(0.92);
+}
+
+.adn-press-strong:active {
+  transform: scale(0.94);
+  filter: brightness(0.88);
+}
+
+/* Cards lift on press release for tactile rebound */
+.adn-card-press {
+  transition:
+    transform var(--t-quick) var(--ease-spring),
+    box-shadow var(--t-base) var(--ease-soft),
+    background var(--t-base) var(--ease-soft);
+}
+.adn-card-press:active {
+  transform: scale(0.985);
+  box-shadow: var(--shadow-pressed);
+}
+
+/* ─── Glass card materiality ────────────────────────────────────────────── */
+
+.adn-glass {
+  background: var(--surface-card);
+  backdrop-filter: blur(40px) saturate(140%);
+  -webkit-backdrop-filter: blur(40px) saturate(140%);
+  border: var(--border-glass);
+  box-shadow: var(--shadow-card);
+}
+
+.adn-glass-elevated {
+  background: var(--surface-elevated);
+  backdrop-filter: blur(48px) saturate(160%);
+  -webkit-backdrop-filter: blur(48px) saturate(160%);
+  border: var(--border-active);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Gradient stroke — 1px gold border that catches the eye on the active item */
+.adn-stroke-grad {
+  position: relative;
+}
+.adn-stroke-grad::before {
+  content: '';
+  position: absolute; inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(232,213,183,0.4), rgba(184,196,208,0.1) 50%, rgba(232,213,183,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Checkmark draw animation ─────────────────────────────────────────── */
+
+.adn-check-draw svg polyline,
+.adn-check-draw svg path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: checkDraw var(--t-base) var(--ease-spring) forwards;
+}
 
 .adn-check-ripple { position: relative; overflow: hidden; }
-.adn-check-ripple::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at var(--rx,50%) var(--ry,50%), rgba(52,211,153,0.08) 0%, transparent 60%); opacity:0; transition: opacity 0.5s; pointer-events:none; }
-.adn-check-ripple.checked::after { opacity:1; }
+.adn-check-ripple::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--rx, 50%) var(--ry, 50%), rgba(52,211,153,0.12) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+  pointer-events: none;
+}
+.adn-check-ripple.checked::after { opacity: 1; }
 
-.adn-shimmer { background: linear-gradient(90deg, transparent, rgba(232,213,183,0.04), transparent); background-size: 200% 100%; animation: shimmer 2s ease-in-out infinite; }
+/* ─── Skeleton shimmer — use in place of every spinner ─────────────────── */
 
-.adn-nav-item { position: relative; }
-.adn-nav-item.active::before { content:''; position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:32px; height:32px; border-radius:50%; background:radial-gradient(circle, rgba(232,213,183,0.06) 0%, transparent 70%); pointer-events:none; animation: breathe 3s ease-in-out infinite; }
+.adn-skel {
+  background: linear-gradient(90deg,
+    rgba(232,213,183,0.02) 0%,
+    rgba(232,213,183,0.06) 40%,
+    rgba(232,213,183,0.10) 50%,
+    rgba(232,213,183,0.06) 60%,
+    rgba(232,213,183,0.02) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.adn-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(232,213,183,0.04), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ─── Tab navigation ────────────────────────────────────────────────────── */
+
+.adn-nav-item {
+  position: relative;
+  transition: opacity var(--t-base) var(--ease-soft), color var(--t-base) var(--ease-soft);
+}
+.adn-nav-item:not(.active) { opacity: 0.55; }
+.adn-nav-item.active::before {
+  content: '';
+  position: absolute; top: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,213,183,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  animation: breathe 3s ease-in-out infinite;
+}
 
 .adn-tab-indicator { position: relative; }
-.adn-tab-indicator::after { content:''; position:absolute; bottom:0; left:15%; right:15%; height:2.5px; border-radius:2px; background:var(--tab-color, rgba(232,213,183,0.4)); box-shadow: 0 0 12px var(--tab-glow, rgba(232,213,183,0.15)); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+.adn-tab-indicator::after {
+  content: '';
+  position: absolute; bottom: 0; left: 15%; right: 15%;
+  height: 2.5px; border-radius: 2px;
+  background: var(--tab-color, rgba(232,213,183,0.4));
+  box-shadow: 0 0 12px var(--tab-glow, rgba(232,213,183,0.15));
+  transition: all var(--t-base) var(--ease-soft);
+}
 
-.adn-reveal { animation: slideInRight 0.5s cubic-bezier(0.16,1,0.3,1) both; }
-.adn-reveal:nth-child(odd) { animation-name: slideInLeft; }
+/* ─── View Transitions API — cross-fade between tabs/views ─────────────── */
 
-.adn-ambient-orb { position:fixed; border-radius:50%; pointer-events:none; filter:blur(60px); transition:background 1.2s ease; will-change:transform; }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.32s;
+    animation-timing-function: var(--ease-soft);
+  }
+  ::view-transition-old(root) { animation-name: vt-fade-out; }
+  ::view-transition-new(root) { animation-name: vt-fade-in; }
+
+  @keyframes vt-fade-out {
+    to { opacity: 0; transform: translateY(-6px) scale(0.995); }
+  }
+  @keyframes vt-fade-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.998); }
+  }
+}
+
+/* ─── Ambient backdrop (orbs, particles, parallax) ─────────────────────── */
+
+.adn-ambient-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  transition: background var(--t-cinema) ease;
+  will-change: transform;
+}
 
 .adn-parallax-slow { will-change: transform; transition: transform 0.1s linear; }
 
-@keyframes particleFloat { 0%,100% { transform: translateY(0) translateX(0); opacity:0.4; } 25% { transform: translateY(-30px) translateX(15px); opacity:0.85; } 50% { transform: translateY(-12px) translateX(-12px); opacity:0.5; } 75% { transform: translateY(-35px) translateX(8px); opacity:0.7; } }
-@keyframes particleDrift { 0%,100% { transform: translateY(0) rotate(0deg); opacity:0.35; } 50% { transform: translateY(-40px) rotate(180deg); opacity:0.8; } }
-@keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(25px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+@keyframes particleFloat { 0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; } 25% { transform: translateY(-30px) translateX(15px); opacity: 0.85; } 50% { transform: translateY(-12px) translateX(-12px); opacity: 0.5; } 75% { transform: translateY(-35px) translateX(8px); opacity: 0.7; } }
+@keyframes particleDrift { 0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.35; } 50% { transform: translateY(-40px) rotate(180deg); opacity: 0.8; } }
+@keyframes orbFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(25px, -30px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } }
 
 .adn-orb-float { animation: orbFloat 20s ease-in-out infinite; }
 .adn-orb-float-alt { animation: orbFloat 25s ease-in-out infinite reverse; }
 
-.adn-particle { position:fixed; border-radius:50%; pointer-events:none; box-shadow: 0 0 6px currentColor; }
-.adn-particle-1 { width:5px; height:5px; animation: particleFloat 8s ease-in-out infinite; }
-.adn-particle-2 { width:4px; height:4px; animation: particleFloat 12s ease-in-out infinite 2s; }
-.adn-particle-3 { width:6px; height:6px; animation: particleDrift 15s ease-in-out infinite 1s; }
-.adn-particle-4 { width:4px; height:4px; animation: particleFloat 10s ease-in-out infinite 4s; }
-.adn-particle-5 { width:5px; height:5px; animation: particleDrift 11s ease-in-out infinite 3s; }
+.adn-particle { position: fixed; border-radius: 50%; pointer-events: none; box-shadow: 0 0 6px currentColor; }
+.adn-particle-1 { width: 5px; height: 5px; animation: particleFloat 8s ease-in-out infinite; }
+.adn-particle-2 { width: 4px; height: 4px; animation: particleFloat 12s ease-in-out infinite 2s; }
+.adn-particle-3 { width: 6px; height: 6px; animation: particleDrift 15s ease-in-out infinite 1s; }
+.adn-particle-4 { width: 4px; height: 4px; animation: particleFloat 10s ease-in-out infinite 4s; }
+.adn-particle-5 { width: 5px; height: 5px; animation: particleDrift 11s ease-in-out infinite 3s; }
 
-.adn-noise::before { content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:0.015; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* ─── Noise texture (analog warmth on dark backgrounds) ─────────────────── */
+
+.adn-noise::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── Celebration glow — when todayRPct === 100 ────────────────────────── */
 
 .adn-celebrate { animation: pulseGlow 2s ease-in-out 3; }
+
+/* ─── Confetti particles (PR celebration) ──────────────────────────────── */
+
+.adn-confetti {
+  position: fixed;
+  width: 8px; height: 14px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: confettiBurst 1.6s var(--ease-soft) forwards;
+  will-change: transform, opacity;
+}
+
+/* ─── Toast container ──────────────────────────────────────────────────── */
+
+.adn-toast {
+  animation: toastSlideIn var(--t-base) var(--ease-spring) both;
+}
+.adn-toast.exiting {
+  animation: toastSlideOut var(--t-base) var(--ease-soft) both;
+}
+
+/* ─── Form focus state — premium outline expansion ─────────────────────── */
+
+.adn-input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(232,213,183,0.3) !important;
+  box-shadow:
+    0 0 0 3px rgba(232,213,183,0.08),
+    0 0 0 1px rgba(232,213,183,0.15) inset !important;
+}
+
+/* ─── Selection color ──────────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(232,213,183,0.25);
+  color: #fff;
+}
+
+/* ─── Scrollbar — invisible but present ────────────────────────────────── */
+
+::-webkit-scrollbar { width: 0; height: 0; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* ─── Helpers ──────────────────────────────────────────────────────────── */
+
+.adn-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.adn-flame {
+  transform-origin: bottom center;
+  animation: flameFlicker 0.8s ease-in-out infinite;
+}

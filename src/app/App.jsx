@@ -47,8 +47,21 @@ import { validateAccessCode } from '../state/access-codes';
 import ProfileHeader, { getFitnessPillars } from './components/ProfileHeader';
 import FitnessPillarsModal from './components/FitnessPillarsModal';
 import ResetConfirmModal from './components/ResetConfirmModal';
+import { ToastProvider, useToast } from '../design/Toast';
+import { transitionView } from '../design/motion';
+import { haptics } from '../design/haptics';
+import { sound } from '../design/sound';
 
 export default function App() {
+  return (
+    <ToastProvider>
+      <AppInner />
+    </ToastProvider>
+  );
+}
+
+function AppInner() {
+  const toast = useToast();
   const { user, profile: authProfile, loading: authLoading, signOut } = useAuth();
   const { state, addGoal, removeGoal, setProfile, log, updateGoal, setProtocolState } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
@@ -115,9 +128,17 @@ export default function App() {
 
   const handleCheckTask = useCallback((taskId) => {
     const current = (logs.routine && logs.routine[todayKey]) || [];
-    const updated = current.includes(taskId)
+    const wasChecked = current.includes(taskId);
+    const updated = wasChecked
       ? current.filter(id => id !== taskId)
       : [...current, taskId];
+    if (wasChecked) {
+      haptics.light();
+      sound.toggleOff();
+    } else {
+      haptics.success();
+      sound.success();
+    }
     log('routine', { ...logs.routine, [todayKey]: updated });
   }, [logs.routine, todayKey, log]);
 
@@ -133,27 +154,39 @@ export default function App() {
     // Prevent duplicate goals from same template
     const isDuplicate = goals.some(g => g.templateId === goal.templateId && g.status === 'active');
     if (isDuplicate) {
-      // Could show a message, but for now just close
+      toast.warning('You already have this goal active');
       setShowGoalSetup(false);
       setGoalSetupDomain(null);
       return;
     }
+    toast.success(`Goal added: ${goal.title}`);
     addGoal(goal);
     setShowGoalSetup(false);
     setGoalSetupDomain(null);
     setActiveTab('routine');
-  }, [addGoal, goals]);
+  }, [addGoal, goals, toast]);
+
+  // Tab switch with view transition + tactile feedback. Falls back gracefully
+  // on browsers without the View Transitions API.
+  const handleTabChange = useCallback((next) => {
+    if (next === activeTab) return;
+    haptics.light();
+    sound.tap();
+    transitionView(() => setActiveTab(next));
+  }, [activeTab]);
 
   const handleAccessCode = useCallback(() => {
     const result = validateAccessCode(accessCodeInput);
     if (result) {
       setProfile({ tier: result.tier });
-      setAccessCodeMsg('Activated: ' + result.name + ' (' + result.tier + ' tier)');
+      toast.success(`Activated: ${result.name} (${result.tier})`);
       setAccessCodeInput('');
+      setAccessCodeMsg('');
     } else {
-      setAccessCodeMsg('Invalid code');
+      toast.error('Invalid code');
+      setAccessCodeMsg('');
     }
-  }, [accessCodeInput, setProfile]);
+  }, [accessCodeInput, setProfile, toast]);
 
   const activeGoals = goals.filter(g => g.status === 'active');
 
@@ -234,7 +267,11 @@ export default function App() {
       paddingBottom: 80,
     }}>
       <AmbientBackdrop tab={activeTab} />
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0', position: 'relative', zIndex: 2 }}>
+      <div
+        key={activeTab}
+        className="adn-reveal"
+        style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0', position: 'relative', zIndex: 2, viewTransitionName: 'root' }}
+      >
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -459,6 +496,7 @@ export default function App() {
                       onClick={() => {
                         if (typeof window !== 'undefined' && window.confirm('Remove "' + g.title + '"?')) {
                           removeGoal(g.id);
+                          toast.info(`Removed: ${g.title}`);
                         }
                       }}
                       style={{
@@ -585,7 +623,7 @@ export default function App() {
       {!showGoalSetup && (
         <TabNav
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           domains={profile.domains || ['body']}
         />
       )}

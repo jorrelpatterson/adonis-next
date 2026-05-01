@@ -7,6 +7,8 @@
 import React, { useState, useEffect } from 'react';
 import { P, FN, FD, FM } from '../design/theme';
 import { GradText } from '../design/components';
+import { sound } from '../design/sound';
+import { haptics } from '../design/haptics';
 
 const ALL_STEPS = [
   { t: 'Analyzing your profile', icon: '\u{1F9EC}', requiresDomain: null },
@@ -33,14 +35,20 @@ export default function CalculatingScreen({ profile, onComplete }) {
 
   useEffect(() => {
     let step = 0;
+    sound.tap();
     const iv = setInterval(() => {
       step++;
       if (step < filtered.length) {
         setCalcStep(step);
+        sound.tap();
       } else {
         clearInterval(iv);
-        setTimeout(() => setReady(true), 600);
-        setTimeout(() => { onComplete && onComplete(); }, 2200);
+        setTimeout(() => {
+          setReady(true);
+          sound.pr();
+          haptics.success();
+        }, 600);
+        setTimeout(() => { onComplete && onComplete(); }, 2400);
       }
     }, 500);
     return () => clearInterval(iv);

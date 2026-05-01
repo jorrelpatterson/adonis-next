@@ -3,6 +3,7 @@ import { P, FN, FM } from '../../design/theme';
 import { s } from '../../design/styles';
 import { getProgram } from '../../protocols/body/workout/programs';
 import ExerciseDetail from './ExerciseDetail';
+import PRCelebration from './PRCelebration';
 
 // ─── Helpers (exported for testing) ────────────────────────────────────────
 
@@ -204,6 +205,8 @@ export default function WorkoutLogger({ profile, protocolStates, logs, log }) {
     [exerciseLogs, todayKey],
   );
 
+  const [celebration, setCelebration] = useState(null);
+
   const handleSaveExercise = (exerciseName, sets, isPR) => {
     if (!log) return;
     // Append a new log entry. Note: we always append; older entries for the
@@ -213,6 +216,21 @@ export default function WorkoutLogger({ profile, protocolStates, logs, log }) {
       { date: todayKey, exercise: exerciseName, sets, isPR: !!isPR },
     ];
     log('exercise', next);
+
+    // PR moment — full-screen celebration. Find the heaviest complete set.
+    if (isPR) {
+      const completeSets = (sets || []).filter(s => s.complete);
+      const top = completeSets.reduce((best, s) => (
+        Number(s.weight) > (best ? Number(best.weight) : 0) ? s : best
+      ), null);
+      if (top) {
+        setCelebration({
+          exercise: exerciseName,
+          weight: Number(top.weight) || 0,
+          reps: Number(top.reps) || 0,
+        });
+      }
+    }
   };
 
   const isRest = !workout || workout.dur === 0;
@@ -289,6 +307,15 @@ export default function WorkoutLogger({ profile, protocolStates, logs, log }) {
             />
           ))}
         </div>
+      )}
+
+      {celebration && (
+        <PRCelebration
+          exercise={celebration.exercise}
+          weight={celebration.weight}
+          reps={celebration.reps}
+          onClose={() => setCelebration(null)}
+        />
       )}
     </div>
   );
