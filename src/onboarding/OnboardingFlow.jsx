@@ -300,7 +300,7 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
               border: '1px solid rgba(232,213,183,0.08)',
               fontSize: 10, color: P.txD, lineHeight: 1.5,
             }}>
-              <strong style={{ color: P.gW }}>Tip:</strong> answer for every domain you're curious about.
+              <strong style={{ color: P.gW }}>Tip:</strong> answer for every domain you{'’'}re curious about.
               Locked ones stay configured — when you upgrade, your routine activates instantly.
             </div>
           </div>

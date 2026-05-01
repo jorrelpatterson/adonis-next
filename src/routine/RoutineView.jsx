@@ -13,6 +13,7 @@ import { IllusTasksDone } from '../design/illustrations';
 import WeeklyRecap, { isRecapDay, buildWeekStats } from '../views/components/WeeklyRecap';
 import StreakMilestone, { getPendingMilestone, setLastShownMilestone } from '../views/components/StreakMilestone';
 import { computeRoutineStreak } from './streak';
+import ProgressBar from '../design/ProgressBar';
 import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
@@ -271,19 +272,21 @@ export default function RoutineView({
         <div style={{ display: 'flex', gap: 12, marginBottom: 16, overflowX: 'auto', padding: '4px 0' }}>
           {goals.map(g => (
             <div key={g.id} style={{
-              minWidth: 120, padding: '8px 12px', borderRadius: 10,
-              background: 'rgba(232,213,183,0.03)', border: '1px solid ' + P.bd,
+              minWidth: 140, padding: '10px 14px', borderRadius: 12,
+              background: 'rgba(232,213,183,0.03)',
+              border: '1px solid ' + P.bd,
+              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
             }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: P.txS, whiteSpace: 'nowrap' }}>{g.title}</div>
-              <div style={{ marginTop: 4, height: 3, borderRadius: 2, background: 'rgba(232,213,183,0.08)' }}>
-                <div style={{
-                  height: '100%', borderRadius: 2,
-                  background: 'linear-gradient(90deg, ' + P.gW + ', ' + P.ok + ')',
-                  width: (g.progress?.percent || 0) + '%',
-                  transition: 'width 0.3s ease',
-                }} />
+              <div style={{ fontSize: 11, fontWeight: 600, color: P.txS, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{g.title}</div>
+              <div style={{ marginTop: 8 }}>
+                <ProgressBar
+                  value={g.progress?.percent || 0}
+                  max={100}
+                  color={(g.progress?.percent || 0) >= 75 ? P.ok : P.gW}
+                  height={4}
+                />
               </div>
-              <div style={{ fontSize: 9, color: P.txD, marginTop: 3 }}>
+              <div style={{ fontSize: 9, color: P.txD, marginTop: 6, fontVariantNumeric: 'tabular-nums' }}>
                 {g.progress?.percent || 0}% {'\u00B7'} {g.progress?.trend || 'on_track'}
               </div>
             </div>

@@ -10,6 +10,8 @@ import { getStackForFinder, findCatalogPeptide, PROTO_STACKS } from '../protocol
 import WorkoutLogger from './components/WorkoutLogger';
 import FoodLogger from './components/FoodLogger';
 import WeightLogger from './components/WeightLogger';
+import EmptyState from '../design/EmptyState';
+import { IllusPeptides } from '../design/illustrations';
 
 const SUB_TABS = [
   { id: 'peptides', label: 'Peptides', icon: '\u{1F489}' },
@@ -137,24 +139,19 @@ function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
           onSwitch={switchToStack}
         />
       ) : !namedStack ? (
-        <div style={{ ...s.card, padding: 24, textAlign: 'center' }}>
-          <div style={{ fontSize: 32, marginBottom: 10 }}>{'\u{1F9EC}'}</div>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: P.gW, marginBottom: 4 }}>
-            Peptide Protocol
-          </div>
-          <div style={{ fontSize: 10, color: P.txD, marginBottom: 14 }}>
-            0 active · {totalAvailable} available
-          </div>
-          <div style={{ fontSize: 12, color: P.txM, marginBottom: 14, lineHeight: 1.5 }}>
-            No peptide stack yet. Take the Peptide Finder from your profile, or pick a stack directly from the Stacks tab.
-          </div>
-          <button
-            onClick={() => setPane('stacks')}
-            style={{ ...s.btn, ...s.pri, fontSize: 11, padding: '8px 16px' }}
-          >
-            Browse Stacks
-          </button>
-          <div style={{ fontSize: 9, color: P.txD, lineHeight: 1.5, fontStyle: 'italic', marginTop: 20 }}>
+        <div style={{ ...s.card, padding: 0, overflow: 'hidden' }}>
+          <EmptyState
+            illustration={<IllusPeptides />}
+            headline="Build your stack"
+            body={`Pick a curated peptide stack from the ${totalAvailable} compounds in our library, or take the Finder for a personalized recommendation.`}
+            cta="Browse Stacks"
+            onCta={() => setPane('stacks')}
+            size={120}
+          />
+          <div style={{
+            padding: '0 20px 20px',
+            fontSize: 9, color: P.txD, lineHeight: 1.6, fontStyle: 'italic', textAlign: 'center',
+          }}>
             ⚕ Adonis is educational. All peptides require a valid prescription. Consult your provider before starting any peptide therapy.
           </div>
         </div>
