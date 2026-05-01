@@ -6,6 +6,7 @@ import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
 import { useState } from 'react';
 import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel } from './intelligence';
 import { groupTasksByTimeBlock } from './group-by-time';
+import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
 
 const TONE_STYLES = {
   warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
@@ -29,6 +30,7 @@ export default function RoutineView({
   const deloadAlert = isToday ? buildDeloadAlert(logs, today) : null;
   const intensity = isToday ? computeWorkoutIntensity(profile, logs, today) : 'normal';
   const intensityLabel = getIntensityLabel(intensity);
+  const adaptive = isToday ? computeAdaptive(profile, logs?.weight, today, profile?.primary) : null;
 
   return (
     <div>
@@ -54,6 +56,64 @@ export default function RoutineView({
           );
         })}
       </div>
+
+      {/* Adaptive pace banner — shows when goal + deadline set */}
+      {adaptive && adaptive.pace !== 'no_goal' && (
+        (() => {
+          const isOff = adaptive.pace === 'off_pace' || adaptive.pace === 'unrealistic';
+          const isAhead = adaptive.pace === 'ahead';
+          const isBehind = adaptive.pace === 'behind';
+          const accent = isOff ? '#EF4444' : isAhead ? P.ok : isBehind ? '#F59E0B' : P.gW;
+          const dotIcon = isOff ? '\u{1F534}' : isAhead ? '\u{1F7E2}' : isBehind ? '\u{1F7E1}' : '\u{1F7E2}';
+          return (
+            <div style={{
+              ...s.card, padding: 14, marginBottom: 12,
+              border: '1px solid ' + accent + '33',
+              background: 'linear-gradient(135deg,' + accent + '0A,' + accent + '02)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 11 }}>{dotIcon}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: accent }}>
+                  {adaptive.paceLabel}
+                </span>
+                {adaptive.daysRemaining != null && (
+                  <span style={{ marginLeft: 'auto', fontSize: 10, color: P.txD, fontFamily: FM }}>
+                    {adaptive.daysRemaining}d left
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <div style={{ fontFamily: FM, fontSize: 18, fontWeight: 700, color: accent }}>
+                    {Math.abs(adaptive.requiredWeeklyRate || 0).toFixed(1)}
+                  </div>
+                  <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                    lbs/wk needed
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontFamily: FM, fontSize: 18, fontWeight: 700, color: accent }}>
+                    {adaptive.adaptedTarget}
+                  </div>
+                  <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                    Daily cal
+                  </div>
+                </div>
+                {intensityLabel.label && (
+                  <div>
+                    <div style={{ fontFamily: FM, fontSize: 14, fontWeight: 700, color: intensityLabel.color, marginTop: 3 }}>
+                      {intensityLabel.icon} {intensityLabel.label}
+                    </div>
+                    <div style={{ fontSize: 8, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                      Workout mode
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()
+      )}
 
       {/* Yesterday recap — only renders when there's data */}
       {recap && (

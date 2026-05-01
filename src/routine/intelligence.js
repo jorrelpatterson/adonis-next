@@ -13,6 +13,7 @@
 //   logs.exercise  = [{ date, name, sets, weight, reps, isPR }, ...]
 
 import { getCheckinAverages } from '../protocols/_system/checkin/selectors.js';
+import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories.js';
 
 const ymd = (d) => new Date(d).toISOString().slice(0, 10);
 
@@ -253,41 +254,13 @@ export function buildDeloadAlert(logs, today) {
 }
 
 /**
- * Goal pace → workout intensity modifier.
- *
- * Compares current weight vs target weight (from goal) to deadline. If
- * dramatically behind, suggest "extreme" intensity; if ahead, suggest
- * "recovery" (back off). Returns one of: 'recovery'|'normal'|'high'|'extreme'.
- *
- * @param {Object} profile - has weight, goalW, targetDate
- * @param {Object} logs - has weight log
- * @param {string} today
+ * Goal pace → workout intensity modifier. Delegates to the adaptive
+ * engine so calorie target + intensity stay in sync. Returns one of:
+ * 'recovery'|'normal'|'high'|'extreme'.
  */
 export function computeWorkoutIntensity(profile, logs, today) {
-  const current = Number(profile?.weight);
-  const goal = Number(profile?.goalW);
-  const deadline = profile?.targetDate;
-  if (!current || !goal || !deadline) return 'normal';
-
-  // Days from today to deadline
-  const todayDate = new Date(today);
-  const deadlineDate = new Date(deadline);
-  const daysLeft = Math.max(1, Math.round((deadlineDate - todayDate) / (1000 * 60 * 60 * 24)));
-
-  // Required weekly delta to hit goal
-  const lbsToGo = goal - current;  // negative if losing
-  const weeksLeft = Math.max(1, daysLeft / 7);
-  const reqWeeklyRate = lbsToGo / weeksLeft;
-  const absRequired = Math.abs(reqWeeklyRate);
-
-  // Determine if user is behind: required rate exceeds safe limits
-  const isLosing = goal < current;
-  const safeMax = isLosing ? 2.5 : 1.5;  // lbs/week
-
-  if (absRequired > safeMax * 1.6) return 'extreme';   // behind by a wide margin
-  if (absRequired > safeMax * 1.0) return 'high';      // behind, push harder
-  if (absRequired < safeMax * 0.3) return 'recovery';  // way ahead — back off
-  return 'normal';
+  const adaptive = computeAdaptive(profile, logs?.weight, today);
+  return adaptive.workoutMode || 'normal';
 }
 
 const INTENSITY_LABELS = {

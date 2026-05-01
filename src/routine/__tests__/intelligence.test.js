@@ -224,22 +224,29 @@ describe('computeWorkoutIntensity', () => {
     expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('extreme');
   });
 
-  it('returns "high" when moderately behind', () => {
-    // Need to lose 12 lbs in 4 weeks → 3 lbs/wk (over 2.5 safe but not extreme)
+  it('returns "extreme" when required pace exceeds safe max (unrealistic)', () => {
+    // Need to lose 12 lbs in 4 weeks → 3 lbs/wk (over 2.5 safe max → unrealistic → extreme)
     const profile = { weight: 200, goalW: 188, targetDate: '2026-05-29' };
-    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('high');
+    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('extreme');
   });
 
-  it('returns "normal" when on safe pace', () => {
-    // Lose 10 lbs in 12 weeks → 0.83 lbs/wk (well within safe)
+  it('returns "normal" when on safe pace + no weight log to compare', () => {
+    // Lose 10 lbs in 12 weeks → 0.83 lbs/wk required.
+    // Without a weight log we default to on-track → normal.
     const profile = { weight: 200, goalW: 190, targetDate: '2026-07-24' };
     expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('normal');
   });
 
-  it('returns "recovery" when way ahead of pace', () => {
-    // Lose 1 lb in 24 weeks → 0.04 lbs/wk (way ahead)
-    const profile = { weight: 200, goalW: 199, targetDate: '2026-10-16' };
-    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('recovery');
+  it('returns "recovery" when actual rate exceeds required (ahead with log)', () => {
+    // Need 0.83 lbs/wk; logging shows -1.5 lbs/wk over last 14 days
+    const profile = { weight: 200, goalW: 190, targetDate: '2026-07-24' };
+    const logs = { weight: [
+      { date: '2026-04-17', weight: 203 },
+      { date: '2026-04-22', weight: 202 },
+      { date: '2026-04-27', weight: 201 },
+      { date: '2026-05-01', weight: 200 },
+    ] };
+    expect(computeWorkoutIntensity(profile, logs, '2026-05-01')).toBe('recovery');
   });
 });
 
