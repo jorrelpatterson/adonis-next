@@ -8,6 +8,7 @@ import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDe
 import { groupTasksByTimeBlock } from './group-by-time';
 import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
 import HomeDashboard from './HomeDashboard';
+import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
   warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
@@ -354,6 +355,16 @@ export default function RoutineView({
 // Renders a single task. Handles all task types: normal (checkbox),
 // browse (Browse → button), check-in (taps to open modal), automated.
 function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLabel, indent = false }) {
+  // Training task with structured exercise data → render ExerciseDetail
+  // (form guide + target muscles + level + Watch Form Video).
+  if (task.category === 'training' && task.data?.exercise) {
+    return (
+      <div style={{ padding: indent ? '4px 14px 4px 28px' : '4px 14px' }}>
+        <ExerciseDetail exercise={task.data.exercise} />
+      </div>
+    );
+  }
+
   const isDone = completed.has(task.id);
   const catColor = CAT_COLORS[task.category] || P.txD;
   const catIcon = CAT_ICONS[task.category] || '';

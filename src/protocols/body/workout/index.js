@@ -48,6 +48,7 @@ const workoutProtocol = {
           time: null,
           priority: 3,
           skippable: true,
+          data: { exercise: ex },
         });
       });
     }
