@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { P, FN, FM } from '../../design/theme';
 import { s } from '../../design/styles';
 import { getProgram } from '../../protocols/body/workout/programs';
+import ExerciseDetail from './ExerciseDetail';
 
 // ─── Helpers (exported for testing) ────────────────────────────────────────
 
@@ -96,17 +97,7 @@ function ExerciseRow({ exercise, lastSession, previousPR, onSave }) {
   const lastSummary = formatLastSession(lastSession);
 
   return (
-    <div style={{
-      padding: '12px 0',
-      borderTop: '1px solid ' + P.bd,
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>{exercise.name}</div>
-        <div style={{ fontFamily: FM, fontSize: 10, color: P.txD }}>
-          {exercise.sets}×{exercise.reps} · {exercise.rest}
-        </div>
-      </div>
-
+    <ExerciseDetail exercise={exercise}>
       {exercise.note && (
         <div style={{ fontSize: 10, color: P.gW, fontStyle: 'italic', marginBottom: 8 }}>
           {exercise.note}
@@ -190,7 +181,7 @@ function ExerciseRow({ exercise, lastSession, previousPR, onSave }) {
           {saved ? 'Saved ✓' : 'Save Sets'}
         </button>
       </div>
-    </div>
+    </ExerciseDetail>
   );
 }
 
