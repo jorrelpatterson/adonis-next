@@ -11,6 +11,7 @@ import GamePlanScreen from '../onboarding/GamePlanScreen';
 import { buildInitialGoals } from '../onboarding/initial-goals';
 import { redirectToCheckout } from '../services/upgrade';
 import BodyView from '../views/BodyView';
+import InsightsView from '../views/InsightsView';
 import MoneyView from '../views/MoneyView';
 import TravelView from '../views/TravelView';
 import MindView from '../views/MindView';
@@ -278,6 +279,8 @@ export default function App() {
               today={today}
             />
           </div>
+        ) : activeTab === 'insights' ? (
+          <InsightsView profile={profile} logs={logs} />
         ) : activeTab === 'profile' ? (
           <div>
             <H t="Profile" sub={profile.name || user.email || 'Set up your profile'} />
