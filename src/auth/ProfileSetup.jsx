@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText } from '../design/components';
+import Select from '../design/Select';
 
 const ACTIVITY_OPTIONS = [
   { id: 'sedentary',   label: 'Sedentary',           sub: 'Desk job, minimal exercise' },
@@ -110,11 +111,16 @@ export default function ProfileSetup({ onSave }) {
             </div>
             <div>
               <label style={s.lab}>Sex (for BMR formula)</label>
-              <select value={form.gender} onChange={set('gender')} style={{ ...s.sel }}>
-                <option value="">Select...</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
+              <Select
+                value={form.gender}
+                onChange={(v) => setForm({ ...form, gender: v })}
+                placeholder="Select…"
+                label="Biological sex"
+                options={[
+                  { value: 'male',   label: 'Male',   sub: 'Mifflin-St Jeor (M) BMR formula' },
+                  { value: 'female', label: 'Female', sub: 'Mifflin-St Jeor (F) BMR formula' },
+                ]}
+              />
             </div>
           </div>
 

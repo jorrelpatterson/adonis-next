@@ -16,6 +16,8 @@ import { computeRoutineStreak } from './streak';
 import ProgressBar from '../design/ProgressBar';
 import { haptics } from '../design/haptics';
 import { sound } from '../design/sound';
+import { useLongPress } from '../design/useLongPress';
+import TaskContextMenu from '../views/components/TaskContextMenu';
 import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
@@ -429,6 +431,8 @@ export default function RoutineView({
 // Renders a single task. Handles all task types: normal (checkbox),
 // browse (Browse → button), check-in (taps to open modal), automated.
 function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLabel, indent = false }) {
+  const longPressHandlers = useLongPress(() => setMenuOpen(true), { delay: 480 });
+  const [menuOpen, setMenuOpen] = useState(false);
   // Training task with structured exercise data → render ExerciseDetail
   // (form guide + target muscles + level + Watch Form Video).
   if (task.category === 'training' && task.data?.exercise) {
@@ -446,9 +450,15 @@ function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLab
   const isBrowse = task.type === 'browse';
   const isTappable = task.type === 'check-in' && onTaskTap;
 
+  const handleMenuAction = (action) => {
+    if (action === 'check' || action === 'uncheck') onCheckTask?.(task.id);
+    // info / snooze / hide stubs — would surface their own UI when wired
+  };
+
   return (
     <div
       onClick={isTappable ? () => onTaskTap(task) : undefined}
+      {...longPressHandlers}
       style={{
         display: 'flex', alignItems: 'flex-start', gap: 10,
         padding: indent ? '8px 14px 8px 28px' : '10px 14px',
@@ -456,8 +466,17 @@ function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLab
         opacity: isDone ? 0.5 : 1,
         background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
         cursor: isTappable ? 'pointer' : 'default',
+        userSelect: 'none', WebkitUserSelect: 'none',
       }}
     >
+      {menuOpen && (
+        <TaskContextMenu
+          task={task}
+          isCompleted={isDone}
+          onAction={handleMenuAction}
+          onClose={() => setMenuOpen(false)}
+        />
+      )}
       {isBrowse ? (
         <div style={{
           width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,

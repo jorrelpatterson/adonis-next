@@ -8,6 +8,114 @@ import { GradText } from '../../design/components';
 import { sound } from '../../design/sound';
 import { haptics } from '../../design/haptics';
 
+// Render a square share image (canvas → blob → Web Share API or download).
+async function renderShareImage({ goal, days }) {
+  const W = 1080;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = W;
+  const ctx = canvas.getContext('2d');
+
+  // Background — dark gradient with green halo
+  const bg = ctx.createRadialGradient(W / 2, W * 0.45, 60, W / 2, W * 0.45, W);
+  bg.addColorStop(0, 'rgba(16,30,24,1)');
+  bg.addColorStop(0.5, 'rgba(8,12,10,1)');
+  bg.addColorStop(1, 'rgba(6,7,9,1)');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, W);
+
+  // Halo glow
+  const halo = ctx.createRadialGradient(W / 2, W * 0.4, 50, W / 2, W * 0.4, 350);
+  halo.addColorStop(0, 'rgba(52,211,153,0.4)');
+  halo.addColorStop(1, 'rgba(52,211,153,0)');
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(W / 2, W * 0.4, 350, 0, 2 * Math.PI); ctx.fill();
+
+  // Big checkmark in a ring
+  ctx.save();
+  ctx.translate(W / 2, W * 0.4);
+  ctx.strokeStyle = 'rgba(52,211,153,0.5)';
+  ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(0, 0, 130, 0, 2 * Math.PI); ctx.stroke();
+  ctx.fillStyle = 'rgba(52,211,153,0.06)';
+  ctx.beginPath(); ctx.arc(0, 0, 105, 0, 2 * Math.PI); ctx.fill();
+  // Check
+  ctx.strokeStyle = '#34D399';
+  ctx.lineWidth = 14;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.beginPath(); ctx.moveTo(-46, 6); ctx.lineTo(-12, 40); ctx.lineTo(56, -32); ctx.stroke();
+  ctx.restore();
+
+  // Eyebrow
+  ctx.fillStyle = '#34D399';
+  ctx.textAlign = 'center';
+  ctx.font = '700 22px "Outfit", sans-serif';
+  const eyebrow = 'GOAL COMPLETE';
+  ctx.fillText([...eyebrow].join(' '), W / 2, W * 0.62);
+
+  // Title (serif italic)
+  ctx.fillStyle = '#F5F5F7';
+  ctx.font = '300 italic 56px "Cormorant Garamond", Georgia, serif';
+  const title = goal?.title || 'You did it.';
+  // word-wrap
+  const maxW = W * 0.78;
+  const words = title.split(/\s+/);
+  let line = '';
+  let y = W * 0.7;
+  for (const word of words) {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxW) {
+      ctx.fillText(line, W / 2, y);
+      y += 64;
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx.fillText(line, W / 2, y);
+
+  // Days + 100%
+  if (days != null) {
+    ctx.font = '700 56px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#F5F5F7';
+    ctx.fillText(String(days), W / 2 - 90, W * 0.86);
+    ctx.fillStyle = '#34D399';
+    ctx.fillText('100%', W / 2 + 110, W * 0.86);
+
+    ctx.font = '700 16px "Outfit", sans-serif';
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillText('DAYS', W / 2 - 90, W * 0.89);
+    ctx.fillText('COMPLETE', W / 2 + 110, W * 0.89);
+  }
+
+  // Brand monogram (bottom)
+  ctx.fillStyle = '#E8D5B7';
+  ctx.font = '300 italic 48px "Cormorant Garamond", Georgia, serif';
+  ctx.fillText('Adonis', W / 2, W * 0.96);
+
+  return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+}
+
+async function shareOrDownload({ goal, days }) {
+  const blob = await renderShareImage({ goal, days });
+  if (!blob) return;
+  const file = new File([blob], 'adonis-goal-complete.png', { type: 'image/png' });
+  // Web Share API (preferred on mobile)
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: 'Goal complete' });
+      return;
+    } catch { /* user dismissed; fall through to download */ }
+  }
+  // Fallback: download
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'adonis-goal-complete.png';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function daysBetween(startISO, endISO) {
   if (!startISO || !endISO) return null;
   const a = new Date(startISO);
@@ -23,6 +131,10 @@ export default function GoalCompleteScreen({ goal, onClose, onShare }) {
   }, []);
 
   const days = daysBetween(goal?.createdAt, new Date().toISOString());
+
+  // Default share handler if parent doesn't provide one — render a square
+  // image and trigger the native share sheet (or download fallback).
+  const handleShare = onShare || (() => shareOrDownload({ goal, days }));
 
   return (
     <div style={{
@@ -122,21 +234,19 @@ export default function GoalCompleteScreen({ goal, onClose, onShare }) {
         display: 'flex', gap: 12,
         animation: 'springScale 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.9s both',
       }}>
-        {onShare && (
-          <button
-            onClick={onShare}
-            style={{
-              padding: '12px 24px', borderRadius: 100,
-              background: 'rgba(232,213,183,0.05)',
-              color: P.txS, fontFamily: FN, fontSize: 12, fontWeight: 600,
-              border: '1px solid rgba(232,213,183,0.15)',
-              cursor: 'pointer',
-              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-            }}
-          >
-            Share
-          </button>
-        )}
+        <button
+          onClick={handleShare}
+          style={{
+            padding: '12px 24px', borderRadius: 100,
+            background: 'rgba(232,213,183,0.05)',
+            color: P.txS, fontFamily: FN, fontSize: 12, fontWeight: 600,
+            border: '1px solid rgba(232,213,183,0.15)',
+            cursor: 'pointer',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
+          Share
+        </button>
         <button
           onClick={onClose}
           style={{

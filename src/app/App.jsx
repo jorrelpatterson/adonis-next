@@ -51,6 +51,7 @@ import EmptyState from '../design/EmptyState';
 import { IllusGoals } from '../design/illustrations';
 import { DomainIcon } from '../design/icons';
 import AppSettings from './components/AppSettings';
+import PullToRefresh from '../design/PullToRefresh';
 import { ToastProvider, useToast } from '../design/Toast';
 import { ActionSheetProvider, useActionSheet } from '../design/ActionSheet';
 import { transitionView } from '../design/motion';
@@ -310,6 +311,13 @@ function AppInner() {
       paddingBottom: 80,
     }}>
       <AmbientBackdrop tab={activeTab} />
+      <PullToRefresh onRefresh={async () => {
+        // Refresh = re-fetch the live peptide catalog. Cheap, visible.
+        try {
+          const catalog = await loadLiveCatalog();
+          if (catalog) log('peptideCatalog', catalog);
+        } catch { /* offline / network — silently no-op */ }
+      }} />
       <div
         key={activeTab}
         className="adn-reveal"

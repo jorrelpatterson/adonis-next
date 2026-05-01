@@ -120,6 +120,16 @@ input, select, textarea {
   100% { opacity: 0; transform: translate(var(--cx, 0), var(--cy, -200px)) rotate(var(--cr, 720deg)) scale(0.5); }
 }
 @keyframes ringDraw { from { stroke-dashoffset: var(--ring-circumference, 283); } to { stroke-dashoffset: var(--ring-target, 0); } }
+@keyframes calcSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes chartBarGrow {
+  0% { transform: scaleY(0); opacity: 0.4; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
 @keyframes flameFlicker {
   0%, 100% { transform: scaleY(1)    rotate(-1deg); filter: brightness(1); }
   25%      { transform: scaleY(1.05) rotate(2deg);  filter: brightness(1.1); }

@@ -138,7 +138,7 @@ export default function AuthScreen() {
                 opacity: loading ? 0.5 : 1,
               }}
             >
-              {loading ? '...' : mode === 'signup' ? 'Create account' : 'Sign in'}
+              {loading ? '…' : mode === 'signup' ? 'Create account' : 'Sign in'}
             </button>
           </form>
 

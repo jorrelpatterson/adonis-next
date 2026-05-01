@@ -77,7 +77,7 @@ export default function GoalSetup({ onCreateGoal, onCancel, profile, initialDoma
               {q.type === 'select' ? (
                 <select value={answers[q.key] || ''} onChange={e => setAnswers({ ...answers, [q.key]: e.target.value })}
                   style={{ ...s.inp, width: '100%' }}>
-                  <option value="">Select...</option>
+                  <option value="">Select…</option>
                   {(q.options || []).map(opt => <option key={opt} value={opt}>{opt}</option>)}
                 </select>
               ) : (

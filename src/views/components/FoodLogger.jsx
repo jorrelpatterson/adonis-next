@@ -5,6 +5,8 @@ import { calcBMR, calcTDEE, calcMacros, calcCalorieTarget, sumDayMeals } from '.
 import { computeAdaptive } from '../../protocols/body/nutrition/adaptive-calories';
 import { sound } from '../../design/sound';
 import { haptics } from '../../design/haptics';
+import EmptyState from '../../design/EmptyState';
+import { IllusFood } from '../../design/illustrations';
 
 // Re-exports for tests + backwards compat with existing imports.
 export { calcBMR, calcTDEE, calcMacros, calcCalorieTarget, sumDayMeals };
@@ -236,12 +238,12 @@ export default function FoodLogger({ profile, protocolStates, logs, log }) {
         </div>
 
         {todaysMeals.length === 0 ? (
-          <div style={{
-            padding: '14px 0', textAlign: 'center',
-            fontSize: 12, color: P.txD,
-          }}>
-            Tap below to log your first meal of the day
-          </div>
+          <EmptyState
+            illustration={<IllusFood />}
+            size={120}
+            headline="No meals yet today"
+            body="Log a meal to track macros and watch your calorie target adapt to your pace."
+          />
         ) : (
           todaysMeals.map((m, i) => (
             <div key={i} style={{

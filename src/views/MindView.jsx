@@ -329,7 +329,7 @@ function GratitudeCard({ gratitudeEntries, onSave }) {
           <input
             value={row.v}
             onChange={e => row.set(e.target.value)}
-            placeholder="I'm grateful for..."
+            placeholder={'I’m grateful for…'}
             style={{ ...s.inp, flex: 1, fontSize: 12, padding: '10px 14px', minHeight: 38 }}
           />
         </div>

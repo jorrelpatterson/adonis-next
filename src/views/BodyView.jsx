@@ -10,6 +10,7 @@ import { getStackForFinder, findCatalogPeptide, PROTO_STACKS } from '../protocol
 import WorkoutLogger from './components/WorkoutLogger';
 import FoodLogger from './components/FoodLogger';
 import WeightLogger from './components/WeightLogger';
+import PhotoJournal from './components/PhotoJournal';
 import EmptyState from '../design/EmptyState';
 import { IllusPeptides } from '../design/illustrations';
 import { sound } from '../design/sound';
@@ -83,11 +84,17 @@ export default function BodyView({ profile, protocolStates, setProtocolState, lo
         />
       )}
       {subTab === 'tools' && (
-        <WeightLogger
-          profile={profile}
-          logs={logs}
-          log={log}
-        />
+        <>
+          <WeightLogger
+            profile={profile}
+            logs={logs}
+            log={log}
+          />
+          <PhotoJournal
+            logs={logs}
+            log={log}
+          />
+        </>
       )}
     </div>
   );

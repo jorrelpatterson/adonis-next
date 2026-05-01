@@ -377,6 +377,8 @@ export default function WeightLogger({ profile, logs, log }) {
                 }
                 const top = yToBar(d.weight);
                 const h = chartH - top;
+                // Bar grows from bottom via transform-origin + scaleY animation.
+                // Stagger by index so the chart "draws" left to right.
                 return (
                   <rect
                     key={d.date}
@@ -386,6 +388,11 @@ export default function WeightLogger({ profile, logs, log }) {
                     height={Math.max(h, 2)}
                     rx={2}
                     fill={isToday ? 'url(#weightTodayGrad)' : 'rgba(232,213,183,0.35)'}
+                    style={{
+                      transformOrigin: `${x + barW / 2}px ${chartH}px`,
+                      transformBox: 'fill-box',
+                      animation: `chartBarGrow 0.7s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.04}s both`,
+                    }}
                   />
                 );
               })}

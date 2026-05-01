@@ -19,6 +19,7 @@ import { collectOnboardingQuestions } from '../protocols/protocol-interface';
 import { getAllProtocols } from '../protocols/registry';
 import { shouldShowQuestion } from './question-types';
 import QuestionField from './QuestionField';
+import Select from '../design/Select';
 
 const ACTIVITY_OPTIONS = [
   { value: 'sedentary',   label: 'Sedentary',           sub: 'Desk job, minimal exercise' },
@@ -185,11 +186,16 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
               </div>
               <div>
                 <label style={s.lab}>Sex</label>
-                <select value={profile.gender} onChange={e => setField('gender', e.target.value)} style={s.sel}>
-                  <option value="">Select...</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
+                <Select
+                  value={profile.gender}
+                  onChange={(v) => setField('gender', v)}
+                  placeholder="Select…"
+                  label="Biological sex"
+                  options={[
+                    { value: 'male',   label: 'Male',   sub: 'Mifflin-St Jeor (M) BMR formula' },
+                    { value: 'female', label: 'Female', sub: 'Mifflin-St Jeor (F) BMR formula' },
+                  ]}
+                />
               </div>
             </div>
 
@@ -355,12 +361,17 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
             </div>
 
             <label style={s.lab}>Primary rest day</label>
-            <select value={schedule.restDay} onChange={e => setSchedule(prev => ({ ...prev, restDay: e.target.value }))} style={s.sel}>
-              <option value="sun">Sunday</option>
-              <option value="sat">Saturday</option>
-              <option value="mon">Monday</option>
-              <option value="any">Floating — pick weekly</option>
-            </select>
+            <Select
+              value={schedule.restDay}
+              onChange={(v) => setSchedule(prev => ({ ...prev, restDay: v }))}
+              label="When do you rest?"
+              options={[
+                { value: 'sun', label: 'Sunday' },
+                { value: 'sat', label: 'Saturday' },
+                { value: 'mon', label: 'Monday' },
+                { value: 'any', label: 'Floating', sub: 'Pick weekly based on schedule' },
+              ]}
+            />
           </div>
         )}
 

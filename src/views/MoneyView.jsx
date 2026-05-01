@@ -5,6 +5,8 @@ import React from 'react';
 import { P, FN, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
+import EmptyState from '../design/EmptyState';
+import { IllusGoals } from '../design/illustrations';
 
 // Catalog of 13 credit cards used by the recommender + spend optimizer.
 // CC_DB does not yet exist as a shared module in src/protocols/money/credit;
@@ -241,12 +243,15 @@ export default function MoneyView({
           ))}
         </div>
       ) : (
-        <div style={{ ...s.card, padding: 20, textAlign: 'center', ...sectionGap }}>
-          <div style={{ fontSize: 13, color: P.txM }}>No money goals yet</div>
-          <button onClick={onAddGoal}
-            style={{ ...s.btn, ...s.pri, marginTop: 10, padding: '8px 20px', fontSize: 12 }}>
-            + Add Goal
-          </button>
+        <div style={{ ...s.card, padding: 0, overflow: 'hidden', ...sectionGap }}>
+          <EmptyState
+            illustration={<IllusGoals />}
+            size={120}
+            headline="No money goals yet"
+            body="Set a target — credit score, savings amount, or income tier — and the system builds the path."
+            cta="+ Add Goal"
+            onCta={onAddGoal}
+          />
         </div>
       )}
 
