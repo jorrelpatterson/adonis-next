@@ -205,7 +205,6 @@ function ProtocolPane({ namedStack, stackPeptides }) {
         {stackPeptides.map(({ itemName, peptide }) => {
           const buyUrl = 'https://advncelabs.com/?q=' + encodeURIComponent(itemName);
           const price = peptide?.price;
-          const inStock = peptide ? peptide.inStock !== false : null;
           return (
             <div key={itemName} style={{
               padding: '10px 0', borderTop: '1px solid ' + P.bd,
@@ -218,11 +217,6 @@ function ProtocolPane({ namedStack, stackPeptides }) {
                   {peptide && (
                     <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
                       {peptide.dose || ''}{peptide.tod ? ' · ' + peptide.tod : ''}{peptide.freq ? ' · ' + peptide.freq.replace(/_/g, ' ') : ''}
-                    </div>
-                  )}
-                  {inStock === false && (
-                    <div style={{ fontSize: 9, color: P.warn || '#F59E0B', marginTop: 4, fontWeight: 600 }}>
-                      · Out of stock — pre-sell available
                     </div>
                   )}
                 </div>
