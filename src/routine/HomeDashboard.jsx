@@ -11,6 +11,9 @@ import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { calcCalorieTarget, sumDayMeals } from '../protocols/body/nutrition/math';
 import { CHECKIN_FIELDS } from '../protocols/_system/checkin/fields';
+import StatNumber from '../design/StatNumber';
+import StreakBadge from '../views/components/StreakBadge';
+import { computeRoutineStreak } from './streak';
 
 function greeting() {
   const h = new Date().getHours();
@@ -99,23 +102,30 @@ function ProtocolScoreRing({ score }) {
   const circ = 2 * Math.PI * radius;
   const dash = (score / 100) * circ;
   const accent = score >= 75 ? P.ok : score >= 50 ? P.gW : '#F59E0B';
+  const glow = score >= 75 ? 'rgba(52,211,153,0.4)' : score >= 50 ? 'rgba(232,213,183,0.4)' : 'rgba(245,158,11,0.4)';
   return (
     <div style={{ position: 'relative', width: 96, height: 96 }}>
-      <svg width="96" height="96" style={{ transform: 'rotate(-90deg)' }}>
+      <svg width="96" height="96" style={{ transform: 'rotate(-90deg)', filter: `drop-shadow(0 0 8px ${glow})` }}>
         <circle cx="48" cy="48" r={radius} fill="none" stroke="rgba(232,213,183,0.08)" strokeWidth="3" />
         <circle
           cx="48" cy="48" r={radius} fill="none"
           stroke={accent} strokeWidth="3" strokeLinecap="round"
           strokeDasharray={`${dash} ${circ - dash}`}
-          style={{ transition: 'stroke-dasharray 0.5s ease' }}
+          style={{
+            transition: 'stroke-dasharray 1.2s cubic-bezier(0.16,1,0.3,1), stroke 0.4s',
+            // Begin from 0 dash on mount so the ring "draws" itself
+            animation: 'ringDraw 1.2s cubic-bezier(0.16,1,0.3,1) both',
+            '--ring-circumference': circ,
+            '--ring-target': circ - dash,
+          }}
         />
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex',
         flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       }}>
-        <div style={{ fontFamily: FM, fontSize: 28, fontWeight: 700, color: accent }}>
-          {score}
+        <div style={{ fontFamily: FM, fontSize: 28, fontWeight: 700, color: accent, fontVariantNumeric: 'tabular-nums' }}>
+          <StatNumber value={score} initial={0} format={(n) => Math.round(n)} duration={1100} />
         </div>
         <div style={{ fontSize: 8, color: P.txD, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', marginTop: 2 }}>
           Protocol
@@ -132,6 +142,7 @@ export default function HomeDashboard({
   const greet = greeting();
   const dn = day ? dayName(day) : '';
   const score = computeProtocolScore({ routine, completedTasks, logs, today, adaptive });
+  const streakDays = computeRoutineStreak(logs?.routine || {}, today);
   const nextUp = findNextUpTask(routine, completedTasks);
   const firstName = (profile?.name || '').split(' ')[0];
 
@@ -189,6 +200,11 @@ export default function HomeDashboard({
               {dn} · <span style={{ color: adaptive.pace === 'off_pace' || adaptive.pace === 'unrealistic' ? '#EF4444'
                 : adaptive.pace === 'behind' ? '#F59E0B'
                 : P.gW }}>{adaptive.paceLabel}</span>
+            </div>
+          )}
+          {streakDays > 0 && (
+            <div style={{ marginTop: 10 }}>
+              <StreakBadge days={streakDays} compact />
             </div>
           )}
         </div>

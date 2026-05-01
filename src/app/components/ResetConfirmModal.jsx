@@ -13,15 +13,19 @@ export default function ResetConfirmModal({ onConfirm, onClose }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: 'rgba(8,10,16,0.85)',
+      background: 'rgba(8,10,16,0.65)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontFamily: FN, padding: 16,
+      animation: 'vt-fade-in 0.3s cubic-bezier(0.16,1,0.3,1) both',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
         ...s.card,
         width: '100%', maxWidth: 480,
         padding: 22,
-        borderRadius: 16,
+        borderRadius: 20,
+        animation: 'springScale 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontFamily: FD, fontSize: 22, fontWeight: 600, color: P.txS, marginBottom: 6 }}>

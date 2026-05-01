@@ -1,0 +1,559 @@
+{
+  "vendor": "Eve",
+  "contact": {
+    "method": "WhatsApp",
+    "value": "+852 5707 2237"
+  },
+  "currency": "USD",
+  "unit": "per vial (10ml)",
+  "received_on": "2026-04-24",
+  "source_file": "oil.xls (from Jorrel's Desktop 2026-04-24)",
+  "sheet_name": "Steroids Finished Products INJECTION",
+  "notes": [
+    "Eve's Category column uses short codes (e.g., E250 = Test Enanthate 250mg/ml). Preserved as vendor_sku.",
+    "Prices are per individual 10ml vial. Cost per box = price × 10 (matches our existing Eve cost convention).",
+    "All 65 insertable products loaded into products table with active=false on 2026-04-24.",
+    "SKIPPED as duplicates: LC120 (dup of LIPO120 Lipo-C 120), LC216 (dup of LIPO216 Lipo-B 216).",
+    "Our SKUs use 'EVE-<vendor_sku>' prefix for this batch to namespace from existing catalog.",
+    "All items HIDDEN from storefront: Schedule III AAS, HRT Rx, and Rx-contaminated blends (Super Shred contains Albuterol).",
+    "Do NOT flip active=true without explicit legal clearance from Jorrel."
+  ],
+  "products": [
+    {
+      "vendor_sku": "C250",
+      "name_raw": "CLENBUTEROL, 40MCG, 100 tablets, 克伦特罗",
+      "size_raw": "TC 250mg ， 10ml x 250 mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-C250"
+    },
+    {
+      "vendor_sku": "E250",
+      "name_raw": "TE-250（Testosterone Enanthate‌），250mg/ml, 10ml, 庚酸睾酮",
+      "size_raw": "10ml x 250 mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-E250"
+    },
+    {
+      "vendor_sku": "E300",
+      "name_raw": "TE-300（Testosterone Enanthate‌），300mg/ml, 10ml, 庚酸睾酮",
+      "size_raw": "10ml x 300mg/ml/vial,  TESTOSTERONE ENANTHATE",
+      "price_per_vial": 14.5,
+      "flag": "",
+      "our_sku": "EVE-E300"
+    },
+    {
+      "vendor_sku": "TY300",
+      "name_raw": "TU-300（Testosterone Undecanoate），300mg/ml, 10ml, 十一酸睾酮",
+      "size_raw": "10ml x 300mg/ml/vial,  Testosterone undecanoate",
+      "price_per_vial": 20.0,
+      "flag": "",
+      "our_sku": "EVE-TY300"
+    },
+    {
+      "vendor_sku": "P100",
+      "name_raw": "TP（Testosterone Propionate‌） 100mg/ml, 10 ml, 丙酸睾酮",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-P100"
+    },
+    {
+      "vendor_sku": "P200",
+      "name_raw": "TP（Testosterone Propionate‌）200mg/ml, 10 ml, 丙酸睾酮",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-P200"
+    },
+    {
+      "vendor_sku": "SP100",
+      "name_raw": "TS （Testosterone Suspension) 100mg/ml, 10 ml, 混睾悬浮物100",
+      "size_raw": "10 ml x 100 mg/vial，Testosterone Proplonate 12mg，Testosterone Isocaproate 24mg\nTestosterone Phenylpropionate 24mg\nTestosterone Decanoate 40mg",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-SP100"
+    },
+    {
+      "vendor_sku": "BA100",
+      "name_raw": "TEST BASE 100mg， (TNE, testosterone no ester)",
+      "size_raw": "testosterone no ester，10ml x 100mg/ml",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-BA100"
+    },
+    {
+      "vendor_sku": "BR50",
+      "name_raw": "TRB 50",
+      "size_raw": "trenbolone base, 10ml x 50mg/vial",
+      "price_per_vial": 16.0,
+      "flag": "",
+      "our_sku": "EVE-BR50"
+    },
+    {
+      "vendor_sku": "S400",
+      "name_raw": "SU（Sustanon）-400 ，400mg/ml, 10ml, 混睾400",
+      "size_raw": "10ml x 400mg/ml/vial ，Testosterone Propionate 48mg, Testosterone Phenylpropionate 96mg, Testosterone Isocaproate 96mg, Testosterone Decanoate 160mg",
+      "price_per_vial": 22.0,
+      "flag": "",
+      "our_sku": "EVE-S400"
+    },
+    {
+      "vendor_sku": "S250",
+      "name_raw": "Sustanon 250mg/ml, 10ml, 混睾250",
+      "size_raw": "10 ml x 250mg/ml/vial， Testosterone Proplonate 30mg\nTestosterone Isocaproate 60mg\nTestosterone Phenylpropionate 60mg\nTestosterone Decanoate 100mg",
+      "price_per_vial": 17.0,
+      "flag": "",
+      "our_sku": "EVE-S250"
+    },
+    {
+      "vendor_sku": "S450",
+      "name_raw": "Supertest 450mg, 10ml",
+      "size_raw": "10ml x 450mg/ml/vial                     Testosterone PhenylPropionate 73 mg\nTestosterone Acetate 32mg, \nTestosterone Decanoate 147mg, \nTestosterone Propionate 73mg, \nTestosterone Cypionate 125mg",
+      "price_per_vial": 23.0,
+      "flag": "",
+      "our_sku": "EVE-S450"
+    },
+    {
+      "vendor_sku": "T600",
+      "name_raw": "Testo-600（testosterone）, 600mg/vial",
+      "size_raw": "10ml x 600mg/vial                        (180mg test acetate，220mg tpp,200mg cyp)",
+      "price_per_vial": 20.0,
+      "flag": "",
+      "our_sku": "EVE-T600"
+    },
+    {
+      "vendor_sku": "R100",
+      "name_raw": "TRA（Trenbolone acetate‌）， 100mg/ml, 10 ml, 醋酸群勃龙100mg",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 22.0,
+      "flag": "",
+      "our_sku": "EVE-R100"
+    },
+    {
+      "vendor_sku": "RY100",
+      "name_raw": "TRE（Trenbolone enanthate），100mg/ml, 10 ml,庚酸群勃龙100mg",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 22.0,
+      "flag": "",
+      "our_sku": "EVE-RY100"
+    },
+    {
+      "vendor_sku": "R200",
+      "name_raw": "TRE 200mg/ml, 10 ml,  庚酸群勃龙200mg",
+      "size_raw": "10ml x 200 mg/ml/vial",
+      "price_per_vial": 33.0,
+      "flag": "",
+      "our_sku": "EVE-R200"
+    },
+    {
+      "vendor_sku": "H100",
+      "name_raw": "TrX-100（ Trenbolone Hexahydrobenzyl Carbonate  ），100mg/ml, 10 ml, 群勃龙环已甲基碳酸酯",
+      "size_raw": "10ml x 100 mg/ml/vial  ， Trenbolone Hexahydrobenzyl Carbonate",
+      "price_per_vial": 40.0,
+      "flag": "",
+      "our_sku": "EVE-H100"
+    },
+    {
+      "vendor_sku": "RM200",
+      "name_raw": "TRENMIX-200 ， 200mg/ml, 10 ml, 群勃龙混合物",
+      "size_raw": "10ml x 200 mg/ml/vial ， Trenbolone Acetate 75mg, Trenbolone Enanthate 125mg",
+      "price_per_vial": 33.0,
+      "flag": "",
+      "our_sku": "EVE-RM200"
+    },
+    {
+      "vendor_sku": "3R225",
+      "name_raw": "TriTren 225, 225mg/ml, 10ml",
+      "size_raw": "10mlx200mg/vial\nTRA75mg, TRE75mg, TRH75mg",
+      "price_per_vial": 48.0,
+      "flag": "",
+      "our_sku": "EVE-3R225"
+    },
+    {
+      "vendor_sku": "B300",
+      "name_raw": "BLEND 300，300mg/ml, 10 ml,混合物300mg",
+      "size_raw": "10 ml x 300 mg/ml/vial， Trenbolone Acetate 100mg, Drostanolone Propionate 100mg, Testosterone Propionate 100mg,",
+      "price_per_vial": 40.0,
+      "flag": "",
+      "our_sku": "EVE-B300"
+    },
+    {
+      "vendor_sku": "B375",
+      "name_raw": "BLEND-375, 375mg/ml, 10 ml, LIVE 混合物375mg",
+      "size_raw": "10 ml x 375 mg/ml/vial， Trenbolone Enanthate 125mg,Drostanolone Enanthate 125mg Testosterone Enathate 125mg",
+      "price_per_vial": 45.0,
+      "flag": "",
+      "our_sku": "EVE-B375"
+    },
+    {
+      "vendor_sku": "B500",
+      "name_raw": "BLEND-500， 500mg/ml, 10 ml, LIVE 混合物500mg",
+      "size_raw": "10 ml x 500 mg/ml/vial， Trenbolone Enanthate 250mg, Drostanolone Enanthate 250mg",
+      "price_per_vial": 68.0,
+      "flag": "",
+      "our_sku": "EVE-B500"
+    },
+    {
+      "vendor_sku": "M100",
+      "name_raw": "Methenolone enanthate , or Primo,  100mg/ml, 10ml , 美替诺龙庚酸酯",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 48.0,
+      "flag": "",
+      "our_sku": "EVE-M100"
+    },
+    {
+      "vendor_sku": "M200",
+      "name_raw": "Methenolone enanthate, or Primo,  200mg/ml, 10ml , 美替诺龙庚酸酯",
+      "size_raw": "10ml x 200 mg/ml/vial",
+      "price_per_vial": 85.0,
+      "flag": "",
+      "our_sku": "EVE-M200"
+    },
+    {
+      "vendor_sku": "N200",
+      "name_raw": "DECA（Nandrolone Decanoate）  200mg/ml, 10 ml 癸酸诺龙",
+      "size_raw": "10ml x 200 mg/ml/vial",
+      "price_per_vial": 22.0,
+      "flag": "",
+      "our_sku": "EVE-N200"
+    },
+    {
+      "vendor_sku": "N300",
+      "name_raw": "DECA（Nandrolone Decanoate）  300mg/ml, 10 ml 癸酸诺龙",
+      "size_raw": "10ml x 300 mg/ml/vial",
+      "price_per_vial": 28.0,
+      "flag": "",
+      "our_sku": "EVE-N300"
+    },
+    {
+      "vendor_sku": "NM300",
+      "name_raw": "Nandromix-300 300mg/ml, 10ml, 葵酸诺龙混合物300mg",
+      "size_raw": "10ml x 300 mg/ml/vial,Nandrolone Phenylpropionate 100mg,  Nandrolone Decanoate 200mg",
+      "price_per_vial": 28.0,
+      "flag": "",
+      "our_sku": "EVE-NM300"
+    },
+    {
+      "vendor_sku": "PN100",
+      "name_raw": "NPP-100(Nandrolone Phenylpropionate),100mg/ml, 10ml, 苯丙酸诺龙100mg",
+      "size_raw": "Nandrolone PhenylPropionate 10ml x 100 mg/ml/vial",
+      "price_per_vial": 15.0,
+      "flag": "",
+      "our_sku": "EVE-PN100"
+    },
+    {
+      "vendor_sku": "PN200",
+      "name_raw": "NPP-200(Nandrolone Phenylpropionate),200mg/ml, 10ml, 苯丙酸诺龙200mg",
+      "size_raw": "Nandrolone PhenylPropionate 10ml x 200 mg/ml/vial",
+      "price_per_vial": 22.0,
+      "flag": "",
+      "our_sku": "EVE-PN200"
+    },
+    {
+      "vendor_sku": "SO50",
+      "name_raw": "Stanozolol oil base, 50mg/ml,  10ml , 司坦唑醇50mg,油剂",
+      "size_raw": "winstrol, 10ml x 50 mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SO50"
+    },
+    {
+      "vendor_sku": "SO100",
+      "name_raw": "Stanozolol oil base , 100mg/ml,  10ml , 司坦唑醇100mg,油剂",
+      "size_raw": "winstrol, 10ml x 100 mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SO100"
+    },
+    {
+      "vendor_sku": "SW50",
+      "name_raw": "Stanozolol suspension, 50mg/ml,  10ml , 司坦唑醇50mg, 水剂",
+      "size_raw": "winstrol, 10ml x 50 mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SW50"
+    },
+    {
+      "vendor_sku": "SW100",
+      "name_raw": "Stanozolol suspension , 100mg/ml,  10ml , 司坦唑醇100mg,水剂",
+      "size_raw": "winstrol, 10ml x 100 mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SW100"
+    },
+    {
+      "vendor_sku": "U200",
+      "name_raw": "BU 200（boldenone undecyleate,  or Equipoise），200mg/ml, 10ml, 宝丹酮200mg",
+      "size_raw": "boldenone undecyleate,  10ml x 200 mg/ml/vial",
+      "price_per_vial": 16.0,
+      "flag": "",
+      "our_sku": "EVE-U200"
+    },
+    {
+      "vendor_sku": "U300",
+      "name_raw": "BU-300（boldenone undecyleate or Equipoise）, 宝丹酮300mg/ml",
+      "size_raw": "10ml x 300 mg/ml/vial ， BOLDENONE UNDECYLENATE ,  or EQUIPOISE",
+      "price_per_vial": 20.0,
+      "flag": "",
+      "our_sku": "EVE-U300"
+    },
+    {
+      "vendor_sku": "U600",
+      "name_raw": "BU 600（boldenone undecyleate）, or BOLDEN-600, 宝丹酮600mg/ml",
+      "size_raw": "10ml x 600 mg/ml/vial，BOLDENONE UNDECYLENATE , or EQUIPOISE",
+      "price_per_vial": 33.0,
+      "flag": "",
+      "our_sku": "EVE-U600"
+    },
+    {
+      "vendor_sku": "BS250",
+      "name_raw": "BC 250 （ boldenone cypionate）,250mg/ml, 10ml, 宝丹酮200mg",
+      "size_raw": "boldenone cypionate,10ml x 250 mg/ml/vial",
+      "price_per_vial": 18.0,
+      "flag": "",
+      "our_sku": "EVE-BS250"
+    },
+    {
+      "vendor_sku": "D100",
+      "name_raw": "DP100（masteron),100mg/ml, 10 ml 屈他雄酮丙酸酯100mg",
+      "size_raw": "Drostanolone Propionate, 10ml x 100 mg/ml/vial",
+      "price_per_vial": 25.0,
+      "flag": "",
+      "our_sku": "EVE-D100"
+    },
+    {
+      "vendor_sku": "D200",
+      "name_raw": "MAST-200， 200mg/ml, 10 ml, 屈他雄酮200mg",
+      "size_raw": "10ml x 200 mg/ml/vial, Drostanolone Enanathate 200mg",
+      "price_per_vial": 45.0,
+      "flag": "",
+      "our_sku": "EVE-D200"
+    },
+    {
+      "vendor_sku": "DM200",
+      "name_raw": "MAST Blend-200 ， 200mg/ml, 10 ml,屈他雄酮混合物200mg",
+      "size_raw": "10ml x 200 mg/ml/vial ， Drostanolone Enanathate 150mg，Drostanolone propionate 50mg",
+      "price_per_vial": 45.0,
+      "flag": "",
+      "our_sku": "EVE-DM200"
+    },
+    {
+      "vendor_sku": "DO50",
+      "name_raw": "Dianabol-50 ， 50mg/ml, 10 ml, 大力补50mg",
+      "size_raw": "10ml x 50 mg/ml/vial ， Methandrostenolone, or Methandienone",
+      "price_per_vial": 18.0,
+      "flag": "◆",
+      "our_sku": "EVE-DO50"
+    },
+    {
+      "vendor_sku": "OXO50",
+      "name_raw": "Anadrol-50（Oxymetholone） 50mg/ml, 10 ml,羟次甲氢龙",
+      "size_raw": "10ml x 50 mg/ml/vial       Oxymetholone",
+      "price_per_vial": 16.0,
+      "flag": "◆",
+      "our_sku": "EVE-OXO50"
+    },
+    {
+      "vendor_sku": "1T100",
+      "name_raw": "DHB (1-Testosterone cypionate, Dihydrobodenone) 100mg/ml",
+      "size_raw": "1-Testosterone cypionate, 10ml x 100 mg/ml/vial",
+      "price_per_vial": 25.0,
+      "flag": "◆",
+      "our_sku": "EVE-1T100"
+    },
+    {
+      "vendor_sku": "MN50",
+      "name_raw": "Trestolone acetate (MENT)，50mg/ml，醋酸曲托龙",
+      "size_raw": "Trestolone acetate, 10ml x 50 mg/ml/vial",
+      "price_per_vial": 57.0,
+      "flag": "",
+      "our_sku": "EVE-MN50"
+    },
+    {
+      "vendor_sku": "HD50",
+      "name_raw": "stanolone (DHT)  50mg/ml，雄诺龙",
+      "size_raw": "stanolone ,10ml x 50 mg/ml/vial",
+      "price_per_vial": 15.0,
+      "flag": "",
+      "our_sku": "EVE-HD50"
+    },
+    {
+      "vendor_sku": "SDO50",
+      "name_raw": "Superdrol 50mg 10ml， 3000，甲基屈他雄酮（Methasteron）",
+      "size_raw": "Methyldrostanolone,                      10ml x 50 mg/ml/vial",
+      "price_per_vial": 16.0,
+      "flag": "◆",
+      "our_sku": "EVE-SDO50"
+    },
+    {
+      "vendor_sku": "BM5",
+      "name_raw": "metribolone 5mg 10ml，美曲勃龙",
+      "size_raw": "10ml x 5 mg/ml/vial",
+      "price_per_vial": 15.0,
+      "flag": "",
+      "our_sku": "EVE-BM5"
+    },
+    {
+      "vendor_sku": "NJ100",
+      "name_raw": "NAD+ 100mg",
+      "size_raw": "10ml x 100 mg/ml/vial",
+      "price_per_vial": 15.0,
+      "flag": "",
+      "our_sku": "EVE-NJ100"
+    },
+    {
+      "vendor_sku": "RX225",
+      "name_raw": "Ripex-225",
+      "size_raw": "Trenbolone Acetate 75mg\nDrostanolone Propionate 75mg\nTestosterone Proplonate 75mg",
+      "price_per_vial": 29.0,
+      "flag": "",
+      "our_sku": "EVE-RX225"
+    },
+    {
+      "vendor_sku": "EC100",
+      "name_raw": "Estradiol Cypionate 10mg,环戊丙酸雌二醇",
+      "size_raw": "10ml x 10 mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-EC100"
+    },
+    {
+      "vendor_sku": "LC120",
+      "name_raw": "Lipo-C\nMethonine  15mg \ncholine Chloride  50mg\nCarnitine  50mg\nDexpanthenol  5mg",
+      "size_raw": "10ml x 120 mg/ml/vial",
+      "price_per_vial": 6.0,
+      "flag": "",
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "LC216",
+      "name_raw": "Lipo-B\nL-Carnitine 20mg \nL-Arginine 20mg \nMethionine 25mg \nInositol 50mg \nCholine 50mg \nB6 (Pyridoxine) 25mg \nB5(Dexpanthenol) 25mg \nB12 (Methy|cobalamin) 1mg",
+      "size_raw": "10ml x 216 mg/ml/vial",
+      "price_per_vial": 7.0,
+      "flag": "",
+      "our_sku": null
+    },
+    {
+      "vendor_sku": "LC500",
+      "name_raw": "L-Carnitine 500mg,左旋肉碱",
+      "size_raw": "10ml x 500mg/ml/vial",
+      "price_per_vial": 6.0,
+      "flag": "★",
+      "our_sku": "EVE-LC500"
+    },
+    {
+      "vendor_sku": "LC425",
+      "name_raw": "Lipo-C【FOCUS】\nATP 50mg\nERIA JARENSIS 50mg\nL CARNITINE 200mg\nMIC BLEND 25/50/50mg\nLICOCAINE 0.1%\nBENZYL ALCOHOL 2%",
+      "size_raw": "10ml x 425mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-LC425"
+    },
+    {
+      "vendor_sku": "LC526",
+      "name_raw": "Lipo-C【FAT BLASTER】\nL CARNTINE 300mg\nMETHIONINE 25mg\nINOSITOL 50mg\nCHOLINE 50mg\nB12 1mg\nB6 50mg\nNADH 50mg",
+      "size_raw": "10ml x 526mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-LC526"
+    },
+    {
+      "vendor_sku": "LC553",
+      "name_raw": "SUPER SHRED\nL-Carnitine  400mg\nMIC BLEND  100mg\nATP  50mg\nAlbuterol  2mg\nB12 1mg",
+      "size_raw": "10ml x 553mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-LC553"
+    },
+    {
+      "vendor_sku": "RP226",
+      "name_raw": "Relaxation PM\nGaba  100mg\nMelatonin  1mg\nArginine  100mg\nGlutamine  25mg",
+      "size_raw": "10ml x 226mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-RP226"
+    },
+    {
+      "vendor_sku": "SHB",
+      "name_raw": "SUPER Human Blend\nL-Arginine  110mg\nL-Ornithin  110mg\nL-Citruline  120mg\nL-Lysine  70mg\nL-Glutamine  40mg\nL-Proline  60mg\nL-Taurine  60mg\nL-Carnitine  220mg\nNAC  75mg",
+      "size_raw": "10ml x 865mg/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-SHB"
+    },
+    {
+      "vendor_sku": "HHB",
+      "name_raw": "Healthy Hair skin nails Blend\nNIACINAMIDE  50mg\nTHIAMINE HCL  50mg\nPANTOTHENIC ACID  25mg\nCHOLINE  10mg\nINOSITOL  10mg\nNIACIN  5mg\nBIOTIN  100mcg\nFOLIC ACID  100mcg\nRIBOFLAVIN  100mcg",
+      "size_raw": "10ml x 150.3mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-HHB"
+    },
+    {
+      "vendor_sku": "LMX",
+      "name_raw": "Lipo Mino Mix\nB6 2mg/ml\nMethionine 12.4mg/ml\nINOSITOL 25mg/ml\nCholine 25mg/ml\nB1 50mg/ml\nB2 5mg/ml\nCarnitine 125mg/ml",
+      "size_raw": "10ml x 244.4mg/ml/vial",
+      "price_per_vial": 10.0,
+      "flag": "",
+      "our_sku": "EVE-LMX"
+    },
+    {
+      "vendor_sku": "GAZ",
+      "name_raw": "immunological enhancement\nGlutathione  200mg\nAscorbic Acid  200mg\nZine Sulfate  2.5mg",
+      "size_raw": "10ml x 402.5mg/ml/vial",
+      "price_per_vial": 15.0,
+      "flag": "",
+      "our_sku": "EVE-GAZ"
+    },
+    {
+      "vendor_sku": "SHR",
+      "name_raw": "SHRED\nL-Carnitine 200mg \nB12  250mcg\nB6 (Pyridoxine) 25mg \nInositol 50mg \nMethionine 25mg \nCholine 50mg",
+      "size_raw": "10ml x 350.25mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SHR"
+    },
+    {
+      "vendor_sku": "GGH",
+      "name_raw": "GHK-CU  2000mcg\nGlutathione  200mg\nHistidine 100mg\nClycine 50mg\nNADH 50mg",
+      "size_raw": "10ml x 402mg/ml/vial",
+      "price_per_vial": 13.0,
+      "flag": "",
+      "our_sku": "EVE-GGH"
+    },
+    {
+      "vendor_sku": "SZ352",
+      "name_raw": "Gaba 100mg\nHistidine 100mg\nL-Theanine  50mg\nTaurine  100mg\nMelatonin  2mg\nLICOCAINE 0.2%",
+      "size_raw": "10ml x 352mg/ml/vial",
+      "price_per_vial": 12.0,
+      "flag": "",
+      "our_sku": "EVE-SZ352"
+    },
+    {
+      "vendor_sku": "D320",
+      "name_raw": "维生素D3",
+      "size_raw": "10ml x 20000iu/ml",
+      "price_per_vial": 8.0,
+      "flag": "",
+      "our_sku": "EVE-D320"
+    },
+    {
+      "vendor_sku": "B1201",
+      "name_raw": "B12",
+      "size_raw": "10ml x 1 mg/ml/vial",
+      "price_per_vial": 4.0,
+      "flag": "★",
+      "our_sku": "EVE-B1201"
+    },
+    {
+      "vendor_sku": "B1210",
+      "name_raw": "B12",
+      "size_raw": "10ml x 10 mg/ml/vial",
+      "price_per_vial": 7.0,
+      "flag": "",
+      "our_sku": "EVE-B1210"
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>advnce labs — There's a peptide for that · Dead bedroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#F4F2EE;
+    --ink:#1A1C22;
+    --navy:#0A0D14;
+    --cyan:#00A0A8;
+    --amber:#E07C24;
+    --dim:#7A7D88;
+    --rule:rgba(0,0,0,0.08);
+    --rule-inv:rgba(255,255,255,0.10);
+    --fn:'Barlow Condensed',sans-serif;
+    --fd:'Cormorant Garamond',serif;
+    --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#222;
+    color:#eee;
+    font-family:var(--fm);
+    padding:40px;
+    min-height:100vh;
+  }
+  .toolbar{
+    max-width:1080px;
+    margin:0 auto 32px;
+    padding:20px 24px;
+    background:#111;
+    border:1px solid #333;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .toolbar h1{font-family:var(--fn);font-weight:300;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:#aaa;}
+  .toolbar p{font-size:11px;color:#888;line-height:1.5;}
+  .toolbar .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .toolbar button{
+    padding:10px 18px;
+    background:var(--cyan);color:#fff;border:none;
+    font-family:var(--fn);font-weight:700;
+    text-transform:uppercase;letter-spacing:1.5px;font-size:12px;
+    cursor:pointer;
+  }
+  .toolbar button.alt{background:transparent;color:var(--cyan);border:1px solid var(--cyan);}
+  .toolbar button:hover{background:#00808a;color:#fff;}
+
+  .slide-wrap{
+    max-width:1080px;
+    margin:0 auto 48px;
+  }
+  .slide-label{
+    font-family:var(--fm);font-size:11px;color:#888;
+    text-transform:uppercase;letter-spacing:2px;
+    margin-bottom:12px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .slide-label button{
+    padding:6px 12px;background:transparent;color:var(--cyan);
+    border:1px solid var(--cyan);font-family:var(--fm);font-size:10px;
+    text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;
+  }
+  .slide-label button:hover{background:var(--cyan);color:#fff;}
+
+  .slide{
+    width:1080px;height:1080px;
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 6px 32px rgba(0,0,0,0.45);
+  }
+  .navy{background:var(--navy);color:var(--cream);}
+  .cream{background:var(--cream);color:var(--ink);}
+
+  /* Top + bottom bars (lockup, eyebrow, footer) */
+  .top-bar{
+    flex:0 0 auto;
+    padding:48px 80px 0;
+    display:flex;flex-direction:row;justify-content:space-between;align-items:center;
+  }
+  .lockup{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--fn);font-weight:300;font-size:18px;
+    text-transform:lowercase;letter-spacing:0.3em;
+  }
+  .lockup .wm em{font-style:normal;color:var(--dim);}
+  .navy .lockup{color:var(--cream);}
+  .cream .lockup{color:var(--ink);}
+  .top-tag{
+    font-family:var(--fm);font-size:11px;
+    text-transform:uppercase;letter-spacing:0.4em;color:var(--dim);
+  }
+
+  .footer{
+    flex:0 0 auto;
+    padding:0 80px 48px;
+    display:flex;flex-direction:row;justify-content:space-between;align-items:center;
+  }
+  .footer-text{
+    font-family:var(--fm);font-size:11px;
+    text-transform:uppercase;letter-spacing:0.3em;color:var(--dim);
+  }
+  .navy .footer-text{color:var(--dim);}
+  .cream .footer-text{color:var(--dim);}
+
+  /* ─────────── SLIDE 1: HOOK (navy) ─────────── */
+  .s1 .stage{
+    flex:1;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 80px;
+  }
+  .s1 .eyebrow{
+    font-family:var(--fm);font-size:13px;
+    text-transform:uppercase;letter-spacing:0.5em;
+    color:var(--cyan);
+    margin-bottom:48px;
+  }
+  .s1 .question{
+    font-family:var(--fd);font-style:italic;font-weight:300;
+    font-size:96px;line-height:1;color:var(--cream);
+    letter-spacing:-2px;margin-bottom:36px;
+  }
+  .s1 .question::before{content:'"';color:var(--dim);}
+  .s1 .question::after{content:'"';color:var(--dim);}
+  .s1 .tagline{
+    font-family:var(--fn);font-weight:900;
+    font-size:138px;line-height:0.92;color:var(--cream);
+    text-transform:uppercase;letter-spacing:-3px;
+    margin-bottom:18px;
+  }
+  .s1 .tagline .accent{color:var(--cyan);}
+  .s1 .swipe{
+    margin-top:32px;
+    font-family:var(--fm);font-size:12px;
+    text-transform:uppercase;letter-spacing:0.4em;
+    color:var(--cyan);
+  }
+  .s1 .swipe .arrow{display:inline-block;margin-left:8px;}
+
+  /* ─────────── SLIDE 2: REVEAL (cream) ─────────── */
+  .s2 .stage{
+    flex:1;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 80px;
+  }
+  .s2 .eyebrow{
+    font-family:var(--fm);font-size:13px;
+    text-transform:uppercase;letter-spacing:0.5em;
+    color:var(--cyan);
+    margin-bottom:24px;
+  }
+  .s2 .compound{
+    font-family:var(--fn);font-weight:900;
+    font-size:200px;line-height:0.85;color:var(--ink);
+    letter-spacing:-5px;
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+  .s2 .subhead{
+    font-family:var(--fd);font-style:italic;font-weight:400;
+    font-size:34px;line-height:1.2;color:var(--ink);
+    margin-bottom:6px;
+  }
+  .s2 .gloss{
+    font-family:var(--fm);font-size:13px;
+    text-transform:uppercase;letter-spacing:0.3em;color:var(--dim);
+    margin-bottom:36px;
+  }
+
+  .findings{
+    display:flex;flex-direction:column;
+    border-top:1px solid var(--rule);
+    margin-bottom:24px;
+  }
+  .findings .row{
+    display:flex;flex-direction:row;align-items:baseline;gap:18px;
+    padding:14px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .findings .marker{
+    flex:0 0 auto;
+    font-family:var(--fn);font-weight:900;font-size:18px;
+    color:var(--cyan);line-height:1;
+  }
+  .findings .label{
+    font-family:var(--fn);font-weight:700;
+    font-size:18px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--ink);
+    flex:0 0 auto;
+  }
+  .findings .body{
+    font-family:var(--fd);font-style:italic;font-weight:400;
+    font-size:22px;color:var(--ink);line-height:1.3;flex:1;
+  }
+
+  .closer{
+    font-family:var(--fd);font-style:italic;font-weight:400;
+    font-size:24px;line-height:1.3;color:var(--dim);
+    max-width:780px;
+  }
+  .closer strong{font-style:italic;font-weight:400;color:var(--amber);}
+
+  /* SVG logo */
+  .logo-svg{display:block;}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>advnce labs / "There's a peptide for that" — Dead bedroom (mockup)</h1>
+  <p>2-slide carousel, 1080×1080 each. Slide 1 = hook (navy). Slide 2 = research reveal (cream). Wait ~3s for fonts before downloading.</p>
+  <div class="row">
+    <button id="download-all">Download both slides</button>
+    <span style="font-family:var(--fm);font-size:10px;color:#888;text-transform:uppercase;letter-spacing:2px;">1080×1080 · 2 slides · 1:1 square</span>
+  </div>
+</div>
+
+<!-- ─────────── Slide 1 — HOOK ─────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>01 — hook (deep navy)</span>
+    <button class="dl" data-slide="s1" data-name="peptide-for-that-deadbedroom-1">Download PNG</button>
+  </div>
+  <div class="slide s1 navy" id="s1">
+    <div class="top-bar">
+      <div class="lockup">
+        <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+          <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+          <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+          <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+        </svg>
+        <span class="wm">advnce <em>labs</em></span>
+      </div>
+      <div class="top-tag">No. 01 · Hook</div>
+    </div>
+    <div class="stage">
+      <div class="eyebrow">What the literature is looking at</div>
+      <div class="question">Dead bedroom?</div>
+      <div class="tagline">There's a peptide<br/>for <span class="accent">that.</span></div>
+      <div class="swipe">Swipe for the research <span class="arrow">→</span></div>
+    </div>
+    <div class="footer">
+      <div class="footer-text">Research-grade · Not for human consumption</div>
+      <div class="footer-text">advncelabs.com</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── Slide 2 — REVEAL ─────────── -->
+<div class="slide-wrap">
+  <div class="slide-label">
+    <span>02 — reveal (cream)</span>
+    <button class="dl" data-slide="s2" data-name="peptide-for-that-deadbedroom-2">Download PNG</button>
+  </div>
+  <div class="slide s2 cream" id="s2">
+    <div class="top-bar">
+      <div class="lockup">
+        <svg class="logo-svg" width="44" height="26" viewBox="0 0 48 28" fill="none" aria-hidden="true">
+          <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+          <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+          <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+        </svg>
+        <span class="wm">advnce <em>labs</em></span>
+      </div>
+      <div class="top-tag">No. 02 · From the literature</div>
+    </div>
+    <div class="stage">
+      <div class="eyebrow">From the literature</div>
+      <div class="compound">PT-141.</div>
+      <div class="subhead">Bremelanotide.</div>
+      <div class="gloss">Synthetic melanocortin-receptor agonist</div>
+
+      <div class="findings">
+        <div class="row">
+          <span class="marker">→</span>
+          <span class="label">Mechanism</span>
+          <span class="body">Activates MC3R / MC4R pathways in the central nervous system — not a peripheral vasodilator.</span>
+        </div>
+        <div class="row">
+          <span class="marker">→</span>
+          <span class="label">Studied since</span>
+          <span class="body">Early 2000s in human and animal models for centrally-mediated sexual response.</span>
+        </div>
+        <div class="row">
+          <span class="marker">→</span>
+          <span class="label">Citations</span>
+          <span class="body">Diamond et al, J Sex Marital Ther 2004 · Pfaus et al, J Sex Med 2007 · Caruso et al, Sex Med Rev 2014.</span>
+        </div>
+      </div>
+
+      <div class="closer">What you do with the research is up to you and your clinician. <strong>We just supply the compound, documented.</strong></div>
+    </div>
+    <div class="footer">
+      <div class="footer-text">Research-grade · Not for human consumption</div>
+      <div class="footer-text">advncelabs.com</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function download(slideId, fileName){
+    const el = document.getElementById(slideId);
+    const canvas = await html2canvas(el, {
+      width:1080, height:1080,
+      windowWidth:1080, windowHeight:1080,
+      scale:1,
+      useCORS:true,
+      backgroundColor:null,
+    });
+    const a = document.createElement('a');
+    a.download = fileName + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  }
+  document.querySelectorAll('.dl').forEach(btn => {
+    btn.addEventListener('click', () => download(btn.dataset.slide, btn.dataset.name));
+  });
+  document.getElementById('download-all').addEventListener('click', async () => {
+    await download('s1','peptide-for-that-deadbedroom-1');
+    await new Promise(r=>setTimeout(r,400));
+    await download('s2','peptide-for-that-deadbedroom-2');
+  });
+</script>
+
+</body>
+</html>

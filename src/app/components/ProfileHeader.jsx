@@ -10,6 +10,7 @@ import { P, FN, FM, FD } from '../../design/theme';
 import { s } from '../../design/styles';
 import { GradText } from '../../design/components';
 import { calcCalorieTarget } from '../../protocols/body/nutrition/math';
+import StatNumber from '../../design/StatNumber';
 
 const FITNESS_PILLAR_META = {
   'Fat Loss':       { icon: '\u{1F525}', label: 'FAT LOSS' },
@@ -63,15 +64,16 @@ export default function ProfileHeader({
   const targetCal = calcCalorieTarget(profile, primaryGoal);
   const daysLeft = daysUntil(profile?.targetDate);
 
+  // Stats with optional `numeric` for count-up animation.
   const stats = [
-    { label: 'Age',        value: profile?.age || '—' },
-    { label: 'Protocols',  value: protocolCount },
+    { label: 'Age',        numeric: profile?.age, format: (n) => Math.round(n) },
+    { label: 'Protocols',  numeric: protocolCount, format: (n) => Math.round(n) },
     { label: 'Height',     value: formatHeight(profile?.hFt, profile?.hIn) },
-    { label: 'Weight',     value: profile?.weight ? `${profile.weight} lbs` : '—' },
-    { label: 'Goal',       value: profile?.goalW ? `${profile.goalW} lbs` : '—' },
-    { label: 'Target Cal', value: targetCal || '—' },
+    { label: 'Weight',     numeric: profile?.weight, format: (n) => `${Math.round(n)} lbs` },
+    { label: 'Goal',       numeric: profile?.goalW,  format: (n) => `${Math.round(n)} lbs` },
+    { label: 'Target Cal', numeric: targetCal, format: (n) => Math.round(n).toLocaleString() },
   ];
-  if (daysLeft != null) stats.push({ label: 'Days Left', value: daysLeft });
+  if (daysLeft != null) stats.push({ label: 'Days Left', numeric: daysLeft, format: (n) => Math.round(n) });
 
   return (
     <>
@@ -144,16 +146,21 @@ export default function ProfileHeader({
           display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 16px',
           paddingTop: 14, borderTop: '1px solid ' + P.bd,
         }}>
-          {stats.map(stat => (
-            <div key={stat.label}>
-              <div style={{ fontSize: 9, color: P.txD, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>
-                {stat.label}
+          {stats.map(stat => {
+            const isNumeric = stat.numeric != null && stat.numeric !== '' && Number.isFinite(Number(stat.numeric));
+            return (
+              <div key={stat.label}>
+                <div style={{ fontSize: 9, color: P.txD, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                  {stat.label}
+                </div>
+                <div style={{ fontFamily: FM, fontSize: 18, fontWeight: 700, color: P.txS, marginTop: 2 }}>
+                  {isNumeric
+                    ? <StatNumber value={Number(stat.numeric)} initial={0} format={stat.format} duration={800} />
+                    : (stat.value ?? '—')}
+                </div>
               </div>
-              <div style={{ fontFamily: FM, fontSize: 18, fontWeight: 700, color: P.txS, marginTop: 2 }}>
-                {stat.value}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

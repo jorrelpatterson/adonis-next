@@ -42,16 +42,20 @@ export default function FitnessPillarsModal({ initial, onSave, onClose }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: 'rgba(8,10,16,0.85)',
+      background: 'rgba(8,10,16,0.65)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
       fontFamily: FN,
+      animation: 'vt-fade-in 0.3s cubic-bezier(0.16,1,0.3,1) both',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
         ...s.card,
         width: '100%', maxWidth: 640,
         padding: '20px 16px 24px',
-        borderRadius: '16px 16px 0 0',
+        borderRadius: '20px 20px 0 0',
         maxHeight: '92vh', overflowY: 'auto',
+        animation: 'springIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         <div style={{ marginBottom: 18, textAlign: 'center' }}>
           <div style={{ fontSize: 11, color: P.txD, letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 700, marginBottom: 4 }}>
