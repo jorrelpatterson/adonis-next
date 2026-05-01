@@ -6,7 +6,7 @@ import { P, FN, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
 import { PEPTIDES } from '../protocols/body/peptides/catalog';
-import { getStackForFinder, findCatalogPeptide } from '../protocols/body/peptides/proto-stacks';
+import { getStackForFinder, findCatalogPeptide, PROTO_STACKS, GOAL_TO_STACK } from '../protocols/body/peptides/proto-stacks';
 import WorkoutLogger from './components/WorkoutLogger';
 import FoodLogger from './components/FoodLogger';
 import WeightLogger from './components/WeightLogger';
@@ -18,7 +18,7 @@ const SUB_TABS = [
   { id: 'tools',    label: 'Tools',    icon: '\u{1F50D}' },
 ];
 
-export default function BodyView({ profile, protocolStates, logs, log }) {
+export default function BodyView({ profile, protocolStates, setProtocolState, logs, log }) {
   const [subTab, setSubTab] = useState('peptides');
 
   return (
@@ -57,6 +57,7 @@ export default function BodyView({ profile, protocolStates, logs, log }) {
         <PeptidesSection
           profile={profile}
           protocolStates={protocolStates}
+          setProtocolState={setProtocolState}
           logs={logs}
         />
       )}
@@ -88,7 +89,8 @@ export default function BodyView({ profile, protocolStates, logs, log }) {
 }
 
 // ─── Peptides sub-tab ─────────────────────────────────────────────────────
-function PeptidesSection({ profile, protocolStates, logs }) {
+function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
+  const [pane, setPane] = useState('protocol');  // protocol | stacks
   const liveCatalog = (logs?.peptideCatalog && logs.peptideCatalog.length) ? logs.peptideCatalog : PEPTIDES;
   const namedStack = getStackForFinder(protocolStates?.peptides || {});
   const stackPeptides = namedStack
@@ -96,9 +98,56 @@ function PeptidesSection({ profile, protocolStates, logs }) {
     : [];
   const totalAvailable = liveCatalog.length;
 
-  if (!namedStack) {
-    return (
-      <div>
+  // Reverse: stack id → first goal id that maps to it (for "Switch to this stack")
+  const stackIdToOptimize = (id) => {
+    const found = Object.entries(GOAL_TO_STACK).find(([, v]) => v === id);
+    return found ? [found[0]] : ['everything'];
+  };
+
+  const switchToStack = (stack) => {
+    if (typeof window !== 'undefined' && !window.confirm('Switch to ' + stack.name + ' stack?')) return;
+    if (setProtocolState) {
+      setProtocolState('peptides', {
+        optimizeFor: stackIdToOptimize(stack.id),
+        // budget tier inferred from stack's monthlyLow
+        budget: stack.monthlyLow < 150 ? 'low'
+              : stack.monthlyLow < 300 ? 'mid'
+              : stack.monthlyLow < 500 ? 'high'
+              : 'premium',
+      });
+    }
+  };
+
+  const subPaneRow = (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+      {[
+        { id: 'protocol', label: 'Protocol' },
+        { id: 'stacks',   label: 'Stacks' },
+      ].map(p => {
+        const isActive = pane === p.id;
+        return (
+          <button key={p.id} onClick={() => setPane(p.id)}
+            style={{
+              ...s.btn, ...(isActive ? s.pri : s.out),
+              fontSize: 11, padding: '6px 14px', minHeight: 32,
+            }}>
+            {p.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div>
+      {subPaneRow}
+      {pane === 'stacks' ? (
+        <StacksBrowser
+          stacks={PROTO_STACKS}
+          activeStackId={namedStack?.id}
+          onSwitch={switchToStack}
+        />
+      ) : !namedStack ? (
         <div style={{ ...s.card, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>{'\u{1F9EC}'}</div>
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: P.gW, marginBottom: 4 }}>
@@ -108,16 +157,30 @@ function PeptidesSection({ profile, protocolStates, logs }) {
             0 active · {totalAvailable} available
           </div>
           <div style={{ fontSize: 12, color: P.txM, marginBottom: 14, lineHeight: 1.5 }}>
-            No peptide stack yet. Take the Peptide Finder in your profile to get a curated stack matched to your goals.
+            No peptide stack yet. Take the Peptide Finder from your profile, or pick a stack directly from the Stacks tab.
           </div>
+          <button
+            onClick={() => setPane('stacks')}
+            style={{ ...s.btn, ...s.pri, fontSize: 11, padding: '8px 16px' }}
+          >
+            Browse Stacks
+          </button>
           <div style={{ fontSize: 9, color: P.txD, lineHeight: 1.5, fontStyle: 'italic', marginTop: 20 }}>
             ⚕ Adonis is educational. All peptides require a valid prescription. Consult your provider before starting any peptide therapy.
           </div>
         </div>
-      </div>
-    );
-  }
+      ) : (
+        <ProtocolPane
+          namedStack={namedStack}
+          stackPeptides={stackPeptides}
+        />
+      )}
+    </div>
+  );
+}
 
+// ─── Protocol pane (active stack detail) ──────────────────────────────────
+function ProtocolPane({ namedStack, stackPeptides }) {
   return (
     <div>
       {/* Stack header */}
@@ -203,6 +266,134 @@ function PeptidesSection({ profile, protocolStates, logs }) {
       }}>
         ⚕ Adonis is educational. All peptides require a valid prescription. Consult your provider before starting any peptide therapy.
       </div>
+    </div>
+  );
+}
+
+// ─── Stacks browser pane ──────────────────────────────────────────────────
+function StacksBrowser({ stacks, activeStackId, onSwitch }) {
+  const [expanded, setExpanded] = useState(null);
+
+  return (
+    <div>
+      <div style={{
+        fontSize: 11, color: P.txM, lineHeight: 1.5, marginBottom: 12,
+        padding: '0 4px',
+      }}>
+        15 curated stacks for different goals + budgets. Tap any stack to see what it contains and why it works together.
+      </div>
+
+      {stacks.map(stack => {
+        const isActive = stack.id === activeStackId;
+        const isOpen = expanded === stack.id;
+        return (
+          <div
+            key={stack.id}
+            style={{
+              ...s.card,
+              padding: 0,
+              marginBottom: 8,
+              overflow: 'hidden',
+              border: '1px solid ' + (isActive ? stack.color + '66' : 'rgba(232,213,183,0.05)'),
+            }}
+          >
+            <button
+              onClick={() => setExpanded(isOpen ? null : stack.id)}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                width: '100%', padding: '12px 14px', textAlign: 'left',
+                fontFamily: FN, color: P.txS,
+                display: 'flex', alignItems: 'center', gap: 12,
+              }}
+            >
+              <span style={{ fontSize: 22 }}>{stack.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: stack.color, letterSpacing: 1.2 }}>
+                    {stack.name}
+                  </span>
+                  {isActive && (
+                    <span style={{
+                      fontSize: 8, padding: '1px 6px', borderRadius: 4,
+                      background: stack.color + '22', color: stack.color,
+                      fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                    }}>
+                      Active
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: 10, color: P.txD, marginTop: 2, lineHeight: 1.4 }}>
+                  {stack.tag}
+                </div>
+                <div style={{ fontSize: 9, color: P.txD, marginTop: 3, fontFamily: FN }}>
+                  {stack.monthly} · {stack.items.length} compound{stack.items.length === 1 ? '' : 's'}
+                </div>
+              </div>
+              <span style={{
+                fontSize: 14, color: P.txD, flexShrink: 0,
+                transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s',
+              }}>
+                ›
+              </span>
+            </button>
+            {isOpen && (
+              <div style={{ padding: '0 14px 14px' }}>
+                <div style={{
+                  padding: '8px 10px', borderRadius: 6,
+                  background: stack.color + '14',
+                  border: '1px solid ' + stack.color + '22',
+                  fontSize: 10, color: P.txM, lineHeight: 1.5, marginBottom: 10,
+                }}>
+                  <strong style={{ color: stack.color, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 700 }}>
+                    Why this stack
+                  </strong>
+                  <div style={{ marginTop: 4 }}>{stack.why}</div>
+                </div>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 6 }}>
+                  Compounds
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                  {stack.items.map(item => (
+                    <span key={item} style={{
+                      fontSize: 10, padding: '4px 8px', borderRadius: 4,
+                      background: 'rgba(232,213,183,0.04)',
+                      color: P.txM,
+                      border: '1px solid ' + P.bd,
+                    }}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <div style={{ fontSize: 9, color: P.txD, lineHeight: 1.5, fontStyle: 'italic', marginBottom: 10 }}>
+                  Best for: {stack.target}
+                </div>
+                {!isActive && (
+                  <button
+                    onClick={() => onSwitch(stack)}
+                    style={{
+                      ...s.btn, ...s.pri,
+                      width: '100%', justifyContent: 'center',
+                      fontSize: 12, padding: '10px 14px',
+                    }}
+                  >
+                    Switch to {stack.name}
+                  </button>
+                )}
+                {isActive && (
+                  <div style={{
+                    padding: '10px 12px', borderRadius: 8,
+                    background: stack.color + '10', textAlign: 'center',
+                    fontSize: 11, fontWeight: 600, color: stack.color,
+                  }}>
+                    ✓ This is your active stack
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

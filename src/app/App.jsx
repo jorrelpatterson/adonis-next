@@ -41,6 +41,7 @@ import RoutineView from '../routine/RoutineView';
 import TabNav from './TabNav';
 import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import PeptideFinderModal from '../views/components/PeptideFinderModal';
+import { WORKOUT_GOAL_TO_OPTIMIZE } from '../protocols/body/peptides/proto-stacks';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
@@ -357,7 +358,17 @@ export default function App() {
               </div>
               <select
                 value={protocolStates?.workout?.primary || profile?.primary || 'Wellness'}
-                onChange={(e) => setProtocolState('workout', { primary: e.target.value })}
+                onChange={(e) => {
+                  const newGoal = e.target.value;
+                  setProtocolState('workout', { primary: newGoal });
+                  // Sync peptide stack — flipping fitness goal also flips
+                  // the recommended stack (SHRED → SCULPT etc.) so Body
+                  // tab + routine browse tasks update immediately.
+                  const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newGoal];
+                  if (optimizeFor) {
+                    setProtocolState('peptides', { optimizeFor });
+                  }
+                }}
                 style={{ ...s.sel, width: '100%' }}
               >
                 <option value="Fat Loss">Lose fat</option>

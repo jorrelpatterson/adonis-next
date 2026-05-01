@@ -197,6 +197,17 @@ export const GOAL_TO_STACK = {
   everything: 'executive',
 };
 
+// Reverse map: workout.primary (the Body Fitness Goal) → peptide
+// optimizeFor IDs. Used to keep the peptide stack in sync when the user
+// flips their fitness goal in Profile.
+export const WORKOUT_GOAL_TO_OPTIMIZE = {
+  'Fat Loss':       ['fat_loss'],
+  'Muscle Gain':    ['muscle'],
+  'Recomposition':  ['fat_loss', 'muscle'],
+  'Aesthetics':     ['muscle', 'skin'],
+  'Wellness':       ['everything'],
+};
+
 // Budget tier → stacks accessible at that price level.
 const BUDGET_STACKS = {
   low:     ['sleep', 'edge', 'balance', 'drive'],
