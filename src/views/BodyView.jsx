@@ -6,7 +6,7 @@ import { P, FN, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
 import { PEPTIDES } from '../protocols/body/peptides/catalog';
-import { getStackForFinder, findCatalogPeptide, PROTO_STACKS, GOAL_TO_STACK } from '../protocols/body/peptides/proto-stacks';
+import { getStackForFinder, findCatalogPeptide, PROTO_STACKS } from '../protocols/body/peptides/proto-stacks';
 import WorkoutLogger from './components/WorkoutLogger';
 import FoodLogger from './components/FoodLogger';
 import WeightLogger from './components/WeightLogger';
@@ -98,23 +98,12 @@ function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
     : [];
   const totalAvailable = liveCatalog.length;
 
-  // Reverse: stack id → first goal id that maps to it (for "Switch to this stack")
-  const stackIdToOptimize = (id) => {
-    const found = Object.entries(GOAL_TO_STACK).find(([, v]) => v === id);
-    return found ? [found[0]] : ['everything'];
-  };
-
   const switchToStack = (stack) => {
     if (typeof window !== 'undefined' && !window.confirm('Switch to ' + stack.name + ' stack?')) return;
     if (setProtocolState) {
-      setProtocolState('peptides', {
-        optimizeFor: stackIdToOptimize(stack.id),
-        // budget tier inferred from stack's monthlyLow
-        budget: stack.monthlyLow < 150 ? 'low'
-              : stack.monthlyLow < 300 ? 'mid'
-              : stack.monthlyLow < 500 ? 'high'
-              : 'premium',
-      });
+      // Explicit pick — bypasses goal/budget resolution in getStackForFinder.
+      // Cleared whenever the user retakes the Peptide Finder.
+      setProtocolState('peptides', { selectedStackId: stack.id });
     }
   };
 

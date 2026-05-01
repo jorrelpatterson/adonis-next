@@ -366,7 +366,9 @@ export default function App() {
                   // tab + routine browse tasks update immediately.
                   const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newGoal];
                   if (optimizeFor) {
-                    setProtocolState('peptides', { optimizeFor });
+                    // Clear any manual stack pick so the new fitness goal drives
+                    // the resolver (otherwise selectedStackId would override).
+                    setProtocolState('peptides', { optimizeFor, selectedStackId: undefined });
                   }
                 }}
                 style={{ ...s.sel, width: '100%' }}

@@ -28,7 +28,9 @@ export default function PeptideFinderModal({ initial, onSave, onClose }) {
         return;
       }
     }
-    onSave(answers);
+    // Retaking the Finder always overrides any prior manual stack pick,
+    // so the wizard's goal/budget answers drive the resolver again.
+    onSave({ ...answers, selectedStackId: undefined });
     onClose();
   };
 

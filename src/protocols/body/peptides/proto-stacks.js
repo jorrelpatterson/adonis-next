@@ -218,14 +218,27 @@ const BUDGET_STACKS = {
 
 /**
  * Selects the right stack for a user given their Peptide Finder answers.
- * Priority: matches primary goal, but falls back to a budget-appropriate
- * alternative if the goal's preferred stack is too expensive.
  *
- * @param {Object} finderAnswers - { optimizeFor, experience, glp1Status, budget, needleComfort }
+ * Priority:
+ *   1. EXPLICIT selectedStackId — set when the user manually picks a
+ *      stack via the Stacks browser. Always wins.
+ *   2. Primary goal → preferred stack (GOAL_TO_STACK), if budget allows.
+ *   3. Budget-tier fallback for the goal.
+ *   4. Cheapest stack in the user's budget tier.
+ *
+ * @param {Object} finderAnswers - { selectedStackId, optimizeFor, experience, glp1Status, budget, needleComfort }
  * @returns {Object|null} stack object, or null if no answers
  */
 export function getStackForFinder(finderAnswers) {
-  if (!finderAnswers || !Array.isArray(finderAnswers.optimizeFor) || finderAnswers.optimizeFor.length === 0) {
+  if (!finderAnswers) return null;
+
+  // 1. Explicit pick wins
+  if (finderAnswers.selectedStackId) {
+    const explicit = PROTO_STACKS.find(s => s.id === finderAnswers.selectedStackId);
+    if (explicit) return applyGlp1Filter(explicit, finderAnswers);
+  }
+
+  if (!Array.isArray(finderAnswers.optimizeFor) || finderAnswers.optimizeFor.length === 0) {
     return null;
   }
 
