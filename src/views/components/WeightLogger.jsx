@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { P, FN, FM, grad } from '../../design/theme';
 import { s } from '../../design/styles';
+import GoalCompleteScreen from './GoalCompleteScreen';
+import { sound } from '../../design/sound';
+import { haptics } from '../../design/haptics';
 
 // ─── Helpers (exported for testing) ────────────────────────────────────────
 
@@ -139,6 +142,7 @@ export default function WeightLogger({ profile, logs, log }) {
 
   // ─── Quick log state ────────────────────────────────────────────────────
   const [draftWeight, setDraftWeight] = useState('');
+  const [goalReached, setGoalReached] = useState(false);
   const placeholder = currentW != null ? String(currentW) : '';
 
   const handleLog = () => {
@@ -150,6 +154,18 @@ export default function WeightLogger({ profile, logs, log }) {
       .sort((a, b) => (a.date < b.date ? -1 : 1));
     log('weight', next);
     setDraftWeight('');
+    sound.success();
+    haptics.success();
+
+    // Goal completion detection — fire ceremony if this log crosses the goal.
+    // Goal is "lose to X" when goalW < startW; "gain to X" when goalW > startW.
+    if (goalW != null && startW != null && currentW != null) {
+      const wasShort = goalDir === 'lose' ? currentW > goalW : currentW < goalW;
+      const nowMet  = goalDir === 'lose' ? w <= goalW         : w >= goalW;
+      if (wasShort && nowMet) {
+        setGoalReached(true);
+      }
+    }
   };
 
   const handleDelete = (date) => {
@@ -526,6 +542,18 @@ export default function WeightLogger({ profile, logs, log }) {
           </>
         )}
       </div>
+
+      {goalReached && (
+        <GoalCompleteScreen
+          goal={{
+            title: goalDir === 'lose'
+              ? `Hit your goal weight: ${goalW} lbs`
+              : `Reached your goal: ${goalW} lbs`,
+            createdAt: weightLog[0]?.date || null,
+          }}
+          onClose={() => setGoalReached(false)}
+        />
+      )}
     </div>
   );
 }

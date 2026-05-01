@@ -3,11 +3,14 @@ import { P, FN, FD, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel } from './intelligence';
 import { groupTasksByTimeBlock } from './group-by-time';
 import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
 import HomeDashboard from './HomeDashboard';
+import EmptyState from '../design/EmptyState';
+import { IllusTasksDone } from '../design/illustrations';
+import WeeklyRecap, { isRecapDay, buildWeekStats } from '../views/components/WeeklyRecap';
 import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
@@ -23,6 +26,23 @@ export default function RoutineView({
 }) {
   const dayIdx = day.getDay();
   const completed = new Set(Array.isArray(completedTasks) ? completedTasks : []);
+
+  // Sunday Recap — surfaces once per week. Persisted dismiss key tied to
+  // ISO week so it doesn't re-show after manual dismiss.
+  const recapKey = today ? `adonis_recap_dismissed_${today}` : null;
+  const [recapShown, setRecapShown] = useState(() => {
+    if (typeof window === 'undefined' || !recapKey) return false;
+    try { return localStorage.getItem(recapKey) === '1'; } catch { return false; }
+  });
+  const showRecap = !recapShown && day && isRecapDay(day) && (logs?.routine || logs?.exercise);
+  const weekStats = useMemo(
+    () => showRecap ? buildWeekStats({ logs, profile, today }) : null,
+    [showRecap, logs, profile, today]
+  );
+  const dismissRecap = () => {
+    try { if (recapKey) localStorage.setItem(recapKey, '1'); } catch { /* noop */ }
+    setRecapShown(true);
+  };
 
   // ─── Intelligence cards (only on today's view) ────────────────────────
   const isToday = today && day.toISOString().slice(0, 10) === today;
@@ -258,10 +278,12 @@ export default function RoutineView({
 
       {/* Routine Items — calendar view, grouped into time blocks */}
       {routine.scheduled.length === 0 ? (
-        <div style={{ ...s.card, padding: 24, textAlign: 'center' }}>
-          <div style={{ fontSize: 24, marginBottom: 8 }}>{'\u{1F3AF}'}</div>
-          <div style={{ fontSize: 13, color: P.txM }}>No tasks yet</div>
-          <div style={{ fontSize: 11, color: P.txD, marginTop: 4 }}>Add a goal to activate your routine</div>
+        <div style={{ ...s.card, padding: 0, overflow: 'hidden' }}>
+          <EmptyState
+            illustration={<IllusTasksDone />}
+            headline="No tasks yet"
+            body="Add a goal and your daily routine will populate automatically — sequenced from wake to lights out."
+          />
         </div>
       ) : (
         <div>
@@ -346,6 +368,11 @@ export default function RoutineView({
             </div>
           ))}
         </div>
+      )}
+
+      {/* Sunday recap — auto-surfaced once/week */}
+      {showRecap && weekStats && (
+        <WeeklyRecap stats={weekStats} onClose={dismissRecap} />
       )}
     </div>
   );

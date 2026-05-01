@@ -47,6 +47,9 @@ import { validateAccessCode } from '../state/access-codes';
 import ProfileHeader, { getFitnessPillars } from './components/ProfileHeader';
 import FitnessPillarsModal from './components/FitnessPillarsModal';
 import ResetConfirmModal from './components/ResetConfirmModal';
+import EmptyState from '../design/EmptyState';
+import { IllusGoals } from '../design/illustrations';
+import { DomainIcon } from '../design/icons';
 import { ToastProvider, useToast } from '../design/Toast';
 import { transitionView } from '../design/motion';
 import { haptics } from '../design/haptics';
@@ -478,9 +481,14 @@ function AppInner() {
                 </button>
               </div>
               {activeGoals.length === 0 ? (
-                <div style={{ fontSize: 11, color: P.txD, textAlign: 'center', padding: '8px 0' }}>
-                  No goals yet
-                </div>
+                <EmptyState
+                  illustration={<IllusGoals />}
+                  size={120}
+                  headline="No goals yet"
+                  body="Add your first to start the system. Your routine, recommendations, and check-ins all hang off goals."
+                  cta="Add a goal"
+                  onCta={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
+                />
               ) : (
                 activeGoals.map(g => (
                   <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
@@ -518,23 +526,35 @@ function AppInner() {
               <div style={{ fontSize: 10, color: P.txD, marginBottom: 10, lineHeight: 1.5 }}>
                 Tap to enable or disable domains
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 {DOMAINS.map(d => {
                   const isActive = (profile.domains || []).includes(d.id);
                   return (
                     <button key={d.id} onClick={() => {
+                      haptics.light();
+                      isActive ? sound.toggleOff() : sound.toggleOn();
                       const current = profile.domains || [];
                       const updated = isActive ? current.filter(id => id !== d.id) : [...current, d.id];
                       setProfile({ domains: updated });
                     }}
                       style={{
-                        padding: '8px 10px', borderRadius: 8, textAlign: 'left',
-                        border: '1px solid ' + (isActive ? P.gW + '44' : P.bd),
-                        background: isActive ? 'rgba(232,213,183,0.04)' : 'transparent',
+                        padding: '12px 12px', borderRadius: 12, textAlign: 'left',
+                        border: '1px solid ' + (isActive ? 'rgba(232,213,183,0.25)' : P.bd),
+                        background: isActive ? 'rgba(232,213,183,0.06)' : 'transparent',
                         cursor: 'pointer', fontFamily: FN,
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        boxShadow: isActive ? '0 0 0 0.5px rgba(232,213,183,0.1) inset, 0 4px 16px rgba(232,213,183,0.04)' : 'none',
                       }}>
-                      <span style={{ fontSize: 14 }}>{d.icon}</span>
-                      <span style={{ fontSize: 11, color: isActive ? P.gW : P.txD, marginLeft: 6, fontWeight: isActive ? 600 : 400 }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        color: isActive ? P.gW : P.txD,
+                        opacity: isActive ? 1 : 0.6,
+                        transition: 'color 0.4s, opacity 0.4s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+                        transform: isActive ? 'scale(1.1)' : 'scale(1)',
+                      }}>
+                        <DomainIcon id={d.id} size={18} />
+                      </span>
+                      <span style={{ fontSize: 12, color: isActive ? P.gW : P.txD, fontWeight: isActive ? 700 : 500, letterSpacing: 0.3 }}>
                         {d.name}
                       </span>
                     </button>
