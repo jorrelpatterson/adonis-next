@@ -3,6 +3,8 @@ import { P, FN, FM } from '../../design/theme';
 import { s } from '../../design/styles';
 import { calcBMR, calcTDEE, calcMacros, calcCalorieTarget, sumDayMeals } from '../../protocols/body/nutrition/math';
 import { computeAdaptive } from '../../protocols/body/nutrition/adaptive-calories';
+import { sound } from '../../design/sound';
+import { haptics } from '../../design/haptics';
 
 // Re-exports for tests + backwards compat with existing imports.
 export { calcBMR, calcTDEE, calcMacros, calcCalorieTarget, sumDayMeals };
@@ -123,12 +125,16 @@ export default function FoodLogger({ profile, protocolStates, logs, log }) {
     const time = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     const next = [...todaysMeals, { ...meal, time }];
     log('food', { ...food, [todayKey]: next });
+    sound.success();
+    haptics.light();
   };
 
   const removeMeal = (idx) => {
     if (!log) return;
     const next = todaysMeals.filter((_, i) => i !== idx);
     log('food', { ...food, [todayKey]: next });
+    sound.toggleOff();
+    haptics.light();
   };
 
   const handleAddCustom = () => {

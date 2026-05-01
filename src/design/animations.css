@@ -129,7 +129,9 @@ input, select, textarea {
 
 /* ─── Honor reduced-motion preference ────────────────────────────────────
    Premium ≠ noisy. People with vestibular sensitivities turn motion off,
-   and we respect that — every decorative animation gets neutralized. */
+   and we respect that — every decorative animation gets neutralized.
+   Triggered by either the system preference OR the in-app override class
+   (adn-reduced-motion on <html>, set by the AppSettings toggle). */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -137,6 +139,14 @@ input, select, textarea {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+html.adn-reduced-motion *,
+html.adn-reduced-motion *::before,
+html.adn-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* ─── Reveals — apply to view roots for staggered screen entry ─────────── */

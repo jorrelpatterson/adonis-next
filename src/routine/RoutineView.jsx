@@ -11,6 +11,8 @@ import HomeDashboard from './HomeDashboard';
 import EmptyState from '../design/EmptyState';
 import { IllusTasksDone } from '../design/illustrations';
 import WeeklyRecap, { isRecapDay, buildWeekStats } from '../views/components/WeeklyRecap';
+import StreakMilestone, { getPendingMilestone, setLastShownMilestone } from '../views/components/StreakMilestone';
+import { computeRoutineStreak } from './streak';
 import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
@@ -26,6 +28,20 @@ export default function RoutineView({
 }) {
   const dayIdx = day.getDay();
   const completed = new Set(Array.isArray(completedTasks) ? completedTasks : []);
+  const isToday = today && day.toISOString().slice(0, 10) === today;
+
+  // Streak milestone detection — fires when user crosses a tier (7/14/30/100).
+  const streakDays = isToday ? computeRoutineStreak(logs?.routine || {}, today) : 0;
+  const pendingMilestone = useMemo(
+    () => isToday ? getPendingMilestone(streakDays) : null,
+    [isToday, streakDays]
+  );
+  const [milestoneDismissed, setMilestoneDismissed] = useState(0);
+  const dismissMilestone = () => {
+    if (pendingMilestone) setLastShownMilestone(pendingMilestone.days);
+    setMilestoneDismissed((n) => n + 1);
+  };
+  const showMilestone = pendingMilestone != null && milestoneDismissed === 0;
 
   // Sunday Recap — surfaces once per week. Persisted dismiss key tied to
   // ISO week so it doesn't re-show after manual dismiss.
@@ -45,7 +61,6 @@ export default function RoutineView({
   };
 
   // ─── Intelligence cards (only on today's view) ────────────────────────
-  const isToday = today && day.toISOString().slice(0, 10) === today;
   const recap = isToday ? buildYesterdayRecap(logs, today) : null;
   const checkinAlerts = isToday ? buildCheckinAlerts(logs) : [];
   const weightAlert = isToday ? buildWeightTrendAlert(logs, profile) : null;
@@ -373,6 +388,15 @@ export default function RoutineView({
       {/* Sunday recap — auto-surfaced once/week */}
       {showRecap && weekStats && (
         <WeeklyRecap stats={weekStats} onClose={dismissRecap} />
+      )}
+
+      {/* Streak milestone — fires once per tier crossing (7/14/30/100) */}
+      {showMilestone && (
+        <StreakMilestone
+          tier={pendingMilestone}
+          days={streakDays}
+          onClose={dismissMilestone}
+        />
       )}
     </div>
   );

@@ -50,6 +50,7 @@ import ResetConfirmModal from './components/ResetConfirmModal';
 import EmptyState from '../design/EmptyState';
 import { IllusGoals } from '../design/illustrations';
 import { DomainIcon } from '../design/icons';
+import AppSettings from './components/AppSettings';
 import { ToastProvider, useToast } from '../design/Toast';
 import { transitionView } from '../design/motion';
 import { haptics } from '../design/haptics';
@@ -106,6 +107,15 @@ function AppInner() {
     });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Apply user's stored reduced-motion preference on boot.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    try {
+      const stored = localStorage.getItem('adonis_reduced_motion') === '1';
+      document.documentElement.classList.toggle('adn-reduced-motion', stored);
+    } catch { /* noop */ }
   }, []);
 
   // Build protocol map from registry
@@ -583,6 +593,9 @@ function AppInner() {
                 </div>
               );
             })()}
+
+            {/* Feel & Feedback — sound + motion toggles */}
+            <AppSettings />
 
             {/* Re-run Setup — soft reset */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>

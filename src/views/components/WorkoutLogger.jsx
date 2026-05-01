@@ -4,6 +4,8 @@ import { s } from '../../design/styles';
 import { getProgram } from '../../protocols/body/workout/programs';
 import ExerciseDetail from './ExerciseDetail';
 import PRCelebration from './PRCelebration';
+import { sound } from '../../design/sound';
+import { haptics } from '../../design/haptics';
 
 // ─── Helpers (exported for testing) ────────────────────────────────────────
 
@@ -91,8 +93,15 @@ function ExerciseRow({ exercise, lastSession, previousPR, onSave }) {
       reps: r.reps === '' ? 0 : Number(r.reps),
       complete: !!r.complete,
     }));
-    onSave(sets, isNewPR(sets, previousPR));
+    const pr = isNewPR(sets, previousPR);
+    onSave(sets, pr);
     setSaved(true);
+    if (!pr) {
+      // PR sound is fired by PRCelebration on full-screen takeover.
+      // Non-PR saves get the standard success cue.
+      sound.success();
+      haptics.success();
+    }
   };
 
   const lastSummary = formatLastSession(lastSession);
@@ -144,7 +153,12 @@ function ExerciseRow({ exercise, lastSession, previousPR, onSave }) {
           />
           <button
             type="button"
-            onClick={() => updateRow(i, 'complete', !row.complete)}
+            onClick={() => {
+              const next = !row.complete;
+              if (next) { sound.toggleOn(); haptics.success(); }
+              else { sound.toggleOff(); haptics.light(); }
+              updateRow(i, 'complete', next);
+            }}
             aria-label={'Set ' + (i + 1) + ' complete'}
             style={{
               width: 24, height: 24, borderRadius: 6,
