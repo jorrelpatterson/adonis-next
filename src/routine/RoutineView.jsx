@@ -3,7 +3,9 @@ import { P, FN, FD, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
+import { useState } from 'react';
 import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel } from './intelligence';
+import { groupTasksByTimeBlock } from './group-by-time';
 
 const TONE_STYLES = {
   warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
@@ -175,7 +177,7 @@ export default function RoutineView({
         </div>
       )}
 
-      {/* Routine Items */}
+      {/* Routine Items — calendar view, grouped into time blocks */}
       {routine.scheduled.length === 0 ? (
         <div style={{ ...s.card, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 24, marginBottom: 8 }}>{'\u{1F3AF}'}</div>
@@ -183,134 +185,47 @@ export default function RoutineView({
           <div style={{ fontSize: 11, color: P.txD, marginTop: 4 }}>Add a goal to activate your routine</div>
         </div>
       ) : (
-        <div style={{ ...s.card, padding: 0, overflow: 'hidden' }}>
-          {routine.scheduled.map((task, i) => {
-            const isDone = completed.has(task.id);
-            const catColor = CAT_COLORS[task.category] || P.txD;
-            const catIcon = CAT_ICONS[task.category] || '';
-            const isRec = task.type === 'recommendation';
-            const isAuto = task.type === 'automated';
-            const isBrowse = task.type === 'browse';
-            const isTappable = task.type === 'check-in' && onTaskTap;
-
-            return (
-              <div key={task.id}
-                onClick={isTappable ? () => onTaskTap(task) : undefined}
-                style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 10,
-                  padding: '10px 14px',
-                  borderBottom: i < routine.scheduled.length - 1 ? '1px solid ' + P.bd : 'none',
-                  opacity: isDone ? 0.5 : isRec ? 0.7 : 1,
-                  background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
-                  cursor: isTappable ? 'pointer' : 'default',
-                }}>
-                {/* Indicator — checkbox for normal tasks, peptide icon for browse tasks */}
-                {isBrowse ? (
-                  <div style={{
-                    width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
-                    border: '1.5px dashed ' + P.gW + '66',
-                    background: 'transparent',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 10, color: P.gW,
-                  }}>
-                    {'→'}
-                  </div>
-                ) : (
-                <button
-                  onClick={(e) => {
-                    if (isAuto) return;
-                    if (isTappable) { e.stopPropagation(); onTaskTap(task); return; }
-                    onCheckTask && onCheckTask(task.id);
-                  }}
-                  style={{
-                    width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
-                    border: isDone ? 'none' : ('1.5px solid ' + (isAuto ? P.ok : catColor + '44')),
-                    background: isDone ? P.ok : isAuto ? P.ok + '22' : 'transparent',
-                    cursor: isAuto ? 'default' : 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 10, color: '#fff', fontFamily: FN,
-                  }}>
-                  {(isDone || isAuto) ? '\u2713' : ''}
-                </button>
-                )}
-
-                {/* Content */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {task.time && (
-                      <span style={{ fontSize: 10, color: P.txD, fontFamily: 'SF Mono, Monaco, monospace', minWidth: 52 }}>
-                        {task.time}
-                      </span>
-                    )}
-                    <span style={{
-                      fontSize: 13, fontWeight: 500,
-                      color: isDone ? P.txD : P.txS,
-                      textDecoration: isDone ? 'line-through' : 'none',
-                    }}>
-                      {catIcon ? catIcon + ' ' : ''}{task.title}
-                    </span>
-                    {task.category === 'training' && intensityLabel.label && (
-                      <span style={{
-                        fontSize: 8, padding: '2px 6px', borderRadius: 4,
-                        background: intensityLabel.color + '22', color: intensityLabel.color,
-                        fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
-                        marginLeft: 4,
-                      }}>
-                        {intensityLabel.icon} {intensityLabel.label}
-                      </span>
-                    )}
-                  </div>
-                  {task.subtitle && (
-                    <div style={{ fontSize: 10, color: P.txD, marginTop: 2, lineHeight: 1.4 }}>
-                      {task.subtitle}
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', gap: 6, marginTop: 3 }}>
-                    {task.goalTitle && (
-                      <span style={{
-                        fontSize: 8, padding: '1px 6px', borderRadius: 4,
-                        background: catColor + '11', color: catColor, fontWeight: 600,
-                      }}>
-                        {task.goalTitle}
-                      </span>
-                    )}
-                    {isAuto && (
-                      <span style={{
-                        fontSize: 8, padding: '1px 6px', borderRadius: 4,
-                        background: P.ok + '15', color: P.ok, fontWeight: 600,
-                      }}>
-                        automated
-                      </span>
-                    )}
-                    {isBrowse && (
-                      <span style={{
-                        fontSize: 8, padding: '1px 6px', borderRadius: 4,
-                        background: P.gW + '18', color: P.gW, fontWeight: 600,
-                      }}>
-                        Suggested · ${task.data?.price || '—'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Browse → button for peptide suggestion tasks */}
-                {isBrowse && task.data?.url && (
-                  <a href={task.data.url} target="_blank" rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                      flexShrink: 0,
-                      fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
-                      color: P.gW, textDecoration: 'none',
-                      border: '1px solid ' + P.gW + '44',
-                      padding: '4px 10px', borderRadius: 6,
-                      alignSelf: 'center',
-                    }}>
-                    Browse →
-                  </a>
-                )}
+        <div>
+          {groupTasksByTimeBlock(routine.scheduled).map(({ block, label, icon, items }) => (
+            <div key={block} style={{ marginBottom: 14 }}>
+              {/* Time block header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 4px', marginBottom: 6 }}>
+                <span style={{ fontSize: 12 }}>{icon}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: 'uppercase', color: P.gW }}>
+                  {label}
+                </span>
+                <div style={{ flex: 1, height: 1, background: P.bd, marginLeft: 4 }} />
               </div>
-            );
-          })}
+              <div style={{ ...s.card, padding: 0, overflow: 'hidden' }}>
+                {items.map((item, i) => {
+                  const isLast = i === items.length - 1;
+                  if (item.kind === 'group') {
+                    return (
+                      <CollapsibleGroup
+                        key={'group-' + item.category}
+                        item={item}
+                        isLast={isLast}
+                        completed={completed}
+                        onCheckTask={onCheckTask}
+                        intensityLabel={intensityLabel}
+                      />
+                    );
+                  }
+                  return (
+                    <TaskRow
+                      key={item.task.id}
+                      task={item.task}
+                      isLast={isLast}
+                      completed={completed}
+                      onCheckTask={onCheckTask}
+                      onTaskTap={onTaskTap}
+                      intensityLabel={intensityLabel}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -350,6 +265,216 @@ export default function RoutineView({
             <div key={i} style={{ fontSize: 12, color: P.txM, padding: '4px 0', lineHeight: 1.5 }}>
               {r.response?.message || r.message}
             </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── TaskRow ──────────────────────────────────────────────────────────────
+// Renders a single task. Handles all task types: normal (checkbox),
+// browse (Browse → button), check-in (taps to open modal), automated.
+function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLabel, indent = false }) {
+  const isDone = completed.has(task.id);
+  const catColor = CAT_COLORS[task.category] || P.txD;
+  const catIcon = CAT_ICONS[task.category] || '';
+  const isAuto = task.type === 'automated';
+  const isBrowse = task.type === 'browse';
+  const isTappable = task.type === 'check-in' && onTaskTap;
+
+  return (
+    <div
+      onClick={isTappable ? () => onTaskTap(task) : undefined}
+      style={{
+        display: 'flex', alignItems: 'flex-start', gap: 10,
+        padding: indent ? '8px 14px 8px 28px' : '10px 14px',
+        borderBottom: isLast ? 'none' : '1px solid ' + P.bd,
+        opacity: isDone ? 0.5 : 1,
+        background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
+        cursor: isTappable ? 'pointer' : 'default',
+      }}
+    >
+      {isBrowse ? (
+        <div style={{
+          width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
+          border: '1.5px dashed ' + P.gW + '66',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 10, color: P.gW,
+        }}>
+          {'→'}
+        </div>
+      ) : (
+        <button
+          onClick={(e) => {
+            if (isAuto) return;
+            if (isTappable) { e.stopPropagation(); onTaskTap(task); return; }
+            onCheckTask && onCheckTask(task.id);
+          }}
+          style={{
+            width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
+            border: isDone ? 'none' : ('1.5px solid ' + (isAuto ? P.ok : catColor + '44')),
+            background: isDone ? P.ok : isAuto ? P.ok + '22' : 'transparent',
+            cursor: isAuto ? 'default' : 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 10, color: '#fff', fontFamily: FN,
+          }}
+        >
+          {(isDone || isAuto) ? '✓' : ''}
+        </button>
+      )}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {task.time && (
+            <span style={{ fontSize: 10, color: P.txD, fontFamily: 'SF Mono, Monaco, monospace', minWidth: 52 }}>
+              {task.time}
+            </span>
+          )}
+          <span style={{
+            fontSize: 13, fontWeight: 500,
+            color: isDone ? P.txD : P.txS,
+            textDecoration: isDone ? 'line-through' : 'none',
+          }}>
+            {catIcon ? catIcon + ' ' : ''}{task.title}
+          </span>
+          {task.category === 'training' && intensityLabel && intensityLabel.label && (
+            <span style={{
+              fontSize: 8, padding: '2px 6px', borderRadius: 4,
+              background: intensityLabel.color + '22', color: intensityLabel.color,
+              fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+              marginLeft: 4,
+            }}>
+              {intensityLabel.icon} {intensityLabel.label}
+            </span>
+          )}
+        </div>
+        {task.subtitle && (
+          <div style={{ fontSize: 10, color: P.txD, marginTop: 2, lineHeight: 1.4 }}>
+            {task.subtitle}
+          </div>
+        )}
+        {(isAuto || isBrowse || task.goalTitle) && (
+          <div style={{ display: 'flex', gap: 6, marginTop: 3 }}>
+            {task.goalTitle && (
+              <span style={{
+                fontSize: 8, padding: '1px 6px', borderRadius: 4,
+                background: catColor + '11', color: catColor, fontWeight: 600,
+              }}>
+                {task.goalTitle}
+              </span>
+            )}
+            {isAuto && (
+              <span style={{
+                fontSize: 8, padding: '1px 6px', borderRadius: 4,
+                background: P.ok + '15', color: P.ok, fontWeight: 600,
+              }}>automated</span>
+            )}
+            {isBrowse && (
+              <span style={{
+                fontSize: 8, padding: '1px 6px', borderRadius: 4,
+                background: P.gW + '18', color: P.gW, fontWeight: 600,
+              }}>
+                Suggested · ${task.data?.price || '—'}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+      {isBrowse && task.data?.url && (
+        <a href={task.data.url} target="_blank" rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            flexShrink: 0,
+            fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+            color: P.gW, textDecoration: 'none',
+            border: '1px solid ' + P.gW + '44',
+            padding: '4px 10px', borderRadius: 6,
+            alignSelf: 'center',
+          }}>
+          Browse →
+        </a>
+      )}
+    </div>
+  );
+}
+
+// ─── CollapsibleGroup ─────────────────────────────────────────────────────
+// Renders a group header (e.g. "🔥 Training · Push Day · 60 min") that
+// expands to reveal each task in the group as an indented TaskRow.
+function CollapsibleGroup({ item, isLast, completed, onCheckTask, intensityLabel }) {
+  const [expanded, setExpanded] = useState(false);
+  const { summary, tasks, category } = item;
+  const doneCount = tasks.filter(t => completed.has(t.id)).length;
+  const allDone = doneCount === tasks.length && tasks.length > 0;
+
+  return (
+    <div style={{ borderBottom: isLast && !expanded ? 'none' : '1px solid ' + P.bd }}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '12px 14px',
+          width: '100%', background: 'transparent',
+          border: 'none', cursor: 'pointer', fontFamily: FN, textAlign: 'left',
+        }}
+      >
+        <div style={{
+          width: 20, height: 20, borderRadius: 10, flexShrink: 0,
+          border: '1.5px solid ' + (allDone ? P.ok : P.gW + '44'),
+          background: allDone ? P.ok : 'transparent',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 10, color: '#fff',
+        }}>
+          {allDone ? '✓' : (doneCount > 0 ? doneCount : '')}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 14 }}>{summary.icon}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>
+              {summary.title}
+            </span>
+            {category === 'training' && intensityLabel && intensityLabel.label && (
+              <span style={{
+                fontSize: 8, padding: '2px 6px', borderRadius: 4,
+                background: intensityLabel.color + '22', color: intensityLabel.color,
+                fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                marginLeft: 4,
+              }}>
+                {intensityLabel.icon} {intensityLabel.label}
+              </span>
+            )}
+            <span style={{
+              fontSize: 8, padding: '1px 6px', borderRadius: 4,
+              background: 'rgba(232,213,183,0.06)', color: P.txD, fontWeight: 600,
+              marginLeft: 'auto', flexShrink: 0,
+            }}>
+              {summary.count}
+            </span>
+          </div>
+          <div style={{ fontSize: 10, color: P.txD, marginTop: 2, lineHeight: 1.4 }}>
+            {summary.subtitle}
+          </div>
+        </div>
+        <span style={{
+          fontSize: 14, color: P.txD, flexShrink: 0,
+          transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s',
+        }}>
+          ›
+        </span>
+      </button>
+      {expanded && (
+        <div style={{ background: 'rgba(232,213,183,0.02)' }}>
+          {tasks.map((t, i) => (
+            <TaskRow
+              key={t.id}
+              task={t}
+              isLast={i === tasks.length - 1}
+              completed={completed}
+              onCheckTask={onCheckTask}
+              intensityLabel={intensityLabel}
+              indent
+            />
           ))}
         </div>
       )}
