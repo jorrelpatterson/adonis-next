@@ -190,6 +190,7 @@ export default function RoutineView({
             const catIcon = CAT_ICONS[task.category] || '';
             const isRec = task.type === 'recommendation';
             const isAuto = task.type === 'automated';
+            const isBrowse = task.type === 'browse';
             const isTappable = task.type === 'check-in' && onTaskTap;
 
             return (
@@ -203,7 +204,18 @@ export default function RoutineView({
                   background: isDone ? 'rgba(52,211,153,0.02)' : 'transparent',
                   cursor: isTappable ? 'pointer' : 'default',
                 }}>
-                {/* Checkbox */}
+                {/* Indicator — checkbox for normal tasks, peptide icon for browse tasks */}
+                {isBrowse ? (
+                  <div style={{
+                    width: 20, height: 20, borderRadius: 10, flexShrink: 0, marginTop: 1,
+                    border: '1.5px dashed ' + P.gW + '66',
+                    background: 'transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 10, color: P.gW,
+                  }}>
+                    {'→'}
+                  </div>
+                ) : (
                 <button
                   onClick={(e) => {
                     if (isAuto) return;
@@ -220,6 +232,7 @@ export default function RoutineView({
                   }}>
                   {(isDone || isAuto) ? '\u2713' : ''}
                 </button>
+                )}
 
                 {/* Content */}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -269,8 +282,32 @@ export default function RoutineView({
                         automated
                       </span>
                     )}
+                    {isBrowse && (
+                      <span style={{
+                        fontSize: 8, padding: '1px 6px', borderRadius: 4,
+                        background: P.gW + '18', color: P.gW, fontWeight: 600,
+                      }}>
+                        Suggested · ${task.data?.price || '—'}
+                      </span>
+                    )}
                   </div>
                 </div>
+
+                {/* Browse → button for peptide suggestion tasks */}
+                {isBrowse && task.data?.url && (
+                  <a href={task.data.url} target="_blank" rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      flexShrink: 0,
+                      fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                      color: P.gW, textDecoration: 'none',
+                      border: '1px solid ' + P.gW + '44',
+                      padding: '4px 10px', borderRadius: 6,
+                      alignSelf: 'center',
+                    }}>
+                    Browse →
+                  </a>
+                )}
               </div>
             );
           })}

@@ -76,6 +76,36 @@ describe('peptide protocol', () => {
     expect(state.stackNames).toEqual(['Tirz 10mg']);
   });
 
+  it('getTasks emits "browse" suggestion tasks when no active peptides + finder answers exist', () => {
+    const finderAnswers = {
+      optimizeFor: ['fat_loss'],
+      experience: 'beginner',
+      glp1Status: 'no',
+      budget: 'mid',
+      needleComfort: 'fine',
+    };
+    const state = peptideProtocol.getState({}, {}, { domain: 'body' }, finderAnswers);
+    const tasks = peptideProtocol.getTasks(state, {}, new Date('2026-05-01'));
+    expect(tasks.length).toBeGreaterThan(0);
+    expect(tasks.every(t => t.type === 'browse')).toBe(true);
+    expect(tasks[0].data.url).toMatch(/advncelabs\.com/);
+    expect(tasks[0].data.peptide).toBeDefined();
+  });
+
+  it('getTasks emits no tasks when no active peptides AND no finder answers', () => {
+    const state = peptideProtocol.getState({}, {}, { domain: 'body' }, {});
+    const tasks = peptideProtocol.getTasks(state, {}, new Date('2026-05-01'));
+    expect(tasks).toEqual([]);
+  });
+
+  it('getTasks emits dose tasks (not browse) when activePeptides is set', () => {
+    const profile = { activePeptides: [{ id: 9, name: 'Tirz 10mg', dose: '0.5mg/wk', freq: 'weekly', tod: 'morning' }] };
+    const state = peptideProtocol.getState(profile, {}, { domain: 'body' }, {});
+    const tasks = peptideProtocol.getTasks(state, profile, new Date('2026-04-06'));  // Monday
+    const browseTasks = tasks.filter(t => t.type === 'browse');
+    expect(browseTasks.length).toBe(0);
+  });
+
   it('getUpsells flags low supply', () => {
     const state = { supplyDaysLeft: 3, activeProduct: { name: 'Tirz', price: 99 } };
     const upsells = peptideProtocol.getUpsells(state, {}, {});

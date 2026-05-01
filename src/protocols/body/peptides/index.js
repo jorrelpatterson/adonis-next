@@ -2,6 +2,7 @@
 import { getPeptidesByGoal, PEPTIDES } from './catalog.js';
 import { getCheckinAverages } from '../../_system/checkin/selectors.js';
 import { getStackAdjustments } from './stack-adjustments.js';
+import { recommendStack } from './recommend-stack.js';
 
 // Returns the live peptide catalog if loaded into logs, otherwise falls back
 // to the static v2 catalog. The live catalog is populated on app mount by
@@ -52,7 +53,7 @@ const peptideProtocol = {
     return goal?.domain === 'body';
   },
 
-  getState(profile, logs, goal) {
+  getState(profile, logs, goal, protocolState) {
     const activePeptides = profile?.activePeptides || [];
     const stackNames = activePeptides.map(p => p.name).filter(Boolean);
     const checkinAverages = getCheckinAverages(logs);
@@ -64,13 +65,42 @@ const peptideProtocol = {
       activeProduct: profile?.activeProduct ?? null,
       checkinAverages,
       catalog,
+      // Peptide Finder answers (from onboarding) — used to surface
+      // "Browse →" suggestion tasks before user commits to a stack.
+      finderAnswers: protocolState || {},
     };
   },
 
   getTasks(state, profile, day) {
     const activePeptides = state?.activePeptides || [];
-    if (!activePeptides.length) return [];
 
+    // BROWSE MODE — user hasn't committed to peptides yet but has finder
+    // answers. Surface the recommended stack on the routine as "Browse →"
+    // tasks linking to advnce labs. Adonis recommends, advnce sells.
+    if (activePeptides.length === 0) {
+      const finder = state?.finderAnswers || {};
+      if (!finder.optimizeFor || !finder.optimizeFor.length) return [];
+      const catalog = state?.catalog || [];
+      const stack = recommendStack(finder, catalog);
+      return stack.map(({ peptide, reason }, i) => ({
+        id: 'peptide-browse-' + peptide.id,
+        title: '\u{1F489} ' + peptide.name,
+        subtitle: peptide.dose + ' · ' + reason,
+        type: 'browse',
+        category: 'peptide_rec',
+        time: peptide.tod || null,
+        priority: 4,
+        skippable: true,
+        data: {
+          peptide,
+          url: 'https://advncelabs.com/?q=' + encodeURIComponent(peptide.name),
+          inStock: peptide.inStock !== false,
+          price: peptide.price,
+        },
+      }));
+    }
+
+    // ACTIVE MODE — user has committed peptides; emit dose tasks
     const dayIdx = day.getUTCDay();
 
     return activePeptides
