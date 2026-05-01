@@ -6,6 +6,7 @@ import { recommendStack } from '../protocols/body/peptides/recommend-stack';
 import { PEPTIDES } from '../protocols/body/peptides/catalog';
 import WorkoutLogger from './components/WorkoutLogger';
 import FoodLogger from './components/FoodLogger';
+import WeightLogger from './components/WeightLogger';
 
 export default function BodyView({
   profile, protocolStates, logs, log,
@@ -31,6 +32,13 @@ export default function BodyView({
       <FoodLogger
         profile={profile}
         protocolStates={protocolStates}
+        logs={logs}
+        log={log}
+      />
+
+      {/* Weight Logger — daily weight + 14-day trend */}
+      <WeightLogger
+        profile={profile}
         logs={logs}
         log={log}
       />
