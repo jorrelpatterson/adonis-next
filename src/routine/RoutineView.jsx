@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel } from './intelligence';
 import { groupTasksByTimeBlock } from './group-by-time';
 import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
+import HomeDashboard from './HomeDashboard';
 
 const TONE_STYLES = {
   warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
@@ -34,6 +35,23 @@ export default function RoutineView({
 
   return (
     <div>
+      {/* Home Dashboard — greeting, protocol score, next-up, stat tiles, check-in dots, mood strip */}
+      {isToday && (
+        <HomeDashboard
+          profile={profile}
+          logs={logs}
+          today={today}
+          routine={routine}
+          completedTasks={completedTasks}
+          adaptive={adaptive}
+          day={day}
+          onCheckinTap={() => {
+            const checkinTask = routine?.scheduled?.find(t => t.type === 'check-in');
+            if (checkinTask && onTaskTap) onTaskTap(checkinTask);
+          }}
+        />
+      )}
+
       {/* Day Selector */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16 }}>
         {DS.map((label, i) => {
