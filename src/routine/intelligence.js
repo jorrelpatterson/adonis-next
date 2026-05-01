@@ -199,3 +199,104 @@ export function buildWeightTrendAlert(logs, profile) {
 
   return null;
 }
+
+/**
+ * Counts consecutive weeks (Mon-Sun) where the user logged at least one
+ * exercise. Returns the count.
+ *
+ * @param {Object} logs - state.logs
+ * @param {string} today - 'YYYY-MM-DD'
+ */
+export function countConsecutiveTrainingWeeks(logs, today) {
+  const exercise = (logs?.exercise || []).filter(e => e?.date);
+  if (exercise.length === 0) return 0;
+
+  // Bucket exercises by week start (Mon)
+  const weekStart = (dateStr) => {
+    const d = new Date(dateStr + 'T12:00:00Z');
+    const dow = d.getUTCDay() || 7;  // 1=Mon..7=Sun
+    d.setUTCDate(d.getUTCDate() - (dow - 1));
+    return d.toISOString().slice(0, 10);
+  };
+
+  const weeksWithTraining = new Set(exercise.map(e => weekStart(e.date)));
+
+  // Walk back from this week, counting consecutive weeks with training
+  let count = 0;
+  let cursor = new Date(weekStart(today) + 'T12:00:00Z');
+  while (true) {
+    const wk = cursor.toISOString().slice(0, 10);
+    if (weeksWithTraining.has(wk)) {
+      count++;
+      cursor.setUTCDate(cursor.getUTCDate() - 7);
+    } else {
+      break;
+    }
+    if (count > 52) break;  // safety
+  }
+  return count;
+}
+
+/**
+ * Suggest a deload week after 4+ consecutive training weeks. Returns
+ * an alert object compatible with the buildCheckinAlerts shape.
+ */
+export function buildDeloadAlert(logs, today) {
+  const weeks = countConsecutiveTrainingWeeks(logs, today);
+  if (weeks < 4) return null;
+  return {
+    tone: 'info',
+    icon: '\u{1F4A4}',
+    title: `Deload week recommended`,
+    body: `${weeks} weeks of consistent training — drop weight 30-40% and reduce volume this week. Your CNS will thank you.`,
+  };
+}
+
+/**
+ * Goal pace → workout intensity modifier.
+ *
+ * Compares current weight vs target weight (from goal) to deadline. If
+ * dramatically behind, suggest "extreme" intensity; if ahead, suggest
+ * "recovery" (back off). Returns one of: 'recovery'|'normal'|'high'|'extreme'.
+ *
+ * @param {Object} profile - has weight, goalW, targetDate
+ * @param {Object} logs - has weight log
+ * @param {string} today
+ */
+export function computeWorkoutIntensity(profile, logs, today) {
+  const current = Number(profile?.weight);
+  const goal = Number(profile?.goalW);
+  const deadline = profile?.targetDate;
+  if (!current || !goal || !deadline) return 'normal';
+
+  // Days from today to deadline
+  const todayDate = new Date(today);
+  const deadlineDate = new Date(deadline);
+  const daysLeft = Math.max(1, Math.round((deadlineDate - todayDate) / (1000 * 60 * 60 * 24)));
+
+  // Required weekly delta to hit goal
+  const lbsToGo = goal - current;  // negative if losing
+  const weeksLeft = Math.max(1, daysLeft / 7);
+  const reqWeeklyRate = lbsToGo / weeksLeft;
+  const absRequired = Math.abs(reqWeeklyRate);
+
+  // Determine if user is behind: required rate exceeds safe limits
+  const isLosing = goal < current;
+  const safeMax = isLosing ? 2.5 : 1.5;  // lbs/week
+
+  if (absRequired > safeMax * 1.6) return 'extreme';   // behind by a wide margin
+  if (absRequired > safeMax * 1.0) return 'high';      // behind, push harder
+  if (absRequired < safeMax * 0.3) return 'recovery';  // way ahead — back off
+  return 'normal';
+}
+
+const INTENSITY_LABELS = {
+  recovery: { label: 'RECOVERY',  icon: '\u{1F7E2}', color: '#34D399' },
+  normal:   { label: '',          icon: '',          color: null },
+  high:     { label: 'HIGH',      icon: '⚡',    color: '#E8D5B7' },
+  extreme:  { label: 'EXTREME',   icon: '\u{1F525}', color: '#EF4444' },
+};
+
+export function getIntensityLabel(intensity) {
+  return INTENSITY_LABELS[intensity] || INTENSITY_LABELS.normal;
+}

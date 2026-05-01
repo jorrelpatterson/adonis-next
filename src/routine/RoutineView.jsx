@@ -3,7 +3,7 @@ import { P, FN, FD, FM } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText } from '../design/components';
 import { CAT_COLORS, CAT_ICONS, DS } from '../design/constants';
-import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert } from './intelligence';
+import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel } from './intelligence';
 
 const TONE_STYLES = {
   warn: { border: 'rgba(245,158,11,0.18)', bg: 'rgba(245,158,11,0.05)', accent: '#F59E0B' },
@@ -24,6 +24,9 @@ export default function RoutineView({
   const recap = isToday ? buildYesterdayRecap(logs, today) : null;
   const checkinAlerts = isToday ? buildCheckinAlerts(logs) : [];
   const weightAlert = isToday ? buildWeightTrendAlert(logs, profile) : null;
+  const deloadAlert = isToday ? buildDeloadAlert(logs, today) : null;
+  const intensity = isToday ? computeWorkoutIntensity(profile, logs, today) : 'normal';
+  const intensityLabel = getIntensityLabel(intensity);
 
   return (
     <div>
@@ -124,7 +127,7 @@ export default function RoutineView({
       {/* Check-in alerts + weight trend */}
       {(checkinAlerts.length > 0 || weightAlert) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
-          {[weightAlert, ...checkinAlerts].filter(Boolean).map((alert, i) => {
+          {[weightAlert, deloadAlert, ...checkinAlerts].filter(Boolean).map((alert, i) => {
             const tone = TONE_STYLES[alert.tone] || TONE_STYLES.info;
             return (
               <div key={i} style={{
@@ -233,6 +236,16 @@ export default function RoutineView({
                     }}>
                       {catIcon ? catIcon + ' ' : ''}{task.title}
                     </span>
+                    {task.category === 'training' && intensityLabel.label && (
+                      <span style={{
+                        fontSize: 8, padding: '2px 6px', borderRadius: 4,
+                        background: intensityLabel.color + '22', color: intensityLabel.color,
+                        fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+                        marginLeft: 4,
+                      }}>
+                        {intensityLabel.icon} {intensityLabel.label}
+                      </span>
+                    )}
                   </div>
                   {task.subtitle && (
                     <div style={{ fontSize: 10, color: P.txD, marginTop: 2, lineHeight: 1.4 }}>

@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert } from '../intelligence.js';
+import {
+  buildYesterdayRecap, buildCheckinAlerts, buildWeightTrendAlert,
+  countConsecutiveTrainingWeeks, buildDeloadAlert, computeWorkoutIntensity, getIntensityLabel,
+} from '../intelligence.js';
 
 const TODAY = '2026-04-30';
 const YESTERDAY = '2026-04-29';
@@ -152,5 +155,103 @@ describe('buildWeightTrendAlert', () => {
     const alert = buildWeightTrendAlert(logs, {});
     // Without goalW, only "almost at goal" can fire (and won't, since goal is missing)
     expect(alert).toBeNull();
+  });
+});
+
+describe('countConsecutiveTrainingWeeks', () => {
+  it('returns 0 when no exercise logged', () => {
+    expect(countConsecutiveTrainingWeeks({ exercise: [] }, '2026-05-01')).toBe(0);
+    expect(countConsecutiveTrainingWeeks({}, '2026-05-01')).toBe(0);
+  });
+
+  it('counts 1 week when only this week has training', () => {
+    const logs = { exercise: [{ date: '2026-04-29', name: 'Bench' }] };
+    expect(countConsecutiveTrainingWeeks(logs, '2026-05-01')).toBe(1);
+  });
+
+  it('counts multiple consecutive weeks', () => {
+    const logs = { exercise: [
+      { date: '2026-04-08', name: 'A' },  // wk 1
+      { date: '2026-04-15', name: 'B' },  // wk 2
+      { date: '2026-04-22', name: 'C' },  // wk 3
+      { date: '2026-04-29', name: 'D' },  // wk 4 (this week)
+    ] };
+    expect(countConsecutiveTrainingWeeks(logs, '2026-05-01')).toBe(4);
+  });
+
+  it('breaks streak on missing week', () => {
+    const logs = { exercise: [
+      { date: '2026-04-08', name: 'A' },  // wk 1
+      // wk 2 missing
+      { date: '2026-04-22', name: 'C' },  // wk 3
+      { date: '2026-04-29', name: 'D' },  // wk 4 (this week)
+    ] };
+    expect(countConsecutiveTrainingWeeks(logs, '2026-05-01')).toBe(2);
+  });
+});
+
+describe('buildDeloadAlert', () => {
+  it('returns null below 4 weeks', () => {
+    const logs = { exercise: [
+      { date: '2026-04-22', name: 'A' },
+      { date: '2026-04-29', name: 'B' },
+    ] };
+    expect(buildDeloadAlert(logs, '2026-05-01')).toBeNull();
+  });
+
+  it('fires at 4+ consecutive weeks', () => {
+    const logs = { exercise: [
+      { date: '2026-04-08', name: 'A' },
+      { date: '2026-04-15', name: 'B' },
+      { date: '2026-04-22', name: 'C' },
+      { date: '2026-04-29', name: 'D' },
+    ] };
+    const alert = buildDeloadAlert(logs, '2026-05-01');
+    expect(alert).not.toBeNull();
+    expect(/deload/i.test(alert.title)).toBe(true);
+  });
+});
+
+describe('computeWorkoutIntensity', () => {
+  it('returns "normal" without enough goal data', () => {
+    expect(computeWorkoutIntensity({}, {}, '2026-05-01')).toBe('normal');
+    expect(computeWorkoutIntensity({ weight: 200 }, {}, '2026-05-01')).toBe('normal');
+  });
+
+  it('returns "extreme" when behind by wide margin', () => {
+    // Need to lose 50 lbs in 2 weeks → 25 lbs/wk required (way over 2.5 limit)
+    const profile = { weight: 220, goalW: 170, targetDate: '2026-05-15' };
+    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('extreme');
+  });
+
+  it('returns "high" when moderately behind', () => {
+    // Need to lose 12 lbs in 4 weeks → 3 lbs/wk (over 2.5 safe but not extreme)
+    const profile = { weight: 200, goalW: 188, targetDate: '2026-05-29' };
+    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('high');
+  });
+
+  it('returns "normal" when on safe pace', () => {
+    // Lose 10 lbs in 12 weeks → 0.83 lbs/wk (well within safe)
+    const profile = { weight: 200, goalW: 190, targetDate: '2026-07-24' };
+    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('normal');
+  });
+
+  it('returns "recovery" when way ahead of pace', () => {
+    // Lose 1 lb in 24 weeks → 0.04 lbs/wk (way ahead)
+    const profile = { weight: 200, goalW: 199, targetDate: '2026-10-16' };
+    expect(computeWorkoutIntensity(profile, {}, '2026-05-01')).toBe('recovery');
+  });
+});
+
+describe('getIntensityLabel', () => {
+  it('returns label structure for known intensities', () => {
+    expect(getIntensityLabel('extreme').label).toBe('EXTREME');
+    expect(getIntensityLabel('high').label).toBe('HIGH');
+    expect(getIntensityLabel('recovery').label).toBe('RECOVERY');
+    expect(getIntensityLabel('normal').label).toBe('');
+  });
+
+  it('falls back to normal for unknown', () => {
+    expect(getIntensityLabel('weird').label).toBe('');
   });
 });
