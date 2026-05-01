@@ -7,6 +7,10 @@ export const DEFAULT_STATE = {
     cycleData: null,
     domains: ['body'],
     tier: 'free',
+    // Multi-select fitness pillars — drives stack picks, exercise emphasis,
+    // routine task surfacing. First entry is treated as primary (matches
+    // protocolStates.workout.primary). Seeded at onboarding completion.
+    fitnessPillars: [],
   },
   goals: [],
   protocolState: {

@@ -44,6 +44,9 @@ import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import PeptideFinderModal from '../views/components/PeptideFinderModal';
 import { WORKOUT_GOAL_TO_OPTIMIZE } from '../protocols/body/peptides/proto-stacks';
 import { validateAccessCode } from '../state/access-codes';
+import ProfileHeader, { getFitnessPillars } from './components/ProfileHeader';
+import FitnessPillarsModal from './components/FitnessPillarsModal';
+import ResetConfirmModal from './components/ResetConfirmModal';
 
 export default function App() {
   const { user, profile: authProfile, loading: authLoading, signOut } = useAuth();
@@ -69,8 +72,13 @@ export default function App() {
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
   const [showCheckin, setShowCheckin] = useState(false);
   const [showPeptideFinder, setShowPeptideFinder] = useState(false);
+  const [showProtocolPlan, setShowProtocolPlan] = useState(false);
+  const [showPillarsModal, setShowPillarsModal] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   // Onboarding state machine — 'profile' | 'calculating' | 'gameplan' | 'app'
   const [onboardingPhase, setOnboardingPhase] = useState('profile');
+  // Soft-reset flag — when true, OnboardingFlow re-runs even if profile is complete.
+  const [forceOnboarding, setForceOnboarding] = useState(false);
 
   // Load live peptide catalog from Supabase on mount.
   // Merges live commerce data (price, stock, active) onto v2's protocol metadata.
@@ -170,21 +178,31 @@ export default function App() {
   // ─── ONBOARDING SALES FUNNEL ──────────────────────────────────────────
   // Phase 1.5 port from v1: multi-step wizard → calculating animation →
   // game plan summary → main app. Conversion-critical UX.
-  if (isProfileIncomplete(profile) && onboardingPhase === 'profile') {
+  if ((isProfileIncomplete(profile) || forceOnboarding) && onboardingPhase === 'profile') {
     return (
       <OnboardingFlow
         initialProfile={profile}
         onComplete={(profileUpdates, protocolStateUpdates) => {
+          // Seed fitnessPillars from primary fitness goal if not already set.
+          // User can multi-select more from Profile tab afterward.
+          const primary = protocolStateUpdates?.workout?.primary || profileUpdates?.primary;
+          if (primary && (!profileUpdates.fitnessPillars || profileUpdates.fitnessPillars.length === 0)) {
+            profileUpdates = { ...profileUpdates, fitnessPillars: [primary] };
+          }
           setProfile(profileUpdates);
           for (const [protocolId, answers] of Object.entries(protocolStateUpdates)) {
             setProtocolState(protocolId, answers);
           }
           // Auto-create initial goals so the user lands in a populated routine
-          // instead of "No tasks yet · Add a goal."
-          const initialGoals = buildInitialGoals(profileUpdates, protocolStateUpdates);
-          for (const goal of initialGoals) {
-            addGoal(goal);
+          // instead of "No tasks yet · Add a goal." Skip on soft reset (existing
+          // goals would duplicate; user can add new ones manually if they want).
+          if (!forceOnboarding) {
+            const initialGoals = buildInitialGoals(profileUpdates, protocolStateUpdates);
+            for (const goal of initialGoals) {
+              addGoal(goal);
+            }
           }
+          setForceOnboarding(false);
           setOnboardingPhase('calculating');
         }}
       />
@@ -287,38 +305,77 @@ export default function App() {
           <InsightsView profile={profile} logs={logs} />
         ) : activeTab === 'profile' ? (
           <div>
-            <H t="Profile" sub={profile.name || user.email || 'Set up your profile'} />
+            <H t="Profile" sub={null} />
+
+            {/* Header summary card — avatar, name, pillars, stat grid + View My Protocol CTA */}
+            <ProfileHeader
+              profile={profile}
+              protocolStates={protocolStates}
+              goals={goals}
+              onViewProtocol={() => setShowProtocolPlan(true)}
+              onEditPillars={() => setShowPillarsModal(true)}
+            />
 
             {/* Account */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Account</div>
-              <div style={{ fontSize: 13, color: P.txS, marginBottom: 8 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 8 }}>Account</div>
+              <div style={{ fontSize: 13, color: P.txS, marginBottom: 10, wordBreak: 'break-all' }}>
                 {user.email}
               </div>
-              <div style={{ fontSize: 10, color: P.txD, marginBottom: 10 }}>
-                Tier: <span style={{ fontWeight: 700, color: tierInfo.color }}>{tierInfo.name}</span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <div style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  padding: '8px 12px', borderRadius: 8,
+                  background: 'rgba(52,211,153,0.05)', border: '1px solid rgba(52,211,153,0.2)',
+                  fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase',
+                  color: P.ok,
+                }}>
+                  <span style={{ fontSize: 12 }}>{'☁️'}</span>
+                  Synced
+                </div>
+                <button
+                  onClick={signOut}
+                  style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px', minHeight: 36 }}
+                >
+                  Log Out
+                </button>
               </div>
-              <button
-                onClick={signOut}
-                style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px', minHeight: 32 }}
-              >
-                Sign out
-              </button>
             </div>
 
-            {/* Subscription tier upgrade — show only if not already at Elite */}
-            {profile.tier !== 'elite' && (
-              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 8 }}>
-                  {profile.tier === 'pro' ? 'Upgrade to Elite' : 'Upgrade'}
+            {/* Subscription card — tier name + feature chips + upgrade buttons + redeem */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 6 }}>
+                Subscription
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 10 }}>
+                <span style={{ fontFamily: FD, fontSize: 22, fontWeight: 300, fontStyle: 'italic', color: tierInfo.color }}>
+                  {tierInfo.name}
+                </span>
+                {tierInfo.price > 0 && (
+                  <span style={{ fontSize: 11, color: P.txD }}>${tierInfo.price}/mo</span>
+                )}
+              </div>
+              {tierInfo.features?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                  {tierInfo.features.map((f, i) => (
+                    <span key={i} style={{
+                      fontSize: 10, padding: '4px 10px', borderRadius: 100,
+                      background: 'rgba(232,213,183,0.04)', border: '1px solid ' + P.bd,
+                      color: P.txM,
+                    }}>
+                      {'✓'} {f}
+                    </span>
+                  ))}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {profile.tier !== 'pro' && profile.tier !== 'elite' && (
+              )}
+              {profile.tier !== 'elite' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+                  {profile.tier !== 'pro' && (
                     <button
                       onClick={() => redirectToCheckout('pro', user)}
                       style={{ ...s.btn, ...s.pri, width: '100%', justifyContent: 'space-between' }}
                     >
-                      <span>Pro · all 8 domains</span>
+                      <span>Upgrade to Pro</span>
                       <span style={{ opacity: 0.7 }}>$14.99/mo</span>
                     </button>
                   )}
@@ -330,64 +387,54 @@ export default function App() {
                       borderColor: 'rgba(184,196,208,0.3)',
                     }}
                   >
-                    <span>Elite · adaptive engine + AI</span>
+                    <span>{profile.tier === 'pro' ? 'Upgrade to Elite' : 'Elite · adaptive engine + AI'}</span>
                     <span style={{ color: P.txD }}>$29.99/mo</span>
                   </button>
                 </div>
-                <div style={{ fontSize: 10, color: P.txD, marginTop: 8, lineHeight: 1.5 }}>
-                  Cancel anytime. Tier updates automatically after payment.
-                </div>
+              )}
+              {/* Inline access code */}
+              <div style={{ display: 'flex', gap: 6 }}>
+                <input
+                  value={accessCodeInput}
+                  onChange={e => setAccessCodeInput(e.target.value)}
+                  style={{ ...s.inp, flex: 1, fontSize: 12 }}
+                  placeholder="Have a code?"
+                />
+                <button onClick={handleAccessCode} style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px' }}>
+                  Redeem
+                </button>
               </div>
-            )}
+              {accessCodeMsg && (
+                <div style={{ fontSize: 10, color: accessCodeMsg.includes('Activated') ? P.ok : P.err, marginTop: 6 }}>
+                  {accessCodeMsg}
+                </div>
+              )}
+            </div>
 
-            {/* Name */}
+            {/* Profile basics */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 10 }}>Profile</div>
               <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Name</label>
               <input
                 value={profile.name || ''}
                 onChange={e => setProfile({ name: e.target.value })}
-                style={{ ...s.inp, width: '100%' }}
+                style={{ ...s.inp, width: '100%', marginBottom: 10 }}
                 placeholder="Your name"
+              />
+              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Current Weight (lbs)</label>
+              <input
+                type="number"
+                value={profile.weight || ''}
+                onChange={e => setProfile({ weight: e.target.value })}
+                style={{ ...s.inp, width: '100%' }}
+                placeholder="210"
               />
             </div>
 
-            {/* Body Fitness Goal — editable. Drives workout program + meal plan + peptide stack. */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>
-                Body Fitness Goal
-              </label>
-              <div style={{ fontSize: 9, color: P.txD, marginBottom: 8, lineHeight: 1.5 }}>
-                Drives workout split, calorie target, and peptide stack. Change this to switch protocols.
-              </div>
-              <select
-                value={protocolStates?.workout?.primary || profile?.primary || 'Wellness'}
-                onChange={(e) => {
-                  const newGoal = e.target.value;
-                  setProtocolState('workout', { primary: newGoal });
-                  // Sync peptide stack — flipping fitness goal also flips
-                  // the recommended stack (SHRED → SCULPT etc.) so Body
-                  // tab + routine browse tasks update immediately.
-                  const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newGoal];
-                  if (optimizeFor) {
-                    // Clear any manual stack pick so the new fitness goal drives
-                    // the resolver (otherwise selectedStackId would override).
-                    setProtocolState('peptides', { optimizeFor, selectedStackId: undefined });
-                  }
-                }}
-                style={{ ...s.sel, width: '100%' }}
-              >
-                <option value="Fat Loss">Lose fat</option>
-                <option value="Muscle Gain">Build muscle</option>
-                <option value="Recomposition">Recomp (lose fat + gain muscle)</option>
-                <option value="Aesthetics">Aesthetics</option>
-                <option value="Wellness">General wellness</option>
-              </select>
-            </div>
-
-            {/* Active Goals — list with delete */}
+            {/* Your Goals */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <label style={{ fontSize: 10, fontWeight: 600, color: P.txD }}>Your Goals</label>
+                <label style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD }}>Your Goals</label>
                 <button onClick={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
                   style={{ ...s.btn, ...s.out, fontSize: 10, padding: '4px 10px', minHeight: 26 }}>
                   + Add
@@ -405,7 +452,7 @@ export default function App() {
                         {g.title}
                       </div>
                       <div style={{ fontSize: 10, color: P.txD, marginTop: 1 }}>
-                        {g.domain} · {g.activeProtocols?.length || 0} protocols
+                        {g.domain} · {g.activeProtocols?.length || 0} protocols · {g.progress?.percent || 0}%
                       </div>
                     </div>
                     <button
@@ -427,39 +474,12 @@ export default function App() {
               )}
             </div>
 
-            {/* Retake Peptide Finder */}
-            {(profile.domains || []).includes('body') && (
-              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-                <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>
-                  Peptide Stack
-                </label>
-                <div style={{ fontSize: 11, color: P.txM, marginBottom: 8 }}>
-                  {protocolStates?.peptides?.optimizeFor?.length
-                    ? `Configured for: ${protocolStates.peptides.optimizeFor.slice(0, 3).join(', ').replace(/_/g, ' ')}`
-                    : 'Take the Peptide Finder to get a personalized stack'}
-                </div>
-                <button onClick={() => setShowPeptideFinder(true)}
-                  style={{ ...s.btn, ...s.out, fontSize: 11, padding: '6px 12px', minHeight: 30 }}>
-                  Retake Peptide Finder
-                </button>
+            {/* Active Domains */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <label style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, display: 'block', marginBottom: 8 }}>Active Protocols</label>
+              <div style={{ fontSize: 10, color: P.txD, marginBottom: 10, lineHeight: 1.5 }}>
+                Tap to enable or disable domains
               </div>
-            )}
-
-            {/* Weight */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Current Weight (lbs)</label>
-              <input
-                type="number"
-                value={profile.weight || ''}
-                onChange={e => setProfile({ weight: e.target.value })}
-                style={{ ...s.inp, width: '100%' }}
-                placeholder="210"
-              />
-            </div>
-
-            {/* Domains */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 8 }}>Active Domains</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                 {DOMAINS.map(d => {
                   const isActive = (profile.domains || []).includes(d.id);
@@ -485,67 +505,42 @@ export default function App() {
               </div>
             </div>
 
-            {/* Access Code */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Access Code</label>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  value={accessCodeInput}
-                  onChange={e => setAccessCodeInput(e.target.value)}
-                  style={{ ...s.inp, flex: 1 }}
-                  placeholder="Enter code"
-                />
-                <button onClick={handleAccessCode} style={{ ...s.pri, padding: '8px 16px' }}>
-                  Apply
+            {/* Retake Peptide Finder */}
+            {(profile.domains || []).includes('body') && (
+              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                <label style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, display: 'block', marginBottom: 4 }}>
+                  Peptide Stack
+                </label>
+                <div style={{ fontSize: 11, color: P.txM, marginBottom: 8 }}>
+                  {protocolStates?.peptides?.optimizeFor?.length
+                    ? `Configured for: ${protocolStates.peptides.optimizeFor.slice(0, 3).join(', ').replace(/_/g, ' ')}`
+                    : 'Take the Peptide Finder to get a personalized stack'}
+                </div>
+                <button onClick={() => setShowPeptideFinder(true)}
+                  style={{ ...s.btn, ...s.out, fontSize: 11, padding: '6px 12px', minHeight: 30 }}>
+                  Retake Peptide Finder
                 </button>
               </div>
-              {accessCodeMsg && (
-                <div style={{ fontSize: 11, color: accessCodeMsg.includes('Activated') ? P.ok : P.err, marginTop: 6 }}>
-                  {accessCodeMsg}
-                </div>
-              )}
-            </div>
+            )}
 
-            {/* Tier Info */}
+            {/* Re-run Setup — soft reset */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Current Tier</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 16, fontWeight: 700, color: tierInfo.color }}>{tierInfo.name}</span>
-                {tierInfo.price > 0 && <span style={{ fontSize: 11, color: P.txD }}>${tierInfo.price}/mo</span>}
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 6 }}>Reset</div>
+              <div style={{ fontSize: 11, color: P.txM, marginBottom: 10, lineHeight: 1.5 }}>
+                Re-run onboarding from scratch. Your weight history, food logs, and PRs are preserved — only your profile answers get overwritten.
               </div>
-              <div style={{ marginTop: 8 }}>
-                {tierInfo.features.map((f, i) => (
-                  <div key={i} style={{ fontSize: 11, color: P.txM, padding: '2px 0' }}>
-                    {'✓'} {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Active Goals */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 8 }}>Active Goals ({activeGoals.length})</div>
-              {activeGoals.length === 0 ? (
-                <div style={{ fontSize: 11, color: P.txD }}>No active goals</div>
-              ) : activeGoals.map(g => (
-                <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid ' + P.bd }}>
-                  <div>
-                    <div style={{ fontSize: 12, color: P.txS }}>{g.title}</div>
-                    <div style={{ fontSize: 9, color: P.txD }}>{g.domain} {'·'} {g.activeProtocols?.length || 0} protocols</div>
-                  </div>
-                  <span style={{ fontSize: 11, color: P.gW }}>{g.progress?.percent || 0}%</span>
-                </div>
-              ))}
-            </div>
-
-            {/* System Status */}
-            <div style={{ ...s.card, padding: 14 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>System Status</div>
-              <div style={{ fontSize: 10, color: P.txD, lineHeight: 1.8 }}>
-                Protocols: {getAllProtocols().length} registered<br />
-                Goals: {goals.length} ({activeGoals.length} active)<br />
-                Engine: active
-              </div>
+              <button
+                onClick={() => setShowResetConfirm(true)}
+                style={{
+                  ...s.btn, width: '100%', justifyContent: 'center',
+                  background: 'transparent',
+                  border: '1px solid rgba(245,158,11,0.3)',
+                  color: P.warn || '#F59E0B',
+                  fontSize: 12, fontWeight: 600,
+                }}
+              >
+                Reset & Start Over
+              </button>
             </div>
           </div>
         ) : (
@@ -607,6 +602,64 @@ export default function App() {
           onSave={(answers) => setProtocolState('peptides', answers)}
           onClose={() => setShowPeptideFinder(false)}
         />
+      )}
+
+      {/* Fitness pillars editor */}
+      {showPillarsModal && (
+        <FitnessPillarsModal
+          initial={getFitnessPillars(profile, protocolStates)}
+          onSave={(pillars) => {
+            setProfile({ fitnessPillars: pillars });
+            // Sync primary fitness goal — first pillar drives workout split + macros + stack.
+            const newPrimary = pillars[0];
+            if (newPrimary) {
+              setProtocolState('workout', { primary: newPrimary });
+              const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newPrimary];
+              if (optimizeFor) {
+                setProtocolState('peptides', { optimizeFor, selectedStackId: undefined });
+              }
+            }
+          }}
+          onClose={() => setShowPillarsModal(false)}
+        />
+      )}
+
+      {/* Reset confirmation */}
+      {showResetConfirm && (
+        <ResetConfirmModal
+          onConfirm={() => {
+            setForceOnboarding(true);
+            setOnboardingPhase('profile');
+          }}
+          onClose={() => setShowResetConfirm(false)}
+        />
+      )}
+
+      {/* View My Protocol overlay — re-shows the Game Plan summary */}
+      {showProtocolPlan && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 1000,
+          background: P.bg,
+        }}>
+          <button
+            onClick={() => setShowProtocolPlan(false)}
+            aria-label="Close"
+            style={{
+              position: 'fixed', top: 16, left: 16, zIndex: 1001,
+              width: 40, height: 40, borderRadius: 20,
+              background: 'rgba(14,16,22,0.7)', border: '1px solid ' + P.bd,
+              color: P.txS, fontSize: 18, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            ×
+          </button>
+          <GamePlanScreen
+            profile={profile}
+            protocolStates={protocolStates}
+            onStart={() => setShowProtocolPlan(false)}
+          />
+        </div>
       )}
     </div>
   );
