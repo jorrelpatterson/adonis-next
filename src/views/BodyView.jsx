@@ -12,6 +12,8 @@ import FoodLogger from './components/FoodLogger';
 import WeightLogger from './components/WeightLogger';
 import EmptyState from '../design/EmptyState';
 import { IllusPeptides } from '../design/illustrations';
+import { sound } from '../design/sound';
+import { haptics } from '../design/haptics';
 
 const SUB_TABS = [
   { id: 'peptides', label: 'Peptides', icon: '\u{1F489}' },
@@ -106,6 +108,9 @@ function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
       // Explicit pick — bypasses goal/budget resolution in getStackForFinder.
       // Cleared whenever the user retakes the Peptide Finder.
       setProtocolState('peptides', { selectedStackId: stack.id });
+      sound.success();
+      haptics.success();
+      setPane('protocol');  // hop back to the stack view so user sees the swap
     }
   };
 
@@ -167,8 +172,10 @@ function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
 
 // ─── Protocol pane (active stack detail) ──────────────────────────────────
 function ProtocolPane({ namedStack, stackPeptides }) {
+  // Key by stack id so React remounts on switch — triggers .adn-reveal
+  // stagger animation, giving a fade-cross between stacks instead of a snap.
   return (
-    <div>
+    <div key={namedStack?.id || 'none'} className="adn-reveal">
       {/* Stack header */}
       <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>

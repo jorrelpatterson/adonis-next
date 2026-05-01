@@ -14,6 +14,8 @@ import WeeklyRecap, { isRecapDay, buildWeekStats } from '../views/components/Wee
 import StreakMilestone, { getPendingMilestone, setLastShownMilestone } from '../views/components/StreakMilestone';
 import { computeRoutineStreak } from './streak';
 import ProgressBar from '../design/ProgressBar';
+import { haptics } from '../design/haptics';
+import { sound } from '../design/sound';
 import ExerciseDetail from '../views/components/ExerciseDetail';
 
 const TONE_STYLES = {
@@ -89,24 +91,42 @@ export default function RoutineView({
         />
       )}
 
-      {/* Day Selector */}
+      {/* Day Selector — premium gradient pill on active day */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16 }}>
         {DS.map((label, i) => {
           const isSelected = i === dayIdx;
           const d = new Date(day);
           d.setDate(d.getDate() + (i - dayIdx));
+          const dateNum = d.getDate();
           return (
-            <button key={i} onClick={() => onDayChange && onDayChange(d)}
+            <button key={i} onClick={() => {
+              if (!isSelected) { haptics.light(); sound.tap(); }
+              onDayChange && onDayChange(d);
+            }}
               style={{
-                width: 36, height: 36, borderRadius: 18,
-                border: isSelected ? '1.5px solid ' + P.gW : '1px solid ' + P.bd,
-                background: isSelected ? 'rgba(232,213,183,0.08)' : 'transparent',
-                color: isSelected ? P.gW : P.txD,
-                fontSize: 12, fontWeight: isSelected ? 700 : 500,
-                cursor: 'pointer', fontFamily: FN,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 40, height: 52, borderRadius: 20,
+                border: isSelected ? 'none' : '1px solid ' + P.bd,
+                background: isSelected
+                  ? 'linear-gradient(180deg, #E8D5B7, #C9B89A)'
+                  : 'rgba(232,213,183,0.025)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                color: isSelected ? '#0A0B0E' : P.txD,
+                fontSize: 11, fontWeight: isSelected ? 700 : 500,
+                cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace',
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                gap: 1,
+                boxShadow: isSelected
+                  ? '0 6px 20px rgba(232,213,183,0.3), 0 1px 0 0 rgba(255,255,255,0.3) inset'
+                  : '0 1px 0 0 rgba(255,255,255,0.02) inset',
+                fontVariantNumeric: 'tabular-nums',
               }}>
-              {label}
+              <span style={{ fontSize: 8, letterSpacing: 1, opacity: isSelected ? 0.7 : 0.6, fontWeight: 700 }}>
+                {label}
+              </span>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>
+                {dateNum}
+              </span>
             </button>
           );
         })}
