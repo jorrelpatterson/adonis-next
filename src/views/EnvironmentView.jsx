@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { P, FN, FM, grad } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
+import ProgressBar from '../design/ProgressBar';
 
 // 6 areas, 6 items each = 36 total. Order matches the spec.
 // `priorityKey` aligns with onboarding priorityArea values
@@ -403,22 +404,22 @@ export default function EnvironmentView({
         <div style={{ ...s.card, padding: 14, ...sectionGap }}>
           <div style={labStyle}>Goals</div>
           {domainGoals.map((g) => (
-            <div key={g.id} style={{ padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
+            <div key={g.id} style={{ padding: '10px 0', borderBottom: '1px solid ' + P.bd }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>{g.title}</div>
-                <div style={{ fontFamily: FM, fontSize: 11, fontWeight: 700, color: P.gW }}>
+                <div style={{ fontFamily: FM, fontSize: 11, fontWeight: 700, color: P.gW, fontVariantNumeric: 'tabular-nums' }}>
                   {g.progress?.percent || 0}%
                 </div>
               </div>
-              <div style={{ marginTop: 4, height: 3, borderRadius: 2, background: 'rgba(232,213,183,0.08)' }}>
-                <div style={{
-                  height: '100%', borderRadius: 2,
-                  background: 'linear-gradient(90deg, ' + P.gW + ', ' + P.ok + ')',
-                  width: (g.progress?.percent || 0) + '%',
-                  transition: 'width .5s',
-                }} />
+              <div style={{ marginTop: 8 }}>
+                <ProgressBar
+                  value={g.progress?.percent || 0}
+                  max={100}
+                  color={(g.progress?.percent || 0) >= 75 ? P.ok : P.gW}
+                  height={4}
+                />
               </div>
-              <div style={{ fontSize: 10, color: P.txD, marginTop: 3 }}>
+              <div style={{ fontSize: 10, color: P.txD, marginTop: 6 }}>
                 {g.activeProtocols?.length || 0} protocols active
               </div>
             </div>

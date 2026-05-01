@@ -3,6 +3,7 @@ import React from 'react';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { H } from '../design/components';
+import ProgressBar from '../design/ProgressBar';
 import {
   SKIN_AM,
   SKIN_PM,
@@ -429,19 +430,20 @@ export default function ImageView({
         <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
           <div style={{ ...s.lab }}>Goals</div>
           {domainGoals.map((g) => (
-            <div key={g.id} style={{ padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
+            <div key={g.id} style={{ padding: '10px 0', borderBottom: '1px solid ' + P.bd }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>{g.title}</div>
-                <div style={{ fontSize: 11, color: P.gW }}>{g.progress?.percent || 0}%</div>
+                <div style={{ fontSize: 11, color: P.gW, fontVariantNumeric: 'tabular-nums', fontWeight: 700 }}>{g.progress?.percent || 0}%</div>
               </div>
-              <div style={{ marginTop: 4, height: 3, borderRadius: 2, background: 'rgba(232,213,183,0.08)' }}>
-                <div style={{
-                  height: '100%', borderRadius: 2,
-                  background: 'linear-gradient(90deg, ' + P.gW + ', ' + P.ok + ')',
-                  width: (g.progress?.percent || 0) + '%',
-                }} />
+              <div style={{ marginTop: 8 }}>
+                <ProgressBar
+                  value={g.progress?.percent || 0}
+                  max={100}
+                  color={(g.progress?.percent || 0) >= 75 ? P.ok : P.gW}
+                  height={4}
+                />
               </div>
-              <div style={{ fontSize: 10, color: P.txD, marginTop: 3 }}>
+              <div style={{ fontSize: 10, color: P.txD, marginTop: 6 }}>
                 {g.activeProtocols?.length || 0} protocols active
               </div>
             </div>

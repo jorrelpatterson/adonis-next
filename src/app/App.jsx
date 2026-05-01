@@ -203,17 +203,43 @@ function AppInner() {
 
   const activeGoals = goals.filter(g => g.status === 'active');
 
-  // AUTH GATE — show loading while session resolves, login screen if no user
+  // AUTH GATE — show a brand-aware boot splash while session resolves.
+  // Premium apps don't show "Loading..." — they show their identity.
   if (authLoading) {
     return (
-      <div style={{
+      <div className="adn-noise" style={{
         fontFamily: FN, background: P.bg, color: P.tx,
         position: 'fixed', inset: 0, display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, letterSpacing: 2, textTransform: 'uppercase',
-        color: P.txD,
+        gap: 14,
       }}>
-        Loading...
+        {/* Brand mark */}
+        <div style={{
+          width: 56, height: 56, borderRadius: 16,
+          background: 'rgba(14,16,22,0.7)',
+          border: '1px solid rgba(232,213,183,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 8px 32px rgba(232,213,183,0.08), 0 1px 0 0 rgba(255,255,255,0.04) inset',
+          animation: 'pulseGlow 2.5s ease-in-out infinite',
+        }}>
+          <span style={{ fontFamily: FD, fontSize: 30, fontWeight: 300, fontStyle: 'italic' }}>
+            <GradText>A</GradText>
+          </span>
+        </div>
+        <div style={{ fontFamily: FD, fontSize: 18, fontStyle: 'italic', fontWeight: 300, color: P.txS }}>
+          <GradText>Adonis</GradText>
+        </div>
+        <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{
+              width: 4, height: 4, borderRadius: 2,
+              background: 'rgba(232,213,183,0.4)',
+              animation: 'breathe 1.2s ease-in-out infinite',
+              animationDelay: `${i * 0.18}s`,
+            }} />
+          ))}
+        </div>
       </div>
     );
   }
