@@ -39,6 +39,7 @@ import GoalSetup from '../goals/GoalSetup';
 import RoutineView from '../routine/RoutineView';
 import TabNav from './TabNav';
 import CheckinModal from '../protocols/_system/checkin/CheckinModal';
+import PeptideFinderModal from '../views/components/PeptideFinderModal';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
   const [showCheckin, setShowCheckin] = useState(false);
+  const [showPeptideFinder, setShowPeptideFinder] = useState(false);
   // Onboarding state machine — 'profile' | 'calculating' | 'gameplan' | 'app'
   const [onboardingPhase, setOnboardingPhase] = useState('profile');
 
@@ -342,18 +344,87 @@ export default function App() {
               />
             </div>
 
-            {/* Primary Goal — derived from first active goal */}
+            {/* Body Fitness Goal — editable. Drives workout program + meal plan + peptide stack. */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Primary Goal</div>
-              <div style={{ fontSize: 13, color: P.txS }}>
-                {activeGoals.length > 0 ? activeGoals[0].title : 'Add a goal to get started'}
+              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>
+                Body Fitness Goal
+              </label>
+              <div style={{ fontSize: 9, color: P.txD, marginBottom: 8, lineHeight: 1.5 }}>
+                Drives workout split, calorie target, and peptide stack. Change this to switch protocols.
               </div>
-              {activeGoals.length > 0 && (
-                <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
-                  Set by your first active goal. Determines workout program + supplement stack.
+              <select
+                value={protocolStates?.workout?.primary || profile?.primary || 'Wellness'}
+                onChange={(e) => setProtocolState('workout', { primary: e.target.value })}
+                style={{ ...s.sel, width: '100%' }}
+              >
+                <option value="Fat Loss">Lose fat</option>
+                <option value="Muscle Gain">Build muscle</option>
+                <option value="Recomposition">Recomp (lose fat + gain muscle)</option>
+                <option value="Aesthetics">Aesthetics</option>
+                <option value="Wellness">General wellness</option>
+              </select>
+            </div>
+
+            {/* Active Goals — list with delete */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <label style={{ fontSize: 10, fontWeight: 600, color: P.txD }}>Your Goals</label>
+                <button onClick={() => { setGoalSetupDomain(null); setShowGoalSetup(true); }}
+                  style={{ ...s.btn, ...s.out, fontSize: 10, padding: '4px 10px', minHeight: 26 }}>
+                  + Add
+                </button>
+              </div>
+              {activeGoals.length === 0 ? (
+                <div style={{ fontSize: 11, color: P.txD, textAlign: 'center', padding: '8px 0' }}>
+                  No goals yet
                 </div>
+              ) : (
+                activeGoals.map(g => (
+                  <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: P.txS }}>
+                        {g.title}
+                      </div>
+                      <div style={{ fontSize: 10, color: P.txD, marginTop: 1 }}>
+                        {g.domain} · {g.activeProtocols?.length || 0} protocols
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (typeof window !== 'undefined' && window.confirm('Remove "' + g.title + '"?')) {
+                          removeGoal(g.id);
+                        }
+                      }}
+                      style={{
+                        background: 'transparent', border: 'none',
+                        color: P.txD, cursor: 'pointer', fontSize: 16, padding: '4px 8px',
+                      }}
+                      title="Remove goal"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))
               )}
             </div>
+
+            {/* Retake Peptide Finder */}
+            {(profile.domains || []).includes('body') && (
+              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>
+                  Peptide Stack
+                </label>
+                <div style={{ fontSize: 11, color: P.txM, marginBottom: 8 }}>
+                  {protocolStates?.peptides?.optimizeFor?.length
+                    ? `Configured for: ${protocolStates.peptides.optimizeFor.slice(0, 3).join(', ').replace(/_/g, ' ')}`
+                    : 'Take the Peptide Finder to get a personalized stack'}
+                </div>
+                <button onClick={() => setShowPeptideFinder(true)}
+                  style={{ ...s.btn, ...s.out, fontSize: 11, padding: '6px 12px', minHeight: 30 }}>
+                  Retake Peptide Finder
+                </button>
+              </div>
+            )}
 
             {/* Weight */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
@@ -507,6 +578,15 @@ export default function App() {
         <CheckinModal
           onSave={handleSaveCheckin}
           onClose={() => setShowCheckin(false)}
+        />
+      )}
+
+      {/* Peptide Finder retake modal */}
+      {showPeptideFinder && (
+        <PeptideFinderModal
+          initial={protocolStates.peptides}
+          onSave={(answers) => setProtocolState('peptides', answers)}
+          onClose={() => setShowPeptideFinder(false)}
         />
       )}
     </div>

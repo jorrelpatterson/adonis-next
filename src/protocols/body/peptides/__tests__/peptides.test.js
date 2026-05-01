@@ -85,11 +85,42 @@ describe('peptide protocol', () => {
       needleComfort: 'fine',
     };
     const state = peptideProtocol.getState({}, {}, { domain: 'body' }, finderAnswers);
-    const tasks = peptideProtocol.getTasks(state, {}, new Date('2026-05-01'));
+    // Monday: weekly + 2x_week + daily peptides should all appear
+    const monday = new Date('2026-04-06T12:00:00Z');
+    const tasks = peptideProtocol.getTasks(state, {}, monday);
     expect(tasks.length).toBeGreaterThan(0);
     expect(tasks.every(t => t.type === 'browse')).toBe(true);
     expect(tasks[0].data.url).toMatch(/advncelabs\.com/);
     expect(tasks[0].data.peptide).toBeDefined();
+    expect(tasks[0].data.stackName).toBeDefined();
+  });
+
+  it('getTasks browse-mode FILTERS by frequency — weekly peptides only on Mon', () => {
+    const finderAnswers = { optimizeFor: ['fat_loss'], experience: 'intermediate', glp1Status: 'no', budget: 'mid', needleComfort: 'fine' };
+    const state = peptideProtocol.getState({}, {}, { domain: 'body' }, finderAnswers);
+
+    // Wednesday should have fewer items than Monday (no weekly Reta)
+    const wednesday = new Date('2026-04-08T12:00:00Z');
+    const monday = new Date('2026-04-06T12:00:00Z');
+
+    const wednesdayTasks = peptideProtocol.getTasks(state, {}, wednesday);
+    const mondayTasks = peptideProtocol.getTasks(state, {}, monday);
+
+    // Wednesday tasks <= Monday tasks (weekly peptides drop off)
+    expect(wednesdayTasks.length).toBeLessThanOrEqual(mondayTasks.length);
+    // No weekly peptides on Wednesday
+    const hasWeeklyOnWed = wednesdayTasks.some(t => t.data.peptide.freq === 'weekly');
+    expect(hasWeeklyOnWed).toBe(false);
+  });
+
+  it('getTasks browse-mode skips as_needed peptides (PT-141, Oxytocin)', () => {
+    const finderAnswers = { optimizeFor: ['libido'], glp1Status: 'no', budget: 'low' };  // → DRIVE stack
+    const state = peptideProtocol.getState({}, {}, { domain: 'body' }, finderAnswers);
+    const monday = new Date('2026-04-06T12:00:00Z');
+    const tasks = peptideProtocol.getTasks(state, {}, monday);
+    // DRIVE stack has PT-141 (as_needed) — should NOT appear on routine
+    const hasAsNeeded = tasks.some(t => t.data.peptide.freq === 'as_needed');
+    expect(hasAsNeeded).toBe(false);
   });
 
   it('getTasks emits no tasks when no active peptides AND no finder answers', () => {

@@ -79,30 +79,38 @@ const peptideProtocol = {
     // answers. Surface the curated NAMED STACK (SHRED/SCULPT/EDGE/etc.)
     // on the routine as "Browse →" tasks linking to advnce labs.
     // Adonis recommends, advnce sells.
+    //
+    // FILTERED BY FREQUENCY — only items due today appear on the routine.
+    // Weekly peptides (e.g. Retatrutide, Tirzepatide) only show on Mondays.
+    // 'as_needed' compounds (PT-141, Oxytocin) never appear automatically.
+    // The full stack is still visible on the Body tab as a reference.
     if (activePeptides.length === 0) {
       const finder = state?.finderAnswers || {};
       const stack = getStackForFinder(finder);
       if (!stack) return [];
       const catalog = state?.catalog || [];
+      const dayIdx = day.getUTCDay();
       const tasks = [];
-      stack.items.forEach((itemName, i) => {
+      stack.items.forEach((itemName) => {
         const peptide = findCatalogPeptide(itemName, catalog);
-        // Even if catalog match fails, still render a task — let user
-        // browse advnce labs by name
+        // No catalog match → can't determine freq → skip routine emission
+        // (still browseable from Body tab)
+        if (!peptide) return;
+        if (!pepShowsToday(peptide.freq, dayIdx)) return;
         tasks.push({
-          id: 'peptide-browse-' + (peptide?.id || itemName.replace(/\s/g, '-')),
+          id: 'peptide-browse-' + peptide.id,
           title: '\u{1F489} ' + itemName,
-          subtitle: stack.name + ' stack · ' + (peptide?.dose || 'See product page'),
+          subtitle: stack.name + ' stack · ' + (peptide.dose || 'See product page'),
           type: 'browse',
           category: 'peptide_rec',
-          time: peptide?.tod || null,
+          time: peptide.tod || null,
           priority: 4,
           skippable: true,
           data: {
-            peptide: peptide || { name: itemName },
+            peptide,
             url: 'https://advncelabs.com/?q=' + encodeURIComponent(itemName),
-            inStock: peptide ? peptide.inStock !== false : null,
-            price: peptide?.price,
+            inStock: peptide.inStock !== false,
+            price: peptide.price,
             stackName: stack.name,
             stackId: stack.id,
           },
