@@ -42,7 +42,7 @@ import RoutineView from '../routine/RoutineView';
 import TabNav from './TabNav';
 import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import PeptideFinderModal from '../views/components/PeptideFinderModal';
-import { WORKOUT_GOAL_TO_OPTIMIZE } from '../protocols/body/peptides/proto-stacks';
+import { WORKOUT_GOAL_TO_OPTIMIZE, getStackForFinder } from '../protocols/body/peptides/proto-stacks';
 import { validateAccessCode } from '../state/access-codes';
 import ProfileHeader, { getFitnessPillars } from './components/ProfileHeader';
 import FitnessPillarsModal from './components/FitnessPillarsModal';
@@ -505,23 +505,26 @@ export default function App() {
               </div>
             </div>
 
-            {/* Retake Peptide Finder */}
-            {(profile.domains || []).includes('body') && (
-              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-                <label style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, display: 'block', marginBottom: 4 }}>
-                  Peptide Stack
-                </label>
-                <div style={{ fontSize: 11, color: P.txM, marginBottom: 8 }}>
-                  {protocolStates?.peptides?.optimizeFor?.length
-                    ? `Configured for: ${protocolStates.peptides.optimizeFor.slice(0, 3).join(', ').replace(/_/g, ' ')}`
-                    : 'Take the Peptide Finder to get a personalized stack'}
+            {/* Peptide Stack — picker entry point */}
+            {(profile.domains || []).includes('body') && (() => {
+              const activeStack = getStackForFinder(protocolStates?.peptides);
+              return (
+                <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                  <label style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, display: 'block', marginBottom: 4 }}>
+                    Peptide Stack
+                  </label>
+                  <div style={{ fontSize: 11, color: P.txM, marginBottom: 8, lineHeight: 1.5 }}>
+                    {activeStack
+                      ? <>Active: <span style={{ color: activeStack.color, fontWeight: 700 }}>{activeStack.icon} {activeStack.name}</span> · {activeStack.items.length} compound{activeStack.items.length === 1 ? '' : 's'}</>
+                      : 'Take the Peptide Finder to get a personalized stack — 5 questions, ~1 min.'}
+                  </div>
+                  <button onClick={() => setShowPeptideFinder(true)}
+                    style={{ ...s.btn, ...s.out, fontSize: 11, padding: '6px 12px', minHeight: 30 }}>
+                    {activeStack ? 'Retake Peptide Finder' : 'Take Peptide Finder'}
+                  </button>
                 </div>
-                <button onClick={() => setShowPeptideFinder(true)}
-                  style={{ ...s.btn, ...s.out, fontSize: 11, padding: '6px 12px', minHeight: 30 }}>
-                  Retake Peptide Finder
-                </button>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Re-run Setup — soft reset */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
