@@ -52,6 +52,7 @@ import { IllusGoals } from '../design/illustrations';
 import { DomainIcon } from '../design/icons';
 import AppSettings from './components/AppSettings';
 import { ToastProvider, useToast } from '../design/Toast';
+import { ActionSheetProvider, useActionSheet } from '../design/ActionSheet';
 import { transitionView } from '../design/motion';
 import { haptics } from '../design/haptics';
 import { sound } from '../design/sound';
@@ -59,13 +60,16 @@ import { sound } from '../design/sound';
 export default function App() {
   return (
     <ToastProvider>
-      <AppInner />
+      <ActionSheetProvider>
+        <AppInner />
+      </ActionSheetProvider>
     </ToastProvider>
   );
 }
 
 function AppInner() {
   const toast = useToast();
+  const actionSheet = useActionSheet();
   const { user, profile: authProfile, loading: authLoading, signOut } = useAuth();
   const { state, addGoal, removeGoal, setProfile, log, updateGoal, setProtocolState } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
@@ -537,8 +541,15 @@ function AppInner() {
                       </div>
                     </div>
                     <button
-                      onClick={() => {
-                        if (typeof window !== 'undefined' && window.confirm('Remove "' + g.title + '"?')) {
+                      onClick={async () => {
+                        const ok = await actionSheet.confirm({
+                          title: 'Remove this goal?',
+                          message: `"${g.title}" will be archived. You can add it back anytime.`,
+                          confirmText: 'Remove',
+                          cancelText: 'Keep it',
+                          destructive: true,
+                        });
+                        if (ok) {
                           removeGoal(g.id);
                           toast.info(`Removed: ${g.title}`);
                         }

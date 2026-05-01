@@ -14,6 +14,7 @@ import EmptyState from '../design/EmptyState';
 import { IllusPeptides } from '../design/illustrations';
 import { sound } from '../design/sound';
 import { haptics } from '../design/haptics';
+import { useActionSheet } from '../design/ActionSheet';
 
 const SUB_TABS = [
   { id: 'peptides', label: 'Peptides', icon: '\u{1F489}' },
@@ -95,6 +96,7 @@ export default function BodyView({ profile, protocolStates, setProtocolState, lo
 // ─── Peptides sub-tab ─────────────────────────────────────────────────────
 function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
   const [pane, setPane] = useState('protocol');  // protocol | stacks
+  const actionSheet = useActionSheet();
   const liveCatalog = (logs?.peptideCatalog && logs.peptideCatalog.length) ? logs.peptideCatalog : PEPTIDES;
   const namedStack = getStackForFinder(protocolStates?.peptides || {});
   const stackPeptides = namedStack
@@ -102,15 +104,17 @@ function PeptidesSection({ profile, protocolStates, setProtocolState, logs }) {
     : [];
   const totalAvailable = liveCatalog.length;
 
-  const switchToStack = (stack) => {
-    if (typeof window !== 'undefined' && !window.confirm('Switch to ' + stack.name + ' stack?')) return;
+  const switchToStack = async (stack) => {
+    const ok = await actionSheet.confirm({
+      title: `Switch to ${stack.name}?`,
+      message: `Your routine will update to use these ${stack.items.length} compounds. You can switch back anytime.`,
+      confirmText: 'Switch Stack',
+      cancelText: 'Cancel',
+    });
+    if (!ok) return;
     if (setProtocolState) {
-      // Explicit pick — bypasses goal/budget resolution in getStackForFinder.
-      // Cleared whenever the user retakes the Peptide Finder.
       setProtocolState('peptides', { selectedStackId: stack.id });
-      sound.success();
-      haptics.success();
-      setPane('protocol');  // hop back to the stack view so user sees the swap
+      setPane('protocol');
     }
   };
 
