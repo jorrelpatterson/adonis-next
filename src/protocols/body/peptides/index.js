@@ -3,6 +3,7 @@ import { getPeptidesByGoal, PEPTIDES } from './catalog.js';
 import { getCheckinAverages } from '../../_system/checkin/selectors.js';
 import { getStackAdjustments } from './stack-adjustments.js';
 import { recommendStack } from './recommend-stack.js';
+import { getStackForFinder, findCatalogPeptide } from './proto-stacks.js';
 
 // Returns the live peptide catalog if loaded into logs, otherwise falls back
 // to the static v2 catalog. The live catalog is populated on app mount by
@@ -75,29 +76,39 @@ const peptideProtocol = {
     const activePeptides = state?.activePeptides || [];
 
     // BROWSE MODE — user hasn't committed to peptides yet but has finder
-    // answers. Surface the recommended stack on the routine as "Browse →"
-    // tasks linking to advnce labs. Adonis recommends, advnce sells.
+    // answers. Surface the curated NAMED STACK (SHRED/SCULPT/EDGE/etc.)
+    // on the routine as "Browse →" tasks linking to advnce labs.
+    // Adonis recommends, advnce sells.
     if (activePeptides.length === 0) {
       const finder = state?.finderAnswers || {};
-      if (!finder.optimizeFor || !finder.optimizeFor.length) return [];
+      const stack = getStackForFinder(finder);
+      if (!stack) return [];
       const catalog = state?.catalog || [];
-      const stack = recommendStack(finder, catalog);
-      return stack.map(({ peptide, reason }, i) => ({
-        id: 'peptide-browse-' + peptide.id,
-        title: '\u{1F489} ' + peptide.name,
-        subtitle: peptide.dose + ' · ' + reason,
-        type: 'browse',
-        category: 'peptide_rec',
-        time: peptide.tod || null,
-        priority: 4,
-        skippable: true,
-        data: {
-          peptide,
-          url: 'https://advncelabs.com/?q=' + encodeURIComponent(peptide.name),
-          inStock: peptide.inStock !== false,
-          price: peptide.price,
-        },
-      }));
+      const tasks = [];
+      stack.items.forEach((itemName, i) => {
+        const peptide = findCatalogPeptide(itemName, catalog);
+        // Even if catalog match fails, still render a task — let user
+        // browse advnce labs by name
+        tasks.push({
+          id: 'peptide-browse-' + (peptide?.id || itemName.replace(/\s/g, '-')),
+          title: '\u{1F489} ' + itemName,
+          subtitle: stack.name + ' stack · ' + (peptide?.dose || 'See product page'),
+          type: 'browse',
+          category: 'peptide_rec',
+          time: peptide?.tod || null,
+          priority: 4,
+          skippable: true,
+          data: {
+            peptide: peptide || { name: itemName },
+            url: 'https://advncelabs.com/?q=' + encodeURIComponent(itemName),
+            inStock: peptide ? peptide.inStock !== false : null,
+            price: peptide?.price,
+            stackName: stack.name,
+            stackId: stack.id,
+          },
+        });
+      });
+      return tasks;
     }
 
     // ACTIVE MODE — user has committed peptides; emit dose tasks
