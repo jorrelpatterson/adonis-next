@@ -54,6 +54,9 @@ input, select, textarea { font-size: 16px !important; -webkit-text-size-adjust: 
 @keyframes particleDrift { 0%,100% { transform: translateY(0) rotate(0deg); opacity:0.35; } 50% { transform: translateY(-40px) rotate(180deg); opacity:0.8; } }
 @keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(25px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
 
+.adn-orb-float { animation: orbFloat 20s ease-in-out infinite; }
+.adn-orb-float-alt { animation: orbFloat 25s ease-in-out infinite reverse; }
+
 .adn-particle { position:fixed; border-radius:50%; pointer-events:none; box-shadow: 0 0 6px currentColor; }
 .adn-particle-1 { width:5px; height:5px; animation: particleFloat 8s ease-in-out infinite; }
 .adn-particle-2 { width:4px; height:4px; animation: particleFloat 12s ease-in-out infinite 2s; }

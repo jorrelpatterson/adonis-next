@@ -33,6 +33,7 @@ const DOMAIN_VIEWS = {
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
+import AmbientBackdrop from '../design/AmbientBackdrop';
 import { DOMAINS, SUB_TIERS } from '../design/constants';
 import { buildDailyRoutine } from '../routine/pipeline';
 import { getAllProtocols } from '../protocols/registry';
@@ -211,9 +212,11 @@ export default function App() {
     <div className="adn-noise" style={{
       fontFamily: FN, background: P.bg, color: P.tx,
       position: 'fixed', inset: 0, overflowY: 'auto',
+      overflowX: 'hidden',
       paddingBottom: 80,
     }}>
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0' }}>
+      <AmbientBackdrop tab={activeTab} />
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0', position: 'relative', zIndex: 2 }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
