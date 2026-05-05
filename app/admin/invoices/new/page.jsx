@@ -34,6 +34,11 @@ export default function NewInvoicePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
+  const [customerSearchOpen, setCustomerSearchOpen] = useState(false);
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [customerResults, setCustomerResults] = useState([]);
+  const [customerSearching, setCustomerSearching] = useState(false);
+
   useEffect(() => {
     const q = query.trim();
     if (!q) { setResults([]); return; }
@@ -46,6 +51,49 @@ export default function NewInvoicePage() {
     }, 200);
     return () => clearTimeout(t);
   }, [query]);
+
+  useEffect(() => {
+    const q = customerQuery.trim();
+    if (!customerSearchOpen) return;
+    if (q.length < 2) { setCustomerResults([]); setCustomerSearching(false); return; }
+    setCustomerSearching(true);
+    const t = setTimeout(async () => {
+      const esc = encodeURIComponent(q);
+      const escLower = encodeURIComponent(q.toLowerCase());
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?or=(first_name.ilike.*${esc}*,last_name.ilike.*${esc}*,email.ilike.*${escLower}*,phone.ilike.*${esc}*)&select=first_name,last_name,email,phone,address,city,state,zip,created_at&order=created_at.desc&limit=30`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } },
+      );
+      const rows = r.ok ? await r.json() : [];
+      const seen = new Set();
+      const deduped = [];
+      for (const row of rows) {
+        const key = (row.email || '').toLowerCase() || (row.phone || '') || `${row.first_name}|${row.last_name}|${row.address}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(row);
+        if (deduped.length >= 8) break;
+      }
+      setCustomerResults(deduped);
+      setCustomerSearching(false);
+    }, 220);
+    return () => clearTimeout(t);
+  }, [customerQuery, customerSearchOpen]);
+
+  function pickCustomer(d) {
+    setCustomer({
+      name: `${d.first_name || ''} ${d.last_name || ''}`.trim(),
+      phone: d.phone || '',
+      email: d.email || '',
+      address: d.address || '',
+      city: d.city || '',
+      state: d.state || '',
+      zip: d.zip || '',
+    });
+    setCustomerSearchOpen(false);
+    setCustomerQuery('');
+    setCustomerResults([]);
+  }
 
   function addItem(p) {
     setItems([...items, { sku: p.sku, name: p.name, size: p.size, qty: 1, price: p.retail, stock: p.stock }]);
@@ -96,30 +144,6 @@ export default function NewInvoicePage() {
     else setError(body.error || 'create failed');
   }
 
-  async function lookupPastCustomer() {
-    const q = prompt('Look up past customer by phone or email:');
-    if (!q) return;
-    const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/orders?or=(phone.eq.${encodeURIComponent(q)},email.eq.${encodeURIComponent(q.toLowerCase())})&select=first_name,last_name,email,phone,address,city,state,zip&order=created_at.desc&limit=1`,
-      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } },
-    );
-    const data = r.ok ? await r.json() : [];
-    if (data.length) {
-      const d = data[0];
-      setCustomer({
-        name: `${d.first_name || ''} ${d.last_name || ''}`.trim(),
-        phone: d.phone || '',
-        email: d.email || '',
-        address: d.address || '',
-        city: d.city || '',
-        state: d.state || '',
-        zip: d.zip || '',
-      });
-    } else {
-      alert('No past customer found');
-    }
-  }
-
   return (
     <div className="admin-form-grid" style={{ flex: 1, maxWidth: 900, display: 'block' }}>
       <h1 className="admin-page-h1" style={cs.h1}>New Invoice</h1>
@@ -129,11 +153,52 @@ export default function NewInvoicePage() {
           <div style={cs.label}>Customer</div>
           <button
             style={{ ...cs.btn, ...cs.btnSecondary, padding: '5px 12px', fontSize: 10 }}
-            onClick={lookupPastCustomer}
+            onClick={() => {
+              setCustomerSearchOpen((v) => !v);
+              setCustomerQuery('');
+              setCustomerResults([]);
+            }}
           >
-            Pick past customer
+            {customerSearchOpen ? 'Close search' : 'Pick past customer'}
           </button>
         </div>
+        {customerSearchOpen && (
+          <div style={{ ...cs.search, marginBottom: 14 }}>
+            <input
+              autoFocus
+              style={cs.input}
+              placeholder="Search past customers by name, email, or phone…"
+              value={customerQuery}
+              onChange={(e) => setCustomerQuery(e.target.value)}
+            />
+            {customerQuery.trim().length >= 2 && (
+              <div style={cs.results}>
+                {customerSearching && customerResults.length === 0 && (
+                  <div style={{ ...cs.resultRow, color: '#7A7D88' }}>Searching…</div>
+                )}
+                {!customerSearching && customerResults.length === 0 && (
+                  <div style={{ ...cs.resultRow, color: '#7A7D88' }}>No matches</div>
+                )}
+                {customerResults.map((d, i) => {
+                  const name = `${d.first_name || ''} ${d.last_name || ''}`.trim() || '(no name)';
+                  return (
+                    <div key={i} style={cs.resultRow} onClick={() => pickCustomer(d)}>
+                      <strong>{name}</strong>{' '}
+                      <span style={{ color: '#7A7D88', fontFamily: 'monospace', fontSize: 11 }}>
+                        {[d.email, d.phone].filter(Boolean).join(' · ')}
+                      </span>
+                      {(d.city || d.state) && (
+                        <div style={{ color: '#7A7D88', fontSize: 11, marginTop: 2 }}>
+                          {[d.city, d.state].filter(Boolean).join(', ')}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
         <div className="admin-form-grid admin-form-grid-4" style={cs.row}>
           <div style={{ gridColumn: 'span 2' }}>
             <label style={cs.label}>Name</label>
