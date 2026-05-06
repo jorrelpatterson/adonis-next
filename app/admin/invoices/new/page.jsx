@@ -58,23 +58,12 @@ export default function NewInvoicePage() {
     if (q.length < 2) { setCustomerResults([]); setCustomerSearching(false); return; }
     setCustomerSearching(true);
     const t = setTimeout(async () => {
-      const esc = encodeURIComponent(q);
-      const escLower = encodeURIComponent(q.toLowerCase());
-      const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?or=(first_name.ilike.*${esc}*,last_name.ilike.*${esc}*,email.ilike.*${escLower}*,phone.ilike.*${esc}*)&select=first_name,last_name,email,phone,address,city,state,zip,created_at&order=created_at.desc&limit=30`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } },
-      );
-      const rows = r.ok ? await r.json() : [];
-      const seen = new Set();
-      const deduped = [];
-      for (const row of rows) {
-        const key = (row.email || '').toLowerCase() || (row.phone || '') || `${row.first_name}|${row.last_name}|${row.address}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        deduped.push(row);
-        if (deduped.length >= 8) break;
-      }
-      setCustomerResults(deduped);
+      const r = await fetch(`/api/past-customers?q=${encodeURIComponent(q)}`, {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      const body = r.ok ? await r.json() : { customers: [] };
+      setCustomerResults(body.customers || []);
       setCustomerSearching(false);
     }, 220);
     return () => clearTimeout(t);
