@@ -34,6 +34,8 @@ export default function InvoiceDetail() {
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
   const [payModal, setPayModal] = useState(null); // { paidAmount: string }
+  const [editCustomer, setEditCustomer] = useState(null); // null | { name, email, phone, address, city, state, zip }
+  const [savingCustomer, setSavingCustomer] = useState(false);
 
   useEffect(() => { load(); }, [id]);
 
@@ -145,6 +147,41 @@ export default function InvoiceDetail() {
     navigator.clipboard.writeText(text).then(() => alert('Copied.'));
   }
 
+  function openEditCustomer() {
+    const realEmail = inv.email && !inv.email.endsWith('@invoice.local') ? inv.email : '';
+    setEditCustomer({
+      name: `${inv.first_name || ''} ${inv.last_name || ''}`.trim(),
+      email: realEmail,
+      phone: inv.phone || '',
+      address: inv.address || '',
+      city: inv.city || '',
+      state: inv.state || '',
+      zip: inv.zip || '',
+    });
+  }
+
+  async function saveCustomer() {
+    if (!editCustomer.name || !editCustomer.address || !editCustomer.city || !editCustomer.state || !editCustomer.zip) {
+      alert('Name + full address are required.');
+      return;
+    }
+    setSavingCustomer(true);
+    const r = await fetch('/api/order-customer-update', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id, ...editCustomer }),
+    });
+    const body = await r.json().catch(() => ({}));
+    setSavingCustomer(false);
+    if (r.ok) {
+      setEditCustomer(null);
+      load();
+    } else {
+      alert('Error: ' + (body.error || r.status));
+    }
+  }
+
   if (loading) return <div style={cs.wrap}>Loading…</div>;
   if (!inv) return <div style={cs.wrap}>Invoice not found.</div>;
 
@@ -204,11 +241,52 @@ export default function InvoiceDetail() {
 
         <div>
           <div style={cs.section}>
-            <div style={cs.label}>Customer</div>
-            <div style={{ marginTop: 6, fontWeight: 700 }}>{inv.first_name} {inv.last_name}</div>
-            <div style={{ fontSize: 13 }}>{inv.email && !inv.email.endsWith('@invoice.local') ? inv.email : '— (no email on file)'}</div>
-            <div style={{ fontSize: 13 }}>{inv.phone || '—'}</div>
-            <div style={{ fontSize: 13, color: '#7A7D88', marginTop: 6 }}>{inv.address}<br />{inv.city}, {inv.state} {inv.zip}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <div style={cs.label}>Customer</div>
+              {!editCustomer && (
+                <button
+                  style={{ ...cs.btn, ...cs.btnSecondary, padding: '4px 10px', fontSize: 10 }}
+                  onClick={openEditCustomer}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+            {!editCustomer ? (
+              <>
+                <div style={{ marginTop: 6, fontWeight: 700 }}>{inv.first_name} {inv.last_name}</div>
+                <div style={{ fontSize: 13 }}>{inv.email && !inv.email.endsWith('@invoice.local') ? inv.email : '— (no email on file)'}</div>
+                <div style={{ fontSize: 13 }}>{inv.phone || '—'}</div>
+                <div style={{ fontSize: 13, color: '#7A7D88', marginTop: 6 }}>{inv.address}<br />{inv.city}, {inv.state} {inv.zip}</div>
+              </>
+            ) : (
+              <div style={{ marginTop: 10, display: 'grid', gap: 8 }}>
+                {[
+                  { key: 'name',    label: 'Name' },
+                  { key: 'email',   label: 'Email' },
+                  { key: 'phone',   label: 'Phone' },
+                  { key: 'address', label: 'Address' },
+                  { key: 'city',    label: 'City' },
+                  { key: 'state',   label: 'State' },
+                  { key: 'zip',     label: 'ZIP' },
+                ].map((f) => (
+                  <div key={f.key}>
+                    <div style={{ ...cs.label, marginBottom: 2 }}>{f.label}</div>
+                    <input
+                      style={{ width: '100%', padding: '7px 10px', border: '1px solid #E4E7EC', borderRadius: 4, fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' }}
+                      value={editCustomer[f.key]}
+                      onChange={(e) => setEditCustomer({ ...editCustomer, [f.key]: e.target.value })}
+                    />
+                  </div>
+                ))}
+                <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                  <button style={{ ...cs.btn, ...cs.btnPrimary }} onClick={saveCustomer} disabled={savingCustomer}>
+                    {savingCustomer ? 'Saving…' : 'Save'}
+                  </button>
+                  <button style={{ ...cs.btn, ...cs.btnSecondary }} onClick={() => setEditCustomer(null)} disabled={savingCustomer}>Cancel</button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div style={cs.section}>
