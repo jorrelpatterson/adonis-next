@@ -1,6 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
 
 const cs = {
@@ -50,12 +51,49 @@ export default function InventoryPage() {
 
   // New state for hide toggle, compare modal, content modal
   const [compareFor, setCompareFor] = useState(null);
+  const [adjustFor, setAdjustFor] = useState(null);
+  const [adjustForm, setAdjustForm] = useState({ delta: '', reason: 'broken', note: '' });
+  const [adjustSaving, setAdjustSaving] = useState(false);
+  const [lossStats, setLossStats] = useState(null);
   const [vendorPrices, setVendorPrices] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [contentFor, setContentFor] = useState(null);
   const [contentForm, setContentForm] = useState({ description:'', specs:[], research:[] });
 
   useEffect(() => { fetchProducts(); }, []);
+  useEffect(() => { loadLossStats(); }, []);
+
+  const loadLossStats = async () => {
+    const r = await fetch('/api/inventory-loss-stats', { credentials: 'include', cache: 'no-store' });
+    if (r.ok) setLossStats(await r.json());
+  };
+
+  const submitAdjust = async () => {
+    const delta = parseInt(adjustForm.delta, 10);
+    if (!Number.isFinite(delta) || delta === 0) {
+      alert('Quantity must be a non-zero whole number. Use a negative number for loss (e.g. -2).');
+      return;
+    }
+    setAdjustSaving(true);
+    const r = await fetch('/api/inventory-adjust', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        product_id: adjustFor.id,
+        delta_vials: delta,
+        reason: adjustForm.reason,
+        note: adjustForm.note || null,
+      }),
+    });
+    const body = await r.json().catch(() => ({}));
+    setAdjustSaving(false);
+    if (!r.ok) { alert('Failed: ' + (body.error || r.status)); return; }
+    setInventory(prev => prev.map(x => x.id === adjustFor.id ? { ...x, stock: body.new_stock } : x));
+    setAdjustFor(null);
+    setAdjustForm({ delta: '', reason: 'broken', note: '' });
+    loadLossStats();
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -243,13 +281,19 @@ export default function InventoryPage() {
           { l:'Inventory Retail',    sub:`now + $${Math.round(committedRetail).toLocaleString()} committed`, v:'$'+Math.round(inventoryRetail).toLocaleString(), c:'#22C55E' },
           { l:'Catalog Wholesale',   sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogWholesale).toLocaleString(),  c:'#6B7A94' },
           { l:'Catalog Retail',      sub:'1 kit each, full active catalog', v:'$'+Math.round(catalogRetail).toLocaleString(),     c:'#0072B5' },
-        ].map((x,i)=>(
-          <div key={i} style={{ ...cs.card, padding:16 }}>
-            <div style={{ fontSize:22, fontWeight:700, color:x.c, fontFamily:"'Barlow Condensed'" }}>{x.v}</div>
-            <div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>{x.l}</div>
-            <div style={{ fontSize:10, color:'#A0A4AE', marginTop:2 }}>{x.sub}</div>
-          </div>
-        ))}
+          { l:'Loss', sub:lossStats ? `${lossStats.loss_vials} vials lifetime · ${lossStats.loss_vials_30d}v in 30d` : '—', v:lossStats ? '$'+Math.round(lossStats.loss_cents/100).toLocaleString() : '—', c:'#DC2626', href:'/admin/inventory/adjustments' },
+        ].map((x,i)=>{
+          const inner = (
+            <div style={{ ...cs.card, padding:16, ...(x.href ? { cursor:'pointer' } : {}) }}>
+              <div style={{ fontSize:22, fontWeight:700, color:x.c, fontFamily:"'Barlow Condensed'" }}>{x.v}</div>
+              <div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>{x.l}</div>
+              <div style={{ fontSize:10, color:'#A0A4AE', marginTop:2 }}>{x.sub}</div>
+            </div>
+          );
+          return x.href
+            ? <Link key={i} href={x.href} style={{ textDecoration:'none' }}>{inner}</Link>
+            : <div key={i}>{inner}</div>;
+        })}
       </div>
 
       {lowStock.length>0&&<div style={{ background:'#FEF2F2', border:'1px solid #FECACA', borderRadius:8, padding:lowStockCollapsed?'10px 14px':16, marginBottom:20 }}>
@@ -372,6 +416,7 @@ export default function InventoryPage() {
                           research: Array.isArray(p.research) ? p.research : [],
                         });
                       }} title="Edit content" style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontSize:13,padding:'2px 4px',lineHeight:1}}>✏</button>
+                      <button onClick={(e)=>{e.stopPropagation(); setAdjustFor(p); setAdjustForm({ delta: '', reason: 'broken', note: '' });}} title="Adjust stock (loss / spillage / count)" style={{background:'none',border:'none',cursor:'pointer',fontSize:13,color:'#A16207',padding:'2px 4px',lineHeight:1}}>📉</button>
                       <button onClick={()=>deleteProduct(p.id)} title="Delete" style={{background:'none',border:'none',cursor:'pointer',fontSize:14,padding:'2px 4px',lineHeight:1}}>🗑</button>
                     </div>}
                   </td>
@@ -469,6 +514,62 @@ export default function InventoryPage() {
           <span style={{fontWeight:700}}>{cartCount} item{cartCount===1?'':'s'} · {cartKits} kit{cartKits===1?'':'s'}</span>
           <button onClick={clearCart} style={{background:'none',border:'1px solid #7A7D88',color:'#7A7D88',padding:'4px 10px',borderRadius:4,fontSize:11,cursor:'pointer'}}>Clear</button>
           <a href="/admin/purchases?from_cart=1" style={{background:'#00A0A8',color:'#fff',padding:'8px 14px',borderRadius:4,fontSize:12,fontWeight:700,textDecoration:'none',letterSpacing:1,textTransform:'uppercase'}}>Open in new PO →</a>
+        </div>
+      )}
+
+      {adjustFor && (
+        <div onClick={()=>!adjustSaving && setAdjustFor(null)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:100,padding:20}}>
+          <div onClick={(e)=>e.stopPropagation()} style={{background:'#fff',borderRadius:8,padding:24,width:440,maxWidth:'92vw',boxShadow:'0 20px 60px rgba(0,0,0,0.25)'}}>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:'#7A7D88',letterSpacing:2,textTransform:'uppercase',marginBottom:6}}>Adjust stock</div>
+            <h2 style={{fontSize:18,fontWeight:700,color:'#0F1928',margin:0,marginBottom:2}}>{adjustFor.name}</h2>
+            <div style={{fontSize:12,color:'#7A7D88',fontFamily:'monospace',marginBottom:16}}>{adjustFor.sku} · {adjustFor.size} · current stock {adjustFor.stock}</div>
+
+            <label style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:'#7A7D88',letterSpacing:2,textTransform:'uppercase',display:'block',marginBottom:4}}>Quantity (vials)</label>
+            <input
+              autoFocus
+              type="number"
+              step="1"
+              placeholder="e.g. -2 (lost 2 vials), or +1 (found one)"
+              value={adjustForm.delta}
+              onChange={(e)=>setAdjustForm(f=>({...f, delta:e.target.value}))}
+              style={{...cs.input, marginBottom:12}}
+            />
+            <div style={{fontSize:11,color:'#7A7D88',marginBottom:12,marginTop:-6}}>
+              Negative = loss · Positive = found-on-count
+            </div>
+
+            <label style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:'#7A7D88',letterSpacing:2,textTransform:'uppercase',display:'block',marginBottom:4}}>Reason</label>
+            <select
+              value={adjustForm.reason}
+              onChange={(e)=>setAdjustForm(f=>({...f, reason:e.target.value}))}
+              style={{...cs.input, marginBottom:12}}
+            >
+              <option value="broken">Broken (in handling/shipping)</option>
+              <option value="spilled">Spilled (during reconstitution)</option>
+              <option value="qa_test">QA test / sample testing</option>
+              <option value="returned_damaged">Customer return — damaged</option>
+              <option value="expired">Expired</option>
+              <option value="sample">Sample / giveaway</option>
+              <option value="count_correction">Count correction (physical recount)</option>
+              <option value="other">Other</option>
+            </select>
+
+            <label style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:'#7A7D88',letterSpacing:2,textTransform:'uppercase',display:'block',marginBottom:4}}>Note (optional)</label>
+            <textarea
+              value={adjustForm.note}
+              onChange={(e)=>setAdjustForm(f=>({...f, note:e.target.value}))}
+              maxLength={500}
+              placeholder="What happened? Anything to remember later..."
+              style={{...cs.input, minHeight:60, fontFamily:'inherit', marginBottom:16}}
+            />
+
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={()=>setAdjustFor(null)} disabled={adjustSaving} style={{...cs.btn, background:'#F7F8FA', color:'#6B7A94', border:'1px solid #E4E7EC'}}>Cancel</button>
+              <button onClick={submitAdjust} disabled={adjustSaving} style={{...cs.btn, background:'#DC2626', color:'#fff', padding:'10px 18px'}}>
+                {adjustSaving ? 'Saving…' : 'Apply adjustment'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
