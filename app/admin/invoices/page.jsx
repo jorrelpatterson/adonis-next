@@ -32,8 +32,10 @@ export default function InvoicesList() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [stats, setStats] = useState(null);
 
   useEffect(() => { load(); }, [statusFilter, search]);
+  useEffect(() => { loadStats(); }, []);
 
   async function load() {
     setLoading(true);
@@ -48,6 +50,11 @@ export default function InvoicesList() {
     setLoading(false);
   }
 
+  async function loadStats() {
+    const r = await fetch('/api/invoice-stats', { credentials: 'include', cache: 'no-store' });
+    if (r.ok) setStats(await r.json());
+  }
+
   function ageDays(iso) {
     return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
   }
@@ -60,6 +67,27 @@ export default function InvoicesList() {
           <div className="admin-page-sub" style={cs.sub}>admin-created orders</div>
         </div>
         <Link href="/admin/invoices/new" style={cs.btn}>+ New invoice</Link>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 20 }}>
+        <div style={{ background: '#fff', border: '1px solid #E4E7EC', borderLeft: '3px solid #16A34A', borderRadius: 6, padding: '14px 16px' }}>
+          <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: '#7A7D88', letterSpacing: 2, textTransform: 'uppercase' }}>Paid</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#0F1928', fontFamily: 'monospace', marginTop: 4 }}>
+            ${stats ? stats.paid_total.toFixed(2) : '—'}
+          </div>
+          <div style={{ fontSize: 11, color: '#7A7D88', fontFamily: 'monospace', marginTop: 2 }}>
+            {stats ? `${stats.paid_count} ${stats.paid_count === 1 ? 'invoice' : 'invoices'}` : ' '}
+          </div>
+        </div>
+        <div style={{ background: '#fff', border: '1px solid #E4E7EC', borderLeft: '3px solid #F59E0B', borderRadius: 6, padding: '14px 16px' }}>
+          <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: '#7A7D88', letterSpacing: 2, textTransform: 'uppercase' }}>Pending</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#0F1928', fontFamily: 'monospace', marginTop: 4 }}>
+            ${stats ? stats.pending_total.toFixed(2) : '—'}
+          </div>
+          <div style={{ fontSize: 11, color: '#7A7D88', fontFamily: 'monospace', marginTop: 2 }}>
+            {stats ? `${stats.pending_count} ${stats.pending_count === 1 ? 'invoice' : 'invoices'}` : ' '}
+          </div>
+        </div>
       </div>
 
       <div className="admin-filter-row" style={cs.bar}>
