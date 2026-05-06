@@ -32,10 +32,14 @@ export async function GET(request) {
   const seen = new Set();
   const deduped = [];
   for (const row of rows) {
+    const realEmail =
+      row.email && !row.email.endsWith('@invoice.local')
+        ? row.email.toLowerCase()
+        : '';
     const key =
-      (row.email || '').toLowerCase() ||
-      (row.phone || '') ||
-      `${row.first_name}|${row.last_name}|${row.address}`;
+      realEmail ||
+      (row.phone || '').replace(/\D/g, '') ||
+      `${(row.first_name || '').toLowerCase()}|${(row.last_name || '').toLowerCase()}|${(row.address || '').toLowerCase()}`;
     if (seen.has(key)) continue;
     seen.add(key);
     deduped.push(row);
