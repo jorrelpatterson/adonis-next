@@ -5,7 +5,7 @@
 
 create table if not exists inventory_adjustments (
   id uuid primary key default gen_random_uuid(),
-  product_id uuid references products(id) on delete set null,
+  product_id integer references products(id) on delete set null,
   sku text not null,
   delta_vials int not null,
   reason text not null check (reason in (
