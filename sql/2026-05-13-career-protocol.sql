@@ -18,12 +18,12 @@ create table if not exists career_profiles (
   interview_transcript jsonb,
   profile_md text,
   profile_summary_md text,
-  profile_status text not null default 'pending',  -- pending | resume_uploaded | wizard_done | interview_done | ready
+  profile_status text not null default 'pending'
+    check (profile_status in ('pending','resume_uploaded','wizard_done','interview_done','ready')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
-create index if not exists career_profiles_user_idx on career_profiles(user_id);
 create index if not exists career_profiles_status_idx on career_profiles(profile_status);
 
 -- ----------------------------------------------------------------
@@ -33,7 +33,7 @@ create table if not exists career_target_companies (
   id uuid primary key default gen_random_uuid(),
   source text not null,         -- 'greenhouse' | 'lever' | 'ashby' | 'workable'
   slug text not null,
-  name text,
+  name text not null,
   notes text,
   active boolean not null default true,
   created_at timestamptz not null default now(),
@@ -51,7 +51,8 @@ create table if not exists career_jobs (
   title text not null,
   company text not null,
   location text,
-  remote_type text,             -- 'remote' | 'hybrid' | 'onsite' | null
+  remote_type text
+    check (remote_type is null or remote_type in ('remote','hybrid','onsite')),
   comp_min int,
   comp_max int,
   comp_currency text default 'USD',
@@ -75,10 +76,12 @@ create table if not exists career_user_jobs (
   job_id uuid not null references career_jobs(id) on delete cascade,
   score int,                    -- 0-100, null if filter_passed=false
   score_reasoning text,
-  recommendation text,          -- 'apply' | 'research' | 'skip'
+  recommendation text
+    check (recommendation is null or recommendation in ('apply','research','skip')),
   filter_passed boolean not null default true,
   filter_reason text,
-  status text not null default 'feed',  -- feed | starred | submitted | archived | dismissed
+  status text not null default 'feed'
+    check (status in ('feed','starred','submitted','archived','dismissed')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique(user_id, job_id)
@@ -113,10 +116,12 @@ create table if not exists career_applications (
   submitted_at timestamptz not null default now(),
   follow_up_at timestamptz not null,
   follow_up_completed_at timestamptz,
-  outcome text,                 -- no_response | rejected | screen | interview | offer | declined | accepted
+  outcome text
+    check (outcome is null or outcome in ('no_response','rejected','screen','interview','offer','declined','accepted')),
   notes text,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  unique(user_id, job_id)
 );
 
 create index if not exists career_applications_user_idx on career_applications(user_id);
@@ -155,3 +160,34 @@ create policy career_applications_user_select on career_applications
 drop policy if exists career_applications_user_update on career_applications;
 create policy career_applications_user_update on career_applications
   for update using (auth.uid() = user_id);
+
+-- ----------------------------------------------------------------
+-- updated_at triggers — keep updated_at honest on UPDATE
+-- ----------------------------------------------------------------
+create or replace function set_career_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists career_profiles_updated_at on career_profiles;
+create trigger career_profiles_updated_at
+  before update on career_profiles
+  for each row execute function set_career_updated_at();
+
+drop trigger if exists career_user_jobs_updated_at on career_user_jobs;
+create trigger career_user_jobs_updated_at
+  before update on career_user_jobs
+  for each row execute function set_career_updated_at();
+
+drop trigger if exists career_tailored_resumes_updated_at on career_tailored_resumes;
+create trigger career_tailored_resumes_updated_at
+  before update on career_tailored_resumes
+  for each row execute function set_career_updated_at();
+
+drop trigger if exists career_applications_updated_at on career_applications;
+create trigger career_applications_updated_at
+  before update on career_applications
+  for each row execute function set_career_updated_at();
