@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 function LoginInner() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ function LoginInner() {
       const res = await fetch('/api/admin-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
 
@@ -29,7 +30,7 @@ function LoginInner() {
         router.push(from);
         router.refresh();
       } else {
-        setError('Invalid password');
+        setError('Invalid credentials');
         setPassword('');
       }
     } catch (err) {
@@ -63,17 +64,31 @@ function LoginInner() {
           }}>
             ADONIS <span style={{ fontWeight: 300, color: '#8C919E' }}>ADMIN</span>
           </div>
-          <div style={{ fontSize: 12, color: '#8C919E', marginTop: 4 }}>Enter your admin password to continue</div>
+          <div style={{ fontSize: 12, color: '#8C919E', marginTop: 4 }}>Sign in to continue</div>
         </div>
 
         <div onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && password && handleLogin(e)}
+            autoFocus
+            style={{
+              width: '100%', padding: '14px 16px', border: '1.5px solid #E4E7EC',
+              borderRadius: 8, fontSize: 15, outline: 'none', background: '#FAFBFC',
+              transition: 'border-color 0.2s',
+            }}
+            onFocus={e => e.target.style.borderColor = '#0072B5'}
+            onBlur={e => e.target.style.borderColor = '#E4E7EC'}
+          />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleLogin(e)}
-            autoFocus
+            onKeyDown={e => e.key === 'Enter' && email && handleLogin(e)}
             style={{
               width: '100%', padding: '14px 16px', border: '1.5px solid #E4E7EC',
               borderRadius: 8, fontSize: 15, outline: 'none', background: '#FAFBFC',
@@ -92,12 +107,12 @@ function LoginInner() {
 
           <button
             onClick={handleLogin}
-            disabled={!password || loading}
+            disabled={!email || !password || loading}
             style={{
               width: '100%', padding: '14px', border: 'none', borderRadius: 8,
               fontSize: 14, fontWeight: 700, cursor: 'pointer',
-              background: password && !loading ? '#0072B5' : '#E4E7EC',
-              color: password && !loading ? '#fff' : '#8C919E',
+              background: email && password && !loading ? '#0072B5' : '#E4E7EC',
+              color: email && password && !loading ? '#fff' : '#8C919E',
               transition: 'all 0.2s', letterSpacing: 0.5,
             }}
           >
