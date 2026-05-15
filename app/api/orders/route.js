@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
 
-export async function GET() {
+export async function GET(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // GET /api/orders — list all orders
   return NextResponse.json({
     success: true,
@@ -10,6 +13,8 @@ export async function GET() {
 }
 
 export async function POST(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // POST /api/orders — create new order (called from app checkout)
   const body = await request.json();
   
@@ -37,6 +42,8 @@ export async function POST(request) {
 }
 
 export async function PATCH(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // PATCH /api/orders — update order status
   const body = await request.json();
   const { orderId, status } = body;

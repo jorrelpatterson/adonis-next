@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SUPABASE_URL || !SERVICE_KEY) return NextResponse.json({ error: 'Server config missing' }, { status: 500 });
@@ -49,6 +52,8 @@ export async function POST(request) {
   return NextResponse.json({ success: true });
 }
 
-export async function GET() {
+export async function GET(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   return NextResponse.json({ status: 'vendor-prices-write route is live' });
 }

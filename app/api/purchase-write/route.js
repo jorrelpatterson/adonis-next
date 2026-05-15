@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { renderPoEmail } from '../../../lib/po-email-template.js';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -36,6 +37,8 @@ async function sendPoEmail({ po, vendor, items, RESEND, SHIPPING_ADDRESS }) {
 }
 
 export async function POST(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   const RESEND = process.env.RESEND_API_KEY;
@@ -197,6 +200,8 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   return NextResponse.json({ status: 'purchase-write route is live' });
 }

@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
 
 // TODO: Replace with Supabase queries once products table is set up
 // For now these are placeholder routes showing the API structure
 
-export async function GET() {
+export async function GET(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // GET /api/inventory — list all products
   return NextResponse.json({
     success: true,
@@ -13,6 +16,8 @@ export async function GET() {
 }
 
 export async function POST(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // POST /api/inventory — add or update a product
   const body = await request.json();
   
@@ -32,6 +37,8 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   // DELETE /api/inventory?id=123
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');

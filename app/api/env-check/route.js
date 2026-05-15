@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
 
-export async function GET() {
+export async function GET(request) {
+  const unauth = requireRole(request, 'admin');
+  if (unauth) return unauth;
   return NextResponse.json({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'present (len='+process.env.NEXT_PUBLIC_SUPABASE_URL.length+')' : 'MISSING',
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'present (len='+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length+')' : 'MISSING',
