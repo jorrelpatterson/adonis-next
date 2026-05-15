@@ -1,0 +1,55 @@
+{
+  "_comment": "Adzuna/JSearch query lists + exclude-title-keywords. Tuned for adonis operator persona (sales leadership, founder-adjacent, GM, RevOps).",
+
+  "adzuna": {
+    "country": "us",
+    "results_per_page": 50,
+    "max_pages": 2,
+    "queries": [
+      "VP of Sales",
+      "Chief Revenue Officer",
+      "Head of Sales",
+      "Head of Revenue",
+      "Head of GTM",
+      "VP Business Development",
+      "VP Strategic Accounts",
+      "Director of Sales",
+      "VP Partnerships",
+      "VP Channel Sales"
+    ],
+    "salary_min": 120000,
+    "max_days_old": 14
+  },
+
+  "jsearch": {
+    "queries": [
+      "VP Sales SaaS",
+      "Chief Revenue Officer home services",
+      "Head of GTM",
+      "VP Business Development clean energy",
+      "Head of Channel Sales"
+    ],
+    "country": "us",
+    "remote_only": false,
+    "include_remote": true,
+    "date_posted": "week",
+    "employment_types": "FULLTIME",
+    "max_pages_per_query": 1
+  },
+
+  "filters": {
+    "exclude_title_keywords": [
+      "Sales Development Representative",
+      "SDR", "BDR", "Junior", "Associate", "Entry", "Intern",
+      "Engineer", "Engineering", "Designer", "Researcher",
+      "Recruiter", "Sourcer",
+      "Product Manager", "Product Designer",
+      "Data Scientist", "Data Analyst",
+      "Accountant", "Office Manager",
+      "Executive Assistant", "Administrative Assistant",
+      "Customer Success Manager", "Customer Support", "Customer Service",
+      "Technical Writer", "Paralegal", "Legal Counsel"
+    ],
+    "exclude_company_keywords": ["MLM", "Cutco"]
+  }
+}
