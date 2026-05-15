@@ -29,6 +29,7 @@ export default function AmbassadorsPage() {
   const [expandedId, setExpanded]     = useState(null);
   const [attributedByAmb, setAttributedByAmb] = useState({});  // ambId -> { customers, ordersByPhone, loading }
   const [statusUpdating, setStatusUpdating] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   const loadAttributed = async (ambId) => {
     if (attributedByAmb[ambId] && !attributedByAmb[ambId].loading) return; // cached
@@ -81,6 +82,14 @@ export default function AmbassadorsPage() {
   };
 
   useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    fetch('/api/me')
+      .then(r => r.json())
+      .then(d => setCurrentUser(d.user))
+      .catch(() => {});
+  }, []);
+
+  const isVA = currentUser?.role === 'va';
 
   const lastPayoutByAmb = payouts.reduce((acc, p) => {
     if (!acc[p.ambassador_id]) acc[p.ambassador_id] = p; // payouts are sorted sent_at desc
@@ -384,14 +393,16 @@ export default function AmbassadorsPage() {
                               onChange={e=>setEditForm(prev=>({...prev,[amb.id]:{...f,[key]:key==='code'?e.target.value.toUpperCase():e.target.value}}))} />
                           </div>
                         ))}
-                        <div style={{marginBottom:16}}>
-                          <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Tier</label>
-                          <select style={{...cs.input,width:'100%'}} value={f.tier||'starter'} onChange={e=>setEditForm(prev=>({...prev,[amb.id]:{...f,tier:e.target.value}}))}>
-                            <option value="starter">Starter (10%)</option>
-                            <option value="builder">Builder (15%)</option>
-                            <option value="elite">Elite (20%)</option>
-                          </select>
-                        </div>
+                        {!isVA && (
+                          <div style={{marginBottom:16}}>
+                            <label style={{fontSize:11,color:'#8C919E',display:'block',marginBottom:4}}>Tier</label>
+                            <select style={{...cs.input,width:'100%'}} value={f.tier||'starter'} onChange={e=>setEditForm(prev=>({...prev,[amb.id]:{...f,tier:e.target.value}}))}>
+                              <option value="starter">Starter (10%)</option>
+                              <option value="builder">Builder (15%)</option>
+                              <option value="elite">Elite (20%)</option>
+                            </select>
+                          </div>
+                        )}
                         <div style={{display:'flex',gap:8}}>
                           <button onClick={()=>saveEdit(amb)} disabled={saving[amb.id]}
                             style={{...cs.btn,background:'#0072B5',color:'#fff',flex:1,opacity:saving[amb.id]?0.5:1}}>
@@ -449,10 +460,12 @@ export default function AmbassadorsPage() {
                           </strong>
                           <span style={{color:'#8C919E',marginLeft:12}}>Period: {period}</span>
                         </div>
-                        <button onClick={()=>sendEmail('payout',amb)} disabled={sending[amb.id+'payout']}
-                          style={{...cs.btn,background:'#22C55E',color:'#fff',width:'100%',opacity:sending[amb.id+'payout']?0.5:1}}>
-                          {sending[amb.id+'payout']?'Sending...':'💸 Send Payout Email'}
-                        </button>
+                        {!isVA && (
+                          <button onClick={()=>sendEmail('payout',amb)} disabled={sending[amb.id+'payout']}
+                            style={{...cs.btn,background:'#22C55E',color:'#fff',width:'100%',opacity:sending[amb.id+'payout']?0.5:1}}>
+                            {sending[amb.id+'payout']?'Sending...':'💸 Send Payout Email'}
+                          </button>
+                        )}
                       </div>
                     )}
                     {tab==='assets' && (
