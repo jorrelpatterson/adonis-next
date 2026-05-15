@@ -15,6 +15,15 @@ const s = {
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0, lowStock: 0, openPos: 0, inTransitValue: 0 });
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userLoaded, setUserLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then(r => r.json())
+      .then(d => { setCurrentUser(d.user); setUserLoaded(true); })
+      .catch(() => setUserLoaded(true));
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -35,6 +44,9 @@ export default function AdminDashboard() {
     }
     load();
   }, []);
+
+  if (!userLoaded) return null;
+  if (currentUser?.role === 'va') return <VaDashboard />;
 
   return (
     <div>
@@ -78,6 +90,80 @@ export default function AdminDashboard() {
             </div>
           </Link>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function VaDashboard() {
+  const [counts, setCounts] = useState({ tickets: 0, drafts: 0, posts: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const fourteenDaysOut = new Date();
+        fourteenDaysOut.setDate(fourteenDaysOut.getDate() + 14);
+
+        const [t, d, p] = await Promise.all([
+          supabase.from('support_tickets').select('id', { count: 'exact', head: true }).in('status', ['open', 'in_progress']),
+          supabase.from('post_drafts').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+          supabase.from('social_posts').select('id', { count: 'exact', head: true }).eq('status', 'scheduled').lte('scheduled_date', fourteenDaysOut.toISOString()),
+        ]);
+        setCounts({
+          tickets: t.count ?? 0,
+          drafts: d.count ?? 0,
+          posts: p.count ?? 0,
+        });
+      } catch (e) {
+        // counts stay 0 on error
+      }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  const tiles = [
+    { label: 'Open support tickets', value: counts.tickets, color: '#E07C24', href: '/admin/support-tickets' },
+    { label: 'News drafts to review', value: counts.drafts, color: '#0072B5', href: '/admin/marketing/news' },
+    { label: 'Posts scheduled (next 14d)', value: counts.posts, color: '#00A0A8', href: '/admin/marketing/content' },
+  ];
+
+  return (
+    <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: '#0F1928', marginBottom: 24 }}>
+        Marketing dashboard
+      </h1>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 32 }}>
+        {tiles.map(t => (
+          <a key={t.label} href={t.href} style={{
+            display: 'block', padding: 20, background: '#fff', border: '1px solid #E4E7EC',
+            borderRadius: 10, textDecoration: 'none', color: '#0F1928',
+          }}>
+            <div style={{ fontSize: 32, fontWeight: 700, color: t.color, marginBottom: 4 }}>
+              {loading ? '—' : t.value}
+            </div>
+            <div style={{ fontSize: 13, color: '#8C919E' }}>{t.label}</div>
+          </a>
+        ))}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        <a href="/admin/marketing" style={{
+          display: 'block', padding: 24, background: '#0F1928', color: '#fff',
+          borderRadius: 10, textDecoration: 'none',
+        }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Marketing hub →</div>
+          <div style={{ fontSize: 13, color: '#B0B4BC' }}>Content, news, ambassadors, subscribers, campaigns</div>
+        </a>
+        <a href="/admin/support-tickets" style={{
+          display: 'block', padding: 24, background: '#fff', border: '1px solid #E4E7EC',
+          color: '#0F1928', borderRadius: 10, textDecoration: 'none',
+        }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Support tickets →</div>
+          <div style={{ fontSize: 13, color: '#8C919E' }}>Reply to customers, manage open issues</div>
+        </a>
       </div>
     </div>
   );
