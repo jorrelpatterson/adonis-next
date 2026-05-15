@@ -7,4 +7,8 @@ next-env.d.ts
 .vercel
 dist/
 .superpowers/
+.claude/worktrees/
+
+# macOS AppleDouble / resource fork files
 ._*
+.DS_Store

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>Positioning — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #F4F2EE;
+    color: #1A1C22;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .canvas {
+    width: 1080px; height: 1080px;
+    padding: 80px 80px 100px 80px;
+    display: flex;
+    flex-direction: column;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+  .lockup { display: flex; align-items: center; gap: 10px; }
+  .lockup svg { height: 28px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 18px; letter-spacing: 0.3em;
+    color: #1A1C22;
+    text-transform: lowercase;
+  }
+  .wordmark em { font-style: normal; color: #7A7D88; }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.45em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .statement {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 1.25;
+    color: #1A1C22;
+    margin-bottom: 32px;
+    max-width: 920px;
+  }
+  .statement strong {
+    font-style: normal;
+    font-weight: 400;
+    color: #00A0A8;
+  }
+
+  .divider {
+    width: 100px; height: 2px; background: #1A1C22;
+    margin-bottom: 40px;
+  }
+
+  .standards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .standards-list .row {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1A1C22;
+  }
+  .standards-list .check {
+    flex: 0 0 auto;
+    color: #00A0A8;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+  .standards-list .label {
+    font-weight: 700;
+    color: #1A1C22;
+  }
+  .standards-list .gloss {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 22px;
+    color: #4A4F5C;
+    margin-left: 8px;
+  }
+  .closer {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.1;
+    color: #1A1C22;
+  }
+  .closer strong {
+    font-style: italic;
+    font-weight: 400;
+    color: #E07C24;
+  }
+
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: #7A7D88;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="top-bar">
+      <div class="lockup">
+        <svg viewBox="0 0 48 28" fill="none"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+        <span class="wordmark">advnce <em>labs</em></span>
+      </div>
+      <span>POSITIONING</span>
+    </div>
+
+    <div class="content">
+      <div class="eyebrow">WHAT YOU GET &middot; NO EXCEPTIONS</div>
+      <div class="statement">Research-grade peptide compounds, documented end-to-end. <strong>The standards <em>are</em> the product.</strong></div>
+      <div class="divider"></div>
+      <div class="standards-list">
+        <div class="row"><span class="check">✓</span><span class="label">Manufacturer COA</span><span class="gloss">— available on every compound</span></div>
+        <div class="row"><span class="check">✓</span><span class="label">Lot traceability</span><span class="gloss">— vial number = batch number</span></div>
+        <div class="row"><span class="check">✓</span><span class="label">Stated purity</span><span class="gloss">— % verified, not "high purity"</span></div>
+        <div class="row"><span class="check">✓</span><span class="label">Vetted sourcing</span><span class="gloss">— short, auditable supply chain</span></div>
+      </div>
+      <div class="closer">If you know why those four matter,<br/><strong>you're exactly who we built this for.</strong></div>
+    </div>
+
+    <div class="footer-bar">
+      <span>RESEARCH USE ONLY</span>
+      <span>advncelabs.com</span>
+    </div>
+  </div>
+</body>
+</html>

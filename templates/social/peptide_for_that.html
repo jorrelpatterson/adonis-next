@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>There's a peptide for that — advnce labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+  }
+  .slide {
+    width: 1080px; height: 1080px;
+    padding: 80px 80px 100px 80px;
+    display: none;
+    flex-direction: column;
+    position: relative;
+  }
+  .slide:first-child { display: flex; }
+
+  /* Top + bottom bars */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.35em;
+    text-transform: uppercase;
+  }
+  .lockup { display: flex; align-items: center; gap: 12px; }
+  .lockup svg { height: 24px; width: auto; }
+  .wordmark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 200;
+    font-size: 18px; letter-spacing: 0.3em;
+    text-transform: lowercase;
+  }
+  .wordmark em { font-style: normal; opacity: 0.55; }
+
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* ─────────── SLIDE 1: HOOK (deep navy) ─────────── */
+  #slide-1 {
+    background: #0A0D14;
+    color: #F4F2EE;
+  }
+  #slide-1 .lockup { color: #F4F2EE; }
+  #slide-1 .lockup .wordmark em { color: #7A7D88; }
+  #slide-1 .top-bar { color: #7A7D88; }
+  #slide-1 .stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  #slide-1 .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.5em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+  #slide-1 .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 96px;
+    line-height: 1.0;
+    color: #F4F2EE;
+    letter-spacing: -2px;
+    margin-bottom: 36px;
+  }
+  #slide-1 .question::before { content: '"'; color: #7A7D88; }
+  #slide-1 .question::after  { content: '"'; color: #7A7D88; }
+  #slide-1 .tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 138px; line-height: 0.92;
+    color: #F4F2EE;
+    text-transform: uppercase;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  #slide-1 .tagline .accent { color: #00A0A8; }
+  #slide-1 .swipe {
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: #00A0A8;
+  }
+
+  /* ─────────── SLIDE 2: REVEAL (cream) ─────────── */
+  #slide-2 {
+    background: #F4F2EE;
+    color: #1A1C22;
+  }
+  #slide-2 .lockup { color: #1A1C22; }
+  #slide-2 .lockup .wordmark em { color: #7A7D88; }
+  #slide-2 .top-bar { color: #7A7D88; }
+  #slide-2 .stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  #slide-2 .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 0.5em;
+    color: #00A0A8;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  #slide-2 .compound {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 168px;
+    line-height: 0.85;
+    color: #1A1C22;
+    letter-spacing: -4px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+  #slide-2 .summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.32;
+    color: #1A1C22;
+    margin-bottom: 28px;
+    max-width: 880px;
+  }
+  #slide-2 .citation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #00A0A8;
+    margin-bottom: 36px;
+  }
+  #slide-2 .closer {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.35;
+    color: #7A7D88;
+    max-width: 800px;
+  }
+  #slide-2 .closer strong {
+    font-style: italic;
+    font-weight: 400;
+    color: #E07C24;
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────── SLIDE 1 ─────────── -->
+<div class="slide" id="slide-1">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wordmark">advnce <em>labs</em></span>
+    </div>
+    <span>No. 01 &middot; Hook</span>
+  </div>
+  <div class="stage">
+    <div class="eyebrow">What the literature is looking at</div>
+    <div class="question">{{HOOK}}</div>
+    <div class="tagline">There's a peptide<br/>for <span class="accent">that.</span></div>
+    <div class="swipe">Swipe for the research &rarr;</div>
+  </div>
+  <div class="footer-bar">
+    <span>Research-grade &middot; Not for human consumption</span>
+    <span>advncelabs.com</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 2 ─────────── -->
+<div class="slide" id="slide-2">
+  <div class="top-bar">
+    <div class="lockup">
+      <svg viewBox="0 0 48 28" fill="none">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+        <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="wordmark">advnce <em>labs</em></span>
+    </div>
+    <span>No. 02 &middot; From the literature</span>
+  </div>
+  <div class="stage">
+    <div class="eyebrow">From the literature</div>
+    <div class="compound">{{COMPOUND}}</div>
+    <div class="summary">{{SUMMARY}}</div>
+    <div class="citation">{{CITATION}}</div>
+    <div class="closer">What you do with the research is up to you and your clinician. <strong>We just supply the compound, documented.</strong></div>
+  </div>
+  <div class="footer-bar">
+    <span>Research-grade &middot; Not for human consumption</span>
+    <span>advncelabs.com</span>
+  </div>
+</div>
+
+</body>
+</html>

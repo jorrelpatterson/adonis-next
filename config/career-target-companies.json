@@ -1,0 +1,21 @@
+{
+  "_comment": "Initial watchlist for the operator persona. Edit the career_target_companies table in Supabase for live changes without redeploying. This file is fallback-only.",
+  "greenhouse": [
+    { "slug": "sunrun",     "name": "Sunrun",         "notes": "residential solar — biggest" },
+    { "slug": "palmetto",   "name": "Palmetto",       "notes": "residential solar" },
+    { "slug": "goodleap",   "name": "GoodLeap",       "notes": "home improvement finance" },
+    { "slug": "thumbtack",  "name": "Thumbtack",      "notes": "home services marketplace" },
+    { "slug": "angi",       "name": "Angi",           "notes": "home services" },
+    { "slug": "salesloft",  "name": "Salesloft",      "notes": "sales engagement" },
+    { "slug": "gongio",     "name": "Gong",           "notes": "revenue intelligence" },
+    { "slug": "apolloio",   "name": "Apollo.io",      "notes": "sales platform" },
+    { "slug": "mindbody",   "name": "Mindbody",       "notes": "vertical SaaS — wellness" },
+    { "slug": "boulevard",  "name": "Boulevard",      "notes": "vertical SaaS — beauty" }
+  ],
+  "lever": [
+    { "slug": "sunpower",       "name": "SunPower",        "notes": "residential solar" },
+    { "slug": "freedomforever", "name": "Freedom Forever", "notes": "solar — alumni" }
+  ],
+  "ashby": [],
+  "workable": []
+}

@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../../lib/supabase';
 
@@ -16,6 +17,7 @@ export default function PricingPage() {
   const [editRetail, setEditRetail] = useState('');
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [marginTarget, setMarginTarget] = useState(95);  // percent
 
   useEffect(() => {
     async function load() {
@@ -68,12 +70,12 @@ export default function PricingPage() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
-        <div><h1 style={cs.h1}>Pricing</h1><p style={{ color:'#8C919E', fontSize:14 }}>Click any retail price to edit · <span style={{color:'#22C55E'}}>Saves to Supabase</span></p></div>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24, gap:12, flexWrap:'wrap' }}>
+        <div><h1 className="admin-page-h1" style={cs.h1}>Pricing</h1><p style={{ color:'#8C919E', fontSize:14 }}>Click any retail price to edit · <span style={{color:'#22C55E'}}>Saves to Supabase</span></p></div>
         <button onClick={()=>setShowBulk(!showBulk)} style={{ ...cs.btn, background:'#0072B5', color:'#fff', padding:'10px 20px' }}>Bulk Margin Tool</button>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:24 }}>
+      <div className="admin-tile-row" style={{ marginBottom:24 }}>
         <div style={{ ...cs.card, padding:16 }}><div style={{ fontSize:22, fontWeight:700, color:'#22C55E', fontFamily:"'Barlow Condensed'" }}>{avgMargin}%</div><div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>Avg Margin</div></div>
         <div style={{ ...cs.card, padding:16 }}><div style={{ fontSize:22, fontWeight:700, color:'#0072B5', fontFamily:"'Barlow Condensed'" }}>{products.filter(p=>Number(p.retail)<Number(p.market_avg||0)).length}</div><div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>Below Market</div></div>
         <div style={{ ...cs.card, padding:16 }}><div style={{ fontSize:22, fontWeight:700, color:'#0F1928', fontFamily:"'Barlow Condensed'" }}>{products.length}</div><div style={{ fontSize:10, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, marginTop:2 }}>Products</div></div>
@@ -90,12 +92,16 @@ export default function PricingPage() {
         </div>
       </div>}
 
+      <div style={{display:'flex',gap:8,alignItems:'center',marginBottom:16}}>
+        <label style={{fontSize:12,color:'#8C919E'}}>Target margin %:</label>
+        <input type="number" min="1" max="99" value={marginTarget} onChange={e=>setMarginTarget(Number(e.target.value)||95)} style={{width:60,padding:'4px 8px',border:'1px solid #E4E7EC',borderRadius:4,fontFamily:'monospace',fontSize:12}} />
+      </div>
       <input style={{ ...cs.input, maxWidth:300, marginBottom:16 }} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)}/>
 
-      <div style={cs.card}>
+      <div className="admin-table-scroll" style={cs.card}>
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead><tr style={{ background:'#F7F8FA' }}>
-            {['Product','Size','Category','Cost/Box','Cost/Vial','Retail','Market','Margin','vs Market',''].map((h,i)=><th key={i} style={{ padding:'10px 12px', textAlign:'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC' }}>{h}</th>)}
+            {['Product','Size','Category','Cost/Box','Cost/Vial','Retail','Market','Margin','vs Market','Suggested',''].map((h,i)=><th key={i} style={{ padding:'10px 12px', textAlign:i===9?'right':'left', fontSize:10, fontWeight:600, color:'#8C919E', textTransform:'uppercase', letterSpacing:1, borderBottom:'2px solid #E4E7EC' }}>{h}</th>)}
           </tr></thead>
           <tbody>{filtered.map(p=>{
             const cpv=(Number(p.cost)/10).toFixed(2);const mg=Number(p.retail)>0?((Number(p.retail)-Number(p.cost)/10)/Number(p.retail)*100).toFixed(1):'0';
@@ -118,6 +124,13 @@ export default function PricingPage() {
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:12,color:'#8C919E'}}>{mkt>0?`$${mkt}`:'—'}</td>
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:12,fontWeight:600,color:Number(mg)>=85?'#22C55E':Number(mg)>=70?'#F59E0B':'#DC2626'}}>{mg}%</td>
                 <td style={{padding:'12px',fontFamily:"'JetBrains Mono'",fontSize:11,fontWeight:600,color:mkt===0?'#8C919E':vs<0?'#22C55E':vs===0?'#8C919E':'#DC2626'}}>{mkt===0?'—':vs<0?`$${Math.abs(vs)} below`:vs===0?'At market':`$${vs} above`}</td>
+                <td style={{padding:'8px 12px',textAlign:'right'}}>
+                  {(() => {
+                    const pv = Number(p.cost) / 10;
+                    const sug = Math.round(pv / (1 - marginTarget / 100));
+                    return <button onClick={()=>updatePrice(p.id, sug)} style={{background:'none',border:'none',color:'#0072B5',cursor:'pointer',fontFamily:'monospace',fontSize:12,textDecoration:'underline'}}>${sug}</button>;
+                  })()}
+                </td>
                 <td style={{padding:'12px'}}>{!ie&&<button onClick={()=>{setEditId(p.id);setEditRetail(String(p.retail))}} style={{...cs.btn,background:'#F7F8FA',color:'#6B7A94',padding:'4px 12px',fontSize:11,border:'1px solid #E4E7EC'}}>Edit</button>}</td>
               </tr>
             );
@@ -127,7 +140,7 @@ export default function PricingPage() {
 
       <div style={{ ...cs.card, padding:20, marginTop:20 }}>
         <div style={{ fontSize:14, fontWeight:700, marginBottom:12 }}>Active Discount Tiers</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
+        <div className="admin-tile-row" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10 }}>
           {[{ r:'1-2 items', p:'0%', l:'No discount' },{ r:'3-4 items', p:'5%', l:'Starter Protocol' },{ r:'5-6 items', p:'10%', l:'Full Protocol' },{ r:'7+ items', p:'15%', l:'All-In' }].map((t,i)=>(
             <div key={i} style={{ padding:14, background:'#F7F8FA', borderRadius:6, textAlign:'center' }}>
               <div style={{ fontFamily:"'Barlow Condensed'", fontSize:22, fontWeight:700 }}>{t.p}</div>
