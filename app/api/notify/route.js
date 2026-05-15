@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import { requireRole } from '../../../lib/requireAdmin';
 
 // POST /api/notify — sends order notification email to admin.
-// Internal-only, triggered from the Stripe webhook / admin order flow.
+// Public endpoint (called by the customer-facing checkout in public/app.html
+// after a successful Stripe payment). No admin auth gate.
 export async function POST(request) {
-  const unauth = requireRole(request, 'admin');
-  if (unauth) return unauth;
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
