@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const ALLOWED_ACTIONS = new Set(['create', 'update', 'delete']);
 const ALLOWED_TYPES = new Set(['percent', 'fixed']);
 
 export async function POST(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
 
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;

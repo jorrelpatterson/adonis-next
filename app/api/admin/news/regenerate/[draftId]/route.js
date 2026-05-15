@@ -4,7 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 import { CURATOR_MODEL, buildSystemPrompt } from '../../../../../../lib/news/curator-prompt';
 import { validateCuratorOutput } from '../../../../../../lib/news/curator';
 import { renderDraft } from '../../../../../../lib/news/render';
@@ -24,7 +24,7 @@ async function sb(path, init = {}) {
 export const maxDuration = 180;
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
 
   // 1. Load draft + candidate

@@ -2,13 +2,13 @@
 // Manually trigger render for a draft (admin retry button).
 
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 import { renderDraft } from '../../../../../../lib/news/render';
 
 export const maxDuration = 120;
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
   try {
     const result = await renderDraft(params.draftId);

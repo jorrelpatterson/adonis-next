@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 // Admin-only read/write for the /admin/marketing/subscribers page.
 // Service-key wrapped because subscribers table contains customer PII.
@@ -20,7 +20,7 @@ async function sbFetch(path, init = {}) {
 }
 
 export async function GET(request) {
-  const unauth = requireAdmin(request);
+  const unauth = requireRole(request, 'admin', 'va');
   if (unauth) return unauth;
   if (!SUPABASE_URL || !SERVICE_KEY) {
     return NextResponse.json({ error: 'Server config missing' }, { status: 500 });
@@ -44,7 +44,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const unauth = requireAdmin(request);
+  const unauth = requireRole(request, 'admin', 'va');
   if (unauth) return unauth;
 
   const body = await request.json().catch(() => ({}));

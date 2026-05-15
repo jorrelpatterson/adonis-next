@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,7 +14,7 @@ function sbHeaders(extra = {}) {
 }
 
 export async function GET(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
 
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status');
@@ -34,7 +34,7 @@ export async function GET(request) {
 }
 
 export async function PATCH(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
 
   const body = await request.json().catch(() => ({}));
   const { id, status, admin_notes } = body;

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../../lib/requireAdmin';
+import { requireRole } from '../../../../lib/requireAdmin';
 import sharp from 'sharp';
 
 export const runtime = 'nodejs';
@@ -72,7 +72,7 @@ async function uploadImage(code, filename, buffer) {
 }
 
 export async function POST(request) {
-  const unauth = requireAdmin(request);
+  const unauth = requireRole(request, 'admin', 'va');
   if (unauth) return unauth;
 
   if (!SUPABASE_URL || !SERVICE_KEY) {

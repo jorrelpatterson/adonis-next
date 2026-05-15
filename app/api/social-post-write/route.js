@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ALLOWED_FIELDS = ['caption','scheduled_date','status','posted_at','image_path','source_compound'];
 
 export async function POST(request) {
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SUPABASE_URL || !SERVICE_KEY) return NextResponse.json({ error: 'Server config missing' }, { status: 500 });

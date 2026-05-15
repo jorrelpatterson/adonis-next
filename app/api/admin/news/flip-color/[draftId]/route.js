@@ -4,7 +4,7 @@
 // (Cover slide is the only one affected, but render.js does all 4 atomically.)
 
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 import { renderDraft } from '../../../../../../lib/news/render';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -21,7 +21,7 @@ async function sb(path, init = {}) {
 export const maxDuration = 120;
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
 
   const dRes = await sb(`/post_drafts?id=eq.${params.draftId}&select=accent_color`);

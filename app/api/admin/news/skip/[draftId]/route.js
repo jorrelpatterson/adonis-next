@@ -2,7 +2,7 @@
 // Mark draft skipped; put underlying candidate on 30-day cooldown.
 
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -16,7 +16,7 @@ async function sb(path, init = {}) {
 }
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
 
   const dRes = await sb(`/post_drafts?id=eq.${params.draftId}&select=candidate_id`);

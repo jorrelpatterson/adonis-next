@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 // Sends a digest email to all active ambassadors with their personalized asset kit URL +
 // summary of latest social posts. Triggered manually from /admin/content for now.
@@ -56,7 +56,7 @@ function buildHtml(firstName, code, posts) {
 }
 
 export async function POST(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
 
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;

@@ -1,7 +1,7 @@
 // app/api/admin/news/approve/[draftId]/route.js
 // Returns a zip of the 4 slide PNGs. Marks draft as posted.
 
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 import archiver from 'archiver';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -18,7 +18,7 @@ async function sb(path, init = {}) {
 export const maxDuration = 60;
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
 
   try {

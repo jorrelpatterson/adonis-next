@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 export async function POST(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
   try {
     const { ambassador, subject, message } = await request.json();
     if (!ambassador || !subject || !message) return NextResponse.json({ error:'Missing data' }, { status:400 });

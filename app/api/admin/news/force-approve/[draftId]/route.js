@@ -3,7 +3,7 @@
 // Renders if not yet rendered.
 
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../../../../lib/requireAdmin';
+import { requireRole } from '../../../../../../lib/requireAdmin';
 import { renderDraft } from '../../../../../../lib/news/render';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,7 +20,7 @@ async function sb(path, init = {}) {
 export const maxDuration = 120;
 
 export async function POST(request, { params }) {
-  const guard = requireAdmin(request);
+  const guard = requireRole(request, 'admin', 'va');
   if (guard) return guard;
 
   await sb(`/post_drafts?id=eq.${params.draftId}`, {
