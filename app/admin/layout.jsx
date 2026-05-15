@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import './admin-mobile.css';
+import { isPathAllowed } from '../../lib/admin-roles';
 
 const NAV = [
   { href: '/admin',              label: 'Dashboard',    icon: '📊' },
@@ -24,6 +25,15 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userLoaded, setUserLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then(r => r.json())
+      .then(d => { setCurrentUser(d.user); setUserLoaded(true); })
+      .catch(() => setUserLoaded(true));
+  }, []);
 
   // Close drawer on route change
   useEffect(() => {
@@ -93,23 +103,28 @@ export default function AdminLayout({ children }) {
           </div>
 
           <nav style={{ flex:1, overflowY:'auto' }}>
-            {NAV.map(item => {
-              const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
-              return (
-                <Link key={item.href} href={item.href} style={{
-                  display:'flex', alignItems:'center', gap:12,
-                  padding: collapsed ? '12px 18px' : '12px 20px',
-                  color:      active ? '#E8D5B7' : '#6B7A94',
-                  background: active ? 'rgba(232,213,183,0.06)' : 'transparent',
-                  borderLeft: active ? '3px solid #E8D5B7' : '3px solid transparent',
-                  textDecoration:'none', fontSize:13, fontWeight: active ? 600 : 400,
-                  transition:'all 0.15s',
-                }}>
-                  <span style={{ fontSize:16 }}>{item.icon}</span>
-                  {!collapsed && item.label}
-                </Link>
-              );
-            })}
+            {NAV
+              .filter(item => {
+                if (!userLoaded || !currentUser) return false; // while loading, show nothing — avoids flashing admin items at VA users
+                return isPathAllowed(currentUser.role, item.href);
+              })
+              .map(item => {
+                const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                return (
+                  <Link key={item.href} href={item.href} style={{
+                    display:'flex', alignItems:'center', gap:12,
+                    padding: collapsed ? '12px 18px' : '12px 20px',
+                    color:      active ? '#E8D5B7' : '#6B7A94',
+                    background: active ? 'rgba(232,213,183,0.06)' : 'transparent',
+                    borderLeft: active ? '3px solid #E8D5B7' : '3px solid transparent',
+                    textDecoration:'none', fontSize:13, fontWeight: active ? 600 : 400,
+                    transition:'all 0.15s',
+                  }}>
+                    <span style={{ fontSize:16 }}>{item.icon}</span>
+                    {!collapsed && item.label}
+                  </Link>
+                );
+              })}
           </nav>
 
           {!collapsed && (
@@ -117,6 +132,14 @@ export default function AdminLayout({ children }) {
               <a href="https://advncelabs.com" target="_blank" rel="noopener noreferrer"
                 style={{ fontSize:11, color:'#6B7A94', textDecoration:'none' }}>↗ advncelabs.com</a>
               <Link href="/app" style={{ fontSize:11, color:'#6B7A94', textDecoration:'none' }}>← Back to App</Link>
+              {currentUser && (
+                <div style={{
+                  fontSize: 11, color: '#9BA5BD', marginBottom: 4,
+                }}>
+                  Signed in as <span style={{ color: '#E8D5B7', fontWeight: 600 }}>{currentUser.name}</span>
+                  <span style={{ color: '#6B7A94' }}> · {currentUser.role}</span>
+                </div>
+              )}
               <button onClick={handleLogout}
                 style={{ fontSize:11, color:'#EF4444', background:'none', border:'none', cursor:'pointer', textAlign:'left', padding:0 }}>
                 Sign Out
