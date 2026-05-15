@@ -118,9 +118,12 @@ export default function AmbassadorsPage() {
   const saveEdit = async (amb) => {
     setSaving(prev=>({...prev,[amb.id]:true}));
     const f = editForm[amb.id];
+    const fields = isVA
+      ? { code: f.code.toUpperCase() }
+      : { name:f.name, email:f.email, phone:f.phone||null, code:f.code.toUpperCase(), tier:f.tier };
     const res = await fetch('/api/ambassador-write', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'update', id: amb.id, fields:{name:f.name,email:f.email,phone:f.phone||null,code:f.code.toUpperCase(),tier:f.tier} })
+      body: JSON.stringify({ action:'update', id: amb.id, fields })
     });
     if (!res.ok) {
       const err = await res.json().catch(()=>({}));
