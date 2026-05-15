@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { findUserByEmail } from './lib/admin-users';
+import { isPathAllowed } from './lib/admin-roles';
 
 // Pages that moved under /admin/marketing/. Preserve deep paths + query.
 const MARKETING_MOVES = [
@@ -18,14 +20,32 @@ export function middleware(request) {
     }
   }
 
-  // 2. Protect /admin routes (not /admin/login)
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    const cookie = request.cookies.get('adonis_admin');
-    if (!cookie || cookie.value !== 'authenticated') {
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('from', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  // 2. Skip auth for the login page itself
+  if (pathname === '/admin/login') return NextResponse.next();
+
+  // 3. Read role + email cookies
+  const role = request.cookies.get('adonis_admin_role')?.value;
+  const email = request.cookies.get('adonis_admin_email')?.value;
+
+  // No cookies → redirect to login
+  if (!role || !email) {
+    const loginUrl = new URL('/admin/login', request.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Cookies present but stale (user removed or role changed) → treat as logged out
+  const user = findUserByEmail(email);
+  if (!user || user.role !== role) {
+    const loginUrl = new URL('/admin/login', request.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // 4. Role-based path gating
+  if (!isPathAllowed(role, pathname)) {
+    // Authenticated but not authorized → bounce to dashboard, not login
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
   return NextResponse.next();
