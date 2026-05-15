@@ -32,11 +32,13 @@ const SOURCE_PRIORITY = {
 };
 
 export async function GET(req) {
-  // Auth
+  // Auth — fail closed: 401 unless Vercel cron user-agent OR valid Bearer token.
+  // CRON_SECRET MUST be set for non-Vercel-cron callers to authenticate.
   const isVercelCron = req.headers.get('user-agent')?.includes('vercel-cron');
   const auth = req.headers.get('authorization');
   const expected = process.env.CRON_SECRET;
-  if (!isVercelCron && expected && auth !== `Bearer ${expected}`) {
+  const validBearer = expected && auth === `Bearer ${expected}`;
+  if (!isVercelCron && !validBearer) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
