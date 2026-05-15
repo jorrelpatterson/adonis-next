@@ -16,13 +16,12 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0, lowStock: 0, openPos: 0, inTransitValue: 0 });
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/me')
       .then(r => r.json())
-      .then(d => { setCurrentUser(d.user); setUserLoaded(true); })
-      .catch(() => setUserLoaded(true));
+      .then(d => setCurrentUser(d.user))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export default function AdminDashboard() {
     load();
   }, []);
 
-  if (!userLoaded) return null;
   if (currentUser?.role === 'va') return <VaDashboard />;
 
   return (

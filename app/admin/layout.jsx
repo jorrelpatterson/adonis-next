@@ -26,13 +26,12 @@ export default function AdminLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/me')
       .then(r => r.json())
-      .then(d => { setCurrentUser(d.user); setUserLoaded(true); })
-      .catch(() => setUserLoaded(true));
+      .then(d => setCurrentUser(d.user))
+      .catch(() => {});
   }, []);
 
   // Close drawer on route change
@@ -105,8 +104,11 @@ export default function AdminLayout({ children }) {
           <nav style={{ flex:1, overflowY:'auto' }}>
             {NAV
               .filter(item => {
-                if (!userLoaded || !currentUser) return false; // while loading, show nothing — avoids flashing admin items at VA users
-                return isPathAllowed(currentUser.role, item.href);
+                // Default: show everything (admin behavior). Only filter when the
+                // user is confirmed VA — middleware already enforces that anyone in
+                // /admin/* is authenticated, so failing open here is safe.
+                if (currentUser?.role === 'va') return isPathAllowed('va', item.href);
+                return true;
               })
               .map(item => {
                 const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
