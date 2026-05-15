@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
-import { requireAdmin } from '../../../lib/requireAdmin';
+import { requireRole } from '../../../lib/requireAdmin';
 
 // Server-side proxy for ambassador UPDATE/DELETE — uses SUPABASE_SERVICE_KEY
 // to bypass RLS, which only allows anon INSERT + SELECT on ambassadors.
 
 const ALLOWED_FIELDS = ['name', 'email', 'phone', 'code', 'tier', 'status'];
+const VA_ALLOWED_FIELDS = ['status', 'code']; // VA can change status (active/paused/banned) and the referral code
 const ALLOWED_TIERS = ['starter', 'builder', 'elite'];
 const ALLOWED_STATUSES = ['active', 'paused', 'banned'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
+  const unauth = requireRole(request, 'admin', 'va'); if (unauth) return unauth;
+
+  const role = request.cookies.get('adonis_admin_role')?.value;
+  const isVA = role === 'va';
 
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -23,6 +27,20 @@ export async function POST(request) {
   try { body = await request.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
 
   const { action, id, fields } = body || {};
+
+  // VA sub-action restrictions
+  if (isVA && action === 'delete') {
+    return NextResponse.json({ error: 'Forbidden: VA cannot delete ambassadors' }, { status: 403 });
+  }
+  if (isVA && fields && typeof fields === 'object') {
+    const disallowed = Object.keys(fields).filter(k => !VA_ALLOWED_FIELDS.includes(k));
+    if (disallowed.length) {
+      return NextResponse.json({
+        error: `Forbidden: VA cannot edit fields: ${disallowed.join(', ')}`,
+      }, { status: 403 });
+    }
+  }
+
   if (!UUID_RE.test(String(id || ''))) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   if (action !== 'update' && action !== 'delete') return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 
