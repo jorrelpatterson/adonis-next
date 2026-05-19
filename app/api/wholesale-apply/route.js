@@ -15,11 +15,6 @@ const NOTIFY =
 
 const VALID_VOLUMES = new Set(['10–99', '100–499', '500–999', '1000+']);
 
-// Map volume range labels to their lower-bound integer.
-// The distributors.expected_volume column is type integer; the full label
-// is preserved in the notes field so nothing is lost for the admin.
-const VOLUME_INT = { '10–99': 10, '100–499': 100, '500–999': 500, '1000+': 1000 };
-
 export async function POST(request) {
   let body;
   try {
@@ -63,9 +58,8 @@ export async function POST(request) {
     phone: body.phone.trim(),
     email: body.email.trim().toLowerCase(),
     country: body.country.trim(),
-    market: body.state.trim(), // existing column reused for region/state
-    expected_volume: VOLUME_INT[body.expected_volume], // DB column is integer; range label in notes
-    notes: `Volume range: ${body.expected_volume}`,
+    market: body.state.trim(),
+    expected_volume: body.expected_volume,
     status: 'pending',
     submitted_at: new Date().toISOString(),
   };
@@ -101,9 +95,7 @@ export async function POST(request) {
           from: 'advnce labs <orders@advncelabs.com>',
           to: NOTIFY,
           subject: `New wholesale inquiry — ${row.business_name}`,
-          // Pass original string label for volume so the email is human-readable.
-          // (row.expected_volume is the integer stored in the DB.)
-          html: wholesaleNotifyHtml({ ...row, expected_volume: body.expected_volume, state: body.state }),
+          html: wholesaleNotifyHtml({ ...row, state: body.state }),
         }),
       });
     } catch (e) {
