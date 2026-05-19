@@ -92,13 +92,15 @@ function priceTiers(cost, retail) {
     f = Math.min(f, cap);
   }
 
-  // Enforce non-increasing order: A >= B >= C >= D >= E >= F
-  // Walk F -> A. If a tier is lower than the one to its right, bring it up.
-  e = Math.max(e, f);
-  d = Math.max(d, e);
-  cTier = Math.max(cTier, d);
-  b = Math.max(b, cTier);
-  a = Math.max(a, b);
+  // Enforce strict gap: each lower-volume tier must be at least $2 above the next higher-volume tier.
+  // If the cap forces equality, accept it (best-effort — most products will respect the gap).
+  const capLimit = cap > 0 ? cap : Infinity;
+  const minGap = 2;
+  e = Math.min(Math.max(e, f + minGap), capLimit);
+  d = Math.min(Math.max(d, e + minGap), capLimit);
+  cTier = Math.min(Math.max(cTier, d + minGap), capLimit);
+  b = Math.min(Math.max(b, cTier + minGap), capLimit);
+  a = Math.min(Math.max(a, b + minGap), capLimit);
 
   // Viability: drop products where floor > cap (can't sell >=5% off retail)
   const viable = floor <= cap || cap === 0;
