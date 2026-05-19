@@ -220,7 +220,10 @@ export default function DistributorsPage() {
                             {sendingApproval[dist.id]?'Sending...':'✉ Resend Approval Email'}
                           </button>
                           <div style={{marginTop:16}}>
-                            <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:8}}>Change Tier</div>
+                            <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:4}}>Tier (informational tag)</div>
+                            <div style={{fontSize:11,color:'#8C919E',fontStyle:'italic',marginBottom:8,lineHeight:1.5}}>
+                              Wholesale pricing is per-SKU on the published sheet. This tier label is a relationship tag only.
+                            </div>
                             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                               {Object.entries(TIER_DISC).map(([k,v])=>(
                                 <button key={k} onClick={async()=>{await sbPatch('distributors',{id:dist.id},{tier:k});setDistributors(prev=>prev.map(d=>d.id===dist.id?{...d,tier:k}:d));}} style={{...cs.btn,padding:'6px 12px',fontSize:11,background:dist.tier===k?'#0072B5':'#F7F8FA',color:dist.tier===k?'#fff':'#6B7A94',border:'1px solid '+(dist.tier===k?'#0072B5':'#E4E7EC')}}>{k.charAt(0).toUpperCase()+k.slice(1)} ({v})</button>
