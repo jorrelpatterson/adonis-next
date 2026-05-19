@@ -36,6 +36,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Distributor not found or missing email' }, { status: 400 });
   }
 
+  if (dist.status !== 'approved' || !dist.login_code) {
+    return NextResponse.json(
+      { error: 'Distributor must be approved with a login code before sending the pricing sheet' },
+      { status: 400 }
+    );
+  }
+
   if (!RESEND) {
     return NextResponse.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
   }

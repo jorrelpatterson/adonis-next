@@ -262,7 +262,7 @@ export default function DistributorsPage() {
                   <div className="admin-split" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:16}}>
                     <div>
                       <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:12}}>Application Details</div>
-                      {[{l:'Business',v:dist.business_name},{l:'Contact',v:dist.contact_name},{l:'Email',v:dist.email},{l:'Phone',v:dist.phone},{l:'Market',v:dist.market},{l:'Expected Vol.',v:dist.expected_volume+'+ vials/mo'},{l:'Website',v:dist.website||'—'}].map((x,i)=>(
+                      {[{l:'Business',v:dist.business_name},{l:'Contact',v:dist.contact_name},{l:'Email',v:dist.email},{l:'Phone',v:dist.phone},{l:'Market',v:dist.market},{l:'Expected Vol.',v:(dist.expected_volume||'—')+' vials/mo'},{l:'Website',v:dist.website||'—'}].map((x,i)=>(
                         <div key={i} style={{display:'flex',gap:12,padding:'6px 0',borderBottom:'1px solid #F0F1F4',fontSize:13}}>
                           <span style={{color:'#8C919E',width:100,flexShrink:0}}>{x.l}</span>
                           <span style={{color:'#0F1928'}}>{x.v}</span>
