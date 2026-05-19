@@ -46,16 +46,22 @@ export default function DistributorsPage() {
   const [approveForm, setApproveForm]   = useState({});
   const [saving, setSaving]             = useState({});
   const [sendingApproval, setSendingApproval] = useState({});
+  const [sheet, setSheet] = useState(null); // { exists, updated_at, size }
+  const [sheetUploading, setSheetUploading] = useState(false);
 
   useEffect(() => {
     async function load() {
       try {
-        const [dists, orders] = await Promise.all([
+        const [dists, orders, sheetInfo] = await Promise.all([
           sbFetch('distributors', 'select=*&order=created_at.desc'),
           sbFetch('distributor_orders', 'select=*&order=created_at.desc'),
+          fetch(`${SUPABASE_URL}/storage/v1/object/info/wholesale-sheets/current.pdf`, {
+            headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+          }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
         ]);
         setDistributors(dists);
         setDistOrders(orders);
+        setSheet(sheetInfo);
       } catch(e) {
         console.error('Distributors load error:', e);
       } finally {
@@ -89,7 +95,7 @@ export default function DistributorsPage() {
     try {
       const res = await fetch('/api/distributor-approval', {
         method: 'POST', headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ distributor: { business_name:dist.business_name, contact_name:dist.contact_name, email:dist.email, login_code:dist.login_code, tier:dist.tier||'entry' }})
+        body: JSON.stringify({ distributor_id: dist.id })
       });
       if (res.ok) alert('Approval email sent to ' + dist.email);
       else alert('Failed — check Resend logs');
@@ -102,6 +108,64 @@ export default function DistributorsPage() {
     setDistributors(prev => prev.map(d => d.id === distId ? { ...d, status: newStatus } : d));
   };
 
+  const uploadSheet = async (file) => {
+    if (!file) return;
+    if (file.type !== 'application/pdf') {
+      alert('PDF only');
+      return;
+    }
+    setSheetUploading(true);
+    try {
+      // Archive existing if present
+      if (sheet) {
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        await fetch(`${SUPABASE_URL}/storage/v1/object/copy`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            bucketId: 'wholesale-sheets',
+            sourceKey: 'current.pdf',
+            destinationKey: `archive/${stamp}.pdf`,
+          }),
+        });
+      }
+      const up = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/wholesale-sheets/current.pdf`,
+        {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/pdf',
+            'x-upsert': 'true',
+          },
+          body: file,
+        }
+      );
+      if (!up.ok) {
+        const err = await up.text();
+        alert('Upload failed: ' + err);
+        setSheetUploading(false);
+        return;
+      }
+      // refresh info
+      const infoRes = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/info/wholesale-sheets/current.pdf`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      );
+      setSheet(infoRes.ok ? await infoRes.json() : { updated_at: new Date().toISOString() });
+      alert('Pricing sheet updated.');
+    } catch (e) {
+      alert('Upload error: ' + e.message);
+    } finally {
+      setSheetUploading(false);
+    }
+  };
+
   const pending  = distributors.filter(d => d.status === 'pending').length;
   const approved = distributors.filter(d => d.status === 'approved').length;
   const totalSpent = distOrders.reduce((s,o) => s + parseFloat(o.subtotal||0), 0);
@@ -112,6 +176,42 @@ export default function DistributorsPage() {
     <div>
       <h1 className="admin-page-h1" style={cs.h1}>Distributors</h1>
       <p style={{color:'#8C919E',fontSize:14,marginBottom:24}}>{distributors.length} applications · {approved} approved · {pending} pending</p>
+      <div style={{
+        ...cs.card,
+        padding:16,
+        marginBottom:16,
+        display:'flex',
+        justifyContent:'space-between',
+        alignItems:'center',
+        gap:16,
+        flexWrap:'wrap',
+      }}>
+        <div>
+          <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:4}}>Current Pricing Sheet</div>
+          {sheet ? (
+            <div style={{fontSize:13,color:'#0F1928'}}>
+              <span style={{fontFamily:"'JetBrains Mono'",color:'#0072B5'}}>current.pdf</span>
+              <span style={{color:'#8C919E',marginLeft:8,fontSize:11}}>
+                Updated {new Date(sheet.updated_at || sheet.created_at || Date.now()).toLocaleString()}
+              </span>
+            </div>
+          ) : (
+            <div style={{fontSize:13,color:'#F59E0B'}}>
+              No sheet uploaded — applicants can't be sent pricing yet.
+            </div>
+          )}
+        </div>
+        <label style={{...cs.btn, background:'#0072B5', color:'#fff', opacity:sheetUploading?0.5:1, cursor:'pointer'}}>
+          {sheetUploading ? 'Uploading...' : (sheet ? 'Replace Sheet' : 'Upload Sheet')}
+          <input
+            type="file"
+            accept="application/pdf"
+            disabled={sheetUploading}
+            onChange={(e) => uploadSheet(e.target.files?.[0])}
+            style={{display:'none'}}
+          />
+        </label>
+      </div>
       <div className="admin-tile-row" style={{marginBottom:24}}>
         {[
           {l:'Total Applications',v:distributors.length,c:'#0F1928'},
