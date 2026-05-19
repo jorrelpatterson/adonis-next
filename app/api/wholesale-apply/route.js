@@ -1,0 +1,119 @@
+// app/api/wholesale-apply/route.js
+import { NextResponse } from 'next/server';
+import { wholesaleNotifyHtml } from '../../../lib/email-templates/wholesale-notify';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const RESEND = process.env.RESEND_API_KEY;
+const NOTIFY =
+  process.env.WHOLESALE_NOTIFY_EMAIL ||
+  process.env.ADMIN_EMAIL ||
+  'jorrelpatterson@gmail.com';
+
+const VALID_VOLUMES = new Set(['10–99', '100–499', '500–999', '1000+']);
+
+// Map volume range labels to their lower-bound integer.
+// The distributors.expected_volume column is type integer; the full label
+// is preserved in the notes field so nothing is lost for the admin.
+const VOLUME_INT = { '10–99': 10, '100–499': 100, '500–999': 500, '1000+': 1000 };
+
+export async function POST(request) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  // Honeypot — if filled, silently succeed (don't tell the bot).
+  if (body.website_url_hp && body.website_url_hp.length > 0) {
+    return NextResponse.json({ success: true });
+  }
+
+  // Required field validation
+  const required = ['business_name', 'contact_name', 'phone', 'email', 'country', 'state', 'expected_volume'];
+  for (const f of required) {
+    if (!body[f] || String(body[f]).trim() === '') {
+      return NextResponse.json({ error: `Missing field: ${f}` }, { status: 400 });
+    }
+  }
+
+  if (!VALID_VOLUMES.has(body.expected_volume)) {
+    return NextResponse.json({ error: 'Invalid expected_volume' }, { status: 400 });
+  }
+
+  if (!body.research_use_only || !body.agree_terms) {
+    return NextResponse.json({ error: 'Must accept both checkboxes' }, { status: 400 });
+  }
+
+  // Basic email shape
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
+  }
+
+  // Turnstile verification — wired in Task 6. For now: skip if no secret.
+  // (The check stays here so Task 6 only adds the verification call.)
+
+  const row = {
+    business_name: body.business_name.trim(),
+    contact_name: body.contact_name.trim(),
+    phone: body.phone.trim(),
+    email: body.email.trim().toLowerCase(),
+    country: body.country.trim(),
+    market: body.state.trim(), // existing column reused for region/state
+    expected_volume: VOLUME_INT[body.expected_volume], // DB column is integer; range label in notes
+    notes: `Volume range: ${body.expected_volume}`,
+    status: 'pending',
+    submitted_at: new Date().toISOString(),
+  };
+
+  // Insert into Supabase
+  const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/distributors`, {
+    method: 'POST',
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify(row),
+  });
+
+  if (!insertRes.ok) {
+    const err = await insertRes.text();
+    console.error('wholesale-apply insert failed:', err);
+    return NextResponse.json({ error: 'Could not save application' }, { status: 500 });
+  }
+
+  // Notify admin (best-effort — don't block success on email failure)
+  if (RESEND) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${RESEND}`,
+        },
+        body: JSON.stringify({
+          from: 'advnce labs <orders@advncelabs.com>',
+          to: NOTIFY,
+          subject: `New wholesale inquiry — ${row.business_name}`,
+          // Pass original string label for volume so the email is human-readable.
+          // (row.expected_volume is the integer stored in the DB.)
+          html: wholesaleNotifyHtml({ ...row, expected_volume: body.expected_volume, state: body.state }),
+        }),
+      });
+    } catch (e) {
+      console.error('wholesale-apply notify failed:', e);
+    }
+  }
+
+  return NextResponse.json({ success: true });
+}
+
+export async function GET() {
+  return NextResponse.json({ status: 'wholesale-apply route is live' });
+}
