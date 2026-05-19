@@ -57,48 +57,59 @@ for (const cat of Object.keys(byCat)) {
   byCat[cat].sort((a, b) => a.displayKey.localeCompare(b.displayKey));
 }
 
+// ─── Six-tier pricing cascade ─────────────────────────────────────────────────
+// Tiers: A 10–90 · B 100–190 · C 200–290 · D 300–390 · E 400–490 · F 500+
+// Linear margin ramp: A 50% → F cost+$4
 function priceTiers(cost, retail) {
   const c = Number(cost) || 0;
   const r = Number(retail) || 0;
 
-  // Raw formulas
-  let a = c * 1.50;          // tier A: 50% margin
-  let b = c * 1.30;          // tier B: 30% margin
-  let cTier = c * 1.15;      // tier C: 15% margin
-  let d = c + 4;             // tier D: $4 fixed markup
+  // Raw formulas — linear interpolation from 50% margin (A) to cost+$4 (F)
+  let a = c * 1.50;          // 50% margin
+  let b = c * 1.40;          // 40% margin
+  let cTier = c * 1.30;      // 30% margin
+  let d = c * 1.20;          // 20% margin
+  let e = c * 1.10;          // 10% margin
+  let f = c + 4;             // $4 fixed markup
 
-  // Floor: every tier must be at least cost + $2
+  // Floor: every tier >= cost + $2
   const floor = c + 2;
   a = Math.max(a, floor);
   b = Math.max(b, floor);
   cTier = Math.max(cTier, floor);
   d = Math.max(d, floor);
+  e = Math.max(e, floor);
+  f = Math.max(f, floor);
 
-  // Cap: every tier must be at most retail × 0.95 (wholesale beats retail by 5%+)
+  // Cap: every tier <= retail x 0.95
   const cap = r * 0.95;
   if (cap > 0) {
     a = Math.min(a, cap);
     b = Math.min(b, cap);
     cTier = Math.min(cTier, cap);
     d = Math.min(d, cap);
+    e = Math.min(e, cap);
+    f = Math.min(f, cap);
   }
 
-  // Enforce non-increasing order: A ≥ B ≥ C ≥ D
-  // Walk D → A. If a tier is lower than the one to its right, bring it up.
+  // Enforce non-increasing order: A >= B >= C >= D >= E >= F
+  // Walk F -> A. If a tier is lower than the one to its right, bring it up.
+  e = Math.max(e, f);
+  d = Math.max(d, e);
   cTier = Math.max(cTier, d);
   b = Math.max(b, cTier);
   a = Math.max(a, b);
 
-  // Viability check: if even the floor exceeds the cap, product can't be sold
-  // profitably at >5% off retail. Mark as not viable (caller decides whether
-  // to hide the row or just leave dashes).
+  // Viability: drop products where floor > cap (can't sell >=5% off retail)
   const viable = floor <= cap || cap === 0;
 
   return {
     a: Math.round(a),
     b: Math.round(b),
-    cTier: Math.round(cTier),
+    c: Math.round(cTier),
     d: Math.round(d),
+    e: Math.round(e),
+    f: Math.round(f),
     viable,
   };
 }
@@ -133,10 +144,10 @@ const html = renderHtml({ byCat, orderedCats, today });
 writeFileSync(join(ROOT, 'wholesale-pricing-template.html'), html);
 
 const visibleCount = orderedCats.reduce((sum, cat) => sum + byCat[cat].length, 0);
-console.log(`\n✓ Wrote wholesale-pricing-template.html`);
+console.log(`\n  Wrote wholesale-pricing-template.html`);
 console.log(`  ${visibleCount} products visible across ${orderedCats.length} categories`);
 if (nonViable.length) {
-  console.warn(`\n⚠ ${nonViable.length} products hidden — cost+$2 exceeds retail×0.95:`);
+  console.warn(`\n  ${nonViable.length} products hidden -- cost+$2 exceeds retail x 0.95:`);
   for (const n of nonViable) {
     console.warn(`  ${n.name}: cost=$${n.cost}, retail=$${n.retail}, floor=$${n.floor.toFixed(2)}, cap=$${n.cap.toFixed(2)}`);
   }
@@ -156,53 +167,47 @@ function dollar(n) {
   return '$' + Number(n).toLocaleString('en-US');
 }
 
-/**
- * Formats a category name as an italic display title.
- * The LAST word is wrapped in <em> for italic-emphasis.
- * Single-word titles are entirely italic.
- */
-function formatCatTitle(name) {
-  const words = name.split(' ');
-  if (words.length === 1) {
-    return `<em>${esc(name)}</em>`;
-  }
-  const last = words.pop();
-  return `${esc(words.join(' '))} <em>${esc(last)}</em>`;
-}
-
 function renderHtml({ byCat, orderedCats, today }) {
   const categorySections = orderedCats.map((cat, idx) => {
     const catNum = String(idx + 1).padStart(2, '0');
     const products = byCat[cat];
-    const rows = products.map((p) => {
+    const rows = products.map((p, rowIdx) => {
       const t = priceTiers(p.cost, p.retail);
+      const evenRow = rowIdx % 2 === 0;
       return `
-          <tr>
+          <tr class="${evenRow ? 'row-even' : ''}">
             <td class="prod-name">${esc(p.name)}</td>
             <td class="prod-size">${esc(p.size)}</td>
             <td class="price retail">${dollar(p.retail)}</td>
-            <td class="price t1">${dollar(t.a)}</td>
-            <td class="price t2">${dollar(t.b)}</td>
-            <td class="price t3">${dollar(t.cTier)}</td>
-            <td class="price t4">${dollar(t.d)}</td>
+            <td class="price ta">${dollar(t.a)}</td>
+            <td class="price tb">${dollar(t.b)}</td>
+            <td class="price tc">${dollar(t.c)}</td>
+            <td class="price td">${dollar(t.d)}</td>
+            <td class="price te">${dollar(t.e)}</td>
+            <td class="price tf">${dollar(t.f)}</td>
           </tr>`;
     }).join('');
 
     return `
-    <div class="category-block${idx > 0 && idx % 2 === 0 ? ' page-break' : ''}">
-      <div class="bgn">${catNum}</div>
-      <div class="cat-eyebrow">Category ${catNum}</div>
-      <h2 class="cat-title">${formatCatTitle(cat)}</h2>
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">${catNum}</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">${esc(cat.toUpperCase())}</span>
+      </div>
+      <div class="cat-rule"></div>
       <table class="pricing-table">
         <thead>
           <tr>
             <th class="th-name">Product</th>
             <th class="th-size">Size</th>
             <th class="th-price">Retail</th>
-            <th class="th-price">10–100</th>
-            <th class="th-price">110–500</th>
-            <th class="th-price">510–1000</th>
-            <th class="th-price">1010+</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
           </tr>
         </thead>
         <tbody>${rows}
@@ -216,266 +221,256 @@ function renderHtml({ byCat, orderedCats, today }) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>advnce labs — Wholesale Pricing · ${esc(today)}</title>
+<title>advnce labs &mdash; Wholesale Pricing &middot; ${esc(today)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@200;300;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 /* ─── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root {
-  --bg:    #050507;
-  --tx:    #E8E4E0;
-  --txd:   #5A5856;
-  --gold:  #E8D5B7;
-  --gold2: #C0B8A0;
-  --fd:    'Cormorant Garamond', serif;
-  --fn:    'Outfit', sans-serif;
-  --border: rgba(232,213,183,.06);
+  --cream:  #F4F2EE;
+  --ink:    #1A1C22;
+  --cyan:   #00A0A8;
+  --amber:  #E07C24;
+  --dim:    #7A7D88;
+  --border: #E4E7EC;
+  --ghost:  rgba(0,0,0,0.03);
+
+  --fn: 'Barlow Condensed', Arial, sans-serif;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fm: 'JetBrains Mono', monospace;
 }
 
 html, body {
-  background: var(--bg);
-  color: var(--tx);
+  background: var(--cream);
+  color: var(--ink);
   font-family: var(--fn);
-  font-weight: 300;
   font-size: 12pt;
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
 }
 
-/* Grain texture overlay — matches .gr on advncelabs.com */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 128px;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
 .sheet {
-  position: relative;
-  z-index: 1;
   max-width: 9.5in;
   margin: 0 auto;
-  padding: 0.35in 0;
+  padding: 0.45in 0.1in 0.35in;
 }
 
 /* ─── Header ────────────────────────────────────── */
 .sheet-header {
   text-align: center;
   margin-bottom: 0.4in;
-  padding-bottom: 22pt;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 24pt;
 }
 
-/* Wordmark — matches nav .logo on site (small, italic, gold) */
-.wordmark {
-  font-family: var(--fd);
-  font-style: italic;
-  font-weight: 300;
-  font-size: 17pt;
-  letter-spacing: .1em;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 7pt;
+.logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12pt;
 }
 
-/* Sheet title eyebrow */
-.sheet-eyebrow {
+.logo-wordmark {
   font-family: var(--fn);
-  font-size: 7.5pt;
-  font-weight: 700;
+  font-weight: 300;
+  font-size: 14pt;
   letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 5pt;
+  color: var(--ink);
+  text-transform: lowercase;
+  line-height: 1;
 }
 
-.sheet-date {
-  font-family: var(--fn);
-  font-size: 8pt;
-  font-weight: 300;
-  color: var(--txd);
-  letter-spacing: 1px;
+.logo-wordmark .labs {
+  color: var(--dim);
+}
+
+.header-rule {
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--cyan);
+  margin: 0 auto 12pt;
+}
+
+.sheet-subhead {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--dim);
+  display: inline;
+}
+
+.draft-label {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--amber);
+  border-bottom: 1px solid var(--amber);
+  display: inline;
+  margin-left: 8px;
 }
 
 /* ─── Per-Vial Banner ───────────────────────────── */
 .pvial-banner {
   margin: 0 auto 0.35in;
-  max-width: 6in;
+  max-width: 5.5in;
   text-align: center;
-  border-top: 1px solid rgba(232,213,183,.18);
-  border-bottom: 1px solid rgba(232,213,183,.18);
-  padding: 16pt 24pt;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 16pt 28pt;
 }
 
-.pvial-label {
+.pvial-title {
   font-family: var(--fn);
-  font-size: 7.5pt;
-  font-weight: 700;
-  letter-spacing: 3px;
+  font-size: 16pt;
+  font-weight: 900;
   text-transform: uppercase;
-  color: var(--txd);
+  letter-spacing: 2px;
+  color: var(--ink);
   margin-bottom: 8pt;
 }
 
-.pvial-main {
-  font-family: var(--fd);
-  font-weight: 300;
-  font-size: 28pt;
-  line-height: 1.05;
-  letter-spacing: -1px;
-  color: var(--tx);
-  margin-bottom: 10pt;
-}
-
-.pvial-main em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--gold);
-}
-
-.pvial-rules {
-  display: flex;
-  flex-direction: column;
-  gap: 4pt;
-  align-items: center;
-}
-
-.pvial-rule {
-  font-family: var(--fn);
+.pvial-sub {
+  font-family: var(--fm);
   font-size: 9pt;
-  font-weight: 300;
-  color: var(--txd);
-  letter-spacing: .3px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--dim);
+  line-height: 1.7;
 }
 
-.pvial-rule strong {
-  font-weight: 500;
-  color: var(--tx);
-}
-
-/* ─── Tier Legend Eyebrow ───────────────────────── */
+/* ─── Tier Legend ───────────────────────────────── */
 .tier-legend {
   text-align: center;
-  margin: 0 auto 0.3in;
-  font-family: var(--fn);
-  font-size: 7pt;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
+  margin: 0 auto 0.35in;
+  font-size: 0;
   line-height: 2;
-  word-spacing: 1px;
 }
 
-.tl-buy {
-  color: var(--gold);
+.tl-label {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 6pt;
 }
 
-.tl-sep {
-  color: var(--txd);
+.tl-item {
+  display: inline-block;
+  margin: 0 10pt;
+  white-space: nowrap;
 }
 
-.tl-tier {
-  color: #E8D5B7;
+.tl-letter {
+  font-family: var(--fn);
+  font-size: 11pt;
   font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 1px;
+}
+
+.tl-dot {
+  font-family: var(--fm);
+  font-size: 9pt;
+  color: var(--dim);
+  margin: 0 3px;
 }
 
 .tl-range {
-  color: var(--txd);
+  font-family: var(--fm);
+  font-size: 9pt;
+  color: var(--dim);
+}
+
+/* ─── Divider ───────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 0.35in;
 }
 
 /* ─── Category Blocks ───────────────────────────── */
 .category-block {
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 0.3in;
-  padding: 20pt 0 16pt;
+  margin-bottom: 0.32in;
+  padding-top: 18pt;
   border-top: 1px solid var(--border);
+  page-break-inside: avoid;
 }
 
-/* Faded background numeral — matches .split .bgn on site */
-.bgn {
-  font-family: var(--fd);
-  font-style: italic;
-  font-weight: 300;
-  font-size: 180pt;
-  color: rgba(232,213,183,0.03);
-  position: absolute;
-  right: -3%;
-  bottom: -10%;
-  line-height: .8;
-  pointer-events: none;
-  user-select: none;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
-/* Category eyebrow — matches .split .lbl on site */
 .cat-eyebrow {
-  font-family: var(--fn);
-  font-size: 8pt;
-  font-weight: 700;
-  letter-spacing: 3px;
+  font-family: var(--fm);
+  font-size: 9pt;
   text-transform: uppercase;
-  color: var(--gold);
+  letter-spacing: 3px;
   margin-bottom: 6pt;
+  line-height: 1;
 }
 
-/* Category title — matches .split h2 on site */
-.cat-title {
-  font-family: var(--fd);
-  font-weight: 300;
-  font-size: 34pt;
-  line-height: 1.05;
-  letter-spacing: -1px;
-  color: var(--tx);
-  margin-bottom: 16pt;
+.eyebrow-num {
+  color: var(--amber);
 }
 
-.cat-title em {
-  font-style: italic;
-  font-weight: 400;
+.eyebrow-sep {
+  color: var(--dim);
+}
+
+.eyebrow-name {
+  color: var(--ink);
+}
+
+.cat-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--cyan);
+  margin-bottom: 14pt;
 }
 
 /* ─── Pricing Table ─────────────────────────────── */
 .pricing-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 10pt;
   position: relative;
-  z-index: 1;
 }
 
 .pricing-table thead tr {
-  border-bottom: 1px solid rgba(232,213,183,.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .pricing-table th {
-  font-family: var(--fn);
-  font-size: 7pt;
-  font-weight: 700;
+  font-family: var(--fm);
+  font-size: 9pt;
+  font-weight: 400;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--txd);
+  color: var(--dim);
   padding: 0 0 8pt;
   text-align: left;
 }
 
+.pricing-table th.th-size,
 .pricing-table th.th-price {
   text-align: right;
 }
 
+.pricing-table th.tf-head {
+  color: var(--cyan);
+  font-weight: 400;
+}
+
 .pricing-table tbody tr {
-  border-bottom: 1px solid rgba(232,213,183,.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.pricing-table tbody tr.row-even {
+  background: var(--ghost);
 }
 
 .pricing-table tbody tr:last-child {
@@ -484,115 +479,97 @@ body::before {
 
 .pricing-table td {
   padding: 7pt 0;
-  color: var(--tx);
   vertical-align: middle;
 }
 
 .prod-name {
-  font-family: var(--fd);
-  font-size: 12pt;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--tx);
-  padding-right: 8pt;
-  width: 30%;
+  font-family: var(--fn);
+  font-size: 11pt;
+  font-weight: 400;
+  color: var(--ink);
+  padding-right: 10pt;
+  width: 28%;
 }
 
 .prod-size {
+  font-family: var(--fm);
   font-size: 9pt;
-  font-weight: 300;
-  color: var(--txd);
-  width: 20%;
-  padding-right: 8pt;
+  font-weight: 400;
+  color: var(--dim);
+  text-align: right;
+  width: 10%;
+  padding-right: 10pt;
 }
 
 .price {
-  text-align: right;
-  font-family: var(--fn);
+  font-family: var(--fm);
   font-size: 10pt;
-  font-weight: 300;
+  font-weight: 400;
+  text-align: right;
   white-space: nowrap;
   padding-left: 6pt;
-  width: 10%;
+  width: 8%;
 }
 
 .price.retail {
-  color: var(--txd);
+  color: var(--dim);
   font-size: 9pt;
 }
 
-.price.t1 {
-  color: var(--tx);
+.price.ta,
+.price.tb,
+.price.tc,
+.price.td,
+.price.te {
+  color: var(--ink);
 }
 
-.price.t2, .price.t3 {
-  color: var(--gold2);
-}
-
-.price.t4 {
-  color: var(--gold);
-  font-weight: 500;
+.price.tf {
+  color: var(--cyan);
+  font-weight: 400;
+  font-size: 11pt;
 }
 
 /* ─── Footer ────────────────────────────────────── */
 .sheet-footer {
-  margin-top: 0.3in;
+  margin-top: 0.4in;
   padding-top: 16pt;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--cyan);
   text-align: center;
 }
 
-.footer-eyebrow {
-  font-family: var(--fn);
-  font-size: 7pt;
-  font-weight: 700;
-  letter-spacing: 3px;
+.footer-lines {
+  font-family: var(--fm);
+  font-size: 9pt;
   text-transform: uppercase;
-  color: var(--txd);
-  margin-bottom: 8pt;
-  line-height: 2;
-}
-
-.footer-wordmark {
-  font-family: var(--fd);
-  font-style: italic;
-  font-weight: 300;
-  font-size: 13pt;
-  letter-spacing: .1em;
-  color: var(--gold);
-  margin-bottom: 5pt;
-  display: block;
+  letter-spacing: 2.5px;
+  color: var(--dim);
+  line-height: 2.2;
 }
 
 .footer-email {
-  font-family: var(--fn);
+  font-family: var(--fm);
   font-size: 9pt;
-  font-weight: 300;
-  color: var(--txd);
-  letter-spacing: .5px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  text-transform: lowercase;
+  margin-top: 6pt;
+  display: block;
 }
 
 /* ─── Print ─────────────────────────────────────── */
 @page {
   size: letter;
-  margin: 0.5in 0.55in;
-  background: #050507;
+  margin: 0.6in 0.7in;
+  background: var(--cream);
 }
 
 @media print {
-  html, body {
-    background: #050507 !important;
+  body {
+    background: var(--cream) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color-adjust: exact;
-  }
-  body::before {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .bgn {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
   .category-block { page-break-inside: avoid; }
   .page-break { page-break-before: always; }
@@ -605,50 +582,53 @@ body::before {
 
   <!-- Header -->
   <div class="sheet-header">
-    <span class="wordmark">advnce labs</span>
-    <div class="sheet-eyebrow">Wholesale Pricing &middot; Draft</div>
-    <div class="sheet-date">${esc(today)}</div>
+    <div class="logo-lockup">
+      <svg viewBox="0 0 48 28" fill="none" width="48" height="28" style="display:inline-block;vertical-align:middle">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3"
+              stroke="#00A0A8" stroke-width="1.8"
+              stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9"  r="2"   fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2"   fill="#E07C24"/>
+        <circle cx="46" cy="3"  r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="logo-wordmark">advnce <span class="labs">labs</span></span>
+    </div>
+    <span class="header-rule"></span>
+    <div>
+      <span class="sheet-subhead">Wholesale Pricing &nbsp;&middot;&nbsp; ${esc(today)}</span>
+      <span class="draft-label">Draft</span>
+    </div>
   </div>
 
   <!-- Prices Per Vial Banner -->
   <div class="pvial-banner">
-    <div class="pvial-main">Prices Per <em>Vial</em></div>
-    <div class="pvial-rules">
-      <div class="pvial-rule">PRICES PER VIAL &nbsp;&middot;&nbsp; ORDERS IN 10-UNIT INCREMENTS &nbsp;&middot;&nbsp; MIN 10 PER SKU</div>
-    </div>
+    <div class="pvial-title">Prices Per Vial</div>
+    <div class="pvial-sub">Orders in 10-unit increments &nbsp;&middot;&nbsp; Minimum 10 vials per SKU</div>
   </div>
 
-  <!-- Tier Legend Eyebrow -->
+  <!-- Tier Legend -->
   <div class="tier-legend">
-    <span class="tl-buy">HOW TO READ THE TIERS</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-tier">BUY A</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-range">10–100 VIALS PER SKU</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-tier">BUY B</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-range">110–500</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-tier">BUY C</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-range">510–1000</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-tier">BUY D</span>
-    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
-    <span class="tl-range">1010+</span>
+    <span class="tl-label">How to read the tiers</span>
+    <span class="tl-item"><span class="tl-letter">A</span><span class="tl-dot">&middot;</span><span class="tl-range">10&ndash;90</span></span>
+    <span class="tl-item"><span class="tl-letter">B</span><span class="tl-dot">&middot;</span><span class="tl-range">100&ndash;190</span></span>
+    <span class="tl-item"><span class="tl-letter">C</span><span class="tl-dot">&middot;</span><span class="tl-range">200&ndash;290</span></span>
+    <span class="tl-item"><span class="tl-letter">D</span><span class="tl-dot">&middot;</span><span class="tl-range">300&ndash;390</span></span>
+    <span class="tl-item"><span class="tl-letter">E</span><span class="tl-dot">&middot;</span><span class="tl-range">400&ndash;490</span></span>
+    <span class="tl-item"><span class="tl-letter">F</span><span class="tl-dot">&middot;</span><span class="tl-range">500+</span></span>
   </div>
+
+  <div class="section-divider"></div>
 
   <!-- Category Blocks -->
   ${categorySections}
 
   <!-- Footer -->
   <div class="sheet-footer">
-    <div class="footer-eyebrow">
-      Lead Time 7–14 Business Days &nbsp;&middot;&nbsp; Min 10 Units &nbsp;&middot;&nbsp; Research Use Only
+    <div class="footer-lines">
+      Lead Time 7&ndash;14 Business Days &nbsp;&middot;&nbsp; Min 10 Units Per SKU<br>
+      Research Use Only &nbsp;&middot;&nbsp; Not for Human Consumption &nbsp;&middot;&nbsp; Not Evaluated by the FDA
     </div>
-    <span class="footer-wordmark">advnce labs</span>
-    <div class="footer-email">wholesale@advncelabs.com</div>
+    <span class="footer-email">wholesale@advncelabs.com</span>
   </div>
 
 </div>
