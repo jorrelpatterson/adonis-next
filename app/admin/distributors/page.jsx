@@ -52,16 +52,14 @@ export default function DistributorsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [dists, orders, sheetInfo] = await Promise.all([
+        const [dists, orders, sheetRes] = await Promise.all([
           sbFetch('distributors', 'select=*&order=created_at.desc'),
           sbFetch('distributor_orders', 'select=*&order=created_at.desc'),
-          fetch(`${SUPABASE_URL}/storage/v1/object/info/wholesale-sheets/current.pdf`, {
-            headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-          }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+          fetch('/api/wholesale-sheet').then((r) => (r.ok ? r.json() : { exists: false })).catch(() => ({ exists: false })),
         ]);
         setDistributors(dists);
         setDistOrders(orders);
-        setSheet(sheetInfo);
+        setSheet(sheetRes && sheetRes.exists ? sheetRes : null);
       } catch(e) {
         console.error('Distributors load error:', e);
       } finally {
@@ -116,48 +114,16 @@ export default function DistributorsPage() {
     }
     setSheetUploading(true);
     try {
-      // Archive existing if present
-      if (sheet) {
-        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-        await fetch(`${SUPABASE_URL}/storage/v1/object/copy`, {
-          method: 'POST',
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            bucketId: 'wholesale-sheets',
-            sourceKey: 'current.pdf',
-            destinationKey: `archive/${stamp}.pdf`,
-          }),
-        });
-      }
-      const up = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/wholesale-sheets/current.pdf`,
-        {
-          method: 'POST',
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/pdf',
-            'x-upsert': 'true',
-          },
-          body: file,
-        }
-      );
-      if (!up.ok) {
-        const err = await up.text();
-        alert('Upload failed: ' + err);
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/wholesale-sheet', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        alert('Upload failed: ' + (data.error || res.statusText));
         setSheetUploading(false);
         return;
       }
-      // refresh info
-      const infoRes = await fetch(
-        `${SUPABASE_URL}/storage/v1/object/info/wholesale-sheets/current.pdf`,
-        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
-      );
-      setSheet(infoRes.ok ? await infoRes.json() : { updated_at: new Date().toISOString() });
+      setSheet({ exists: true, ...data });
       alert('Pricing sheet updated.');
     } catch (e) {
       alert('Upload error: ' + e.message);
