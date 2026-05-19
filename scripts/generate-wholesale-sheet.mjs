@@ -59,18 +59,18 @@ for (const cat of Object.keys(byCat)) {
 
 // ─── Six-tier pricing cascade ─────────────────────────────────────────────────
 // Tiers: A 10–90 · B 100–190 · C 200–290 · D 300–390 · E 400–490 · F 500+
-// Linear margin ramp: A 50% → F cost+$4
+// Retail-anchored discount ladder: A 50% off → F cost+$4
 function priceTiers(cost, retail) {
   const c = Number(cost) || 0;
   const r = Number(retail) || 0;
 
-  // Raw formulas — linear interpolation from 50% margin (A) to cost+$4 (F)
-  let a = c * 1.50;          // 50% margin
-  let b = c * 1.40;          // 40% margin
-  let cTier = c * 1.30;      // 30% margin
-  let d = c * 1.20;          // 20% margin
-  let e = c * 1.10;          // 10% margin
-  let f = c + 4;             // $4 fixed markup
+  // Raw formulas — % off retail ladder, with F anchored at cost + $4
+  let a = r * 0.50;          // 50% off retail
+  let b = r * 0.45;          // 55% off retail
+  let cTier = r * 0.40;      // 60% off retail
+  let d = r * 0.35;          // 65% off retail
+  let e = r * 0.30;          // 70% off retail
+  let f = c + 4;             // cost + $4 (volume floor)
 
   // Floor: every tier >= cost + $2
   const floor = c + 2;
