@@ -72,8 +72,8 @@ function priceTiers(cost, retail) {
   let e = r * 0.20;          // 80% off retail
   let f = r * 0.10;          // 90% off retail
 
-  // Floor: every tier >= cost + $2
-  const floor = c + 2;
+  // Floor: every tier >= cost + $4
+  const floor = c + 4;
   a = Math.max(a, floor);
   b = Math.max(b, floor);
   cTier = Math.max(cTier, floor);
