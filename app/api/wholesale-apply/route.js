@@ -49,8 +49,25 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
   }
 
-  // Turnstile verification — wired in Task 6. For now: skip if no secret.
-  // (The check stays here so Task 6 only adds the verification call.)
+  // Turnstile verification (only if secret configured)
+  const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
+  if (TURNSTILE_SECRET) {
+    if (!body.turnstile_token) {
+      return NextResponse.json({ error: 'Missing Turnstile token' }, { status: 400 });
+    }
+    const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: TURNSTILE_SECRET,
+        response: body.turnstile_token,
+      }),
+    });
+    const result = await verify.json();
+    if (!result.success) {
+      return NextResponse.json({ error: 'Turnstile verification failed' }, { status: 400 });
+    }
+  }
 
   const row = {
     business_name: body.business_name.trim(),

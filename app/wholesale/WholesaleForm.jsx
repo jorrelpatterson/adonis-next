@@ -43,6 +43,8 @@ export default function WholesaleForm({ turnstileSiteKey }) {
 
   const update = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
+  const [turnstileToken, setTurnstileToken] = useState('');
+
   return (
     <form
       onSubmit={(e) => {
@@ -245,9 +247,27 @@ export default function WholesaleForm({ turnstileSiteKey }) {
         </span>
       </label>
 
-      {/* Turnstile placeholder — Task 6 fills this */}
       {turnstileSiteKey ? (
-        <div data-turnstile-placeholder style={{ minHeight: 65 }} />
+        <div
+          ref={(el) => {
+            if (!el || el.dataset.rendered) return;
+            el.dataset.rendered = '1';
+            const script = document.createElement('script');
+            script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+              window.turnstile?.render(el, {
+                sitekey: turnstileSiteKey,
+                callback: (token) => setTurnstileToken(token),
+                'expired-callback': () => setTurnstileToken(''),
+                'error-callback': () => setTurnstileToken(''),
+              });
+            };
+            document.head.appendChild(script);
+          }}
+          style={{ minHeight: 65, display: 'flex', justifyContent: 'center' }}
+        />
       ) : null}
 
       <button
