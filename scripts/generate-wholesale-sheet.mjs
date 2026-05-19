@@ -57,24 +57,50 @@ for (const cat of Object.keys(byCat)) {
   byCat[cat].sort((a, b) => a.displayKey.localeCompare(b.displayKey));
 }
 
-function tiers(retail) {
-  const r = Number(retail);
-  return {
-    t1: Math.max(1, Math.round(r * 0.50)),
-    t2: Math.max(1, Math.round(r * 0.45)),
-    t3: Math.max(1, Math.round(r * 0.40)),
-    t4: Math.max(1, Math.round(r * 0.35)),
-  };
-}
+function priceTiers(cost, retail) {
+  const c = Number(cost) || 0;
+  const r = Number(retail) || 0;
 
-// Margin sanity check
-const warnings = [];
-for (const g of groups.values()) {
-  const topTier = Math.max(1, Math.round(Number(g.retail) * 0.35));
-  const margin = topTier - (Number(g.cost) || 0);
-  if (margin < 0) {
-    warnings.push({ name: g.displayKey, retail: g.retail, cost: g.cost, top: topTier, margin });
+  // Raw formulas
+  let a = c * 1.50;          // tier A: 50% margin
+  let b = c * 1.30;          // tier B: 30% margin
+  let cTier = c * 1.15;      // tier C: 15% margin
+  let d = c + 4;             // tier D: $4 fixed markup
+
+  // Floor: every tier must be at least cost + $2
+  const floor = c + 2;
+  a = Math.max(a, floor);
+  b = Math.max(b, floor);
+  cTier = Math.max(cTier, floor);
+  d = Math.max(d, floor);
+
+  // Cap: every tier must be at most retail × 0.95 (wholesale beats retail by 5%+)
+  const cap = r * 0.95;
+  if (cap > 0) {
+    a = Math.min(a, cap);
+    b = Math.min(b, cap);
+    cTier = Math.min(cTier, cap);
+    d = Math.min(d, cap);
   }
+
+  // Enforce non-increasing order: A ≥ B ≥ C ≥ D
+  // Walk D → A. If a tier is lower than the one to its right, bring it up.
+  cTier = Math.max(cTier, d);
+  b = Math.max(b, cTier);
+  a = Math.max(a, b);
+
+  // Viability check: if even the floor exceeds the cap, product can't be sold
+  // profitably at >5% off retail. Mark as not viable (caller decides whether
+  // to hide the row or just leave dashes).
+  const viable = floor <= cap || cap === 0;
+
+  return {
+    a: Math.round(a),
+    b: Math.round(b),
+    cTier: Math.round(cTier),
+    d: Math.round(d),
+    viable,
+  };
 }
 
 // Order categories — put highest-volume first
@@ -88,21 +114,32 @@ const orderedCats = [
   ...Object.keys(byCat).filter((c) => !CAT_ORDER.includes(c)).sort(),
 ];
 
+// Filter non-viable products (floor > cap — can't sell at meaningful discount)
+const nonViable = [];
+for (const cat of orderedCats) {
+  byCat[cat] = byCat[cat].filter((g) => {
+    const t = priceTiers(g.cost, g.retail);
+    if (!t.viable) {
+      nonViable.push({ name: g.displayName || g.displayKey, cost: g.cost, retail: g.retail, floor: (Number(g.cost) || 0) + 2, cap: (Number(g.retail) || 0) * 0.95 });
+      return false;
+    }
+    return true;
+  });
+}
+
 // Render HTML and write
 const today = new Date().toISOString().slice(0, 10);
 const html = renderHtml({ byCat, orderedCats, today });
 writeFileSync(join(ROOT, 'wholesale-pricing-template.html'), html);
 
+const visibleCount = orderedCats.reduce((sum, cat) => sum + byCat[cat].length, 0);
 console.log(`\n✓ Wrote wholesale-pricing-template.html`);
-console.log(`  ${groups.size} unique products across ${orderedCats.length} categories`);
-
-if (warnings.length) {
-  console.warn(`\n⚠  ${warnings.length} product(s) lose money at the 1000+ tier (35% of retail):`);
-  for (const w of warnings) {
-    console.warn(`  ${w.name}: top=$${w.top}, cost=$${w.cost}, margin=$${w.margin}`);
+console.log(`  ${visibleCount} products visible across ${orderedCats.length} categories`);
+if (nonViable.length) {
+  console.warn(`\n⚠ ${nonViable.length} products hidden — cost+$2 exceeds retail×0.95:`);
+  for (const n of nonViable) {
+    console.warn(`  ${n.name}: cost=$${n.cost}, retail=$${n.retail}, floor=$${n.floor.toFixed(2)}, cap=$${n.cap.toFixed(2)}`);
   }
-} else {
-  console.log('  No margin issues at top tier.');
 }
 
 // ─── HTML renderer ────────────────────────────────────────────────────────────
@@ -138,16 +175,16 @@ function renderHtml({ byCat, orderedCats, today }) {
     const catNum = String(idx + 1).padStart(2, '0');
     const products = byCat[cat];
     const rows = products.map((p) => {
-      const t = tiers(p.retail);
+      const t = priceTiers(p.cost, p.retail);
       return `
           <tr>
             <td class="prod-name">${esc(p.name)}</td>
             <td class="prod-size">${esc(p.size)}</td>
             <td class="price retail">${dollar(p.retail)}</td>
-            <td class="price t1">${dollar(t.t1)}</td>
-            <td class="price t2">${dollar(t.t2)}</td>
-            <td class="price t3">${dollar(t.t3)}</td>
-            <td class="price t4">${dollar(t.t4)}</td>
+            <td class="price t1">${dollar(t.a)}</td>
+            <td class="price t2">${dollar(t.b)}</td>
+            <td class="price t3">${dollar(t.cTier)}</td>
+            <td class="price t4">${dollar(t.d)}</td>
           </tr>`;
     }).join('');
 
@@ -162,10 +199,10 @@ function renderHtml({ byCat, orderedCats, today }) {
             <th class="th-name">Product</th>
             <th class="th-size">Size</th>
             <th class="th-price">Retail</th>
-            <th class="th-price">10–99</th>
-            <th class="th-price">100–499</th>
-            <th class="th-price">500–999</th>
-            <th class="th-price">1000+</th>
+            <th class="th-price">10–100</th>
+            <th class="th-price">110–500</th>
+            <th class="th-price">510–1000</th>
+            <th class="th-price">1010+</th>
           </tr>
         </thead>
         <tbody>${rows}
@@ -324,6 +361,36 @@ body::before {
 .pvial-rule strong {
   font-weight: 500;
   color: var(--tx);
+}
+
+/* ─── Tier Legend Eyebrow ───────────────────────── */
+.tier-legend {
+  text-align: center;
+  margin: 0 auto 0.3in;
+  font-family: var(--fn);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  line-height: 2;
+  word-spacing: 1px;
+}
+
+.tl-buy {
+  color: var(--gold);
+}
+
+.tl-sep {
+  color: var(--txd);
+}
+
+.tl-tier {
+  color: #E8D5B7;
+  font-weight: 700;
+}
+
+.tl-range {
+  color: var(--txd);
 }
 
 /* ─── Category Blocks ───────────────────────────── */
@@ -545,13 +612,31 @@ body::before {
 
   <!-- Prices Per Vial Banner -->
   <div class="pvial-banner">
-    <div class="pvial-label">PRICES PER VIAL</div>
     <div class="pvial-main">Prices Per <em>Vial</em></div>
     <div class="pvial-rules">
-      <div class="pvial-rule">Orders in <strong>10-unit increments</strong></div>
-      <div class="pvial-rule">Minimum <strong>10 vials</strong> per SKU per order</div>
-      <div class="pvial-rule">All products for <strong>research use only</strong></div>
+      <div class="pvial-rule">PRICES PER VIAL &nbsp;&middot;&nbsp; ORDERS IN 10-UNIT INCREMENTS &nbsp;&middot;&nbsp; MIN 10 PER SKU</div>
     </div>
+  </div>
+
+  <!-- Tier Legend Eyebrow -->
+  <div class="tier-legend">
+    <span class="tl-buy">HOW TO READ THE TIERS</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-tier">BUY A</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-range">10–100 VIALS PER SKU</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-tier">BUY B</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-range">110–500</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-tier">BUY C</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-range">510–1000</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-tier">BUY D</span>
+    <span class="tl-sep">&nbsp;&middot;&nbsp;</span>
+    <span class="tl-range">1010+</span>
   </div>
 
   <!-- Category Blocks -->
