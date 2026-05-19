@@ -44,12 +44,63 @@ export default function WholesaleForm({ turnstileSiteKey }) {
   const update = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
   const [turnstileToken, setTurnstileToken] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  if (submitted) {
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '40px 20px',
+          background: 'rgba(232,213,183,0.04)',
+          border: '1px solid rgba(232,213,183,0.15)',
+          borderRadius: 4,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: 'italic',
+            fontSize: 32,
+            color: '#E8D5B7',
+            marginBottom: 16,
+          }}
+        >
+          Thank you.
+        </div>
+        <p style={{ fontSize: 13, lineHeight: 1.8, color: '#9C9A94', maxWidth: 420, margin: '0 auto' }}>
+          Your application is in. We review wholesale inquiries within 1–2 business days. If
+          approved, you'll receive your login code and current pricing sheet by email.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        // Wired up in Task 7 — for now this is UI-only.
+        setError('');
+        setSubmitting(true);
+        try {
+          const res = await fetch('/api/wholesale-apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...form, turnstile_token: turnstileToken }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            setError(data.error || 'Submission failed. Please try again.');
+            setSubmitting(false);
+            return;
+          }
+          setSubmitted(true);
+        } catch (err) {
+          setError('Network error. Please try again.');
+          setSubmitting(false);
+        }
       }}
       style={{ display: 'grid', gap: 18 }}
     >
@@ -270,11 +321,29 @@ export default function WholesaleForm({ turnstileSiteKey }) {
         />
       ) : null}
 
+      {error ? (
+        <div
+          style={{
+            padding: '10px 14px',
+            background: 'rgba(239,68,68,0.08)',
+            border: '1px solid rgba(239,68,68,0.3)',
+            borderRadius: 4,
+            color: '#EF4444',
+            fontSize: 12,
+            lineHeight: 1.5,
+          }}
+        >
+          {error}
+        </div>
+      ) : null}
+
       <button
         type="submit"
+        disabled={submitting}
         style={{
           marginTop: 12,
           padding: '14px 24px',
+          opacity: submitting ? 0.5 : 1,
           background: '#E8D5B7',
           color: '#050507',
           border: 'none',
@@ -287,7 +356,7 @@ export default function WholesaleForm({ turnstileSiteKey }) {
           cursor: 'pointer',
         }}
       >
-        Submit Application
+        {submitting ? 'Submitting...' : 'Submit Application'}
       </button>
     </form>
   );
