@@ -61,7 +61,7 @@ for (const cat of Object.keys(byCat)) {
 // Tiers: A 10–90 · B 100–190 · C 200–290 · D 300–390 · E 400–490 · F 500+
 // Retail-anchored discount ladder: A 50% off → F cost+$4
 function priceTiers(cost, retail) {
-  const c = Number(cost) || 0;
+  const c = (Number(cost) || 0) / 10;  // DB stores cost per 10-pack; convert to per-vial
   const r = Number(retail) || 0;
 
   // Raw formulas — % off retail ladder, with F anchored at cost + $4
@@ -131,7 +131,8 @@ for (const cat of orderedCats) {
   byCat[cat] = byCat[cat].filter((g) => {
     const t = priceTiers(g.cost, g.retail);
     if (!t.viable) {
-      nonViable.push({ name: g.displayName || g.displayKey, cost: g.cost, retail: g.retail, floor: (Number(g.cost) || 0) + 2, cap: (Number(g.retail) || 0) * 0.95 });
+      const cPer = (Number(g.cost) || 0) / 10;  // per-vial cost
+      nonViable.push({ name: g.displayName || g.displayKey, cost: g.cost, costPer: cPer, retail: g.retail, floor: cPer + 2, cap: (Number(g.retail) || 0) * 0.95 });
       return false;
     }
     return true;
@@ -149,7 +150,7 @@ console.log(`  ${visibleCount} products visible across ${orderedCats.length} cat
 if (nonViable.length) {
   console.warn(`\n  ${nonViable.length} products hidden -- cost+$2 exceeds retail x 0.95:`);
   for (const n of nonViable) {
-    console.warn(`  ${n.name}: cost=$${n.cost}, retail=$${n.retail}, floor=$${n.floor.toFixed(2)}, cap=$${n.cap.toFixed(2)}`);
+    console.warn(`  ${n.name}: cost=$${n.costPer.toFixed(2)}/vial (DB pack: $${n.cost}), retail=$${n.retail}, floor=$${n.floor.toFixed(2)}, cap=$${n.cap.toFixed(2)}`);
   }
 }
 
