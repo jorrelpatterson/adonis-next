@@ -64,13 +64,13 @@ function priceTiers(cost, retail) {
   const c = (Number(cost) || 0) / 10;  // DB stores cost per 10-pack; convert to per-vial
   const r = Number(retail) || 0;
 
-  // Raw formulas — % off retail ladder, with F anchored at cost + $4
+  // Raw formulas — accelerating % off retail ladder
   let a = r * 0.50;          // 50% off retail
-  let b = r * 0.45;          // 55% off retail
-  let cTier = r * 0.40;      // 60% off retail
-  let d = r * 0.35;          // 65% off retail
-  let e = r * 0.30;          // 70% off retail
-  let f = c + 4;             // cost + $4 (volume floor)
+  let b = r * 0.40;          // 60% off retail
+  let cTier = r * 0.35;      // 65% off retail
+  let d = r * 0.25;          // 75% off retail
+  let e = r * 0.20;          // 80% off retail
+  let f = r * 0.10;          // 90% off retail
 
   // Floor: every tier >= cost + $2
   const floor = c + 2;
