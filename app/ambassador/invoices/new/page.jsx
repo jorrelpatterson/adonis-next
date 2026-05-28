@@ -40,6 +40,11 @@ export default function AmbassadorNewInvoicePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
+  const [customerSearchOpen, setCustomerSearchOpen] = useState(false);
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [customerResults, setCustomerResults] = useState([]);
+  const [customerSearching, setCustomerSearching] = useState(false);
+
   // Validate ambassador code on mount via the public-readable ambassadors table
   // (RLS allows anon SELECT). If they're paused/banned, surface that immediately.
   useEffect(() => {
@@ -73,6 +78,35 @@ export default function AmbassadorNewInvoicePage() {
     }, 200);
     return () => clearTimeout(t);
   }, [query]);
+
+  useEffect(() => {
+    const q = customerQuery.trim();
+    if (!customerSearchOpen) return;
+    if (q.length < 2) { setCustomerResults([]); setCustomerSearching(false); return; }
+    setCustomerSearching(true);
+    const t = setTimeout(async () => {
+      const r = await fetch(`/api/ambassador-past-customers?ambassador_code=${encodeURIComponent(code)}&q=${encodeURIComponent(q)}`, { cache: 'no-store' });
+      const body = r.ok ? await r.json() : { customers: [] };
+      setCustomerResults(body.customers || []);
+      setCustomerSearching(false);
+    }, 220);
+    return () => clearTimeout(t);
+  }, [customerQuery, customerSearchOpen, code]);
+
+  function pickCustomer(d) {
+    setCustomer({
+      name: `${d.first_name || ''} ${d.last_name || ''}`.trim(),
+      phone: d.phone || '',
+      email: d.email && !d.email.endsWith('@invoice.local') ? d.email : '',
+      address: d.address || '',
+      city: d.city || '',
+      state: d.state || '',
+      zip: d.zip || '',
+    });
+    setCustomerSearchOpen(false);
+    setCustomerQuery('');
+    setCustomerResults([]);
+  }
 
   function addItem(p) {
     setItems([...items, { sku: p.sku, name: p.name, size: p.size, qty: 1, price: p.retail, stock: p.stock }]);
@@ -134,7 +168,57 @@ export default function AmbassadorNewInvoicePage() {
       </div>
 
       <div style={cs.section}>
-        <div style={cs.label}>Customer</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
+          <div style={cs.label}>Customer</div>
+          <button
+            style={{ ...cs.btn, ...cs.btnSecondary, padding: '5px 12px', fontSize: 10 }}
+            onClick={() => {
+              setCustomerSearchOpen((v) => !v);
+              setCustomerQuery('');
+              setCustomerResults([]);
+            }}
+          >
+            {customerSearchOpen ? 'Close search' : 'Pick past customer'}
+          </button>
+        </div>
+        {customerSearchOpen && (
+          <div style={{ ...cs.search, marginBottom: 14 }}>
+            <input
+              autoFocus
+              style={cs.input}
+              placeholder="Search your past customers by name, email, or phone…"
+              value={customerQuery}
+              onChange={(e) => setCustomerQuery(e.target.value)}
+            />
+            {customerQuery.trim().length >= 2 && (
+              <div style={cs.results}>
+                {customerSearching && customerResults.length === 0 && (
+                  <div style={{ ...cs.resultRow, color: '#7A7D88' }}>Searching…</div>
+                )}
+                {!customerSearching && customerResults.length === 0 && (
+                  <div style={{ ...cs.resultRow, color: '#7A7D88' }}>No matches</div>
+                )}
+                {customerResults.map((d, i) => {
+                  const name = `${d.first_name || ''} ${d.last_name || ''}`.trim() || '(no name)';
+                  const realEmail = d.email && !d.email.endsWith('@invoice.local') ? d.email : '';
+                  return (
+                    <div key={i} style={cs.resultRow} onClick={() => pickCustomer(d)}>
+                      <strong>{name}</strong>{' '}
+                      <span style={{ color: '#7A7D88', fontFamily: 'monospace', fontSize: 11 }}>
+                        {[realEmail, d.phone].filter(Boolean).join(' · ')}
+                      </span>
+                      {(d.city || d.state) && (
+                        <div style={{ color: '#7A7D88', fontSize: 11, marginTop: 2 }}>
+                          {[d.city, d.state].filter(Boolean).join(', ')}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
         <div style={cs.row}>
           <div style={{ gridColumn: 'span 2' }}>
             <label style={cs.label}>Name</label>
