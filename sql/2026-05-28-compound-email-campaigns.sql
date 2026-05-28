@@ -21,11 +21,13 @@ create index if not exists compound_marketing_sku_idx on compound_marketing(sku)
 
 -- Sequence-style dispatch_no helper: monotonic across all drafts.
 -- Defined before compound_email_drafts so it can be referenced as a column default.
--- The function body references compound_email_drafts, but Postgres resolves function
--- bodies at call time, not at definition time, so forward-referencing the table is fine.
+-- Uses plpgsql (not sql) because plpgsql defers name resolution until call time,
+-- allowing the forward reference to compound_email_drafts (created below).
 create or replace function next_dispatch_no() returns int as $$
-  select coalesce(max(dispatch_no), 0) + 1 from compound_email_drafts;
-$$ language sql;
+begin
+  return (select coalesce(max(dispatch_no), 0) + 1 from compound_email_drafts);
+end;
+$$ language plpgsql;
 
 -- 2) compound_email_drafts — one row per planned send.
 create table if not exists compound_email_drafts (
