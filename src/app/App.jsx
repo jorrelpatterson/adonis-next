@@ -9,6 +9,7 @@ import { buildDailyRoutine } from '../routine/pipeline';
 import { getAllProtocols } from '../protocols/registry';
 import GoalSetup from '../goals/GoalSetup';
 import RoutineView from '../routine/RoutineView';
+import WorkoutView from './views/WorkoutView';
 import TabNav from './TabNav';
 import { validateAccessCode } from '../state/access-codes';
 
@@ -285,6 +286,15 @@ export default function App() {
           /* Domain tab view */
           (() => {
             const domain = DOMAINS.find(d => d.id === activeTab);
+            if (activeTab === 'body') {
+              return (
+                <div>
+                  <H t={(domain?.icon || '') + ' ' + (domain?.name || activeTab)}
+                    sub={domain?.sub || ''} />
+                  <WorkoutView />
+                </div>
+              );
+            }
             const domainGoals = activeGoals.filter(g => g.domain === activeTab);
             const domainTasks = routine.scheduled.filter(t => {
               const proto = protocolMap[t.protocolId];
