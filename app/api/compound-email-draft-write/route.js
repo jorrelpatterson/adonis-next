@@ -36,7 +36,7 @@ export async function POST(request) {
       category_label: cm.category ? cm.category.toUpperCase() : null,
       hook: cm.hook || null,
       citations_short: cm.citation_primary ? cm.citation_primary.toUpperCase() : null,
-      show_stock_stamp: false,
+      show_stock_stamp: true,
       trigger: 'manual',
       status: 'draft',
       created_by: request.cookies.get('adonis_admin_email')?.value || 'admin',
