@@ -1,6 +1,6 @@
 // src/app/views/workout/HowToModal.jsx
 import React from 'react';
-import { P, FN, FD } from '../../../design/theme';
+import { P, FD } from '../../../design/theme';
 import { s } from '../../../design/styles';
 import { EXERCISE_DB, getVideoUrl } from '../../../protocols/body/workout/exercises';
 
