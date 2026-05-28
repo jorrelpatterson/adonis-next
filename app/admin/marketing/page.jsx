@@ -87,6 +87,16 @@ export default function MarketingHub() {
       tag: `W2: ${stats.subs.stage2} · W3: ${stats.subs.stage3}`,
     },
     {
+      href:'/admin/marketing/email-campaigns',
+      icon:'🔬',
+      color:'#6366F1',
+      label:'Email Campaigns',
+      desc:'Compound spotlight dispatches',
+      stat: '→',
+      statLabel: 'view',
+      tag: null,
+    },
+    {
       href:'/admin/marketing/post-builder',
       icon:'🎨',
       color:'#00A0A8',
