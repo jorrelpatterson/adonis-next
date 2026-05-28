@@ -58,6 +58,19 @@ export default function DraftCard({ draft, mode }) {
     location.reload();
   }
 
+  async function generate() {
+    if (!confirm('Generate AI copy for tagline, layman lead/bridge, bullets, and citations? This overwrites existing values in those fields.')) return;
+    setBusy(true);
+    try {
+      const r = await fetch('/api/compound-email-generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ draft_id: draft.id }),
+      });
+      if (!r.ok) { alert('Generate failed: ' + await r.text()); return; }
+      location.reload();
+    } finally { setBusy(false); }
+  }
+
   const cardStyle = {
     border: mode === 'needsCopy' ? '1px solid #E07C24' : '1px solid #E4E7EC',
     background: '#fff', padding: 18, borderRadius: 4,
@@ -127,6 +140,9 @@ export default function DraftCard({ draft, mode }) {
       )}
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {!editing && (mode === 'draft' || mode === 'needsCopy' || mode === 'ready') && (
+          <button onClick={generate} disabled={busy} style={btnPrimary}>✨ Generate copy</button>
+        )}
         {!editing && mode !== 'sent' && (
           <button onClick={() => setEditing(true)} disabled={busy} style={btn}>Edit</button>
         )}
