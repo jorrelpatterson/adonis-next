@@ -78,22 +78,12 @@ for (let i = 0; i < lines.length; i++) {
 console.log(`Parsed ${rows.length} compound rows from peptide-for-that-campaign.md`);
 
 // Deduplicate by compound_slug within a batch: same compound may appear under
-// multiple hooks (e.g. BPC-157 for knees AND gut). Keep the last occurrence so
-// we don't send two rows with the same slug in one POST — Supabase's
-// ON CONFLICT DO UPDATE rejects intra-batch duplicates.
-// We keep all rows but when multiple share a slug, concatenate their hooks.
+// multiple hooks (e.g. BPC-157 for knees AND gut). First-hook-wins — keep the
+// first occurrence and skip later ones so hook stays a single short question
+// suitable for use as an email subject line.
 const slugMap = new Map();
 for (const row of rows) {
-  if (slugMap.has(row.compound_slug)) {
-    const existing = slugMap.get(row.compound_slug);
-    // Merge hook (append if different)
-    if (!existing.hook.includes(row.hook)) {
-      existing.hook = existing.hook + ' / ' + row.hook;
-    }
-    // Keep first research_angle/citation unless empty
-    if (!existing.research_angle && row.research_angle) existing.research_angle = row.research_angle;
-    if (!existing.citation_primary && row.citation_primary) existing.citation_primary = row.citation_primary;
-  } else {
+  if (!slugMap.has(row.compound_slug)) {
     slugMap.set(row.compound_slug, { ...row });
   }
 }
