@@ -19,10 +19,19 @@ create table if not exists compound_marketing (
 );
 create index if not exists compound_marketing_sku_idx on compound_marketing(sku);
 
+-- Sequence-style dispatch_no helper: monotonic across all drafts.
+-- Defined before compound_email_drafts so it can be referenced as a column default.
+-- The function body references compound_email_drafts, but Postgres resolves function
+-- bodies at call time, not at definition time, so forward-referencing the table is fine.
+create or replace function next_dispatch_no() returns int as $$
+  select coalesce(max(dispatch_no), 0) + 1 from compound_email_drafts;
+$$ language sql;
+
 -- 2) compound_email_drafts — one row per planned send.
 create table if not exists compound_email_drafts (
   id                     uuid primary key default gen_random_uuid(),
-  dispatch_no            int unique,
+  dispatch_no            int unique default next_dispatch_no(),
+  -- Intentionally NOT a FK to compound_marketing.compound_slug: drafts must remain readable even if the marketing row is later removed.
   compound_slug          text not null,
   compound_name          text not null,
   product_url            text not null,
@@ -40,6 +49,7 @@ create table if not exists compound_email_drafts (
   status                 text not null default 'draft'
                                 check (status in ('draft','ready','sending','sent','failed')),
   created_at             timestamptz not null default now(),
+  updated_at             timestamptz not null default now(),
   scheduled_at           timestamptz,
   sent_at                timestamptz,
   recipient_count        int not null default 0,
@@ -50,11 +60,6 @@ create table if not exists compound_email_drafts (
 );
 create index if not exists compound_email_drafts_status_idx on compound_email_drafts(status);
 create index if not exists compound_email_drafts_created_at_idx on compound_email_drafts(created_at desc);
-
--- Sequence-style dispatch_no helper: monotonic across all drafts.
-create or replace function next_dispatch_no() returns int as $$
-  select coalesce(max(dispatch_no), 0) + 1 from compound_email_drafts;
-$$ language sql;
 
 -- 3) compound_email_recipients — one row per recipient per send.
 create table if not exists compound_email_recipients (
@@ -80,11 +85,26 @@ create table if not exists compound_email_unsubscribes (
   unsubscribed_at timestamptz not null default now(),
   source_draft_id uuid references compound_email_drafts(id) on delete set null
 );
+create index if not exists compound_email_unsubscribes_source_draft_idx on compound_email_unsubscribes(source_draft_id);
 
 -- 5) subscribers gets a new column. Welcome emails still send unconditionally;
 --    only compound-spotlight sends respect this column.
 alter table subscribers
   add column if not exists compound_email_unsubscribed_at timestamptz;
+
+-- Auto-bump updated_at on row mutation.
+create or replace function set_compound_email_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists compound_email_drafts_updated_at on compound_email_drafts;
+create trigger compound_email_drafts_updated_at
+  before update on compound_email_drafts
+  for each row execute function set_compound_email_updated_at();
 
 -- RLS off on all four new tables; access goes through service-role API routes.
 alter table compound_marketing            enable row level security;
