@@ -47,8 +47,11 @@ export function getProgressionSuggestion({ wkLogs, goal, week, dayIdx, exercise 
   let hitTarget = true;
   for (let i = 0; i < setCount; i++) {
     const entry = wkLogs[logKey(goal, prevWeek, dayIdx, exercise.name, i)];
-    if (!entry || !entry.c) return null; // no prior data — no suggestion
+    // All-or-nothing precondition: every prior set must be marked complete.
+    // Partial data returns null so the UI shows no suggestion at all.
+    if (!entry || !entry.c) return null;
     const wt = parseFloat(entry.wt) || 0;
+    // Track the highest weight across the prior week's sets (handles pyramid loading).
     if (lastWeight === null || wt > lastWeight) lastWeight = wt;
     const reps = parseFloat(entry.r) || 0;
     if (target > 0 && reps < target) hitTarget = false;
