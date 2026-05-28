@@ -75,6 +75,12 @@ export async function POST(request) {
   );
   if (!stockUpdate.ok) return NextResponse.json({ error: 'stock update failed: ' + await stockUpdate.text() }, { status: 500 });
 
+  if (product.sku) {
+    const { onStockRise } = await import('../../../lib/onStockRise');
+    onStockRise({ sku: product.sku, previousStock: currentStock, newStock, source: 'inventory-adjust' })
+      .catch(err => console.error('onStockRise (inventory-adjust) error:', err));
+  }
+
   const insertRes = await fetch(
     `${SUPABASE_URL}/rest/v1/inventory_adjustments`,
     {

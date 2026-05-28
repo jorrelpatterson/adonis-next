@@ -49,18 +49,25 @@ export async function POST(request) {
       }),
     });
 
-    const prodRes = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${line.product_id}&select=stock`, { headers });
+    const prodRes = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${line.product_id}&select=stock,sku`, { headers });
     const [prod] = await prodRes.json();
     if (!prod) continue;
+    const prevStock = prod.stock || 0;
+    const nextStock = prevStock + recvNow * KIT_VIALS;
     await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${line.product_id}`, {
       method: 'PATCH', headers,
       body: JSON.stringify({
-        stock: (prod.stock || 0) + recvNow * KIT_VIALS,
+        stock: nextStock,
         cost: unitCost,
         vendor: po.vendor.name,
         updated_at: new Date().toISOString(),
       }),
     });
+    if (prod.sku) {
+      const { onStockRise } = await import('../../../lib/onStockRise');
+      onStockRise({ sku: prod.sku, previousStock: prevStock, newStock: nextStock, source: 'purchase-receive' })
+        .catch(err => console.error('onStockRise (purchase-receive) error:', err));
+    }
   }
 
   const updatedLinesRes = await fetch(`${SUPABASE_URL}/rest/v1/purchase_order_items?po_id=eq.${po_id}&select=qty_ordered,qty_received`, { headers });
