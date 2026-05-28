@@ -17,7 +17,7 @@ export default function SetGrid({ goal, week, dayIdx, exercise, wkLogs, wkPRs, o
     const curWt = parseFloat(cur.wt) || 0;
     const isPR = curWt > 0 && curWt > pr;
 
-    const update = (patch) => onSet(i, { wt: cur.wt || '', r: cur.r || '', c: !!cur.c, ...patch });
+    const update = (patch) => onSet(i, { wt: cur.wt ?? '', r: cur.r ?? '', c: !!cur.c, ...patch });
 
     rows.push(
       <div key={i} style={{
