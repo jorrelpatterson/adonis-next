@@ -77,6 +77,16 @@ export default function MarketingHub() {
       tag: stats.ambassadors.paused > 0 ? `${stats.ambassadors.paused} paused` : null,
     },
     {
+      href:'/admin/marketing/recruitment',
+      icon:'🎤',
+      color:'#E07C24',
+      label:'Recruitment Drip',
+      desc:'Solar-rep ambassador campaign',
+      stat: '→',
+      statLabel: 'queue',
+      tag: 'New',
+    },
+    {
       href:'/admin/marketing/subscribers',
       icon:'📧',
       color:'#A78BFA',
