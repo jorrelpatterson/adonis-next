@@ -10,7 +10,7 @@ export const DEFAULT_STATE = {
   },
   goals: [],
   protocolState: {
-    workout: { wkWeek: 1, wkViewDay: null, wkLogs: {}, wkPRs: {} },
+    workout: { wkWeek: 1, wkViewDay: null, wkLogs: {}, wkPRs: {}, wkSwaps: {} },
     peptides: { activeCycles: [], supplyInv: [], injectionLog: [], pepCart: [], orderHistory: [], shippingInfo: {} },
     credit: { creditScores: [], disputes: [], disputeQueue: [], repairAuto: true, creditFactors: { payment: 90, utilization: 25, ageYears: 3, accounts: 5, inquiries: 2 }, ccWallet: [] },
     income: { incomeTarget: 2000, incomePartnerType: 'referrer', incomeVerticals: ['solar', 'roofing', 'telecom'], incomeLeads: [], incomeEarnings: [], incomeSetupDone: false },
