@@ -21,10 +21,38 @@ export async function POST(request) {
 }
 
 async function handleCreate(request) {
-  const unauth = requireAdmin(request); if (unauth) return unauth;
-
   const body = await request.json().catch(() => ({}));
-  const { customer, items, discount_pct, discount_flat_cents, notes } = body;
+  const { customer, items, discount_pct, discount_flat_cents, notes, ambassador_code } = body;
+
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const headers = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' };
+
+  // Auth: either an admin cookie OR a valid active ambassador code. Ambassadors
+  // cannot apply discounts and the invoice is auto-attributed to them.
+  let ambassador = null;
+  if (ambassador_code) {
+    if (!SUPABASE_URL || !SERVICE_KEY) {
+      return NextResponse.json({ error: 'server config missing' }, { status: 500 });
+    }
+    const codeClean = String(ambassador_code).trim().toUpperCase();
+    if (!/^[A-Z0-9_-]{2,40}$/.test(codeClean)) {
+      return NextResponse.json({ error: 'invalid ambassador_code' }, { status: 400 });
+    }
+    const ar = await fetch(
+      `${SUPABASE_URL}/rest/v1/ambassadors?code=eq.${encodeURIComponent(codeClean)}&select=id,code,name,status&limit=1`,
+      { headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` }, cache: 'no-store' },
+    );
+    if (!ar.ok) return NextResponse.json({ error: 'ambassador lookup failed' }, { status: 500 });
+    const arows = await ar.json();
+    if (!arows.length) return NextResponse.json({ error: 'unknown ambassador code' }, { status: 401 });
+    if (arows[0].status && arows[0].status !== 'active') {
+      return NextResponse.json({ error: `ambassador is ${arows[0].status}` }, { status: 403 });
+    }
+    ambassador = arows[0];
+  } else {
+    const unauth = requireAdmin(request); if (unauth) return unauth;
+  }
 
   if (!customer || !customer.name || !customer.address || !customer.city || !customer.state || !customer.zip) {
     return NextResponse.json({ error: 'customer name + full address are required' }, { status: 400 });
@@ -35,18 +63,19 @@ async function handleCreate(request) {
   if (items.length > 20) {
     return NextResponse.json({ error: 'max 20 items per invoice' }, { status: 400 });
   }
-  const pct = discount_pct == null || discount_pct === '' ? null : Number(discount_pct);
-  const flat = discount_flat_cents == null || discount_flat_cents === '' ? null : Math.round(Number(discount_flat_cents));
+  // Ambassadors cannot apply discounts; force null regardless of what was sent.
+  const pct = ambassador
+    ? null
+    : (discount_pct == null || discount_pct === '' ? null : Number(discount_pct));
+  const flat = ambassador
+    ? null
+    : (discount_flat_cents == null || discount_flat_cents === '' ? null : Math.round(Number(discount_flat_cents)));
   if (pct != null && (isNaN(pct) || pct < 0 || pct > 100)) {
     return NextResponse.json({ error: 'discount_pct must be 0-100' }, { status: 400 });
   }
   if (flat != null && (isNaN(flat) || flat < 0)) {
     return NextResponse.json({ error: 'discount_flat_cents must be non-negative' }, { status: 400 });
   }
-
-  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const headers = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' };
 
   const normalizedItems = [];
   let subtotalCents = 0;
@@ -165,7 +194,8 @@ async function handleCreate(request) {
     invoice_image_path: objectPath,
     invoice_discount_pct: pct,
     invoice_discount_flat_cents: flat,
-    created_by: 'admin',
+    created_by: ambassador ? `ambassador:${ambassador.code}` : 'admin',
+    ref_code: ambassador ? ambassador.code : undefined,
     created_at: new Date().toISOString(),
   };
 
