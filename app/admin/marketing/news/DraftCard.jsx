@@ -25,19 +25,10 @@ export default function DraftCard({ draft, mode }) {
     };
   }
 
-  async function approveAndDownload() {
-    const res = await call(`/api/admin/news/approve/${draft.id}`);
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${draft.slot_date}-${slugify(draft.hook)}.zip`;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-    // Caption to clipboard
-    try { await navigator.clipboard.writeText(captionWithHashtags(draft)); }
-    catch (e) { /* clipboard may fail without HTTPS in some browsers */ }
-    alert('Downloaded zip + caption copied. Now post to IG.');
+  async function approveToCalendar() {
+    const res = await call(`/api/admin/news/approve-to-calendar/${draft.id}`);
+    const j = await res.json().catch(() => ({}));
+    alert(`Approved → added to the Content Calendar${j.scheduled_date ? ` on ${j.scheduled_date}` : ''}. The VA posts it from there.`);
     location.reload();
   }
 
@@ -103,8 +94,8 @@ export default function DraftCard({ draft, mode }) {
 
       {mode === 'ready' && (
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button onClick={safe(approveAndDownload)} disabled={busy} style={btnPrimary}>
-            {busy === `/api/admin/news/approve/${draft.id}` ? 'Zipping…' : 'Approve & Download'}
+          <button onClick={safe(approveToCalendar)} disabled={busy} style={btnPrimary}>
+            {busy === `/api/admin/news/approve-to-calendar/${draft.id}` ? 'Adding…' : 'Approve → Calendar'}
           </button>
           <button onClick={() => setEditing(true)} disabled={busy} style={btnGhost}>Edit caption</button>
           <button onClick={safe(async () => { await call(`/api/admin/news/regenerate/${draft.id}`); location.reload(); })}
@@ -130,14 +121,6 @@ export default function DraftCard({ draft, mode }) {
       )}
     </div>
   );
-}
-
-function captionWithHashtags(d) {
-  return [(d.caption || '').trim(), (d.hashtags || []).join(' ')].filter(Boolean).join('\n\n');
-}
-
-function slugify(s) {
-  return String(s || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
 }
 
 const btnPrimary = { padding: '8px 14px', background: '#1A1C22', color: '#F4F2EE',

@@ -16,6 +16,7 @@ const POST_TYPE_BADGE = {
   principles_carousel: { color:'#00A0A8', bg:'#E6FBFC', label:'Principles' },
   positioning_manifesto: { color:'#E07C24', bg:'#FDF3EB', label:'Positioning' },
   receipt_card: { color:'#A16207', bg:'#FEF3C7', label:'Receipt' },
+  news_card: { color:'#DC2626', bg:'#FEE2E2', label:'News' },
 };
 
 const STATUS_BADGE = {
@@ -94,8 +95,13 @@ export default function ContentPage() {
   const saveEdit = () => updatePost(editForm).then(() => setEditing(false));
 
   const downloadImage = (path, filename) => {
+    // Cross-origin images (news slides on Supabase Storage) ignore the download
+    // attribute and would open in a tab instead — route those through the
+    // same-origin proxy so they actually download. Local paths pass through.
+    const isRemote = /^https?:\/\//i.test(path);
+    const href = isRemote ? `/api/social-image-proxy?url=${encodeURIComponent(path)}` : path;
     const a = document.createElement('a');
-    a.href = path; a.download = filename || path.split('/').pop();
+    a.href = href; a.download = filename || path.split('/').pop();
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
 
@@ -111,6 +117,10 @@ export default function ContentPage() {
     }
     if (post.post_type === 'stack_carousel' && /-1\.png$/i.test(base)) {
       return [1,2,3,4,5].map(n => base.replace(/-1\.png$/i, `-${n}.png`));
+    }
+    // News posts (from the news queue) — 4 rendered slides at .../slide-1.png .. -4.png
+    if (post.post_type === 'news_card' && /slide-1\.png$/i.test(base)) {
+      return [1,2,3,4].map(n => base.replace(/slide-1\.png$/i, `slide-${n}.png`));
     }
     // "There's a peptide for that" campaign — 2-slide carousel (hook → reveal)
     if (/\/ptt-[^/]+-1\.png$/i.test(base)) {
