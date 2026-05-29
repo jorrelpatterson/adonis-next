@@ -12,3 +12,6 @@ dist/
 # macOS AppleDouble / resource fork files
 ._*
 .DS_Store
+
+# Supabase CLI local cache
+supabase/.temp/

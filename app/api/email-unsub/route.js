@@ -11,25 +11,28 @@ function renderPage(message, sub) {
 
 export async function GET(request) {
   const token = new URL(request.url).searchParams.get('t');
-  const email = verifyUnsubToken(token || '');
+  const email = verifyUnsubToken(token);
   if (!email) return renderPage('Invalid link.', 'This unsubscribe link is not valid or has been tampered with.');
 
   const headers = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' };
+  const encodedEmail = encodeURIComponent(email);
+  const now = new Date().toISOString();
 
-  // Try subscribers first.
-  const subRes = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodeURIComponent(email)}&select=id`, { headers, cache: 'no-store' });
+  const subRes = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodedEmail}&select=id`, { headers, cache: 'no-store' });
   const subRows = subRes.ok ? await subRes.json() : [];
 
   if (subRows.length) {
-    await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodeURIComponent(email)}`, {
+    const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodedEmail}`, {
       method: 'PATCH', headers,
-      body: JSON.stringify({ compound_email_unsubscribed_at: new Date().toISOString() }),
+      body: JSON.stringify({ compound_email_unsubscribed_at: now }),
     });
+    if (!patchRes.ok) console.error('email-unsub: subscriber PATCH failed', patchRes.status, await patchRes.text());
   } else {
-    await fetch(`${SUPABASE_URL}/rest/v1/compound_email_unsubscribes?on_conflict=email`, {
+    const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/compound_email_unsubscribes?on_conflict=email`, {
       method: 'POST', headers: { ...headers, Prefer: 'resolution=merge-duplicates' },
-      body: JSON.stringify({ email, unsubscribed_at: new Date().toISOString() }),
+      body: JSON.stringify({ email, unsubscribed_at: now }),
     });
+    if (!upsertRes.ok) console.error('email-unsub: suppression upsert failed', upsertRes.status, await upsertRes.text());
   }
 
   return renderPage("You're unsubscribed.", 'Compound spotlight emails are off for this address. Transactional emails (order confirmations, ambassador comms) are unaffected.');

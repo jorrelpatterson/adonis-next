@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>advnce labs &mdash; Wholesale Pricing &middot; 2026-05-19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Base ─────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --cream:  #F4F2EE;
+  --ink:    #1A1C22;
+  --cyan:   #00A0A8;
+  --amber:  #E07C24;
+  --dim:    #7A7D88;
+  --border: #E4E7EC;
+  --ghost:  rgba(0,0,0,0.03);
+
+  --fn: 'Barlow Condensed', Arial, sans-serif;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+html, body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--fn);
+  font-size: 12pt;
+  line-height: 1.5;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+.sheet {
+  max-width: 9.5in;
+  margin: 0 auto;
+  padding: 0.45in 0.1in 0.35in;
+}
+
+/* ─── Header ────────────────────────────────────── */
+.sheet-header {
+  text-align: center;
+  margin-bottom: 0.4in;
+  padding-bottom: 24pt;
+}
+
+.logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12pt;
+}
+
+.logo-wordmark {
+  font-family: var(--fn);
+  font-weight: 300;
+  font-size: 14pt;
+  letter-spacing: 3px;
+  color: var(--ink);
+  text-transform: lowercase;
+  line-height: 1;
+}
+
+.logo-wordmark .labs {
+  color: var(--dim);
+}
+
+.header-rule {
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--cyan);
+  margin: 0 auto 12pt;
+}
+
+.sheet-subhead {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--dim);
+  display: inline;
+}
+
+.draft-label {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--amber);
+  border-bottom: 1px solid var(--amber);
+  display: inline;
+  margin-left: 8px;
+}
+
+/* ─── Per-Vial Banner ───────────────────────────── */
+.pvial-banner {
+  margin: 0 auto 0.35in;
+  max-width: 5.5in;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 16pt 28pt;
+}
+
+.pvial-title {
+  font-family: var(--fn);
+  font-size: 16pt;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink);
+  margin-bottom: 8pt;
+}
+
+.pvial-sub {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+/* ─── Tier Legend ───────────────────────────────── */
+.tier-legend {
+  text-align: center;
+  margin: 0 auto 0.35in;
+  font-size: 0;
+  line-height: 2;
+}
+
+.tl-label {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 6pt;
+}
+
+.tl-item {
+  display: inline-block;
+  margin: 0 10pt;
+  white-space: nowrap;
+}
+
+.tl-letter {
+  font-family: var(--fn);
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 1px;
+}
+
+.tl-dot {
+  font-family: var(--fm);
+  font-size: 9pt;
+  color: var(--dim);
+  margin: 0 3px;
+}
+
+.tl-range {
+  font-family: var(--fm);
+  font-size: 9pt;
+  color: var(--dim);
+}
+
+/* ─── Divider ───────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 0.35in;
+}
+
+/* ─── Category Blocks ───────────────────────────── */
+.category-block {
+  margin-bottom: 0.32in;
+  padding-top: 18pt;
+  border-top: 1px solid var(--border);
+  page-break-inside: avoid;
+}
+
+.cat-eyebrow {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 6pt;
+  line-height: 1;
+}
+
+.eyebrow-num {
+  color: var(--amber);
+}
+
+.eyebrow-sep {
+  color: var(--dim);
+}
+
+.eyebrow-name {
+  color: var(--ink);
+}
+
+.cat-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--cyan);
+  margin-bottom: 14pt;
+}
+
+/* ─── Pricing Table ─────────────────────────────── */
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
+}
+
+.pricing-table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.pricing-table th {
+  font-family: var(--fm);
+  font-size: 9pt;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 0 0 8pt;
+  text-align: left;
+}
+
+.pricing-table th.th-size,
+.pricing-table th.th-price {
+  text-align: right;
+}
+
+.pricing-table th.tf-head {
+  color: var(--cyan);
+  font-weight: 400;
+}
+
+.pricing-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.pricing-table tbody tr.row-even {
+  background: var(--ghost);
+}
+
+.pricing-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.pricing-table td {
+  padding: 7pt 0;
+  vertical-align: middle;
+}
+
+.prod-name {
+  font-family: var(--fn);
+  font-size: 11pt;
+  font-weight: 400;
+  color: var(--ink);
+  padding-right: 10pt;
+  width: 28%;
+}
+
+.prod-size {
+  font-family: var(--fm);
+  font-size: 9pt;
+  font-weight: 400;
+  color: var(--dim);
+  text-align: right;
+  width: 10%;
+  padding-right: 10pt;
+}
+
+.price {
+  font-family: var(--fm);
+  font-size: 10pt;
+  font-weight: 400;
+  text-align: right;
+  white-space: nowrap;
+  padding-left: 6pt;
+  width: 8%;
+}
+
+.price.retail {
+  color: var(--dim);
+  font-size: 9pt;
+}
+
+.price.ta,
+.price.tb,
+.price.tc,
+.price.td,
+.price.te {
+  color: var(--ink);
+}
+
+.price.tf {
+  color: var(--cyan);
+  font-weight: 400;
+  font-size: 11pt;
+}
+
+/* ─── Footer ────────────────────────────────────── */
+.sheet-footer {
+  margin-top: 0.4in;
+  padding-top: 16pt;
+  border-top: 1px solid var(--cyan);
+  text-align: center;
+}
+
+.footer-lines {
+  font-family: var(--fm);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--dim);
+  line-height: 2.2;
+}
+
+.footer-email {
+  font-family: var(--fm);
+  font-size: 9pt;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  text-transform: lowercase;
+  margin-top: 6pt;
+  display: block;
+}
+
+/* ─── Print ─────────────────────────────────────── */
+@page {
+  size: letter;
+  margin: 0.6in 0.7in;
+  background: var(--cream);
+}
+
+@media print {
+  body {
+    background: var(--cream) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  .category-block { page-break-inside: avoid; }
+  .page-break { page-break-before: always; }
+  .no-print { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- Header -->
+  <div class="sheet-header">
+    <div class="logo-lockup">
+      <svg viewBox="0 0 48 28" fill="none" width="48" height="28" style="display:inline-block;vertical-align:middle">
+        <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3"
+              stroke="#00A0A8" stroke-width="1.8"
+              stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="32" cy="9"  r="2"   fill="#00A0A8"/>
+        <circle cx="38" cy="12" r="2"   fill="#E07C24"/>
+        <circle cx="46" cy="3"  r="2.5" fill="#E07C24"/>
+      </svg>
+      <span class="logo-wordmark">advnce <span class="labs">labs</span></span>
+    </div>
+    <span class="header-rule"></span>
+    <div>
+      <span class="sheet-subhead">Wholesale Pricing &nbsp;&middot;&nbsp; 2026-05-19</span>
+      <span class="draft-label">Draft</span>
+    </div>
+  </div>
+
+  <!-- Prices Per Vial Banner -->
+  <div class="pvial-banner">
+    <div class="pvial-title">Prices Per Vial</div>
+    <div class="pvial-sub">Orders in 10-unit increments &nbsp;&middot;&nbsp; Minimum 10 vials per SKU</div>
+  </div>
+
+  <!-- Tier Legend -->
+  <div class="tier-legend">
+    <span class="tl-label">How to read the tiers</span>
+    <span class="tl-item"><span class="tl-letter">A</span><span class="tl-dot">&middot;</span><span class="tl-range">10&ndash;90</span></span>
+    <span class="tl-item"><span class="tl-letter">B</span><span class="tl-dot">&middot;</span><span class="tl-range">100&ndash;190</span></span>
+    <span class="tl-item"><span class="tl-letter">C</span><span class="tl-dot">&middot;</span><span class="tl-range">200&ndash;290</span></span>
+    <span class="tl-item"><span class="tl-letter">D</span><span class="tl-dot">&middot;</span><span class="tl-range">300&ndash;390</span></span>
+    <span class="tl-item"><span class="tl-letter">E</span><span class="tl-dot">&middot;</span><span class="tl-range">400&ndash;490</span></span>
+    <span class="tl-item"><span class="tl-letter">F</span><span class="tl-dot">&middot;</span><span class="tl-range">500+</span></span>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Category Blocks -->
+  
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">01</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">WEIGHT LOSS</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">5-Amino-1MQ</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$50</td>
+            <td class="price ta">$25</td>
+            <td class="price tb">$20</td>
+            <td class="price tc">$18</td>
+            <td class="price td">$13</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Adipotide</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$58</td>
+            <td class="price ta">$29</td>
+            <td class="price tb">$26</td>
+            <td class="price tc">$24</td>
+            <td class="price td">$22</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">AOD-9604</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$37</td>
+            <td class="price ta">$24</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$18</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">CagriSema</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$99</td>
+            <td class="price ta">$50</td>
+            <td class="price tb">$40</td>
+            <td class="price tc">$35</td>
+            <td class="price td">$25</td>
+            <td class="price te">$21</td>
+            <td class="price tf">$19</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">CagriSema</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$99</td>
+            <td class="price ta">$50</td>
+            <td class="price tb">$40</td>
+            <td class="price tc">$35</td>
+            <td class="price td">$25</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Mazdutide</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$72</td>
+            <td class="price ta">$36</td>
+            <td class="price tb">$32</td>
+            <td class="price tc">$30</td>
+            <td class="price td">$28</td>
+            <td class="price te">$26</td>
+            <td class="price tf">$24</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Retatrutide</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$99</td>
+            <td class="price ta">$50</td>
+            <td class="price tb">$40</td>
+            <td class="price tc">$35</td>
+            <td class="price td">$25</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Retatrutide</td>
+            <td class="prod-size">20mg / 3ml</td>
+            <td class="price retail">$180</td>
+            <td class="price ta">$90</td>
+            <td class="price tb">$72</td>
+            <td class="price tc">$63</td>
+            <td class="price td">$45</td>
+            <td class="price te">$36</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Retatrutide</td>
+            <td class="prod-size">30mg / 3ml</td>
+            <td class="price retail">$216</td>
+            <td class="price ta">$108</td>
+            <td class="price tb">$86</td>
+            <td class="price tc">$76</td>
+            <td class="price td">$54</td>
+            <td class="price te">$43</td>
+            <td class="price tf">$23</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Retatrutide</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$55</td>
+            <td class="price ta">$28</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$19</td>
+            <td class="price td">$14</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Semaglutide</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$119</td>
+            <td class="price ta">$60</td>
+            <td class="price tb">$48</td>
+            <td class="price tc">$42</td>
+            <td class="price td">$30</td>
+            <td class="price te">$24</td>
+            <td class="price tf">$12</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Semaglutide</td>
+            <td class="prod-size">15mg / 3ml</td>
+            <td class="price retail">$148</td>
+            <td class="price ta">$74</td>
+            <td class="price tb">$59</td>
+            <td class="price tc">$52</td>
+            <td class="price td">$37</td>
+            <td class="price te">$30</td>
+            <td class="price tf">$15</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Semaglutide</td>
+            <td class="prod-size">20mg / 3ml</td>
+            <td class="price retail">$184</td>
+            <td class="price ta">$92</td>
+            <td class="price tb">$74</td>
+            <td class="price tc">$64</td>
+            <td class="price td">$46</td>
+            <td class="price te">$37</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Semaglutide</td>
+            <td class="prod-size">30mg / 3ml</td>
+            <td class="price retail">$261</td>
+            <td class="price ta">$131</td>
+            <td class="price tb">$104</td>
+            <td class="price tc">$91</td>
+            <td class="price td">$65</td>
+            <td class="price te">$52</td>
+            <td class="price tf">$26</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Semaglutide</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$65</td>
+            <td class="price ta">$33</td>
+            <td class="price tb">$26</td>
+            <td class="price tc">$23</td>
+            <td class="price td">$16</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$7</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Survodutide</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$261</td>
+            <td class="price ta">$131</td>
+            <td class="price tb">$104</td>
+            <td class="price tc">$91</td>
+            <td class="price td">$65</td>
+            <td class="price te">$52</td>
+            <td class="price tf">$32</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$112</td>
+            <td class="price ta">$56</td>
+            <td class="price tb">$45</td>
+            <td class="price tc">$39</td>
+            <td class="price td">$28</td>
+            <td class="price te">$22</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">15mg / 3ml</td>
+            <td class="price retail">$135</td>
+            <td class="price ta">$68</td>
+            <td class="price tb">$54</td>
+            <td class="price tc">$47</td>
+            <td class="price td">$34</td>
+            <td class="price te">$27</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">20mg / 3ml</td>
+            <td class="price retail">$153</td>
+            <td class="price ta">$77</td>
+            <td class="price tb">$61</td>
+            <td class="price tc">$54</td>
+            <td class="price td">$38</td>
+            <td class="price te">$31</td>
+            <td class="price tf">$15</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">30mg / 3ml</td>
+            <td class="price retail">$252</td>
+            <td class="price ta">$126</td>
+            <td class="price tb">$101</td>
+            <td class="price tc">$88</td>
+            <td class="price td">$63</td>
+            <td class="price te">$50</td>
+            <td class="price tf">$25</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">40mg / 3ml</td>
+            <td class="price retail">$297</td>
+            <td class="price ta">$149</td>
+            <td class="price tb">$119</td>
+            <td class="price tc">$104</td>
+            <td class="price td">$74</td>
+            <td class="price te">$59</td>
+            <td class="price tf">$30</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Tirzepatide</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$55</td>
+            <td class="price ta">$28</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$19</td>
+            <td class="price td">$14</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">02</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">GH</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">CJC-1295 noDAC</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$54</td>
+            <td class="price ta">$28</td>
+            <td class="price tb">$26</td>
+            <td class="price tc">$24</td>
+            <td class="price td">$22</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">CJC-1295 noDAC</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$47</td>
+            <td class="price ta">$24</td>
+            <td class="price tb">$20</td>
+            <td class="price tc">$18</td>
+            <td class="price td">$16</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$12</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">CJC-1295 wDAC</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$47</td>
+            <td class="price ta">$31</td>
+            <td class="price tb">$29</td>
+            <td class="price tc">$27</td>
+            <td class="price td">$25</td>
+            <td class="price te">$23</td>
+            <td class="price tf">$21</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">CJC+IPA Blend</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$50</td>
+            <td class="price ta">$25</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$18</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">GHRP-6</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$29</td>
+            <td class="price ta">$19</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$13</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Ipamorelin</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$48</td>
+            <td class="price ta">$24</td>
+            <td class="price tb">$19</td>
+            <td class="price tc">$17</td>
+            <td class="price td">$15</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Sermorelin</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$76</td>
+            <td class="price ta">$38</td>
+            <td class="price tb">$30</td>
+            <td class="price tc">$27</td>
+            <td class="price td">$20</td>
+            <td class="price te">$18</td>
+            <td class="price tf">$16</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Sermorelin</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$43</td>
+            <td class="price ta">$22</td>
+            <td class="price tb">$19</td>
+            <td class="price tc">$17</td>
+            <td class="price td">$15</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Tesamorelin</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$39</td>
+            <td class="price ta">$24</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$18</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$14</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">03</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">LONGEVITY</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">AICAR</td>
+            <td class="prod-size">50mg / 3ml</td>
+            <td class="price retail">$56</td>
+            <td class="price ta">$28</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Epitalon</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$36</td>
+            <td class="price ta">$19</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$13</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Epitalon</td>
+            <td class="prod-size">50mg / 3ml</td>
+            <td class="price retail">$94</td>
+            <td class="price ta">$47</td>
+            <td class="price tb">$38</td>
+            <td class="price tc">$33</td>
+            <td class="price td">$24</td>
+            <td class="price te">$19</td>
+            <td class="price tf">$17</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Glutathione</td>
+            <td class="prod-size">1500mg / 3ml</td>
+            <td class="price retail">$72</td>
+            <td class="price ta">$36</td>
+            <td class="price tb">$29</td>
+            <td class="price tc">$25</td>
+            <td class="price td">$18</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">IGF-1 LR3</td>
+            <td class="prod-size">0.1mg / 3ml</td>
+            <td class="price retail">$25</td>
+            <td class="price ta">$18</td>
+            <td class="price tb">$16</td>
+            <td class="price tc">$14</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">IGF-1 LR3</td>
+            <td class="prod-size">1mg / 3ml</td>
+            <td class="price retail">$135</td>
+            <td class="price ta">$68</td>
+            <td class="price tb">$54</td>
+            <td class="price tc">$47</td>
+            <td class="price td">$34</td>
+            <td class="price te">$27</td>
+            <td class="price tf">$25</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">IGF-DES</td>
+            <td class="prod-size">1mg / 3ml</td>
+            <td class="price retail">$40</td>
+            <td class="price ta">$20</td>
+            <td class="price tb">$18</td>
+            <td class="price tc">$16</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">MOTS-c</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$104</td>
+            <td class="price ta">$52</td>
+            <td class="price tb">$42</td>
+            <td class="price tc">$36</td>
+            <td class="price td">$26</td>
+            <td class="price te">$21</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">MOTS-c</td>
+            <td class="prod-size">40mg / 3ml</td>
+            <td class="price retail">$229</td>
+            <td class="price ta">$115</td>
+            <td class="price tb">$92</td>
+            <td class="price tc">$80</td>
+            <td class="price td">$57</td>
+            <td class="price te">$46</td>
+            <td class="price tf">$24</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">NAD+</td>
+            <td class="prod-size">100mg / 3ml</td>
+            <td class="price retail">$42</td>
+            <td class="price ta">$21</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">NAD+</td>
+            <td class="prod-size">500mg / 3ml</td>
+            <td class="price retail">$60</td>
+            <td class="price ta">$30</td>
+            <td class="price tb">$24</td>
+            <td class="price tc">$21</td>
+            <td class="price td">$15</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Pinealon</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$40</td>
+            <td class="price ta">$20</td>
+            <td class="price tb">$18</td>
+            <td class="price tc">$16</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Pinealon</td>
+            <td class="prod-size">20mg / 3ml</td>
+            <td class="price retail">$68</td>
+            <td class="price ta">$34</td>
+            <td class="price tb">$27</td>
+            <td class="price tc">$24</td>
+            <td class="price td">$18</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Pinealon</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$25</td>
+            <td class="price ta">$18</td>
+            <td class="price tb">$16</td>
+            <td class="price tc">$14</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">SLU-PP-332</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$108</td>
+            <td class="price ta">$54</td>
+            <td class="price tb">$43</td>
+            <td class="price tc">$38</td>
+            <td class="price td">$27</td>
+            <td class="price te">$22</td>
+            <td class="price tf">$17</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">SS-31</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$58</td>
+            <td class="price ta">$29</td>
+            <td class="price tb">$23</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$17</td>
+            <td class="price te">$15</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">SS-31</td>
+            <td class="prod-size">50mg / 3ml</td>
+            <td class="price retail">$225</td>
+            <td class="price ta">$113</td>
+            <td class="price tb">$90</td>
+            <td class="price tc">$79</td>
+            <td class="price td">$56</td>
+            <td class="price te">$45</td>
+            <td class="price tf">$38</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">04</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">RECOVERY</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">ARA-290</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$58</td>
+            <td class="price ta">$29</td>
+            <td class="price tb">$23</td>
+            <td class="price tc">$20</td>
+            <td class="price td">$15</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">BPC-157</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$69</td>
+            <td class="price ta">$35</td>
+            <td class="price tb">$28</td>
+            <td class="price tc">$24</td>
+            <td class="price td">$17</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">BPC+TB Blend</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$79</td>
+            <td class="price ta">$40</td>
+            <td class="price tb">$32</td>
+            <td class="price tc">$28</td>
+            <td class="price td">$20</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">BPC+TB Blend</td>
+            <td class="prod-size">20mg / 3ml</td>
+            <td class="price retail">$96</td>
+            <td class="price ta">$48</td>
+            <td class="price tb">$38</td>
+            <td class="price tc">$34</td>
+            <td class="price td">$25</td>
+            <td class="price te">$23</td>
+            <td class="price tf">$21</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Dermorphin</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$81</td>
+            <td class="price ta">$41</td>
+            <td class="price tb">$32</td>
+            <td class="price tc">$28</td>
+            <td class="price td">$20</td>
+            <td class="price te">$16</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">KLOW</td>
+            <td class="prod-size">80mg / 3ml</td>
+            <td class="price retail">$139</td>
+            <td class="price ta">$70</td>
+            <td class="price tb">$56</td>
+            <td class="price tc">$49</td>
+            <td class="price td">$35</td>
+            <td class="price te">$28</td>
+            <td class="price tf">$26</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">TB-500</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$91</td>
+            <td class="price ta">$46</td>
+            <td class="price tb">$36</td>
+            <td class="price tc">$32</td>
+            <td class="price td">$23</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">TB-500</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$70</td>
+            <td class="price ta">$35</td>
+            <td class="price tb">$28</td>
+            <td class="price tc">$25</td>
+            <td class="price td">$18</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$12</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">05</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">IMMUNE</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">KPV</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$50</td>
+            <td class="price ta">$25</td>
+            <td class="price tb">$20</td>
+            <td class="price tc">$18</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">LL-37</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$70</td>
+            <td class="price ta">$35</td>
+            <td class="price tb">$28</td>
+            <td class="price tc">$25</td>
+            <td class="price td">$18</td>
+            <td class="price te">$15</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">PNC-27</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$195</td>
+            <td class="price ta">$98</td>
+            <td class="price tb">$78</td>
+            <td class="price tc">$68</td>
+            <td class="price td">$49</td>
+            <td class="price te">$39</td>
+            <td class="price tf">$21</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">PNC-27</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$124</td>
+            <td class="price ta">$62</td>
+            <td class="price tb">$50</td>
+            <td class="price tc">$43</td>
+            <td class="price td">$31</td>
+            <td class="price te">$25</td>
+            <td class="price tf">$14</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Thymalin</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$32</td>
+            <td class="price ta">$20</td>
+            <td class="price tb">$18</td>
+            <td class="price tc">$16</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Thymosin A1</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$134</td>
+            <td class="price ta">$67</td>
+            <td class="price tb">$54</td>
+            <td class="price tc">$47</td>
+            <td class="price td">$34</td>
+            <td class="price te">$27</td>
+            <td class="price tf">$21</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Thymosin A1</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$73</td>
+            <td class="price ta">$37</td>
+            <td class="price tb">$29</td>
+            <td class="price tc">$26</td>
+            <td class="price td">$18</td>
+            <td class="price te">$15</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">VIP</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$112</td>
+            <td class="price ta">$56</td>
+            <td class="price tb">$45</td>
+            <td class="price tc">$39</td>
+            <td class="price td">$28</td>
+            <td class="price te">$22</td>
+            <td class="price tf">$18</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">VIP</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$63</td>
+            <td class="price ta">$32</td>
+            <td class="price tb">$25</td>
+            <td class="price tc">$22</td>
+            <td class="price td">$16</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$12</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">06</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">COGNITIVE</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">Cerebrolysin</td>
+            <td class="prod-size">60mg / 3ml</td>
+            <td class="price retail">$72</td>
+            <td class="price ta">$36</td>
+            <td class="price tb">$29</td>
+            <td class="price tc">$25</td>
+            <td class="price td">$18</td>
+            <td class="price te">$14</td>
+            <td class="price tf">$7</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Dihexa</td>
+            <td class="prod-size">20mg x 25 tabs</td>
+            <td class="price retail">$260</td>
+            <td class="price ta">$130</td>
+            <td class="price tb">$104</td>
+            <td class="price tc">$91</td>
+            <td class="price td">$65</td>
+            <td class="price te">$52</td>
+            <td class="price tf">$26</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Selank</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$43</td>
+            <td class="price ta">$22</td>
+            <td class="price tb">$19</td>
+            <td class="price tc">$17</td>
+            <td class="price td">$15</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Semax</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$41</td>
+            <td class="price ta">$21</td>
+            <td class="price tb">$19</td>
+            <td class="price tc">$17</td>
+            <td class="price td">$15</td>
+            <td class="price te">$13</td>
+            <td class="price tf">$11</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Semax</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$27</td>
+            <td class="price ta">$19</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$13</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">07</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">SEXUAL HEALTH</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">Kisspeptin-10</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$55</td>
+            <td class="price ta">$28</td>
+            <td class="price tb">$22</td>
+            <td class="price tc">$19</td>
+            <td class="price td">$17</td>
+            <td class="price te">$15</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Melanotan I</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$40</td>
+            <td class="price ta">$20</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$13</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Melanotan II</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$34</td>
+            <td class="price ta">$19</td>
+            <td class="price tb">$17</td>
+            <td class="price tc">$15</td>
+            <td class="price td">$13</td>
+            <td class="price te">$11</td>
+            <td class="price tf">$9</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Oxytocin</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$47</td>
+            <td class="price ta">$24</td>
+            <td class="price tb">$21</td>
+            <td class="price tc">$19</td>
+            <td class="price td">$17</td>
+            <td class="price te">$15</td>
+            <td class="price tf">$13</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">PT-141</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$39</td>
+            <td class="price ta">$20</td>
+            <td class="price tb">$18</td>
+            <td class="price tc">$16</td>
+            <td class="price td">$14</td>
+            <td class="price te">$12</td>
+            <td class="price tf">$10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">08</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">SLEEP</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">DSIP</td>
+            <td class="prod-size">5mg / 3ml</td>
+            <td class="price retail">$32</td>
+            <td class="price ta">$18</td>
+            <td class="price tb">$16</td>
+            <td class="price tc">$14</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">09</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">SKIN</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">GHK-Cu</td>
+            <td class="prod-size">100mg / 3ml</td>
+            <td class="price retail">$100</td>
+            <td class="price ta">$50</td>
+            <td class="price tb">$40</td>
+            <td class="price tc">$35</td>
+            <td class="price td">$25</td>
+            <td class="price te">$20</td>
+            <td class="price tf">$10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">10</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">COSMETIC</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">Snap-8</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$36</td>
+            <td class="price ta">$18</td>
+            <td class="price tb">$16</td>
+            <td class="price tc">$14</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">11</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">PEPTIDE BLEND</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">GKP Blend</td>
+            <td class="prod-size">70mg / 3ml</td>
+            <td class="price retail">$139</td>
+            <td class="price ta">$70</td>
+            <td class="price tb">$56</td>
+            <td class="price tc">$49</td>
+            <td class="price td">$35</td>
+            <td class="price te">$28</td>
+            <td class="price tf">$16</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Glow</td>
+            <td class="prod-size">50mg / 3ml</td>
+            <td class="price retail">$185</td>
+            <td class="price ta">$93</td>
+            <td class="price tb">$74</td>
+            <td class="price tc">$65</td>
+            <td class="price td">$46</td>
+            <td class="price te">$37</td>
+            <td class="price tf">$20</td>
+          </tr>
+          <tr class="row-even">
+            <td class="prod-name">Glow Plus</td>
+            <td class="prod-size">70mg / 3ml</td>
+            <td class="price retail">$225</td>
+            <td class="price ta">$113</td>
+            <td class="price tb">$90</td>
+            <td class="price tc">$79</td>
+            <td class="price td">$56</td>
+            <td class="price te">$45</td>
+            <td class="price tf">$24</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">12</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">PHARMA</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">B12</td>
+            <td class="prod-size">10ml / vial</td>
+            <td class="price retail">$27</td>
+            <td class="price ta">$18</td>
+            <td class="price tb">$16</td>
+            <td class="price tc">$14</td>
+            <td class="price td">$12</td>
+            <td class="price te">$10</td>
+            <td class="price tf">$8</td>
+          </tr>
+          <tr class="">
+            <td class="prod-name">Melatonin</td>
+            <td class="prod-size">10mg / 3ml</td>
+            <td class="price retail">$80</td>
+            <td class="price ta">$40</td>
+            <td class="price tb">$32</td>
+            <td class="price tc">$28</td>
+            <td class="price td">$26</td>
+            <td class="price te">$24</td>
+            <td class="price tf">$22</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="category-block">
+      <div class="cat-eyebrow">
+        <span class="eyebrow-num">13</span>
+        <span class="eyebrow-sep"> &mdash; </span>
+        <span class="eyebrow-name">SUPPLIES</span>
+      </div>
+      <div class="cat-rule"></div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th class="th-name">Product</th>
+            <th class="th-size">Size</th>
+            <th class="th-price">Retail</th>
+            <th class="th-price">A</th>
+            <th class="th-price">B</th>
+            <th class="th-price">C</th>
+            <th class="th-price">D</th>
+            <th class="th-price">E</th>
+            <th class="th-price tf-head">F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-even">
+            <td class="prod-name">Bac Water</td>
+            <td class="prod-size">10ml / vial</td>
+            <td class="price retail">$12</td>
+            <td class="price ta">$11</td>
+            <td class="price tb">$11</td>
+            <td class="price tc">$11</td>
+            <td class="price td">$10</td>
+            <td class="price te">$8</td>
+            <td class="price tf">$6</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  <!-- Footer -->
+  <div class="sheet-footer">
+    <div class="footer-lines">
+      Lead Time 7&ndash;14 Business Days &nbsp;&middot;&nbsp; Min 10 Units Per SKU<br>
+      Research Use Only &nbsp;&middot;&nbsp; Not for Human Consumption &nbsp;&middot;&nbsp; Not Evaluated by the FDA
+    </div>
+    <span class="footer-email">wholesale@advncelabs.com</span>
+  </div>
+
+</div>
+</body>
+</html>
