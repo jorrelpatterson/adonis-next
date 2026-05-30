@@ -18,21 +18,25 @@ export async function GET(request) {
   const encodedEmail = encodeURIComponent(email);
   const now = new Date().toISOString();
 
+  // ALWAYS record in the shared suppression list. This table is the single source of
+  // truth that BOTH the compound-spotlight sender and the recruitment drip check for
+  // opt-out, so every unsubscribe must land here — including subscribers (previously a
+  // subscriber's opt-out only stamped the subscribers row and the drip never saw it).
+  const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/compound_email_unsubscribes?on_conflict=email`, {
+    method: 'POST', headers: { ...headers, Prefer: 'resolution=merge-duplicates' },
+    body: JSON.stringify({ email, unsubscribed_at: now }),
+  });
+  if (!upsertRes.ok) console.error('email-unsub: suppression upsert failed', upsertRes.status, await upsertRes.text());
+
+  // If they're also a newsletter subscriber, stamp that row too (keeps subscriber views consistent).
   const subRes = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodedEmail}&select=id`, { headers, cache: 'no-store' });
   const subRows = subRes.ok ? await subRes.json() : [];
-
   if (subRows.length) {
     const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?email=ilike.${encodedEmail}`, {
       method: 'PATCH', headers,
       body: JSON.stringify({ compound_email_unsubscribed_at: now }),
     });
     if (!patchRes.ok) console.error('email-unsub: subscriber PATCH failed', patchRes.status, await patchRes.text());
-  } else {
-    const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/compound_email_unsubscribes?on_conflict=email`, {
-      method: 'POST', headers: { ...headers, Prefer: 'resolution=merge-duplicates' },
-      body: JSON.stringify({ email, unsubscribed_at: now }),
-    });
-    if (!upsertRes.ok) console.error('email-unsub: suppression upsert failed', upsertRes.status, await upsertRes.text());
   }
 
   return renderPage("You're unsubscribed.", 'Compound spotlight emails are off for this address. Transactional emails (order confirmations, ambassador comms) are unaffected.');
