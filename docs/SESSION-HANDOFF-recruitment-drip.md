@@ -1,5 +1,20 @@
 # Session Handoff — Ambassador Recruitment Drip
 
+> ## ⏸️ CURRENT STATE — 2026-05-30: LOADED & PARKED, NOT LAUNCHED
+>
+> The campaign is fully built, deployed, verified, and **parked**. Operator will launch later.
+>
+> - **823 solar-dealer recipients** imported into `ambassador_recruitment_recipients`, `csv_batch_id='2026-05-30-solar-prod'`, all `drip_status='queued'`, `next_touch_num=1`, **`next_send_at=NULL`** (inert → cron finds 0 due → sends nothing). Source: `~/Desktop/prod_leads.csv` (final). Excluded opted_out/test/invalid_email/healthcare-urgent; included construction + role accts + business_name_looks_personal.
+> - **TO LAUNCH (one action, confirm with operator first):** `PATCH ambassador_recruitment_recipients?csv_batch_id=eq.2026-05-30-solar-prod` → `{"next_send_at":"<now ISO>"}`. Next hourly cron tick sends touch 1 (~200/run); Day 0/3/7/14/21 cadence is automatic.
+> - **Corrections applied since the original handoff below:**
+>   - `ADVNCE_ORIGIN=https://join.advncelabs.com` (NEW subdomain → `adonis-next` Vercel project; GoDaddy CNAME `join`→`cname.vercel-dns.com`). The handoff's `advncelabs.com` apex was WRONG (separate storefront, 404s the app routes). `www.adonis.pro` also serves the app.
+>   - Cron was bundling-broken on Vercel → fixed with `experimental.outputFileTracingIncludes` in `next.config.js` (without it the scheduled cron throws "Cannot find module renderRecruitmentEmail.js").
+>   - CAN-SPAM postal address added to all 5 footers; wholesale cross-sell block removed from touch 1 (page 404'd); KLOW touch-3 line approved.
+>   - Re-running the CSV import RESETS drip state (merge-duplicates) — import once.
+> - **Verified:** real production send via cron, join.advncelabs.com links, postal address, unsubscribe + suppression (0 overlap with `subscribers`). Deploy HEAD at park: `e9c2364`.
+>
+> ---
+
 **Date:** 2026-05-28
 **Owner:** Jorrel Patterson
 **HEAD at handoff:** `6cac700` (commit range `dea3cd5` → `6cac700`, 15 commits, all pushed to `origin/main`)
