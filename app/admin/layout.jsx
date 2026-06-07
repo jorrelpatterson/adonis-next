@@ -14,6 +14,7 @@ const NAV = [
   { href: '/admin/pricing',      label: 'Pricing',      icon: '💰' },
   { href: '/admin/marketing',    label: 'Marketing',    icon: '📣' },
   { href: '/admin/marketing/news', label: 'News',       icon: '📰' },
+  { href: '/admin/visitors',     label: 'Visitors',     icon: '👁️' },
   { href: '/admin/distributors', label: 'Distributors', icon: '🏭' },
   { href: '/admin/discount-codes', label: 'Discount Codes', icon: '🎫' },
   { href: '/admin/pre-sell',     label: 'Pre-sell',     icon: '⏳' },
