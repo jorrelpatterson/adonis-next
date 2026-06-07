@@ -56,3 +56,30 @@ Cart in app.html → `/api/checkout` (Stripe session) → Stripe hosted checkout
 - Styling via vanilla CSS (`app/globals.css`) and inline styles — no Tailwind or component library
 - React hooks for state management (no external state library)
 - Minimal dependencies by design
+
+
+## os.jorrel.io — approved dev requests
+
+When os.jorrel.io approves engineering work for this project, it lands in this project's
+`jorrel-os.json` under `current.dev_requests[]` (written by the local `scripts/dev-requests.ts`
+bridge in the jorrel-os repo). Treat any entries there as approved, ready-to-build intake —
+each carries a brief and the originating discussion thread. After acting on one, you may clear
+it from `current.dev_requests[]` (merge-only).
+
+
+## Keeping os.jorrel.io current (report at session end)
+
+When you finish working in this project, push its current state to the dashboard so the
+card stays fresh — ONE call, no sync/deploy needed:
+
+```
+curl -X POST https://os.jorrel.io/api/report \
+  -H "Authorization: Bearer $CRON_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"project_id":"adonis-next","next_action":"<the next concrete step>","blockers":["..."],"completed":["what shipped this session"]}'
+```
+
+`$CRON_SECRET` is in the jorrel-os repo's `.env.local` (this project is a sibling of
+`jorrel-os/` under "Ai Projects/"). Only include fields that changed. The committed
+`jorrel-os.json` stays the durable record; this just keeps the live card current.
+For deeper/approved dev work, see the dev_requests note above.
