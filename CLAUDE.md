@@ -67,13 +67,22 @@ each carries a brief and the originating discussion thread. After acting on one,
 it from `current.dev_requests[]` (merge-only).
 
 
-## "Save everything" — end-of-session ritual
+## "Save everything" — end-of-session
 
-When Jorrel says **"save everything"** (his end-of-session phrase), do ALL of this before finishing:
+"Save everything" is Jorrel's phrase to wrap a session. It does NOT change your normal
+rules — it just makes sure the work is saved and the os.jorrel.io dashboard reflects it.
+Three things:
 
-1. **Save the work** — commit (and push, if this project deploys on push) everything changed this session.
-2. **Update this project's record** — merge-only update `jorrel-os.json` `current.*`: `next_action`, `blockers`, `completed_today`, `last_session` (today, YYYY-MM-DD). Never remove or rename other keys.
-3. **Refresh the os.jorrel.io card** — one call, instant, no deploy:
+1. **Save your work the normal way.** If a MASTER-BRIEFING.md exists at the "Ai Projects/"
+   root, follow it exactly — it governs commits (show diffs, get Jorrel's approval; do NOT
+   auto-commit) and says `jorrel-os.json` is MERGE-ONLY. This note never overrides that.
+2. **Update this project's `jorrel-os.json` — MERGE-ONLY.** Touch ONLY these keys:
+   `current.next_action`, `current.blockers`, `current.completed_today`,
+   `current.last_session` (today's date YYYY-MM-DD). Leave every other key exactly as-is —
+   this file may have extra keys (`phases`, `setup`, `urls`, etc.); do not touch them, do not
+   reshape the file. This file is the durable record.
+3. **Refresh the live dashboard card** — this is separate from the file; one call, instant,
+   no deploy:
 
 ```
 curl -X POST https://os.jorrel.io/api/report \
@@ -82,6 +91,8 @@ curl -X POST https://os.jorrel.io/api/report \
   -d '{"project_id":"adonis-next","next_action":"<next concrete step>","blockers":["..."],"completed":["what shipped this session"]}'
 ```
 
-`$CRON_SECRET` is in the jorrel-os repo's `.env.local` (a sibling folder under "Ai Projects/"). Send only the fields that changed. `project_id` MUST be `adonis-next`.
+`$CRON_SECRET` is in the jorrel-os repo's `.env.local` (a sibling folder under "Ai Projects/").
+Send only the fields that changed. `project_id` MUST be `adonis-next`.
 
-That is what "save everything" means in this project.
+Why both step 2 and step 3: step 2 (the file) is the permanent record; step 3 (the curl) is
+what makes the live card update instantly without a deploy. They are not redundant — do both.
