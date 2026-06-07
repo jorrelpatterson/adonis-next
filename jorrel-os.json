@@ -35,9 +35,14 @@
       "Default retail prices on the 81 new Eve tablets are 2× cost (placeholder) — need real market research before activation",
       "Vendor JSONs (eve-pricing.json) don't include the tablets sheet — only peptide vials"
     ],
-    "next_action": "Launch the parked ambassador recruitment drip: run the single-recipient dry run, then set next_send_at=now on the 823-lead batch (2026-05-30-solar-prod). Confirm ADVNCE_ORIGIN, EMAIL_UNSUB_SECRET, RESEND_API_KEY, CRON_SECRET are set on Vercel first.",
-    "last_session": "2026-06-06",
+    "next_action": "Take the visitor recovery engine live: review a day of dry-run data at adonis.pro/admin/visitors, then set RECOVERY_LIVE=true on the advnce-site Vercel project + redeploy to start sending recovery emails. (Standing priority still parked: the ambassador recruitment drip — 823 leads, batch 2026-05-30-solar-prod, set next_send_at=now to launch; confirm ADVNCE_ORIGIN, EMAIL_UNSUB_SECRET, RESEND_API_KEY, CRON_SECRET on Vercel.) Housekeeping: delete the verify-test-001 test row; optionally add IP_HASH_SALT to advnce-site Preview env.",
+    "last_session": "2026-06-07",
     "completed_today": [
+      "Built first-party visitor recovery engine on advnce-site (advncelabs.com) — Opensend-style anonymous-visitor→email recovery, in-house. Pixel track.js sitewide (15 pages), /api/track ingest to Supabase (hashed IP), /api/cron/recovery 15-min cron (abandoned-checkout 30m + cart 60m triggers), self-contained opt-out (/api/unsubscribe + email_optout + /unsubscribe.html), inert resolveStranger() stub for future paid identity-graph. 14 node:test unit tests. Gated behind RECOVERY_LIVE (default dry-run — sends zero emails). Spec+plan in advnce-site/docs/superpowers/. Merged feat/visitor-recovery-engine→main, deployed live.",
+      "4 new Supabase tables applied manually (visitors, visitor_events, recovery_sends, email_optout). IP_HASH_SALT set on advnce-site Vercel (Production). Live endpoints verified: /track.js 200, /api/track {ok:true}, cron {live:false}.",
+      "Built /admin/visitors dashboard on adonis-next (adonis.pro/admin) — read-only: summary tiles, dry-run/live banner, recovery candidates, identified visitors, recent activity feed. Added Visitors nav item. Build passed, pushed, deployed (auth-gated 307→login verified)."
+    ],
+    "_completed_2026_06_06": [
       "Fixed compound-spotlight email restock drafts mapping by raw order code instead of compound name (commit 59a5278). Root cause: onStockRise looked up compound_marketing by its sku column, which is unpopulated — e.g. PT-141's product SKU 'PT10' leaked as the draft name with a blank hook. Now resolves product by SKU → matches compound_marketing by name/slug → falls back to product name, never the raw code.",
       "Backfilled the IP10 restock draft → Ipamorelin (name, slug, hook, GROWTH HORMONE label, RAUN 1998 citation; body left null for ✨ Generate).",
       "Deleted two redundant restock orphan drafts: NP8 (duplicated an already-authored Snap-8 draft) and HGH (not in the campaign md, no marketing copy).",
