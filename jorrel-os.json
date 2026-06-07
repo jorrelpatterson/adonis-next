@@ -36,8 +36,14 @@
       "Vendor JSONs (eve-pricing.json) don't include the tablets sheet — only peptide vials"
     ],
     "next_action": "Launch the parked ambassador recruitment drip: run the single-recipient dry run, then set next_send_at=now on the 823-lead batch (2026-05-30-solar-prod). Confirm ADVNCE_ORIGIN, EMAIL_UNSUB_SECRET, RESEND_API_KEY, CRON_SECRET are set on Vercel first.",
-    "last_session": "2026-06-02",
+    "last_session": "2026-06-06",
     "completed_today": [
+      "Fixed compound-spotlight email restock drafts mapping by raw order code instead of compound name (commit 59a5278). Root cause: onStockRise looked up compound_marketing by its sku column, which is unpopulated — e.g. PT-141's product SKU 'PT10' leaked as the draft name with a blank hook. Now resolves product by SKU → matches compound_marketing by name/slug → falls back to product name, never the raw code.",
+      "Backfilled the IP10 restock draft → Ipamorelin (name, slug, hook, GROWTH HORMONE label, RAUN 1998 citation; body left null for ✨ Generate).",
+      "Deleted two redundant restock orphan drafts: NP8 (duplicated an already-authored Snap-8 draft) and HGH (not in the campaign md, no marketing copy).",
+      "CLAUDE.md — formalized the 'save everything' end-of-session ritual (commit + jorrel-os.json merge update + os.jorrel.io card refresh)."
+    ],
+    "_completed_2026_06_02": [
       "lib/requireAdmin.js — admin-cookie auth helper; applied to 6 /api/* routes in adonis-next (ambassador-welcome, ambassador-message, ambassador-payout, ambassador-write, ambassador-content-digest, discount-code-write)",
       "Schema migration 2026-04-23_ambassadors_commissions_rpc.sql — CREATE IF NOT EXISTS for ambassadors + referral_commissions + new ambassador_payouts + RPC drop/create-with-defaults + ALTER orders ADD ref_code. Applied to prod.",
       "ambassador-content-digest filter fix (active → status=eq.active) — was returning 0 ambassadors every call, so digest never sent",

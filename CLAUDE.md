@@ -67,19 +67,21 @@ each carries a brief and the originating discussion thread. After acting on one,
 it from `current.dev_requests[]` (merge-only).
 
 
-## Keeping os.jorrel.io current (report at session end)
+## "Save everything" — end-of-session ritual
 
-When you finish working in this project, push its current state to the dashboard so the
-card stays fresh — ONE call, no sync/deploy needed:
+When Jorrel says **"save everything"** (his end-of-session phrase), do ALL of this before finishing:
+
+1. **Save the work** — commit (and push, if this project deploys on push) everything changed this session.
+2. **Update this project's record** — merge-only update `jorrel-os.json` `current.*`: `next_action`, `blockers`, `completed_today`, `last_session` (today, YYYY-MM-DD). Never remove or rename other keys.
+3. **Refresh the os.jorrel.io card** — one call, instant, no deploy:
 
 ```
 curl -X POST https://os.jorrel.io/api/report \
   -H "Authorization: Bearer $CRON_SECRET" \
   -H "Content-Type: application/json" \
-  -d '{"project_id":"adonis-next","next_action":"<the next concrete step>","blockers":["..."],"completed":["what shipped this session"]}'
+  -d '{"project_id":"adonis-next","next_action":"<next concrete step>","blockers":["..."],"completed":["what shipped this session"]}'
 ```
 
-`$CRON_SECRET` is in the jorrel-os repo's `.env.local` (this project is a sibling of
-`jorrel-os/` under "Ai Projects/"). Only include fields that changed. The committed
-`jorrel-os.json` stays the durable record; this just keeps the live card current.
-For deeper/approved dev work, see the dev_requests note above.
+`$CRON_SECRET` is in the jorrel-os repo's `.env.local` (a sibling folder under "Ai Projects/"). Send only the fields that changed. `project_id` MUST be `adonis-next`.
+
+That is what "save everything" means in this project.
