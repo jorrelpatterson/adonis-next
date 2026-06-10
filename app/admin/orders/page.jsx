@@ -7,6 +7,7 @@ import { totalCollectedRevenue } from '../../../lib/revenue';
 const STATUS = {
   pending_payment: { color:'#F59E0B', bg:'#FFFBEB', label:'Pending Payment' },
   confirmed:       { color:'#60A5FA', bg:'#EFF6FF', label:'Confirmed' },
+  paid:            { color:'#16A34A', bg:'#F0FDF4', label:'Paid' },
   processing:      { color:'#A78BFA', bg:'#F5F3FF', label:'Processing' },
   shipped:         { color:'#34D399', bg:'#ECFDF5', label:'Shipped' },
   delivered:       { color:'#22C55E', bg:'#F0FDF4', label:'Delivered' },
@@ -50,12 +51,14 @@ export default function OrdersPage() {
     const ms = (o.order_id||'').toLowerCase().includes(search.toLowerCase()) ||
                name.includes(search.toLowerCase()) ||
                (o.email||'').toLowerCase().includes(search.toLowerCase());
-    return ms && (filterStatus === 'all' || o.status === filterStatus);
+    // A "sent" invoice is awaiting payment too — group it with Pending Payment.
+    const effStatus = o.status === 'sent' ? 'pending_payment' : o.status;
+    return ms && (filterStatus === 'all' || effStatus === filterStatus);
   }), [orders, search, filterStatus]);
 
   const totalRevenue = totalCollectedRevenue(orders);
   const settledCount = orders.filter(o => ['confirmed', 'processing', 'shipped', 'delivered'].includes(o.status)).length;
-  const pending = orders.filter(o => o.status === 'pending_payment' || o.status === 'confirmed').length;
+  const pending = orders.filter(o => o.status === 'pending_payment' || o.status === 'sent').length;
 
   const updateStatus = async (orderId, newStatus) => {
     await fetch('/api/order-status', {

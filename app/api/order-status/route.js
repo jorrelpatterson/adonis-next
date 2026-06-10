@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireRole } from '../../../lib/requireAdmin';
 
-const VALID = ['pending_payment', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+const VALID = ['pending_payment', 'sent', 'confirmed', 'paid', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 // POST /api/order-status — admin updates an order's status via the
 // service-role key (orders RLS blocks anon writes). Body: { orderId, status }.
