@@ -73,6 +73,7 @@ export default function OrdersPage() {
     try {
       const res = await fetch('/api/shipping-confirm', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order: {
           first_name: order.first_name, email: order.email, order_id: order.order_id,
