@@ -3,16 +3,6 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from 'react';
 import { totalCollectedRevenue } from '../../../lib/revenue';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-async function sbFetch(table, params='') {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-  });
-  const d = await r.json();
-  return Array.isArray(d) ? d : [];
-}
 
 const STATUS = {
   pending_payment: { color:'#F59E0B', bg:'#FFFBEB', label:'Pending Payment' },
@@ -42,8 +32,9 @@ export default function OrdersPage() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await sbFetch('orders', 'select=*&order=created_at.desc');
-        setOrders(data);
+        const r = await fetch('/api/orders-list', { credentials: 'include', cache: 'no-store' });
+        const d = await r.json();
+        setOrders(Array.isArray(d.orders) ? d.orders : []);
       } catch(e) {
         console.error('Orders load error:', e);
       } finally {
@@ -66,10 +57,11 @@ export default function OrdersPage() {
   const pending = orders.filter(o => o.status === 'pending_payment' || o.status === 'confirmed').length;
 
   const updateStatus = async (orderId, newStatus) => {
-    await fetch(`${SUPABASE_URL}/rest/v1/orders?order_id=eq.${orderId}`, {
-      method: 'PATCH',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ status: newStatus, updated_at: new Date().toISOString() })
+    await fetch('/api/order-status', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, status: newStatus })
     });
     setOrders(prev => prev.map(o => o.order_id === orderId ? { ...o, status: newStatus } : o));
   };
