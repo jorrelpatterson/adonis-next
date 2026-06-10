@@ -1,0 +1,130 @@
+import { NextResponse } from 'next/server';
+import { requireRole } from '../../../lib/requireAdmin';
+
+const PAYMENT_HANDLE = '626-806-4475';
+const PAYMENT_NAME = 'Jorrel Patterson';
+
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function reminderEmailHtml({ first_name, order_id, items, total, discount_amount, discount_code }) {
+  const itemRows = (items || []).map((i) =>
+    `<tr>
+      <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${esc(i.name)}${i.size ? ' · ' + esc(i.size) : ''}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7A7D88;text-align:center">${i.qty}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1C22;text-align:right;font-weight:700">${i.price === 0 ? 'FREE' : '$' + (i.price * i.qty)}</td>
+    </tr>`
+  ).join('');
+
+  const logo = '<svg viewBox="0 0 48 28" width="36" height="21" fill="none" style="vertical-align:middle;display:inline-block"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <title>Payment reminder — order ${esc(order_id)}</title>
+</head>
+<body style="margin:0;padding:0;background:#E8E6E2;font-family:Arial,Helvetica,sans-serif">
+<div style="max-width:600px;margin:0 auto;padding:24px 16px">
+
+  <div style="background:#F4F2EE;border-bottom:1px solid #E4E7EC;padding:20px 32px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px">
+    ${logo}
+    <span style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:300;letter-spacing:3px;color:#1A1C22;text-transform:lowercase">advnce <span style="color:#7A7D88;font-weight:300">labs</span></span>
+    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase">Payment reminder</span>
+  </div>
+
+  <div style="background:#F4F2EE;padding:40px 32px">
+
+    <div style="font-size:15px;color:#1A1C22;margin-bottom:20px">Hi ${esc(first_name) || 'there'}, just a friendly reminder — we haven't received payment for your order yet, so it's still on hold. Send payment below to lock it in and we'll ship right away.</div>
+
+    <div style="border:2px solid #00A0A8;background:#FAFBFC;border-radius:6px;padding:24px;margin-bottom:28px;text-align:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Send via Zelle or Apple Pay</div>
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:42px;font-weight:900;color:#00A0A8;letter-spacing:-1px;line-height:1;margin:4px 0">$${parseFloat(total || 0).toFixed(2)}</div>
+      <div style="font-size:18px;font-weight:700;color:#1A1C22;margin-top:10px">${PAYMENT_HANDLE}</div>
+      <div style="font-size:13px;color:#7A7D88;margin-top:2px">${PAYMENT_NAME}</div>
+      <div style="margin-top:16px;padding:10px 12px;background:#FFFBEB;border-radius:4px;font-size:12px;color:#A16207">Put <strong>${esc(order_id)}</strong> in the payment note so we can match your payment.</div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Your order ${esc(order_id)}</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #E4E7EC;border-radius:4px;overflow:hidden">
+        <thead><tr style="background:#FAFBFC">
+          <th style="padding:10px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Item</th>
+          <th style="padding:10px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Qty</th>
+          <th style="padding:10px 12px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #E4E7EC">Price</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+      ${discount_amount > 0 ? `<div style="display:flex;justify-content:space-between;padding:10px 12px;background:#FFFBEB;border-radius:3px;margin-top:10px"><span style="font-size:13px;font-weight:700;color:#A16207">${esc(discount_code) || 'Discount'}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#A16207">-$${parseFloat(discount_amount).toFixed(2)}</span></div>` : ''}
+      <div style="display:flex;justify-content:space-between;padding:14px 12px;background:#FAFBFC;border-radius:3px;margin-top:10px;border:1px solid #E4E7EC"><span style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:700;color:#1A1C22;letter-spacing:1px;text-transform:uppercase">Total due</span><span style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:900;color:#00A0A8">$${parseFloat(total || 0).toFixed(2)}</span></div>
+    </div>
+
+    <div style="font-size:12px;color:#7A7D88;line-height:1.7">Already sent payment? Thank you — you can ignore this, it may have crossed in the mail. Questions? Just reply to this email.</div>
+
+  </div>
+
+  <div style="background:#1A1C22;padding:18px 32px;border-radius:0 0 6px 6px;text-align:center">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(244,242,238,0.35);letter-spacing:1.5px;line-height:2;margin:0;text-transform:uppercase">advnce labs &middot; advncelabs.com</p>
+  </div>
+
+</div>
+</body>
+</html>`;
+}
+
+// POST /api/payment-reminder — admin re-sends a pending order's payment
+// instructions (Zelle/Apple Pay) to the customer. Re-sendable; no state change.
+export async function POST(request) {
+  const unauth = requireRole(request, 'admin', 'va');
+  if (unauth) return unauth;
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
+  }
+
+  const { orderId } = await request.json().catch(() => ({}));
+  if (!orderId) {
+    return NextResponse.json({ error: 'orderId required' }, { status: 400 });
+  }
+
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!SUPABASE_URL || !SERVICE_KEY) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+  }
+
+  // Look up the order so the amount/items/email are authoritative.
+  const lookup = await fetch(
+    `${SUPABASE_URL}/rest/v1/orders?order_id=eq.${encodeURIComponent(orderId)}&select=order_id,first_name,email,items,total,discount_amount,discount_code,status&limit=1`,
+    { headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` }, cache: 'no-store' },
+  );
+  if (!lookup.ok) {
+    return NextResponse.json({ error: 'Order lookup failed' }, { status: 500 });
+  }
+  const order = (await lookup.json())[0];
+  if (!order) {
+    return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+  }
+  if (!order.email) {
+    return NextResponse.json({ error: 'This order has no email on file' }, { status: 400 });
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      from: 'advnce labs <orders@advncelabs.com>',
+      to: order.email,
+      subject: `Payment reminder — order ${order.order_id} ($${parseFloat(order.total || 0).toFixed(2)})`,
+      html: reminderEmailHtml(order),
+    }),
+  });
+  const result = await res.json().catch(() => ({}));
+  if (res.ok) {
+    return NextResponse.json({ success: true, email: order.email, emailId: result.id });
+  }
+  console.error('payment-reminder Resend error:', result);
+  return NextResponse.json({ error: result.message || 'Email send failed' }, { status: 502 });
+}

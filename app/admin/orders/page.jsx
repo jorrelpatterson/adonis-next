@@ -28,6 +28,7 @@ export default function OrdersPage() {
   const [expandedId, setExpanded] = useState(null);
   const [tracking, setTracking]   = useState({});
   const [sending, setSending]     = useState({});
+  const [reminding, setReminding] = useState({});
 
   useEffect(() => {
     async function load() {
@@ -85,6 +86,22 @@ export default function OrdersPage() {
       else alert('Email failed — check Resend logs');
     } catch(e) { alert('Error: ' + e.message); }
     setSending(prev => ({ ...prev, [order.order_id]: false }));
+  };
+
+  const sendReminder = async (order) => {
+    setReminding(prev => ({ ...prev, [order.order_id]: true }));
+    try {
+      const res = await fetch('/api/payment-reminder', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.order_id })
+      });
+      const d = await res.json().catch(() => ({}));
+      if (res.ok && d.success) alert('Payment reminder sent to ' + (d.email || order.email));
+      else alert('Reminder failed: ' + (d.error || ('HTTP ' + res.status)));
+    } catch(e) { alert('Error: ' + e.message); }
+    setReminding(prev => ({ ...prev, [order.order_id]: false }));
   };
 
   if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'50vh',color:'#8C919E'}}><div style={{textAlign:'center'}}><div style={{fontSize:32,marginBottom:8}}>🛒</div>Loading orders...</div></div>;
@@ -179,6 +196,15 @@ export default function OrdersPage() {
                       <div>
                         <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Ship To</div>
                         <div style={{fontSize:13,color:'#4A4F5C',lineHeight:1.8,marginBottom:20}}>{customerName}<br/>{order.address}<br/>{order.city}, {order.state} {order.zip}{order.phone&&<><br/>{order.phone}</>}</div>
+                        {order.status==='pending_payment' && (
+                          <div style={{marginBottom:20}}>
+                            <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Awaiting Payment</div>
+                            <button onClick={()=>sendReminder(order)} disabled={reminding[order.order_id]}
+                              style={{...cs.btn,background:'#F59E0B',color:'#fff',width:'100%',opacity:reminding[order.order_id]?0.5:1}}>
+                              {reminding[order.order_id]?'Sending...':'✉ Send Payment Reminder'}
+                            </button>
+                          </div>
+                        )}
                         <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Ship Order</div>
                         <div style={{display:'flex',gap:8,marginBottom:16}}>
                           <input style={{...cs.input,flex:1}} placeholder="Tracking number"
