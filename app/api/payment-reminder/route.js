@@ -5,11 +5,13 @@ const PAYMENT_HANDLE = '626-806-4475';
 const PAYMENT_NAME = 'Jorrel Patterson';
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// A size is worth showing only if it's present and not the literal "N/A".
+const hasSize = (s) => !!s && String(s).trim() !== '' && String(s).trim().toUpperCase() !== 'N/A';
 
 function reminderEmailHtml({ first_name, order_id, items, total, discount_amount, discount_code }) {
   const itemRows = (items || []).map((i) =>
     `<tr>
-      <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${esc(i.name)}${i.size ? ' · ' + esc(i.size) : ''}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${esc(i.name)}${hasSize(i.size) ? ' · ' + esc(i.size) : ''}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7A7D88;text-align:center">${i.qty}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1C22;text-align:right;font-weight:700">${i.price === 0 ? 'FREE' : '$' + (i.price * i.qty)}</td>
     </tr>`

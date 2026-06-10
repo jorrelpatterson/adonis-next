@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// A size is worth showing only if it's present and not the literal "N/A".
+const hasSize = (s) => !!s && String(s).trim() !== '' && String(s).trim().toUpperCase() !== 'N/A';
+
 // POST /api/notify-customer — emails the buyer their Zelle/Apple Pay
 // payment instructions after placing a pending_payment order.
 // Public endpoint (called from public/app.html submitOrder).
@@ -18,7 +21,7 @@ export async function POST(request) {
 
     const itemRows = (items || []).map(i =>
       `<tr>
-        <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${i.name}${i.size ? ' · ' + i.size : ''}</td>
+        <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-size:13px;color:#1A1C22">${i.name}${hasSize(i.size) ? ' · ' + i.size : ''}</td>
         <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7A7D88;text-align:center">${i.qty}</td>
         <td style="padding:10px 12px;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1C22;text-align:right;font-weight:700">${i.price === 0 ? 'FREE' : '$' + (i.price * i.qty)}</td>
       </tr>`

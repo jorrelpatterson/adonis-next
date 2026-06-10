@@ -2,12 +2,14 @@ import { NextResponse } from 'next/server';
 import { requireRole } from '../../../lib/requireAdmin';
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// A size is worth showing only if it's present and not the literal "N/A".
+const hasSize = (s) => !!s && String(s).trim() !== '' && String(s).trim().toUpperCase() !== 'N/A';
 
 function shippedEmailHtml({ first_name, order_id, items, total, tracking_number, carrier, ship_address, ship_city, ship_state, ship_zip, est_delivery }) {
   const logo = '<svg viewBox="0 0 48 28" width="36" height="21" fill="none" style="vertical-align:middle;display:inline-block"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>';
 
   const itemsHtml = (items || []).map((i) =>
-    `<tr><td style="padding:10px 0;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1C22">${esc(i.name)} &mdash; ${esc(i.size)} &times; ${i.qty}</td><td style="text-align:right;padding:10px 0;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1C22">$${(i.price * i.qty).toFixed(2)}</td></tr>`
+    `<tr><td style="padding:10px 0;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1C22">${esc(i.name)}${hasSize(i.size) ? ' &mdash; ' + esc(i.size) : ''} &times; ${i.qty}</td><td style="text-align:right;padding:10px 0;border-bottom:1px solid #E4E7EC;font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1C22">$${(i.price * i.qty).toFixed(2)}</td></tr>`
   ).join('');
 
   return `<!DOCTYPE html>
