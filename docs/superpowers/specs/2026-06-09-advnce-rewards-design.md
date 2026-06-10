@@ -52,9 +52,14 @@ where displayed). Swapping a gift SKU is a one-line change.
 
 ### 2.3 Gift unlock (applies to THIS order)
 
-- If `lifetimePaidSpend < threshold` AND
-  `lifetimePaidSpend + currentOrderSubtotal ≥ threshold`, the order crosses
-  that tier: set `tier_unlocked: '<TIER>'` on the order and append the gift
+- If a tier's gift has not been granted before (see double-grant protection
+  below) AND `lifetimePaidSpend + currentOrderFinalTotal ≥ threshold`, the
+  order unlocks that tier. (Final total = post-discount, matching what joins
+  lifetime spend once paid.) This also **grandfathers pre-program
+  customers**: someone with $999 of historical spend gets the MOMENTUM and
+  VELOCITY gifts on their first post-launch qualifying order — a deliberate
+  launch reward for the existing base.
+  On unlock: set `tier_unlocked: '<TIER>'` on the order and append the gift
   as a **$0 line item** (`{ sku, name, size, qty: 1, price: 0, retail,
   loyalty_gift: true }`).
 - Gift ships with this order during normal manual fulfillment (only after
