@@ -199,7 +199,7 @@ export default function OrdersPage() {
                       <div>
                         <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Ship To</div>
                         <div style={{fontSize:13,color:'#4A4F5C',lineHeight:1.8,marginBottom:20}}>{customerName}<br/>{order.address}<br/>{order.city}, {order.state} {order.zip}{order.phone&&<><br/>{order.phone}</>}</div>
-                        {order.status==='pending_payment' && (
+                        {(order.status==='pending_payment' || order.status==='sent') && (
                           <div style={{marginBottom:20}}>
                             <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Awaiting Payment</div>
                             <button onClick={()=>sendReminder(order)} disabled={reminding[order.order_id]}
