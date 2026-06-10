@@ -151,9 +151,10 @@ export default function OrdersPage() {
                     <div><div style={{fontSize:13,fontWeight:600,color:'#0F1928'}}>{customerName}</div><div style={{fontSize:11,color:'#8C919E'}}>{order.email}</div></div>
                     {order.price_mismatch && <span style={{fontSize:10,background:'#FEF2F2',color:'#EF4444',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⚠ Price mismatch</span>}
                     {order.discount_type === 'ambassador_first' && <span title="First sale to this customer — 15% off + 15% commission" style={{fontSize:10,background:'#FEF3C7',color:'#A16207',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎉 First Sale {order.discount_code}</span>}
-                    {order.discount_type === 'ambassador_repeat' && order.ref_code && <span title="Repeat customer — commission to original ambassador" style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>↻ {order.ref_code}</span>}
+                    {order.ref_code && order.discount_type !== 'ambassador_first' && <span title="Repeat customer — commission to original ambassador" style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>↻ {order.ref_code}</span>}
                     {order.discount_type === 'promo' && <span style={{fontSize:10,background:'#F0FDF4',color:'#16A34A',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎫 {order.discount_code}</span>}
-                    {!order.discount_type && order.ref_code && <span style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>ref: {order.ref_code}</span>}
+                    {order.discount_type === 'loyalty' && <span title="ADVNCE Status loyalty discount" style={{fontSize:10,background:'#FFF7ED',color:'#E07C24',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⭐ {order.discount_code}</span>}
+                    {order.tier_unlocked && <span title="Tier unlocked on this order — free gift vial must be included in the shipment" style={{fontSize:10,background:'#FEF3C7',color:'#A16207',padding:'2px 8px',borderRadius:4,fontWeight:700}}>🎁 {order.tier_unlocked} GIFT</span>}
                   </div>
                   <div style={{display:'flex',gap:16,alignItems:'center'}}>
                     <div style={{fontFamily:"'JetBrains Mono'",fontSize:14,fontWeight:700}}>${parseFloat(order.total||0).toFixed(2)}</div>
@@ -169,8 +170,8 @@ export default function OrdersPage() {
                         <div style={{fontSize:10,fontWeight:600,color:'#8C919E',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Items</div>
                         {items.map((item,i)=>(
                           <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid #F0F1F4',fontSize:13}}>
-                            <span style={{color:'#4A4F5C'}}>{item.name} {item.size} × {item.qty}</span>
-                            <span style={{fontFamily:"'JetBrains Mono'",fontSize:12}}>${(item.price*item.qty).toFixed(2)}</span>
+                            <span style={{color:'#4A4F5C'}}>{item.name} {item.size} × {item.qty}{item.loyalty_gift && <span style={{color:'#E07C24',fontWeight:700}}> · FREE GIFT</span>}</span>
+                            <span style={{fontFamily:"'JetBrains Mono'",fontSize:12}}>{item.loyalty_gift ? 'FREE' : '$'+(item.price*item.qty).toFixed(2)}</span>
                           </div>
                         ))}
                         {order.discount_amount > 0 && (() => {
