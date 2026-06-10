@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireRole } from '../../../lib/requireAdmin';
+import { enrichItemSizes } from '../../../lib/enrichItemSizes';
 
 const PAYMENT_HANDLE = '626-806-4475';
 const PAYMENT_NAME = 'Jorrel Patterson';
@@ -112,6 +113,10 @@ export async function POST(request) {
   if (!order.email) {
     return NextResponse.json({ error: 'This order has no email on file' }, { status: 400 });
   }
+
+  // Fill in real strengths (e.g. "10mg / 3ml") from the catalog where the
+  // order item only saved "N/A".
+  order.items = await enrichItemSizes(order.items);
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',

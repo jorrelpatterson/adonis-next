@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireRole } from '../../../lib/requireAdmin';
+import { isMissingSize, fetchSizeMap, applySizeMap } from '../../../lib/enrichItemSizes';
 
 // GET /api/orders-list — admin list of orders via the service-role key.
 // The orders table's RLS blocks the anon key, so the admin Orders page
@@ -23,5 +24,19 @@ export async function GET(request) {
     return NextResponse.json({ error: await r.text() }, { status: 500 });
   }
   const orders = await r.json();
+
+  // Fill in real strengths from the catalog (by SKU) where an item only saved
+  // "N/A" — one products lookup for every missing SKU across the whole list.
+  const missingSkus = [];
+  for (const o of orders) {
+    for (const it of o.items || []) {
+      if (isMissingSize(it.size) && it.sku) missingSkus.push(it.sku);
+    }
+  }
+  if (missingSkus.length) {
+    const sizeBySku = await fetchSizeMap(missingSkus);
+    for (const o of orders) o.items = applySizeMap(o.items, sizeBySku);
+  }
+
   return NextResponse.json({ orders });
 }
