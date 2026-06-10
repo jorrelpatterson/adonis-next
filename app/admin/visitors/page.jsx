@@ -1,7 +1,6 @@
 'use client';
 export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase';
 
 const s = {
   card: { background: '#fff', borderRadius: 8, border: '1px solid #E4E7EC', padding: 24 },
@@ -43,31 +42,17 @@ export default function VisitorsDashboard() {
 
   useEffect(() => {
     async function load() {
-      const since24 = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
       try {
-        const [vTotal, vId, ev24, recvAll, optTotal, recentEv, idList, recentSends] = await Promise.all([
-          supabase.from('visitors').select('vid', { count: 'exact', head: true }),
-          supabase.from('visitors').select('vid', { count: 'exact', head: true }).not('identified_email', 'is', null),
-          supabase.from('visitor_events').select('id', { count: 'exact', head: true }).gte('created_at', since24),
-          supabase.from('recovery_sends').select('id', { count: 'exact', head: true }),
-          supabase.from('email_optout').select('email', { count: 'exact', head: true }),
-          supabase.from('visitor_events').select('created_at,type,email,product,url').order('created_at', { ascending: false }).limit(40),
-          supabase.from('visitors').select('identified_email,first_seen,last_seen').not('identified_email', 'is', null).order('last_seen', { ascending: false }).limit(50),
-          supabase.from('recovery_sends').select('sent_at,status,trigger_type,email').order('sent_at', { ascending: false }).limit(40),
-        ]);
+        const r = await fetch('/api/admin/visitors');
+        if (!r.ok) throw new Error('load failed');
+        const d = await r.json();
 
-        setStats({
-          visitors: vTotal.count ?? 0,
-          identified: vId.count ?? 0,
-          events24: ev24.count ?? 0,
-          candidates: recvAll.count ?? 0,
-          optouts: optTotal.count ?? 0,
-        });
-        setEvents(recentEv.data || []);
-        setIdentified(idList.data || []);
-        setSends(recentSends.data || []);
+        setStats(d.stats);
+        setEvents(d.events || []);
+        setIdentified(d.identified || []);
+        setSends(d.sends || []);
 
-        const statuses = (recentSends.data || []).map(r => r.status);
+        const statuses = (d.sends || []).map(row => row.status);
         if (statuses.length === 0) setLiveMode(null);
         else setLiveMode(statuses.some(st => st === 'sent') ? 'live' : 'dryrun');
       } catch (e) {
