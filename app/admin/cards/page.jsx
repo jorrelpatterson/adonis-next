@@ -21,14 +21,15 @@ export default function CardsPage() {
   const [selectedId, setSelectedId] = useState('');
   const [qrSvg, setQrSvg] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     fetch(`${SUPABASE_URL}/rest/v1/ambassadors?select=id,name,code,status&order=name.asc`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     })
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(`ambassadors fetch ${r.status}`); return r.json(); })
       .then(d => setAmbassadors(Array.isArray(d) ? d : []))
-      .catch(console.error)
+      .catch(e => { console.error(e); setLoadError(true); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -37,12 +38,14 @@ export default function CardsPage() {
 
   useEffect(() => {
     if (!ambCode) { setQrSvg(''); return; }
+    let stale = false;
     QRCode.toString(refUrl(ambCode), {
       type: 'svg',
       errorCorrectionLevel: 'M',
       margin: 4,
       color: { dark: '#1A1C22', light: '#FFFFFF' },
-    }).then(setQrSvg).catch(console.error);
+    }).then(svg => { if (!stale) setQrSvg(svg); }).catch(console.error);
+    return () => { stale = true; };
   }, [ambCode]);
 
   const printCards = async () => {
@@ -62,10 +65,13 @@ export default function CardsPage() {
         }
         @page { size: 3.625in 2.125in; margin: 0; }
         @media print {
+          html, body { background: #fff; }
+          .no-print { display: none !important; }
           body * { visibility: hidden; }
           #print-cards, #print-cards * { visibility: visible; }
           #print-cards { position: absolute; left: 0; top: 0; margin: 0; }
           #print-cards > div { page-break-after: always; box-shadow: none; }
+          #print-cards > div:last-child { page-break-after: auto; }
           * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
       `}</style>
@@ -80,8 +86,9 @@ export default function CardsPage() {
               <option key={a.id} value={a.id}>{a.name} — {a.code}{a.status && a.status !== 'active' ? ` (${a.status})` : ''}</option>
             ))}
           </select>
-          {amb && amb.code && <button style={s.btn} onClick={printCards}>Print / Save PDF</button>}
+          {amb && amb.code && <button style={{ ...s.btn, opacity: qrSvg ? 1 : 0.5 }} onClick={printCards} disabled={!qrSvg}>Print / Save PDF</button>}
           {amb && !amb.code && <span style={{ color: '#DC2626', fontSize: 13 }}>This ambassador has no code — set one on the Ambassadors page first.</span>}
+          {loadError && <span style={{ color: '#DC2626', fontSize: 13 }}>Could not load ambassadors — refresh to retry.</span>}
         </div>
       </div>
 
