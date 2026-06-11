@@ -111,20 +111,23 @@ export async function POST(request) {
     if (!/^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(testEmail)) {
       return NextResponse.json({ error: 'Valid testEmail required' }, { status: 400 });
     }
-    // Send both variants with representative sample data so copy can be reviewed.
+    // Send every variant with representative sample data so copy can be reviewed.
     const sampleRecipient = { email: testEmail, name: 'Sample' };
-    const memberSeg = { segment: 'member', spend: 480, tier: { name: 'MOMENTUM', threshold: 350, pct: 5, giftName: 'DSIP 5mg' }, giftNames: ['DSIP 5mg'], next: { name: 'VELOCITY', threshold: 1000, pct: 10 } };
-    const introSeg = { segment: 'intro_progress', spend: 125, tier: null };
+    const variants = [
+      ['member', { segment: 'member', spend: 480, tier: { name: 'MOMENTUM', threshold: 350, pct: 5, giftName: 'DSIP 5mg' }, giftNames: ['DSIP 5mg'], next: { name: 'VELOCITY', threshold: 1000, pct: 10 } }],
+      ['intro w/ progress', { segment: 'intro_progress', spend: 125, tier: null }],
+      ['intro plain', { segment: 'intro_plain', spend: 0, tier: null }],
+    ];
     try {
-      const m = renderAnnouncement(sampleRecipient, memberSeg, baseUrl);
-      await sendEmail(testEmail, '[TEST] ' + m.subject, m.html);
-      await sleep(SEND_THROTTLE_MS);
-      const i = renderAnnouncement(sampleRecipient, introSeg, baseUrl);
-      await sendEmail(testEmail, '[TEST] ' + i.subject, i.html);
+      for (const [label, seg] of variants) {
+        const r = renderAnnouncement(sampleRecipient, seg, baseUrl);
+        await sendEmail(testEmail, `[TEST · ${label}] ` + r.subject, r.html);
+        await sleep(SEND_THROTTLE_MS);
+      }
     } catch (err) {
       return NextResponse.json({ error: 'Test send failed', detail: String(err.message || err) }, { status: 500 });
     }
-    return NextResponse.json({ mode, sent: 2, to: testEmail });
+    return NextResponse.json({ mode, sent: variants.length, to: testEmail });
   }
 
   if (mode === 'send') {
