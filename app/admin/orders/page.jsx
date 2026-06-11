@@ -153,7 +153,7 @@ export default function OrdersPage() {
                     {order.discount_type === 'ambassador_first' && <span title="First sale to this customer — 15% off + 15% commission" style={{fontSize:10,background:'#FEF3C7',color:'#A16207',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎉 First Sale {order.discount_code}</span>}
                     {order.ref_code && order.discount_type !== 'ambassador_first' && <span title="Repeat customer — commission to original ambassador" style={{fontSize:10,background:'#EFF6FF',color:'#0072B5',padding:'2px 8px',borderRadius:4}}>↻ {order.ref_code}</span>}
                     {order.discount_type === 'promo' && <span style={{fontSize:10,background:'#F0FDF4',color:'#16A34A',padding:'2px 8px',borderRadius:4,fontWeight:600}}>🎫 {order.discount_code}</span>}
-                    {order.discount_type === 'loyalty' && <span title="ADVNCE Status loyalty discount" style={{fontSize:10,background:'#FFF7ED',color:'#E07C24',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⭐ {order.discount_code}</span>}
+                    {order.discount_type === 'loyalty' && <span title="ADVNCE Rewards loyalty discount" style={{fontSize:10,background:'#FFF7ED',color:'#E07C24',padding:'2px 8px',borderRadius:4,fontWeight:600}}>⭐ {order.discount_code}</span>}
                     {order.tier_unlocked && <span title="Tier unlocked on this order — free gift vial must be included in the shipment" style={{fontSize:10,background:'#FEF3C7',color:'#A16207',padding:'2px 8px',borderRadius:4,fontWeight:700}}>🎁 {order.tier_unlocked} GIFT</span>}
                   </div>
                   <div style={{display:'flex',gap:16,alignItems:'center'}}>

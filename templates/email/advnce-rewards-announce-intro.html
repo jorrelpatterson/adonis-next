@@ -1,0 +1,84 @@
+<!--
+  ADVNCE Rewards launch announcement — SEGMENT B: customers below $350 lifetime + subscribers with no orders.
+  Subject: Every order counts now — introducing ADVNCE Rewards
+  Preheader: Automatic rewards. No signup, no points, no codes. Your history already counts.
+  Merge fields (per recipient): {{FIRST_NAME}} {{PROGRESS_BLOCK}} {{UNSUBSCRIBE_URL}}
+  PROGRESS_BLOCK (customers with orders): the dark progress card below, with LIFETIME/REMAINING filled.
+  PROGRESS_BLOCK (no order history): empty string — the email reads cleanly without it.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <title>Introducing ADVNCE Rewards</title>
+</head>
+<body style="margin:0;padding:0;background:#E8E6E2;font-family:Arial,Helvetica,sans-serif">
+  <div style="max-width:600px;margin:0 auto;padding:24px 16px">
+
+    <div style="background:#F4F2EE;border-bottom:1px solid #E4E7EC;padding:20px 32px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px">
+      <svg viewBox="0 0 48 28" width="36" height="21" fill="none" style="vertical-align:middle;display:inline-block"><path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="9" r="2" fill="#00A0A8"/><circle cx="38" cy="12" r="2" fill="#E07C24"/><circle cx="46" cy="3" r="2.5" fill="#E07C24"/></svg>
+      <span style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:300;letter-spacing:3px;color:#1A1C22;text-transform:lowercase">advnce <span style="color:#7A7D88;font-weight:300">labs</span></span>
+    </div>
+
+    <div style="background:#F4F2EE;padding:44px 40px">
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#00A0A8;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px">New — ADVNCE Rewards</div>
+      <h1 style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:42px;font-weight:900;color:#1A1C22;line-height:1;letter-spacing:-0.5px;text-transform:uppercase;margin:0 0 18px">The more you research,<br><span style="color:#00A0A8">the further you go.</span></h1>
+      <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:300;color:#1A1C22;line-height:1.6;margin:0 0 28px">Hi {{FIRST_NAME}} — we just launched our rewards program, and it works the way we think rewards should: <em>automatically.</em> No signup. No points to track. No codes to remember. Every paid order builds your lifetime total, and your benefits apply at checkout on their own.</p>
+
+      <!-- Tier ladder -->
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr>
+          <td style="padding:16px 18px;border:1px solid #E4E7EC;background:#FAFBFC">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#7A7D88;letter-spacing:3px;text-transform:uppercase">Tier 01 · $350 lifetime</div>
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:900;color:#1A1C22;text-transform:uppercase;margin:4px 0 2px">Momentum — 5% off everything</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#E07C24;letter-spacing:1px;text-transform:uppercase">🎁 Unlock gift: DSIP 5mg, free</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 18px;border:1px solid #E4E7EC;border-top:0;background:#FAFBFC">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#7A7D88;letter-spacing:3px;text-transform:uppercase">Tier 02 · $1,000 lifetime</div>
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:900;color:#1A1C22;text-transform:uppercase;margin:4px 0 2px">Velocity — 10% off everything</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#E07C24;letter-spacing:1px;text-transform:uppercase">🎁 Unlock gift: NAD+ 500mg, free &middot; early restock access</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 18px;border:1px solid #1A1C22;border-top:0;background:#1A1C22">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(244,242,238,0.5);letter-spacing:3px;text-transform:uppercase">Tier 03 · $2,500 lifetime</div>
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:900;color:#00A0A8;text-transform:uppercase;margin:4px 0 2px">Apex — 15% off everything</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#E07C24;letter-spacing:1px;text-transform:uppercase">🎁 Unlock gift: SS-31 50mg, free &middot; priority fulfillment &middot; surprise drop-ins</div>
+          </td>
+        </tr>
+      </table>
+
+      {{PROGRESS_BLOCK}}
+
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1A1C22;line-height:1.8;margin:0 0 28px">The order that carries you across a threshold ships with the gift in the box — then the discount applies to everything after, forever. And if you've ordered before: <strong>your history already counts.</strong></p>
+
+      <div style="text-align:center;margin-bottom:8px">
+        <a href="https://www.advncelabs.com/advnce-rewards.html" style="display:inline-block;background:#00A0A8;color:#ffffff;padding:14px 36px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:2px;text-decoration:none">See the full program →</a>
+      </div>
+      <div style="text-align:center;margin-bottom:4px">
+        <a href="https://www.advncelabs.com/advnce-catalog.html" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7A7D88;letter-spacing:2px;text-transform:uppercase;text-decoration:none">or browse the catalog</a>
+      </div>
+
+    </div>
+
+    <div style="background:#1A1C22;padding:20px 32px;border-radius:0 0 6px 6px;text-align:center">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(244,242,238,0.35);letter-spacing:1.5px;line-height:2.2;margin:0;text-transform:uppercase">advncelabs.com &middot; orders@advncelabs.com<br>All products for research use only &middot; Not for human consumption &middot; Not evaluated by the FDA<br><a href="{{UNSUBSCRIBE_URL}}" style="color:rgba(244,242,238,0.35)">Unsubscribe</a></p>
+    </div>
+
+  </div>
+</body>
+</html>
+<!--
+  PROGRESS_BLOCK snippet (insert for recipients WITH order history, values per recipient):
+
+  <div style="background:#1A1C22;padding:22px 24px;margin-bottom:28px;border-radius:3px;text-align:center">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(244,242,238,0.45);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px">Your head start</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#F4F2EE;line-height:2">Lifetime so far: <strong style="color:#00A0A8">${{LIFETIME}}</strong><br>just <strong style="color:#E07C24">${{REMAINING}}</strong> from MOMENTUM and your free DSIP vial</div>
+  </div>
+-->
