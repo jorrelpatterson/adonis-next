@@ -77,6 +77,16 @@ export default function MarketingHub() {
       tag: stats.ambassadors.paused > 0 ? `${stats.ambassadors.paused} paused` : null,
     },
     {
+      href:'/admin/cards',
+      icon:'🪪',
+      color:'#00A0A8',
+      label:'Business Cards',
+      desc:'Print-ready ambassador cards with QR codes',
+      stat:'→',
+      statLabel:'generate',
+      tag:null,
+    },
+    {
       href:'/admin/marketing/recruitment',
       icon:'🎤',
       color:'#E07C24',
