@@ -107,6 +107,16 @@ export default function MarketingHub() {
       tag: null,
     },
     {
+      href:'/admin/marketing/rewards-announce',
+      icon:'⭐',
+      color:'#E07C24',
+      label:'Rewards Announcement',
+      desc:'ADVNCE Rewards launch email — dry run, test, send',
+      stat: '→',
+      statLabel: 'send',
+      tag: 'One-off',
+    },
+    {
       href:'/admin/marketing/post-builder',
       icon:'🎨',
       color:'#00A0A8',
