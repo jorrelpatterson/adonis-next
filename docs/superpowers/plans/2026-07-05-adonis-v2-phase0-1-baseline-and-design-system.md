@@ -68,7 +68,7 @@ Phase 1 (tests created):
 
 **Baseline numbers (verified 2026-07-05):** `npx vitest run` → `Test Files 8 failed | 90 passed (98)`, `Tests 735 passed`. The 8 failures are node-runner `.mjs` scripts vitest can't execute: `lib/reorderDuration.test.mjs`, `lib/news/{curator,pubmed,rss}.test.mjs` + the same 4 duplicated under `.claude/worktrees/workout-view/`.
 
-> **Correction (discovered during Task 2 execution):** the "90 passed" figure double-counted ~50 duplicate test files vitest was crawling inside `.claude/worktrees/workout-view/`. After the Task 2 exclusions the true main-only baseline is **39 test files / 332 tests, all green** (verified: 44 tracked test files − 5 excluded `lib/**/*.test.mjs` = 39). Expected counts in Tasks 3–12 are corrected accordingly.
+> **Correction (discovered during Task 2 execution + review):** the "90 passed" figure double-counted ~50 duplicate test files vitest was crawling inside `.claude/worktrees/workout-view/`. Also, the original exclude glob `lib/**/*.test.mjs` was too broad — it swallowed `lib/businessCard.test.mjs`, which is a real **vitest** suite (7 tests for the live ambassador-card helpers), not a node-runner script, and which is not runnable under plain `node` either. The exclude was narrowed to the 4 actual node-runner scripts (`lib/reorderDuration.test.mjs` + `lib/news/**`), keeping businessCard in-suite. True main-only baseline: **40 test files / 339 tests, all green** (verified: 44 tracked test files − 4 excluded node-runner `.mjs` = 40). Expected counts in Tasks 3–12 are corrected accordingly.
 
 ---
 
@@ -122,8 +122,10 @@ Replace the `test` block in `vite.config.js` with:
     exclude: [
       '**/._*',
       '**/node_modules/**',
-      '**/.claude/**',        // local worktrees/harness files — never part of the suite
-      'lib/**/*.test.mjs',    // node-runner scripts (run via `node lib/news/rss.test.mjs`), not vitest
+      '**/.claude/**',              // local worktrees/harness files — never part of the suite
+      'lib/reorderDuration.test.mjs', // node-runner script (run via `node lib/reorderDuration.test.mjs`), not vitest
+      'lib/news/**',                  // node-runner scripts (run via `node lib/news/rss.test.mjs`), not vitest
+      // NOTE: lib/businessCard.test.mjs is a real vitest suite — do NOT exclude it.
     ],
   },
 ```
@@ -131,7 +133,7 @@ Replace the `test` block in `vite.config.js` with:
 - [ ] **Step 3: Verify the suite is green**
 
 Run: `npx vitest run 2>&1 | tail -4`
-Expected: `Test Files  39 passed (39)`, `Tests  332 passed (332)` (the old "90 passed" included worktree duplicates — see baseline correction above)
+Expected: `Test Files  40 passed (40)`, `Tests  339 passed (339)` (the old "90 passed" included worktree duplicates — see baseline correction above)
 
 - [ ] **Step 4: Commit**
 
@@ -166,7 +168,7 @@ Expected: `Merge made by the 'ort' strategy.` (no conflicts)
 - [ ] **Step 3: Verify the suite absorbed the branch's tests**
 
 Run: `npx vitest run 2>&1 | tail -4`
-Expected: `Test Files  50 passed (50)` (39 + 11 new), `Tests` ≥ 332, 0 failed
+Expected: `Test Files  51 passed (51)` (40 + 11 new), `Tests` ≥ 339, 0 failed
 
 - [ ] **Step 4: Record the new duplicate-pair in the spec**
 
@@ -195,7 +197,7 @@ Expected: worktree removed; `Deleted branch claude/workout-view`. If the worktre
 - [ ] **Step 7: Re-run the suite (worktree removal shrinks nothing — sanity only)**
 
 Run: `npx vitest run 2>&1 | tail -3`
-Expected: `Test Files  50 passed (50)`
+Expected: `Test Files  51 passed (51)`
 
 ---
 
@@ -331,7 +333,7 @@ Expected: PASS (7 tests)
 
 - [ ] **Step 5: Full suite + commit**
 
-Run: `npx vitest run 2>&1 | tail -3` → `Test Files  51 passed (51)`
+Run: `npx vitest run 2>&1 | tail -3` → `Test Files  52 passed (52)`
 
 ```bash
 git add src/design/haptics.js src/design/sound.js src/design/motion.js src/design/__tests__/sensory.test.js
@@ -397,7 +399,7 @@ git show v2-revival-archive:src/design/illustrations.jsx > src/design/illustrati
 
 - [ ] **Step 5: Full suite + commit**
 
-Run: `npx vitest run 2>&1 | tail -3` → `Test Files  52 passed (52)`
+Run: `npx vitest run 2>&1 | tail -3` → `Test Files  53 passed (53)`
 
 ```bash
 git add src/design/icons.jsx src/design/illustrations.jsx src/design/__tests__/iconography.test.jsx
@@ -480,7 +482,7 @@ git show v2-revival-archive:src/design/EmptyState.jsx  > src/design/EmptyState.j
 
 - [ ] **Step 5: Full suite + commit**
 
-Run: `npx vitest run 2>&1 | tail -3` → `Test Files  53 passed (53)`
+Run: `npx vitest run 2>&1 | tail -3` → `Test Files  54 passed (54)`
 
 ```bash
 git add src/design/Skeleton.jsx src/design/ProgressBar.jsx src/design/StatNumber.jsx src/design/EmptyState.jsx src/design/__tests__/primitives.test.jsx
@@ -563,7 +565,7 @@ git show v2-revival-archive:src/design/Select.jsx > src/design/Select.jsx
 
 - [ ] **Step 5: Full suite + commit**
 
-Run: `npx vitest run 2>&1 | tail -3` → `Test Files  54 passed (54)`
+Run: `npx vitest run 2>&1 | tail -3` → `Test Files  55 passed (55)`
 
 ```bash
 git add src/design/Toast.jsx src/design/Select.jsx src/design/__tests__/interactive.test.jsx
@@ -661,7 +663,7 @@ git show v2-revival-archive:src/design/PullToRefresh.jsx > src/design/PullToRefr
 
 - [ ] **Step 5: Full suite + commit**
 
-Run: `npx vitest run 2>&1 | tail -3` → `Test Files  55 passed (55)`
+Run: `npx vitest run 2>&1 | tail -3` → `Test Files  56 passed (56)`
 
 ```bash
 git add src/design/useLongPress.js src/design/ActionSheet.jsx src/design/PullToRefresh.jsx src/design/__tests__/gesture-sheet.test.jsx
@@ -714,7 +716,7 @@ Then in the render root (currently lines 84–90), insert the backdrop as the fi
 - [ ] **Step 3: Full suite — App tests must still pass**
 
 Run: `npx vitest run 2>&1 | tail -3`
-Expected: `Test Files  55 passed (55)` — no regressions (backdrop honors reduced-motion and renders inert layers in happy-dom)
+Expected: `Test Files  56 passed (56)` — no regressions (backdrop honors reduced-motion and renders inert layers in happy-dom)
 
 - [ ] **Step 4: Visual smoke on the dev server**
 
@@ -758,7 +760,7 @@ git show v2-revival-archive:src/design/styles.js        > src/design/styles.js
 - [ ] **Step 3: Full suite — this is the backward-compatibility gate**
 
 Run: `npx vitest run 2>&1 | tail -4`
-Expected: `Test Files  55 passed (55)`, 0 failed.
+Expected: `Test Files  56 passed (56)`, 0 failed.
 **If any test fails here, STOP:** the archive version broke a consumer. Do not adapt the consumer — revert (`git checkout main -- src/design/styles.js src/design/components/H.jsx`), diff the failing usage, and apply the archive change as a manual merge that keeps both consumers and premium styling. Then re-run.
 
 - [ ] **Step 4: Visual spot-check**
@@ -781,7 +783,7 @@ git commit -m "design: adopt premium H header and shared styles from v2-revival-
 - [ ] **Step 1: Full suite, final numbers**
 
 Run: `npx vitest run 2>&1 | tail -4`
-Expected: `Test Files  55 passed (55)`, `Tests` ≥ 352 (332 baseline + workout-view's + 20 new design tests), 0 failed.
+Expected: `Test Files  56 passed (56)`, `Tests` ≥ 366 (339 baseline + workout-view's + 20 new design tests), 0 failed.
 
 - [ ] **Step 2: Production build of the consumer app**
 

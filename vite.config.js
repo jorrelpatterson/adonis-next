@@ -13,8 +13,10 @@ export default defineConfig({
     exclude: [
       '**/._*',
       '**/node_modules/**',
-      '**/.claude/**',        // local worktrees/harness files — never part of the suite
-      'lib/**/*.test.mjs',    // node-runner scripts (run via `node lib/news/rss.test.mjs`), not vitest
+      '**/.claude/**',              // local worktrees/harness files — never part of the suite
+      'lib/reorderDuration.test.mjs', // node-runner script (run via `node lib/reorderDuration.test.mjs`), not vitest
+      'lib/news/**',                  // node-runner scripts (run via `node lib/news/rss.test.mjs`), not vitest
+      // NOTE: lib/businessCard.test.mjs is a real vitest suite — do NOT exclude it.
     ],
   },
 });
