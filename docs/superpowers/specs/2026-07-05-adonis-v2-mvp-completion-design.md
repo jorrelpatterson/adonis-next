@@ -66,6 +66,7 @@ Plus: **signups upsert into the `subscribers` table** so the existing welcome-em
 | Calorie engine | main `calorie-engine.js` (BMR/TDEE/macros) | revival adaptive layer (Off Pace / Pushing Harder) — additive |
 | Peptide data | main injection/compatibility/research | revival proto-stacks/recommend-stack/stack-adjustments — complementary |
 | Design system | **revival's premium system replaces main's bare one** | main's newer constants (SUB_TIERS etc.) survive |
+| Body workout UI | `workout-view` merge (WorkoutView/SetGrid/RestTimer — main architecture, 2026-05-27) | revival WorkoutLogger/PRCelebration/ExerciseDetail, adapted in Phase 3 |
 
 ### Serving model
 Vite app builds during the Vercel build and is served statically by Next ("ride-along" — reuse revival commit `6e016c3`'s mechanism). App at **`adonis.pro/app`**; `/` remains the marketing funnel with CTA repointed; `app.html` → redirect to `/app`. Build output gitignored.
