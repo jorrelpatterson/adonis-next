@@ -10,6 +10,11 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    exclude: ['**/._*', '**/node_modules/**'],
+    exclude: [
+      '**/._*',
+      '**/node_modules/**',
+      '**/.claude/**',        // local worktrees/harness files — never part of the suite
+      'lib/**/*.test.mjs',    // node-runner scripts (run via `node lib/news/rss.test.mjs`), not vitest
+    ],
   },
 });
