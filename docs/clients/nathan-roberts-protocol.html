@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>advnce labs — reconstitution &amp; dosing reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,400;1,300;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F2EE; --ink:#1A1C22; --cyan:#00A0A8; --amber:#E07C24;
+    --dim:#7A7D88; --border:#E4E7EC; --ghost:rgba(0,0,0,0.03); --panel:#FBFAF8;
+    --fn:'Barlow Condensed',sans-serif;
+    --fd:'Cormorant Garamond',Georgia,serif;
+    --fm:'JetBrains Mono',ui-monospace,monospace;
+    --fb:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--cream); color:var(--ink);
+    font-family:var(--fb); font-size:13.5px; line-height:1.62;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:44px 36px 60px;}
+
+  /* ── Header / logo lockup ── */
+  .head{display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
+    border-bottom:1.5px solid var(--ink); padding-bottom:20px; margin-bottom:30px;}
+  .lockup{display:flex; align-items:center; gap:12px;}
+  .lockup svg{width:46px; height:27px; display:block;}
+  .wordmark{font-family:var(--fn); font-weight:400; font-size:30px; line-height:0.9; letter-spacing:0.5px; color:var(--ink);}
+  .wordmark .labs{color:var(--dim); font-weight:300;}
+  .manifesto{font-family:var(--fm); font-size:8.5px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-top:6px;}
+  .doc-meta{text-align:right; font-family:var(--fm); font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); line-height:2;}
+  .doc-meta b{color:var(--ink); font-weight:700;}
+
+  h1{font-family:var(--fn); font-weight:700; font-size:40px; line-height:1; letter-spacing:0.5px;
+     text-transform:uppercase; margin:0 0 8px;}
+  h1 em{font-family:var(--fd); font-style:italic; font-weight:400; text-transform:none; color:var(--cyan); letter-spacing:0;}
+  .sub{font-family:var(--fd); font-style:italic; font-weight:300; font-size:18px; color:var(--dim); margin-bottom:30px;}
+
+  /* ── Client card ── */
+  .client{display:flex; flex-wrap:wrap; gap:14px 32px; background:var(--panel);
+    border:1px solid var(--border); border-radius:4px; padding:16px 22px; margin-bottom:30px;}
+  .field span{display:block; font-family:var(--fm); font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); margin-bottom:3px;}
+  .field b{font-family:var(--fn); font-size:18px; font-weight:700; color:var(--ink); line-height:1;}
+
+  /* ── Section label ── */
+  .sec{font-family:var(--fn); font-weight:700; font-size:13px; letter-spacing:3px; text-transform:uppercase;
+    color:var(--ink); margin:36px 0 14px; padding-bottom:7px; border-bottom:1px solid var(--border);
+    display:flex; align-items:baseline; gap:10px;}
+  .sec .n{font-family:var(--fn); font-weight:900; font-size:13px; color:var(--cyan);}
+
+  /* ── Legend ── */
+  .legend{border-left:2px solid var(--cyan); background:var(--ghost); border-radius:0 4px 4px 0;
+    padding:13px 18px; font-size:12.5px; color:var(--dim); margin-bottom:6px;}
+  .legend b{color:var(--ink);}
+
+  /* ── Peptide cards ── */
+  .pep{background:var(--panel); border:1px solid var(--border); border-radius:5px;
+    padding:20px 22px; margin-bottom:14px; page-break-inside:avoid;}
+  .pep-top{display:flex; justify-content:space-between; align-items:baseline; gap:16px; margin-bottom:13px;}
+  .pep-name{font-family:var(--fn); font-weight:700; font-size:23px; letter-spacing:0.3px; text-transform:uppercase; color:var(--ink); line-height:1;}
+  .pep-tag{font-family:var(--fm); font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--dim);
+    border:1px solid var(--border); border-radius:2px; padding:4px 9px; white-space:nowrap;}
+
+  .recipe{font-family:var(--fm); font-size:12px; color:var(--ink); background:#fff;
+    border:1px solid var(--border); border-left:2px solid var(--cyan); border-radius:0 4px 4px 0; padding:11px 15px; line-height:1.85;}
+  .recipe .hl{color:var(--cyan); font-weight:700;}
+  .recipe .res{color:var(--ink); font-weight:700; background:rgba(0,160,168,0.08); padding:1px 5px; border-radius:3px;}
+
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:13px;}
+  .cell{background:#fff; border:1px solid var(--border); border-radius:4px; padding:10px 12px;}
+  .cell span{display:block; font-family:var(--fm); font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:4px;}
+  .cell b{font-family:var(--fn); font-size:18px; font-weight:700; color:var(--ink); line-height:1;}
+  .cell.key{border-color:var(--amber); background:rgba(224,124,36,0.05);}
+  .cell.key b{color:var(--amber);}
+
+  .note{font-family:var(--fd); font-size:14px; font-style:italic; font-weight:400; color:var(--dim); margin-top:12px; line-height:1.5;}
+  .note b{font-style:normal; color:var(--ink); font-family:var(--fb); font-size:12.5px; font-weight:600;}
+
+  /* ── Titration table ── */
+  table{width:100%; border-collapse:collapse; margin-top:6px;}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--border);}
+  th{font-family:var(--fm); font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); font-weight:700;}
+  td{font-family:var(--fm); font-size:12px; color:var(--ink);}
+  td.label{font-family:var(--fb); font-size:12.5px; color:var(--ink);}
+  td .u{color:var(--amber); font-weight:700;}
+
+  /* ── Weekly schedule ── */
+  .week{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:6px;}
+  .day{background:var(--panel); border:1px solid var(--border); border-radius:4px; padding:9px 7px; min-height:104px;}
+  .day .dname{font-family:var(--fm); font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:9px; text-align:center; border-bottom:1px solid var(--border); padding-bottom:6px;}
+  .dose{font-size:10px; color:var(--ink); line-height:1.35; margin-bottom:7px; padding-left:9px; position:relative;}
+  .dose::before{content:""; position:absolute; left:0; top:5px; width:4px; height:4px; border-radius:50%; background:var(--cyan);}
+  .dose b{display:block; font-family:var(--fn); font-weight:700; text-transform:uppercase; font-size:10.5px; letter-spacing:0.3px;}
+  .dose .when{font-family:var(--fm); font-size:8px; letter-spacing:1px; color:var(--dim);}
+  .dose .amt{font-family:var(--fm); font-size:9.5px; color:var(--amber); font-weight:700;}
+  .dose.rest{color:var(--dim);} .dose.rest::before{background:var(--border);}
+
+  /* ── Guidance ── */
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .guide{background:var(--panel); border:1px solid var(--border); border-radius:5px; padding:16px 18px;}
+  .guide h3{font-family:var(--fn); font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); margin:0 0 11px;}
+  .guide ol,.guide ul{margin:0; padding-left:18px; font-size:12px; color:var(--dim); line-height:1.7;}
+  .guide li{margin-bottom:5px;}
+  .guide li b{color:var(--ink);}
+
+  /* ── Disclaimer / footer ── */
+  .disc{margin-top:30px; padding:15px 18px; border:1px solid var(--border); border-left:2px solid var(--amber);
+    border-radius:0 4px 4px 0; background:var(--ghost); font-family:var(--fm); font-size:9.5px; color:var(--dim); line-height:1.7;}
+  .disc b{color:var(--ink);}
+  .foot{margin-top:22px; padding-top:16px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; font-family:var(--fm); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--dim);}
+
+  @media print{ body{background:#fff;} .wrap{padding:0;} @page{margin:13mm;} }
+  @media (max-width:640px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .two{grid-template-columns:1fr;}
+    .week{grid-template-columns:repeat(2,1fr);}
+    h1{font-size:32px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ── HEADER ── -->
+  <div class="head">
+    <div>
+      <div class="lockup">
+        <svg viewBox="0 0 48 28" fill="none" aria-label="advnce labs">
+          <path d="M2 24L8 19L14 22L20 14L26 17L32 9L38 12L46 3" stroke="#00A0A8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="32" cy="9" r="2" fill="#00A0A8"/>
+          <circle cx="38" cy="12" r="2" fill="#E07C24"/>
+          <circle cx="46" cy="3" r="2.5" fill="#E07C24"/>
+        </svg>
+        <div class="wordmark">advnce <span class="labs">labs</span></div>
+      </div>
+      <div class="manifesto">Precision. Purity. Protocol.</div>
+    </div>
+    <div class="doc-meta">
+      <div><b>Reference Sheet</b></div>
+      <div>Prepared 06 / 15 / 2026</div>
+      <div>Ref&nbsp;NR-0615</div>
+    </div>
+  </div>
+
+  <h1>Reconstitution <em>&amp;</em> Dosing</h1>
+  <div class="sub">A complete setup, dosing, and handling reference for a four-compound protocol.</div>
+
+  <!-- ── CLIENT ── -->
+  <div class="client">
+    <div class="field"><span>Prepared for</span><b>Nathan Roberts</b></div>
+    <div class="field"><span>Sex / Age</span><b>M&nbsp;·&nbsp;36</b></div>
+    <div class="field"><span>Height</span><b>5&prime;11&Prime;</b></div>
+    <div class="field"><span>Weight</span><b>200 lb</b></div>
+    <div class="field"><span>Compounds</span><b>4</b></div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <b>How to read this.</b> All draw amounts are in <b>insulin-syringe units</b> on a standard
+    <b>U-100 (1&nbsp;mL / 100-unit)</b> syringe — <b>10 units = 0.1&nbsp;mL.</b> "Reconstitute" means adding the listed
+    <b>bacteriostatic (BAC) water</b> to the powder. These vials hold up to ~3&nbsp;mL; every recipe below stays at
+    1–2&nbsp;mL to leave headroom. Aim water at the glass wall, swirl gently — never shake. Once mixed,
+    <b>refrigerate and use within ~28 days.</b>
+  </div>
+
+  <!-- ── 1 · RETATRUTIDE ── -->
+  <div class="sec"><span class="n">01</span> Retatrutide — 10 mg</div>
+  <div class="pep">
+    <div class="pep-top">
+      <div class="pep-name">Retatrutide</div>
+      <div class="pep-tag">GLP-1 / GIP / Glucagon · Weekly · SubQ</div>
+    </div>
+    <div class="recipe">
+      Reconstitute: <span class="hl">10&nbsp;mg vial</span> + <span class="hl">1&nbsp;mL BAC water</span>
+      &nbsp;→&nbsp; <span class="res">10&nbsp;mg/mL</span> &nbsp;·&nbsp; 10 units = 1&nbsp;mg
+    </div>
+    <table>
+      <thead><tr><th>Phase</th><th>Weekly dose</th><th>Draw</th><th>Volume</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Weeks 1–4 (start)</td><td>2&nbsp;mg</td><td><span class="u">20 units</span></td><td>0.20&nbsp;mL</td></tr>
+        <tr><td class="label">Weeks 5–8</td><td>4&nbsp;mg</td><td><span class="u">40 units</span></td><td>0.40&nbsp;mL</td></tr>
+        <tr><td class="label">Weeks 9–12</td><td>6&nbsp;mg</td><td><span class="u">60 units</span></td><td>0.60&nbsp;mL</td></tr>
+        <tr><td class="label">Max (as tolerated)</td><td>8&nbsp;mg</td><td><span class="u">80 units</span></td><td>0.80&nbsp;mL</td></tr>
+      </tbody>
+    </table>
+    <div class="note">At <b>10&nbsp;mg/mL</b> every titration step lands on a clean unit mark and fits inside a single 1&nbsp;mL
+      syringe — no splitting. One injection weekly, same day each week, morning, subcutaneous. A single 10&nbsp;mg vial
+      covers roughly the first 4–5 weeks; reorder before climbing. If GI effects appear, hold the current dose 2–4 extra
+      weeks before increasing. <b>This is why 1&nbsp;mL — not 2&nbsp;mL:</b> retatrutide doses climb high in mg, so a
+      concentrated mix keeps the draw small and the math clean.</div>
+  </div>
+
+  <!-- ── 2 · CJC / IPA ── -->
+  <div class="sec"><span class="n">02</span> CJC-1295 / Ipamorelin — 10 mg blend</div>
+  <div class="pep">
+    <div class="pep-top">
+      <div class="pep-name">CJC-1295 / Ipamorelin</div>
+      <div class="pep-tag">GH secretagogue · Nightly · SubQ</div>
+    </div>
+    <div class="recipe">
+      Reconstitute: <span class="hl">10&nbsp;mg vial</span> (5&nbsp;mg + 5&nbsp;mg) + <span class="hl">2&nbsp;mL BAC water</span>
+      &nbsp;→&nbsp; <span class="res">2.5&nbsp;mg/mL each</span> &nbsp;·&nbsp; 1 unit = 25&nbsp;mcg of each
+    </div>
+    <div class="grid">
+      <div class="cell"><span>Dose</span><b>100 mcg ea</b></div>
+      <div class="cell key"><span>Draw</span><b>4 units</b></div>
+      <div class="cell"><span>Timing</span><b>Before bed</b></div>
+      <div class="cell"><span>Doses / vial</span><b>~50</b></div>
+    </div>
+    <div class="note">Lower concentration here is deliberate — it makes a small mcg dose easier to measure. Inject nightly on an
+      empty stomach (no food 30 min before or after). Start at 100&nbsp;mcg each (4 units); may build toward 200&nbsp;mcg each
+      (8 units). <b>Common schedule:</b> 5 nights on, 2 off. Brief flushing or head-rush after injection is normal.</div>
+  </div>
+
+  <!-- ── 3 · MOTS-C ── -->
+  <div class="sec"><span class="n">03</span> MOTS-c — 40 mg</div>
+  <div class="pep">
+    <div class="pep-top">
+      <div class="pep-name">MOTS-c</div>
+      <div class="pep-tag">Mitochondrial / metabolic · 2×/week · SubQ</div>
+    </div>
+    <div class="recipe">
+      Reconstitute: <span class="hl">40&nbsp;mg vial</span> + <span class="hl">2&nbsp;mL BAC water</span>
+      &nbsp;→&nbsp; <span class="res">20&nbsp;mg/mL</span> &nbsp;·&nbsp; 10 units = 2&nbsp;mg
+    </div>
+    <div class="grid">
+      <div class="cell"><span>Dose</span><b>5 mg</b></div>
+      <div class="cell key"><span>Draw</span><b>25 units</b></div>
+      <div class="cell"><span>Timing</span><b>AM</b></div>
+      <div class="cell"><span>Doses / vial</span><b>8 · ~4 wk</b></div>
+    </div>
+    <div class="note">Inject 5&nbsp;mg twice weekly (e.g. Mon &amp; Thu), morning, subcutaneous. Range is 5–10&nbsp;mg, 2–3×/week —
+      for a 10&nbsp;mg dose draw 50 units. Best paired with training days. One 40&nbsp;mg vial = ~4 weeks at 5&nbsp;mg 2×/wk.</div>
+  </div>
+
+  <!-- ── 4 · KLOW ── -->
+  <div class="sec"><span class="n">04</span> KLOW Blend — 80 mg</div>
+  <div class="pep">
+    <div class="pep-top">
+      <div class="pep-name">KLOW · BPC-157 + TB-500 + GHK-Cu + KPV</div>
+      <div class="pep-tag">Recovery / repair · Daily · SubQ</div>
+    </div>
+    <div class="recipe">
+      Reconstitute: <span class="hl">80&nbsp;mg vial</span> + <span class="hl">2&nbsp;mL BAC water</span>
+      &nbsp;→&nbsp; <span class="res">40&nbsp;mg/mL</span> &nbsp;·&nbsp; 10 units = 4&nbsp;mg blend
+    </div>
+    <div class="grid">
+      <div class="cell"><span>Dose</span><b>4 mg / day</b></div>
+      <div class="cell key"><span>Draw</span><b>10 units</b></div>
+      <div class="cell"><span>Timing</span><b>AM</b></div>
+      <div class="cell"><span>Course</span><b>~20 days</b></div>
+    </div>
+    <div class="note"><b>Fixed:</b> 2&nbsp;mL fits the 3&nbsp;mL vial with room to spare (the earlier 4&nbsp;mL was over capacity).
+      Inject once daily, morning, subcutaneous — rotate sites; inject near a target/injury area when relevant. Standard
+      is 4&nbsp;mg/day (10 units / 0.10&nbsp;mL) for ~20 days. For a gentler longer run use 2&nbsp;mg (5 units); for an
+      intensive use 6&nbsp;mg (15 units).</div>
+  </div>
+
+  <!-- ── WEEKLY SCHEDULE ── -->
+  <div class="sec"><span class="n">★</span> Weekly Schedule — At a Glance</div>
+  <div class="week">
+    <div class="day"><div class="dname">Mon</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose"><b>MOTS-c</b><span class="when">AM</span> · <span class="amt">25u</span></div>
+      <div class="dose"><b>Reta</b><span class="when">AM</span> · <span class="amt">20u</span></div>
+      <div class="dose"><b>CJC/Ipa</b><span class="when">PM</span> · <span class="amt">4u</span></div>
+    </div>
+    <div class="day"><div class="dname">Tue</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose"><b>CJC/Ipa</b><span class="when">PM</span> · <span class="amt">4u</span></div>
+    </div>
+    <div class="day"><div class="dname">Wed</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose"><b>CJC/Ipa</b><span class="when">PM</span> · <span class="amt">4u</span></div>
+    </div>
+    <div class="day"><div class="dname">Thu</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose"><b>MOTS-c</b><span class="when">AM</span> · <span class="amt">25u</span></div>
+      <div class="dose"><b>CJC/Ipa</b><span class="when">PM</span> · <span class="amt">4u</span></div>
+    </div>
+    <div class="day"><div class="dname">Fri</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose"><b>CJC/Ipa</b><span class="when">PM</span> · <span class="amt">4u</span></div>
+    </div>
+    <div class="day"><div class="dname">Sat</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose rest">CJC/Ipa rest</div>
+    </div>
+    <div class="day"><div class="dname">Sun</div>
+      <div class="dose"><b>KLOW</b><span class="when">AM</span> · <span class="amt">10u</span></div>
+      <div class="dose rest">CJC/Ipa rest</div>
+    </div>
+  </div>
+  <div class="note">Retatrutide is shown on Monday as an example "anchor" day — pick any one fixed day per week and keep it
+    consistent. CJC/Ipamorelin runs 5 nights on / 2 off (Sat &amp; Sun shown off).</div>
+
+  <!-- ── GUIDANCE ── -->
+  <div class="sec"><span class="n">+</span> Injection &amp; Storage</div>
+  <div class="two">
+    <div class="guide">
+      <h3>SubQ injection — step by step</h3>
+      <ol>
+        <li>Wash hands. Wipe the vial top and the skin site with an alcohol pad.</li>
+        <li>Draw your dose. Flip the vial, pull to the unit mark, tap out air bubbles, push air back out.</li>
+        <li><b>Pinch skin</b> at the site, insert at 45°, push the plunger slowly and steadily.</li>
+        <li>Remove, light pressure with the pad. <b>New needle every injection.</b></li>
+        <li>Rotate sites: abdomen (2&Prime; from navel), outer thigh, love handles, back of upper arm.</li>
+      </ol>
+    </div>
+    <div class="guide">
+      <h3>Storage &amp; handling</h3>
+      <ul>
+        <li><b>Powder (sealed):</b> room temp or fridge, away from heat/light — stable for months.</li>
+        <li><b>After mixing:</b> refrigerate (36–46&nbsp;°F), use within <b>~28 days</b>.</li>
+        <li><b>BAC water:</b> store at room temperature; it keeps the vial sterile between draws.</li>
+        <li><b>Never freeze</b> reconstituted compounds — freezing destroys them.</li>
+        <li>Solution should be <b>clear</b>. Discard if cloudy or discolored.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── DISCLAIMER ── -->
+  <div class="disc">
+    <b>RESEARCH-USE NOTICE.</b> advnce labs supplies research-grade compounds for in-vitro laboratory research. Products are
+    not approved by the FDA and are not intended to diagnose, treat, cure, or prevent any condition. The reconstitution and
+    reference figures above are general technical information, <b>not medical advice</b> and not an individualized clinical
+    prescription. Consult a qualified, licensed healthcare provider before any protocol. Discontinue and seek medical care
+    if an adverse or allergic reaction occurs. Use is undertaken solely at the user's own responsibility.
+  </div>
+
+  <div class="foot">
+    <span>advnce labs · advncelabs.com</span>
+    <span>Documented · Verified · Traceable</span>
+  </div>
+
+</div>
+</body>
+</html>
