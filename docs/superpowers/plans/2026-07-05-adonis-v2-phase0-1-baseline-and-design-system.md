@@ -79,14 +79,14 @@ Phase 1 (tests created):
 **Interfaces:**
 - Produces: tag `v2-revival-archive` — every later port step reads file content via `git show v2-revival-archive:<path>`.
 
-- [ ] **Step 1: Create the annotated tag**
+- [x] **Step 1: Create the annotated tag**
 
 ```bash
 cd "/Volumes/(626)806-4475/Ai Projects/adonis-next"
 git tag -a v2-revival-archive origin/v2-revival -m "archive: v2-revival experience branch (52 commits, tip 2026-05-01) — harvest source for the port-forward per 2026-07-05 spec"
 ```
 
-- [ ] **Step 2: Verify the tag resolves and serves file content**
+- [x] **Step 2: Verify the tag resolves and serves file content**
 
 Run: `git show v2-revival-archive:src/design/motion.js | head -1`
 Expected: `// Motion helpers — primitives the app uses for premium transitions.`
@@ -106,12 +106,12 @@ Expected: `v2-revival-archive`
 **Interfaces:**
 - Produces: `npx vitest run` fully green — the pass/fail signal every later task relies on.
 
-- [ ] **Step 1: Confirm the current failure mode**
+- [x] **Step 1: Confirm the current failure mode**
 
 Run: `npx vitest run 2>&1 | tail -4`
 Expected: `Test Files  8 failed | 90 passed (98)` and `Tests  735 passed (735)`
 
-- [ ] **Step 2: Extend the exclude list**
+- [x] **Step 2: Extend the exclude list**
 
 Replace the `test` block in `vite.config.js` with:
 
@@ -130,12 +130,12 @@ Replace the `test` block in `vite.config.js` with:
   },
 ```
 
-- [ ] **Step 3: Verify the suite is green**
+- [x] **Step 3: Verify the suite is green**
 
 Run: `npx vitest run 2>&1 | tail -4`
 Expected: `Test Files  40 passed (40)`, `Tests  339 passed (339)` (the old "90 passed" included worktree duplicates — see baseline correction above)
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add vite.config.js
@@ -153,24 +153,24 @@ git commit -m "test: exclude node-runner .mjs suites and .claude worktrees from 
 **Interfaces:**
 - Produces: `WorkoutView` rendered under the Body tab (from the branch); `progression.js` / `keys.js` in the workout protocol. Phase 3 treats these as the **base** that revival's WorkoutLogger/PRCelebration port onto.
 
-- [ ] **Step 1: Confirm the merge is conflict-free**
+- [x] **Step 1: Confirm the merge is conflict-free**
 
 Run: `git merge-tree $(git merge-base main claude/workout-view) main claude/workout-view | grep -c "<<<<<<<"`
 Expected: `0`
 
-- [ ] **Step 2: Merge**
+- [x] **Step 2: Merge**
 
 ```bash
 git merge --no-ff claude/workout-view -m "merge: workout-view — WorkoutView under Body tab (SetGrid+PR, swaps, deload, rest timer)"
 ```
 Expected: `Merge made by the 'ort' strategy.` (no conflicts)
 
-- [ ] **Step 3: Verify the suite absorbed the branch's tests**
+- [x] **Step 3: Verify the suite absorbed the branch's tests**
 
 Run: `npx vitest run 2>&1 | tail -4`
 Expected: `Test Files  51 passed (51)` (40 + 11 new), `Tests` ≥ 339, 0 failed
 
-- [ ] **Step 4: Record the new duplicate-pair in the spec**
+- [x] **Step 4: Record the new duplicate-pair in the spec**
 
 In `docs/superpowers/specs/2026-07-05-adonis-v2-mvp-completion-design.md`, add this row to the bottom of the duplicate-pair rulings table:
 
@@ -178,14 +178,14 @@ In `docs/superpowers/specs/2026-07-05-adonis-v2-mvp-completion-design.md`, add t
 | Body workout UI | `workout-view` merge (WorkoutView/SetGrid/RestTimer — main architecture, 2026-05-27) | revival WorkoutLogger/PRCelebration/ExerciseDetail, adapted in Phase 3 |
 ```
 
-- [ ] **Step 5: Commit the spec row**
+- [x] **Step 5: Commit the spec row**
 
 ```bash
 git add docs/superpowers/specs/2026-07-05-adonis-v2-mvp-completion-design.md
 git commit -m "docs: record workout-view merge as body-workout-UI base in duplicate-pair table"
 ```
 
-- [ ] **Step 6: Remove the worktree and local branch**
+- [x] **Step 6: Remove the worktree and local branch**
 
 ```bash
 git worktree remove .claude/worktrees/workout-view
@@ -194,7 +194,7 @@ git branch -d claude/workout-view
 Expected: worktree removed; `Deleted branch claude/workout-view`. If the worktree refuses over ignored files, use `git worktree remove --force .claude/worktrees/workout-view`.
 (Leave the REMOTE branch alone — deleting `origin/claude/workout-view` is outward-facing; Jorrel decides at session end.)
 
-- [ ] **Step 7: Re-run the suite (worktree removal shrinks nothing — sanity only)**
+- [x] **Step 7: Re-run the suite (worktree removal shrinks nothing — sanity only)**
 
 Run: `npx vitest run 2>&1 | tail -3`
 Expected: `Test Files  51 passed (51)`
@@ -207,14 +207,14 @@ Expected: `Test Files  51 passed (51)`
 - Commit as-is: `docs/clients/nathan-roberts-protocol.html`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Commit the client doc**
+- [x] **Step 1: Commit the client doc**
 
 ```bash
 git add docs/clients/nathan-roberts-protocol.html
 git commit -m "docs(clients): nathan roberts reconstitution & dosing reference"
 ```
 
-- [ ] **Step 2: Ignore local harness files**
+- [x] **Step 2: Ignore local harness files**
 
 `.gitignore` line 10 currently reads `.claude/worktrees/`. Replace that line with:
 
@@ -222,12 +222,12 @@ git commit -m "docs(clients): nathan roberts reconstitution & dosing reference"
 .claude/
 ```
 
-- [ ] **Step 3: Verify status is clean (jorrel-os.json aside)**
+- [x] **Step 3: Verify status is clean (jorrel-os.json aside)**
 
 Run: `git status --short`
 Expected: only ` M jorrel-os.json` (session-state file — rides the end-of-session ritual, never this plan)
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .gitignore
@@ -249,7 +249,7 @@ git commit -m "chore: gitignore .claude/ (local harness + worktrees)"
   - `EASE.{spring|soft|snap|stiff}` (CSS cubic-bezier strings); `transitionView(fn)` (View Transitions wrapper, sync fallback); `countUpTo({from,to,duration,onUpdate,easing}) → cancel()`
 - Consumed by: Toast/Select/ActionSheet/PullToRefresh (Tasks 8–9), StatNumber (Task 7), and Phase 2+ shell work.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/design/__tests__/sensory.test.js`:
 
@@ -313,12 +313,12 @@ describe('sound', () => {
 });
 ```
 
-- [ ] **Step 2: Run it — must fail on missing modules**
+- [x] **Step 2: Run it — must fail on missing modules**
 
 Run: `npx vitest run src/design/__tests__/sensory.test.js`
 Expected: FAIL — `Cannot find module '../motion'` (or `../haptics`)
 
-- [ ] **Step 3: Port the three files verbatim**
+- [x] **Step 3: Port the three files verbatim**
 
 ```bash
 git show v2-revival-archive:src/design/haptics.js > src/design/haptics.js
@@ -326,12 +326,12 @@ git show v2-revival-archive:src/design/sound.js   > src/design/sound.js
 git show v2-revival-archive:src/design/motion.js  > src/design/motion.js
 ```
 
-- [ ] **Step 4: Run the test — must pass**
+- [x] **Step 4: Run the test — must pass**
 
 Run: `npx vitest run src/design/__tests__/sensory.test.js`
 Expected: PASS (7 tests)
 
-- [ ] **Step 5: Full suite + commit**
+- [x] **Step 5: Full suite + commit**
 
 Run: `npx vitest run 2>&1 | tail -3` → `Test Files  52 passed (52)`
 
@@ -352,7 +352,7 @@ git commit -m "design: port sensory core (haptics, sound, motion) from v2-reviva
 - Produces: named svg components — `IconRoutine/IconBody/IconMoney/IconTravel/IconMind/IconImage/...({size, className, style})`; `IllusGoals/IllusTasksDone/IllusFood/IllusWorkout/IllusPeptides/...({size})`.
 - Consumed by: EmptyState demos (Task 7), TabNav upgrade (Phase 3+), domain views (Phase 4).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/design/__tests__/iconography.test.jsx`:
 
@@ -386,18 +386,18 @@ describe('iconography', () => {
 });
 ```
 
-- [ ] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/iconography.test.jsx` → FAIL `Cannot find module '../icons'`
+- [x] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/iconography.test.jsx` → FAIL `Cannot find module '../icons'`
 
-- [ ] **Step 3: Port verbatim**
+- [x] **Step 3: Port verbatim**
 
 ```bash
 git show v2-revival-archive:src/design/icons.jsx         > src/design/icons.jsx
 git show v2-revival-archive:src/design/illustrations.jsx > src/design/illustrations.jsx
 ```
 
-- [ ] **Step 4: Run the test — must pass** — expected PASS (2 tests)
+- [x] **Step 4: Run the test — must pass** — expected PASS (2 tests)
 
-- [ ] **Step 5: Full suite + commit**
+- [x] **Step 5: Full suite + commit**
 
 Run: `npx vitest run 2>&1 | tail -3` → `Test Files  53 passed (53)`
 
@@ -419,7 +419,7 @@ git commit -m "design: port icon + illustration sets from v2-revival-archive"
 - Produces: `SkelLine({w,h,mt}) / SkelCircle({size,mt}) / SkelCard({height}) / SkelRoutine()`; `ProgressBar({value, max, color, background, height, showRail})` (default export); `StatNumber({value, format, duration, initial, className, style})` (default export); `EmptyState({illustration, headline, body, cta, onCta, size})` (default export).
 - Consumed by: HomeDashboard + Insights (Phase 3/4), empty states across domain views.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/design/__tests__/primitives.test.jsx`:
 
@@ -480,9 +480,9 @@ describe('primitives', () => {
 });
 ```
 
-- [ ] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/primitives.test.jsx` → FAIL `Cannot find module '../Skeleton'`
+- [x] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/primitives.test.jsx` → FAIL `Cannot find module '../Skeleton'`
 
-- [ ] **Step 3: Port verbatim**
+- [x] **Step 3: Port verbatim**
 
 ```bash
 git show v2-revival-archive:src/design/Skeleton.jsx    > src/design/Skeleton.jsx
@@ -491,9 +491,9 @@ git show v2-revival-archive:src/design/StatNumber.jsx  > src/design/StatNumber.j
 git show v2-revival-archive:src/design/EmptyState.jsx  > src/design/EmptyState.jsx
 ```
 
-- [ ] **Step 4: Run the test — must pass** — expected PASS (5 tests)
+- [x] **Step 4: Run the test — must pass** — expected PASS (5 tests)
 
-- [ ] **Step 5: Full suite + commit**
+- [x] **Step 5: Full suite + commit**
 
 Run: `npx vitest run 2>&1 | tail -3` → `Test Files  54 passed (54)`
 
@@ -515,7 +515,7 @@ git commit -m "design: port static primitives (skeleton, progress, stat, empty s
 - Produces: `ToastProvider({children})` + `useToast() → {show, success, error, warning, info}` (each `(msg, opts?)`); `Select({value, onChange, options: [{value, label, sub?}], placeholder, label, style})` (default export) — opens a bottom sheet, calls `onChange(opt.value)`.
 - Consumed by: Phase 2+ shell (ToastProvider wraps App); forms across views.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/design/__tests__/interactive.test.jsx`:
 
@@ -565,18 +565,18 @@ describe('Select', () => {
 });
 ```
 
-- [ ] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/interactive.test.jsx` → FAIL `Cannot find module '../Toast'`
+- [x] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/interactive.test.jsx` → FAIL `Cannot find module '../Toast'`
 
-- [ ] **Step 3: Port verbatim**
+- [x] **Step 3: Port verbatim**
 
 ```bash
 git show v2-revival-archive:src/design/Toast.jsx  > src/design/Toast.jsx
 git show v2-revival-archive:src/design/Select.jsx > src/design/Select.jsx
 ```
 
-- [ ] **Step 4: Run the test — must pass** — expected PASS (3 tests)
+- [x] **Step 4: Run the test — must pass** — expected PASS (3 tests)
 
-- [ ] **Step 5: Full suite + commit**
+- [x] **Step 5: Full suite + commit**
 
 Run: `npx vitest run 2>&1 | tail -3` → `Test Files  55 passed (55)`
 
@@ -598,7 +598,7 @@ git commit -m "design: port toast system and bottom-sheet select"
 - Produces: `useLongPress(callback, {delay=500, threshold=8}) → {onTouchStart,onTouchMove,onTouchEnd,onTouchCancel,onMouseDown,onMouseMove,onMouseUp,onMouseLeave,onContextMenu,onClickCapture}`; `ActionSheetProvider({children})` + `useActionSheet() → {confirm(opts) → Promise<boolean>}` (opts: `{title, message, confirmText, cancelText, destructive}`); `PullToRefresh({onRefresh, scrollerSelector='.adn-noise'})` (default export).
 - Consumed by: TaskContextMenu (Phase 3), destructive confirms replacing `window.confirm` (Phase 3+), routine refresh (Phase 3).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `src/design/__tests__/gesture-sheet.test.jsx`:
 
@@ -662,9 +662,9 @@ describe('PullToRefresh', () => {
 });
 ```
 
-- [ ] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/gesture-sheet.test.jsx` → FAIL `Cannot find module '../useLongPress'`
+- [x] **Step 2: Run it — must fail** — `npx vitest run src/design/__tests__/gesture-sheet.test.jsx` → FAIL `Cannot find module '../useLongPress'`
 
-- [ ] **Step 3: Port verbatim**
+- [x] **Step 3: Port verbatim**
 
 ```bash
 git show v2-revival-archive:src/design/useLongPress.js   > src/design/useLongPress.js
@@ -672,9 +672,9 @@ git show v2-revival-archive:src/design/ActionSheet.jsx   > src/design/ActionShee
 git show v2-revival-archive:src/design/PullToRefresh.jsx > src/design/PullToRefresh.jsx
 ```
 
-- [ ] **Step 4: Run the test — must pass** — expected PASS (4 tests)
+- [x] **Step 4: Run the test — must pass** — expected PASS (4 tests)
 
-- [ ] **Step 5: Full suite + commit**
+- [x] **Step 5: Full suite + commit**
 
 Run: `npx vitest run 2>&1 | tail -3` → `Test Files  56 passed (56)`
 
@@ -696,14 +696,14 @@ git commit -m "design: port long-press hook, action sheet, pull-to-refresh"
 - Consumes: `TAB_VIBES` from `./constants` (already on main at `src/design/constants.js:29` — identical to archive) and `P` from `./theme`.
 - Produces: `<AmbientBackdrop tab={string} />` rendered behind all shell content; the full `adn-*` keyframe set available app-wide.
 
-- [ ] **Step 1: Replace animations.css and port the backdrop**
+- [x] **Step 1: Replace animations.css and port the backdrop**
 
 ```bash
 git show v2-revival-archive:src/design/animations.css     > src/design/animations.css
 git show v2-revival-archive:src/design/AmbientBackdrop.jsx > src/design/AmbientBackdrop.jsx
 ```
 
-- [ ] **Step 2: Wire the backdrop into App.jsx**
+- [x] **Step 2: Wire the backdrop into App.jsx**
 
 Add the import after the existing design imports (`src/app/App.jsx`, near line 13):
 
@@ -726,18 +726,18 @@ Then in the render root (currently lines 84–90), insert the backdrop as the fi
 
 (The only changes: the new `<AmbientBackdrop … />` line, and `position: 'relative', zIndex: 2` appended to the inner wrapper's style. Everything else stays byte-identical.)
 
-- [ ] **Step 3: Full suite — App tests must still pass**
+- [x] **Step 3: Full suite — App tests must still pass**
 
 Run: `npx vitest run 2>&1 | tail -3`
 Expected: `Test Files  56 passed (56)` — no regressions (backdrop honors reduced-motion and renders inert layers in happy-dom)
 
-- [ ] **Step 4: Visual smoke on the dev server**
+- [ ] **Step 4: Visual smoke on the dev server** — DEFERRED (SDD execution 2026-07-05): substituted `npm run build:app` (compiles clean) since a headless agent can't eyeball orbs/tint; the interactive browser check is carried as an open manual-QA item for Jorrel / the phase gate.
 
 Run: `npm run dev:app` and open the printed localhost URL.
 Check: orbs + particles visible behind content; tint shifts when you switch tabs (Routine → a domain tab → Profile); content still scrolls and taps normally (backdrop is pointer-events:none).
 Stop the server after checking.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/design/animations.css src/design/AmbientBackdrop.jsx src/app/App.jsx
@@ -758,29 +758,29 @@ The design core (theme.js, constants.js, components/GradText.jsx, components/ind
 - Produces: `H({t, sub, eyebrow})`; `s.*` style tokens (superset of main's — existing consumers keep working).
 - Consumed by: every view; the existing suite (incl. `components.test.jsx` and all view tests) is the compatibility gate.
 
-- [ ] **Step 1: Inspect what's changing (context for the reviewer, no edits)**
+- [x] **Step 1: Inspect what's changing (context for the reviewer, no edits)**
 
 Run: `git diff main v2-revival-archive -- src/design/components/H.jsx src/design/styles.js | head -80`
 Expected: H gains `eyebrow` block + italic display styling; styles.js gains premium tokens. No removed export names.
 
-- [ ] **Step 2: Apply the archive versions**
+- [x] **Step 2: Apply the archive versions**
 
 ```bash
 git show v2-revival-archive:src/design/components/H.jsx > src/design/components/H.jsx
 git show v2-revival-archive:src/design/styles.js        > src/design/styles.js
 ```
 
-- [ ] **Step 3: Full suite — this is the backward-compatibility gate**
+- [x] **Step 3: Full suite — this is the backward-compatibility gate**
 
 Run: `npx vitest run 2>&1 | tail -4`
 Expected: `Test Files  56 passed (56)`, 0 failed.
 **If any test fails here, STOP:** the archive version broke a consumer. Do not adapt the consumer — revert (`git checkout main -- src/design/styles.js src/design/components/H.jsx`), diff the failing usage, and apply the archive change as a manual merge that keeps both consumers and premium styling. Then re-run.
 
-- [ ] **Step 4: Visual spot-check**
+- [ ] **Step 4: Visual spot-check** — DEFERRED (SDD execution 2026-07-05): substituted `npm run build:app` (compiles clean); italic-header spot-check on Routine/Profile tabs carried as an open manual-QA item.
 
 Run: `npm run dev:app` — headers now render italic serif display with tighter leading; card/button styling subtly upgraded; nothing overlaps or clips on the Routine and Profile tabs. Stop the server.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/design/components/H.jsx src/design/styles.js
@@ -793,27 +793,27 @@ git commit -m "design: adopt premium H header and shared styles from v2-revival-
 
 **Files:** none created — verification only.
 
-- [ ] **Step 1: Full suite, final numbers**
+- [x] **Step 1: Full suite, final numbers**
 
 Run: `npx vitest run 2>&1 | tail -4`
 Expected: `Test Files  56 passed (56)`, `Tests` ≥ 366 (339 baseline + workout-view's + 20 new design tests), 0 failed.
 
-- [ ] **Step 2: Production build of the consumer app**
+- [x] **Step 2: Production build of the consumer app**
 
 Run: `npm run build:app`
 Expected: `✓ built in …s`, no errors. (Output lands in `dist/` — gitignored; do not commit it.)
 
-- [ ] **Step 3: Next.js build unaffected (admin side untouched, sanity only)**
+- [x] **Step 3: Next.js build unaffected (admin side untouched, sanity only)**
 
 Run: `npm run build 2>&1 | tail -5`
 Expected: build completes with no new errors.
 
-- [ ] **Step 4: Close-of-phase archive diff (straggler-polish check from the spec)**
+- [x] **Step 4: Close-of-phase archive diff (straggler-polish check from the spec)**
 
 Run: `git diff v2-revival-archive main --stat -- src/design/`
 Expected: differences ONLY in files this plan deliberately did not take from the archive (none in `src/design/` — every design file should now be byte-identical to the archive) plus main-only additions (the 5 new `__tests__` files). If any ported file shows a content diff, it was corrupted in transit — re-run its `git show … >` step.
 
-- [ ] **Step 5: Log completion in the plan doc**
+- [x] **Step 5: Log completion in the plan doc**
 
 Tick every checkbox in this file, then:
 
