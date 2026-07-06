@@ -11,6 +11,7 @@ import GoalSetup from '../goals/GoalSetup';
 import RoutineView from '../routine/RoutineView';
 import WorkoutView from './views/WorkoutView';
 import TabNav from './TabNav';
+import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
 
 export default function App() {
@@ -88,7 +89,8 @@ export default function App() {
       position: 'fixed', inset: 0, overflowY: 'auto',
       paddingBottom: 80,
     }}>
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0' }}>
+      <AmbientBackdrop tab={activeTab} />
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0', position: 'relative', zIndex: 2 }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
