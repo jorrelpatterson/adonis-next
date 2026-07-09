@@ -1,0 +1,2901 @@
+[
+  {
+    "label": "italy ancestry, low budget, soon, no relocation, eu+children, italian",
+    "output": [
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 100,
+        "reasons": [
+          "Ancestry match",
+          "Speaks Italian"
+        ]
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 33,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 33,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 33,
+        "reasons": []
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 21,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 21,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 21,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 21,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 5,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "ireland ancestry, free budget, medium timeline, relocate yes, eu only",
+    "output": [
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 95,
+        "reasons": [
+          "Ancestry match"
+        ]
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 35,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 35,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 35,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 35,
+        "reasons": []
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 25,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 25,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 25,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 13,
+        "reasons": []
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 13,
+        "reasons": []
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 3,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "poland ancestry, mid budget, no rush, part-time abroad, tax, spanish",
+    "output": [
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 88,
+        "reasons": [
+          "Ancestry match"
+        ]
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 54,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 54,
+        "reasons": []
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 51,
+        "reasons": [
+          "Speaks Spanish"
+        ]
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 51,
+        "reasons": [
+          "Speaks Spanish"
+        ]
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 14,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 6,
+        "reasons": []
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 6,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "germany ancestry, high budget, soon, minimal visits, planb+business, german+portuguese",
+    "output": [
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 95,
+        "reasons": [
+          "Ancestry match",
+          "Speaks German"
+        ]
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 48,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 39,
+        "reasons": []
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 34,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 34,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 34,
+        "reasons": []
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 20,
+        "reasons": []
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 20,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 20,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 6,
+        "reasons": [
+          "Speaks Portuguese"
+        ]
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 1,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "no ancestry, premium budget, asap, no relocation, travel+planb",
+    "output": [
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 55,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 43,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 38,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 16,
+        "reasons": []
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 8,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "multi-ancestry italy+ireland, premium, soon, upper clamp at 100",
+    "output": [
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 100,
+        "reasons": [
+          "Ancestry match",
+          "Speaks Italian"
+        ]
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 100,
+        "reasons": [
+          "Ancestry match"
+        ]
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 61,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 56,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 50,
+        "reasons": [
+          "Within budget"
+        ]
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 46,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 46,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 34,
+        "reasons": []
+      },
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 26,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 26,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 26,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "no ancestry, free budget, asap, relocate yes, empty purpose — lower clamp at 0",
+    "output": [
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 10,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 10,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 10,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 10,
+        "reasons": []
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 8,
+        "reasons": []
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 0,
+        "reasons": []
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 0,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 0,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 0,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 0,
+        "reasons": []
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 0,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "label": "empty answers object — all defaults and optional-chaining fallbacks",
+    "output": [
+      {
+        "id": "mexico",
+        "name": "Mexico",
+        "flag": "🇲🇽",
+        "pathway": "residency",
+        "eligible": "4 years residency",
+        "timeline": "4-5 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 161,
+        "docs": [
+          "Temporary resident visa",
+          "Proof of income/savings",
+          "Background check",
+          "Spanish proficiency test",
+          "Mexican history exam"
+        ],
+        "tips": [
+          "Temporary → Permanent → Naturalize",
+          "Spanish proficiency required",
+          "Culture/history exam is easy with study"
+        ],
+        "benefits": [
+          "161 visa-free countries",
+          "Low cost of living",
+          "No worldwide income tax (with planning)"
+        ],
+        "score": 31,
+        "reasons": []
+      },
+      {
+        "id": "panama",
+        "name": "Panama",
+        "flag": "🇵🇦",
+        "pathway": "residency",
+        "eligible": "5 years residency",
+        "timeline": "5-6 years",
+        "cost": "$2,000-5,000",
+        "visaFree": 143,
+        "docs": [
+          "Friendly Nations Visa application",
+          "Bank account with $5K+",
+          "Background check",
+          "Health certificate"
+        ],
+        "tips": [
+          "Friendly Nations Visa easy for US citizens",
+          "No language requirement",
+          "USD is legal tender"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "USD economy",
+          "Strategic location",
+          "No language requirement"
+        ],
+        "score": 31,
+        "reasons": []
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina",
+        "flag": "🇦🇷",
+        "pathway": "residency",
+        "eligible": "2 years residency",
+        "timeline": "2-3 years",
+        "cost": "$500-2,000",
+        "visaFree": 171,
+        "docs": [
+          "Residency visa application",
+          "Background check (FBI apostilled)",
+          "Proof of income",
+          "2 years residency proof"
+        ],
+        "tips": [
+          "One of fastest naturalizations globally",
+          "Spanish helpful but not required",
+          "Strong passport (171 visa-free)"
+        ],
+        "benefits": [
+          "Fast naturalization (2 years)",
+          "171 visa-free countries",
+          "Rich culture",
+          "Low cost of living"
+        ],
+        "score": 31,
+        "reasons": []
+      },
+      {
+        "id": "paraguay",
+        "name": "Paraguay",
+        "flag": "🇵🇾",
+        "pathway": "residency",
+        "eligible": "3 years residency",
+        "timeline": "3-4 years",
+        "cost": "$1,000-3,000",
+        "visaFree": 142,
+        "docs": [
+          "Permanent residency application",
+          "Bank deposit ($5K+)",
+          "Background check",
+          "Paraguayan ID (cedula)"
+        ],
+        "tips": [
+          "Doesn't require physical presence full-time",
+          "Very low cost of living",
+          "Easy residency process"
+        ],
+        "benefits": [
+          "Territorial tax system",
+          "Low enforcement of presence",
+          "Low cost of living"
+        ],
+        "score": 31,
+        "reasons": []
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "flag": "🇮🇹",
+        "pathway": "descent",
+        "eligible": "Italian ancestor who emigrated after 1861, unbroken citizenship line",
+        "timeline": "24-48 mo (consulate) / 12-24 mo (court)",
+        "cost": "$500-15,000",
+        "visaFree": 191,
+        "docs": [
+          "Birth certs (full lineage)",
+          "Marriage certs (full lineage)",
+          "Death certs (deceased)",
+          "USCIS naturalization search",
+          "Italian ancestor BC from Comune",
+          "Apostille all US docs",
+          "Certified Italian translations",
+          "Consulate appointment"
+        ],
+        "tips": [
+          "USCIS searches take 6-12 months — file FIRST",
+          "Book consulate appointment NOW, 2+ year waits",
+          "Join Italian Citizenship Facebook groups for alerts",
+          "1948 court case faster for maternal line but costs $5-15K"
+        ],
+        "benefits": [
+          "EU citizenship — live/work anywhere in EU",
+          "191 visa-free countries",
+          "EU healthcare access",
+          "Pass to children automatically"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "ireland",
+        "name": "Ireland",
+        "flag": "🇮🇪",
+        "pathway": "descent",
+        "eligible": "Irish-born grandparent (or parent born in Ireland)",
+        "timeline": "12-18 mo",
+        "cost": "$300-500",
+        "visaFree": 190,
+        "docs": [
+          "Your birth certificate",
+          "Parent's birth certificate",
+          "Irish grandparent's birth certificate",
+          "Marriage certificates in lineage",
+          "Photo ID + proof of address",
+          "Foreign Birth Registration form"
+        ],
+        "tips": [
+          "One of the easiest descent claims",
+          "Processing ~12-18 months due to backlog",
+          "Irish passport = full EU citizenship",
+          "Common Travel Area with UK"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Common Travel Area with UK",
+          "190 visa-free countries",
+          "Pass to children"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "poland",
+        "name": "Poland",
+        "flag": "🇵🇱",
+        "pathway": "descent",
+        "eligible": "Polish ancestor — no generational limit, back to 1920",
+        "timeline": "6-18 mo",
+        "cost": "$500-3,000",
+        "visaFree": 188,
+        "docs": [
+          "Polish ancestor documents (birth/passport/military)",
+          "Full lineage documentation",
+          "Naturalization records check",
+          "Sworn Polish translations",
+          "Application to Voivode"
+        ],
+        "tips": [
+          "No generational limit — great-great-grandparents work",
+          "Polish archives survived WWII well",
+          "Polish attorney can handle remotely ($1-3K)"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Schengen zone",
+          "Growing economy",
+          "No wealth tax"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "flag": "🇩🇪",
+        "pathway": "descent",
+        "eligible": "German ancestor, especially persecution victims (Article 116)",
+        "timeline": "12-36 mo",
+        "cost": "$200-2,000",
+        "visaFree": 190,
+        "docs": [
+          "Proof of ancestor's German citizenship",
+          "Persecution proof (if Article 116)",
+          "Complete lineage documentation",
+          "BVA application form"
+        ],
+        "tips": [
+          "Article 116 is very generous — covers Jewish, political persecution",
+          "2021 law changes expanded eligibility",
+          "Free application for Article 116 cases"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top 5 passport globally",
+          "Free university education",
+          "Excellent healthcare"
+        ],
+        "score": 18,
+        "reasons": []
+      },
+      {
+        "id": "portugal_gv",
+        "name": "Portugal Golden Visa",
+        "flag": "🇵🇹",
+        "pathway": "investment",
+        "eligible": "€500K+ fund investment",
+        "timeline": "5-6 years to passport",
+        "cost": "€500,000+",
+        "visaFree": 191,
+        "docs": [
+          "Proof of qualifying investment",
+          "Criminal background check",
+          "Portuguese health insurance",
+          "NIF (tax number)",
+          "A2 Portuguese language cert"
+        ],
+        "tips": [
+          "Fund investments most popular — hands-off",
+          "Only 7 days/year in Portugal required",
+          "Real estate route eliminated in 2024",
+          "A2 language test is easy — 3 months study"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Low residency requirement",
+          "NHR tax regime",
+          "Excellent quality of life"
+        ],
+        "score": 6,
+        "reasons": []
+      },
+      {
+        "id": "caribbean",
+        "name": "Caribbean CBI",
+        "flag": "🏝️",
+        "pathway": "investment",
+        "eligible": "Donation or investment from $100K",
+        "timeline": "3-6 months",
+        "cost": "$100K-250K",
+        "visaFree": 157,
+        "docs": [
+          "CBI application form",
+          "Proof of funds",
+          "Enhanced due diligence",
+          "Medical examination",
+          "Bank reference letter"
+        ],
+        "tips": [
+          "Fastest path to second passport",
+          "No residency requirement",
+          "Grenada has US E-2 treaty access",
+          "Dominica cheapest at $100K"
+        ],
+        "benefits": [
+          "3-6 month processing",
+          "No residency required",
+          "Tax advantages",
+          "Geographic diversification"
+        ],
+        "subOptions": [
+          {
+            "name": "Dominica",
+            "cost": "$100K",
+            "visaFree": 146
+          },
+          {
+            "name": "Grenada",
+            "cost": "$150K",
+            "visaFree": 148
+          },
+          {
+            "name": "St. Kitts",
+            "cost": "$250K",
+            "visaFree": 157
+          },
+          {
+            "name": "Antigua",
+            "cost": "$230K",
+            "visaFree": 151
+          }
+        ],
+        "score": 6,
+        "reasons": []
+      },
+      {
+        "id": "malta",
+        "name": "Malta",
+        "flag": "🇲🇹",
+        "pathway": "investment",
+        "eligible": "€690K+ contribution + property",
+        "timeline": "12-36 months",
+        "cost": "€690,000+",
+        "visaFree": 190,
+        "docs": [
+          "National contribution (€600-750K)",
+          "Property purchase/rental",
+          "Philanthropic donation (€10K+)",
+          "Four-tier due diligence"
+        ],
+        "tips": [
+          "Most expensive EU CBI but fastest EU passport",
+          "Very strict due diligence",
+          "English-speaking"
+        ],
+        "benefits": [
+          "EU citizenship",
+          "Top passport globally",
+          "English-speaking",
+          "Favorable tax regime"
+        ],
+        "score": 6,
+        "reasons": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "label": "no scores -> Unknown",
+    "output": {
+      "range": "Unknown",
+      "color": "#6B7280",
+      "tips": [],
+      "latest": null,
+      "delta": 0
+    }
+  },
+  {
+    "label": "Excellent (780), single reading, no disputes -> delta 0",
+    "output": {
+      "range": "Excellent",
+      "color": "#34D399",
+      "delta": 0,
+      "latest": 780,
+      "tips": [
+        "Never miss a payment — payment history is 35% of your score"
+      ]
+    }
+  },
+  {
+    "label": "Good (720) up from 680 -> positive delta",
+    "output": {
+      "range": "Good",
+      "color": "#60A5FA",
+      "delta": 40,
+      "latest": 720,
+      "tips": [
+        "Keep credit utilization below 10% for maximum score impact",
+        "Never miss a payment — payment history is 35% of your score"
+      ]
+    }
+  },
+  {
+    "label": "Fair (660) with one active dispute -> singular active-dispute tip",
+    "output": {
+      "range": "Fair",
+      "color": "#FBBF24",
+      "delta": 0,
+      "latest": 660,
+      "tips": [
+        "Focus on removing negative items — each deletion can boost 20-50 points",
+        "1 active dispute in progress — follow up after 30 days",
+        "Keep credit utilization below 10% for maximum score impact",
+        "Never miss a payment — payment history is 35% of your score",
+        "Consider becoming an authorized user on an old account with perfect history"
+      ]
+    }
+  },
+  {
+    "label": "Poor (610) with two active disputes incl hard_inquiry -> plural + inquiry tips",
+    "output": {
+      "range": "Poor",
+      "color": "#F97316",
+      "delta": -15,
+      "latest": 610,
+      "tips": [
+        "Focus on removing negative items — each deletion can boost 20-50 points",
+        "2 active disputes in progress — follow up after 30 days",
+        "Keep credit utilization below 10% for maximum score impact",
+        "Never miss a payment — payment history is 35% of your score",
+        "Consider becoming an authorized user on an old account with perfect history",
+        "Hard inquiries fall off after 2 years — dispute any you didn't authorize"
+      ]
+    }
+  },
+  {
+    "label": "Very Poor (550) with only resolved disputes -> no active tip, hard_inquiry tip still fires",
+    "output": {
+      "range": "Very Poor",
+      "color": "#EF4444",
+      "delta": 0,
+      "latest": 550,
+      "tips": [
+        "Focus on removing negative items — each deletion can boost 20-50 points",
+        "Keep credit utilization below 10% for maximum score impact",
+        "Never miss a payment — payment history is 35% of your score",
+        "Consider becoming an authorized user on an old account with perfect history",
+        "Hard inquiries fall off after 2 years — dispute any you didn't authorize"
+      ]
+    }
+  }
+]

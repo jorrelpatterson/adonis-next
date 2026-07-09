@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Fat Loss @ 2000 cal",
+    "output": {
+      "protein": 200,
+      "carbs": 150,
+      "fat": 67
+    }
+  },
+  {
+    "label": "Muscle Gain @ 2800 cal",
+    "output": {
+      "protein": 210,
+      "carbs": 315,
+      "fat": 78
+    }
+  },
+  {
+    "label": "Recomposition @ 2200 cal",
+    "output": {
+      "protein": 193,
+      "carbs": 193,
+      "fat": 73
+    }
+  },
+  {
+    "label": "Aesthetics @ 1800 cal",
+    "output": {
+      "protein": 158,
+      "carbs": 158,
+      "fat": 60
+    }
+  },
+  {
+    "label": "unknown goal falls back to 30/40/30",
+    "output": {
+      "protein": 150,
+      "carbs": 200,
+      "fat": 67
+    }
+  },
+  {
+    "label": "odd calories exercise rounding (1777, Fat Loss)",
+    "output": {
+      "protein": 178,
+      "carbs": 133,
+      "fat": 59
+    }
+  }
+]

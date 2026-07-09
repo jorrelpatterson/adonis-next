@@ -1,0 +1,2631 @@
+[
+  {
+    "label": "free tier / body only / Wednesday / low intensity / empty profile+intel",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Hydration → Sunlight → Peptides. Your circadian reset sequence."
+        },
+        {
+          "id": "work",
+          "name": "Deep Work",
+          "icon": "⚡",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Front-load hard decisions. Willpower depletes throughout the day."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Peak body temperature = peak strength. Afternoon is optimal for hypertrophy."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Every minute of deep sleep = recovery + GH release. Protect this window."
+        }
+      ],
+      "items": [
+        {
+          "id": 0,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Consistent wake time for circadian rhythm",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "20oz water + pinch sea salt + lemon. Daily target: 100oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2, Omega-3 (2g), Magnesium Glycinate (400mg), Probiotics (50B CFU), Vitamin C (1000mg)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "2 eggs + 2 whites, turkey sausage (2 links), ½ grapefruit · 290 cal · 30P/12C/14F — Running: 290/— cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 10,
+          "cat": "training",
+          "time": "8:00 AM",
+          "title": "\\u{1F525} Resistance Training B",
+          "sub": "45 min session",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 11,
+          "cat": "training",
+          "time": "8:05 AM",
+          "title": "Warm-up",
+          "sub": "5 min walk + dynamic stretches + light warmup sets",
+          "sortKey": 485,
+          "block": "morning"
+        },
+        {
+          "id": 12,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Trap Bar Deadlifts",
+          "sub": "3×8 · Rest 75s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 13,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Standing DB OHP",
+          "sub": "3×10 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 14,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Pull-ups (assisted if needed)",
+          "sub": "3×8 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 15,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Farmer Carries",
+          "sub": "3×40 yds · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 16,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Plank Hold",
+          "sub": "3×30s · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 17,
+          "cat": "training",
+          "time": "9:00 AM",
+          "title": "Cool Down",
+          "sub": "5 min stretch + foam roll",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 18,
+          "cat": "nutrition",
+          "time": "9:15 AM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + water/ice within 30 min",
+          "sortKey": 555,
+          "block": "work"
+        },
+        {
+          "id": 5,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Beef jerky (2oz) + apple slices · 220 cal · 20P/22C/4F — Running: 510/— cal",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 6,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Grilled salmon (5oz) over arugula, avocado (¼), balsamic vinaigrette · 440 cal · 36P/10C/28F — Running: 950/— cal",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 9,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "60oz+ by now (of 100oz daily). Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 7,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Protein bar (low sugar, 20g+ protein) · 210 cal · 22P/18C/7F — Running: 1160/— cal",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 8,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Lean ground beef (5oz) bowl, cauliflower rice, peppers, onions, salsa · 380 cal · 38P/15C/16F — Running: 1540/— cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 19,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium Glycinate (400mg), Ashwagandha (600mg), Chamomile or Valerian if needed",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 20,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 21,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7-8 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "premium / multi-domain / Monday / employee 9-5 / peptides + rich intel",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Mind primes Body — gratitude lowers cortisol, breathwork activates parasympathetic. Peptide absorption peaks when stress is low."
+        },
+        {
+          "id": "work",
+          "name": "Work Protocol",
+          "icon": "💼",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Focus block first, admin second. Your prefrontal cortex is sharpest in the first 3 hours after waking."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Mental energy spent → channel into physical. Post-focus training prevents overthinking."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Journal processes the day, magnesium calms the nervous system, darkness triggers melatonin. Each step compounds into deeper sleep."
+        }
+      ],
+      "items": [
+        {
+          "id": 56,
+          "cat": "morning",
+          "time": "6:02 AM",
+          "title": "⚠️ Low Sleep Recovery",
+          "sub": "Yesterday's sleep was poor. Consider lighter training today, extra caffeine AM only, 20 min nap at 1 PM if possible.",
+          "sortKey": 362,
+          "block": "morning"
+        },
+        {
+          "id": 57,
+          "cat": "morning",
+          "time": "6:02 AM",
+          "title": "🧘 High Stress Alert",
+          "sub": "Stress was elevated yesterday. Prioritize breathwork, skip HIIT finisher, add 5 min meditation before training.",
+          "sortKey": 362,
+          "block": "morning"
+        },
+        {
+          "id": 58,
+          "cat": "morning",
+          "time": "6:02 AM",
+          "title": "💪 Recovery Check",
+          "sub": "High soreness reported. Foam roll 10 min pre-workout. Prioritize warm-up. Drop weight 10% if form breaks.",
+          "sortKey": 362,
+          "block": "morning"
+        },
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "7:00 AM",
+          "title": "Wake Up",
+          "sub": "Good morning, Marcus. Consistent wake time for circadian rhythm.",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 16,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "Protein pancakes (3): 2 scoops whey, 1 egg, ½ cup oats, blended. Maple syrup · 550 cal · 45P/55C/12F — Running: 550/2900 cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "morning",
+          "time": "7:02 AM",
+          "title": "📋 Yesterday",
+          "sub": "💪 1 exercise logged · 🍽️ 1850 cal tracked · 😊 Mood: 4/5 · 🏆 PR: Barbell Rows 185×8",
+          "sortKey": 422,
+          "block": "morning"
+        },
+        {
+          "id": 0,
+          "cat": "mind",
+          "time": "7:05 AM",
+          "title": "🙏 Gratitude",
+          "sub": "3 things you're grateful for. Sets intention before the day.",
+          "sortKey": 425,
+          "block": "morning"
+        },
+        {
+          "id": 50,
+          "cat": "morning",
+          "time": "7:05 AM",
+          "title": "🛏️ Make Bed",
+          "sub": "First win of the day. 2 minutes. Sets the tone.",
+          "sortKey": 425,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "mind",
+          "time": "7:10 AM",
+          "title": "🧘 Morning Meditation",
+          "sub": "10 min focused attention. Before stimulants — your brain is most receptive now.",
+          "sortKey": 430,
+          "block": "morning"
+        },
+        {
+          "id": 6,
+          "cat": "morning",
+          "time": "7:18 AM",
+          "title": "⚖️ Weight",
+          "sub": "📈 165.2 lbs (↑0.7 since last) — water/food weight fluctuation is normal",
+          "sortKey": 438,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "morning",
+          "time": "7:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "20oz water + pinch sea salt + lemon. Daily target: 99oz",
+          "sortKey": 440,
+          "block": "morning"
+        },
+        {
+          "id": 5,
+          "cat": "morning",
+          "time": "7:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 445,
+          "block": "morning"
+        },
+        {
+          "id": 7,
+          "cat": "peptide",
+          "time": "7:30 AM",
+          "title": "Semaglutide 5mg",
+          "sub": "0.25-2.4mg/wk · Weekly (Mon) · Draw 10u",
+          "sortKey": 450,
+          "block": "morning",
+          "pepId": 1
+        },
+        {
+          "id": 8,
+          "cat": "peptide",
+          "time": "7:30 AM",
+          "title": "TB-500",
+          "sub": "2-5mg 2x/wk · 2x/wk (Mon/Thu) · Draw 50u",
+          "sortKey": 450,
+          "block": "morning",
+          "pepId": 71
+        },
+        {
+          "id": 9,
+          "cat": "peptide_rec",
+          "time": "7:30 AM",
+          "title": "💡 AOD-9604",
+          "sub": "300mcg/day · Recommended · Draw 12u (5mg vial + 2mL BAC)",
+          "sortKey": 450,
+          "block": "morning",
+          "pepId": 29,
+          "suggested": true
+        },
+        {
+          "id": 48,
+          "cat": "skincare",
+          "time": "7:35 AM",
+          "title": "✂️ Haircut — Due",
+          "sub": "Last done 39 days ago. Every 3 weeks recommended.",
+          "sortKey": 455,
+          "block": "morning"
+        },
+        {
+          "id": 10,
+          "cat": "skincare",
+          "time": "7:40 AM",
+          "title": "Gentle Cleanser",
+          "sub": "AM Step 1",
+          "sortKey": 460,
+          "block": "morning"
+        },
+        {
+          "id": 11,
+          "cat": "skincare",
+          "time": "7:42 AM",
+          "title": "Vitamin C Serum (20%)",
+          "sub": "Active · Monday",
+          "sortKey": 462,
+          "block": "morning"
+        },
+        {
+          "id": 12,
+          "cat": "skincare",
+          "time": "7:44 AM",
+          "title": "Hyaluronic Acid",
+          "sub": "AM Step 3",
+          "sortKey": 464,
+          "block": "morning"
+        },
+        {
+          "id": 13,
+          "cat": "skincare",
+          "time": "7:45 AM",
+          "title": "Moisturizer",
+          "sub": "AM Step 4",
+          "sortKey": 465,
+          "block": "morning"
+        },
+        {
+          "id": 14,
+          "cat": "skincare",
+          "time": "7:46 AM",
+          "title": "SPF 50",
+          "sub": "AM Step 5",
+          "sortKey": 466,
+          "block": "morning"
+        },
+        {
+          "id": 15,
+          "cat": "supplement",
+          "time": "7:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2, Creatine Monohydrate (5g), Omega-3 (2g), Zinc (30mg), Ashwagandha (600mg KSM-66)",
+          "sortKey": 470,
+          "block": "morning"
+        },
+        {
+          "id": 22,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "💼 Office starts",
+          "sub": "Block until 5:00 PM",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 51,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "💻 Workspace Prep",
+          "sub": "Clear desk, fill water, close unnecessary tabs. Set intention for the session.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 53,
+          "cat": "credit",
+          "time": "9:00 AM",
+          "title": "📊 Weekly Credit Check",
+          "sub": "Review dispute statuses. Check Credit Karma for score changes. Update any resolved items.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 54,
+          "cat": "mind",
+          "time": "9:00 AM",
+          "title": "⚡ Focus Block",
+          "sub": "90 min deep work. Phone off. Single task. Peak cognitive window.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 59,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "🌍 Poland — Application Submitted",
+          "sub": "Check consulate portal for updates. Estimated wait: check your timeline.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 60,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "🌍 Citizenship Check-In",
+          "sub": "Review all active applications. Follow up on anything pending 30+ days. Check document expiration dates.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 17,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Bagel + cream cheese + smoked salmon (2oz) · 420 cal · 22P/42C/16F — Running: 970/2900 cal · 📍 prep ahead",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 47,
+          "cat": "income",
+          "time": "10:00 AM",
+          "title": "Network Outreach",
+          "sub": "Reach out to 4 people about referral program",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 18,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Double chicken burrito bowl: 8oz chicken, rice, beans, salsa, guac · 750 cal · 55P/70C/20F — Running: 1720/2900 cal · 📍 prep ahead",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 49,
+          "cat": "skincare",
+          "time": "1:00 PM",
+          "title": "🧍 Posture Check",
+          "sub": "Shoulders back, chin neutral, feet flat. Stand/stretch 5 min every hour.",
+          "sortKey": 780,
+          "block": "midday"
+        },
+        {
+          "id": 24,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "59oz+ by now (of 99oz daily). Keep water at desk. Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 19,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Trail mix (¼ cup) + protein bar · 400 cal · 25P/40C/16F — Running: 2120/2900 cal · 📍 prep ahead",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 23,
+          "cat": "work",
+          "time": "5:00 PM",
+          "title": "💼 Office ends",
+          "sub": "Transition to evening protocol",
+          "sortKey": 1020,
+          "block": "training"
+        },
+        {
+          "id": 25,
+          "cat": "training",
+          "time": "5:00 PM",
+          "title": "\\u{1F525} Back & Biceps",
+          "sub": "60 min session · ⚡ HIGH INTENSITY \\xB7 Post-work",
+          "sortKey": 1020,
+          "block": "training"
+        },
+        {
+          "id": 26,
+          "cat": "training",
+          "time": "5:05 PM",
+          "title": "Warm-up",
+          "sub": "5 min row + band pull-aparts + dead hangs",
+          "sortKey": 1025,
+          "block": "training"
+        },
+        {
+          "id": 27,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Conventional Deadlifts",
+          "sub": "4×7 · Rest 120s — Top set + back-off sets",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 28,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Barbell Rows",
+          "sub": "4×10 · Rest 90s — 🎯 185lbs × 8 last time. Hit all reps to unlock +5",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 29,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Weighted Pull-ups",
+          "sub": "4×6-8 · Rest 90s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 30,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Face Pulls",
+          "sub": "3×17 · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 31,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Barbell Curls",
+          "sub": "3×12 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 32,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Hammer Curls",
+          "sub": "3×14 · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 33,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Ab Wheel Rollouts",
+          "sub": "3×12 · Rest 45s — From knees — roll until back flat, pull with abs",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 34,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Dead Bug",
+          "sub": "3×12 · Rest 30s — Opposite arm and leg — back stays flat on floor",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 35,
+          "cat": "training",
+          "time": "6:00 PM",
+          "title": "Cool Down",
+          "sub": "5 min lat/bicep stretches",
+          "sortKey": 1080,
+          "block": "training"
+        },
+        {
+          "id": 36,
+          "cat": "training",
+          "time": "6:05 PM",
+          "title": "Finisher: 10 min HIIT",
+          "sub": "Bike sprints or burpees — push through the clock",
+          "sortKey": 1085,
+          "block": "training"
+        },
+        {
+          "id": 37,
+          "cat": "nutrition",
+          "time": "6:15 PM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + fast carbs (banana + honey) within 30 min",
+          "sortKey": 1095,
+          "block": "training"
+        },
+        {
+          "id": 20,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Salmon (6oz), mashed potatoes (1.5 cups), green beans, butter · 680 cal · 42P/55C/22F — Running: 2800/2900 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 21,
+          "cat": "nutrition",
+          "time": "9:00 PM",
+          "title": "Before Bed",
+          "sub": "Greek yogurt (1 cup) + granola + honey · 320 cal · 28P/35C/8F — Running: 3120/2900 cal",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 38,
+          "cat": "skincare",
+          "time": "9:00 PM",
+          "title": "Oil Cleanser",
+          "sub": "PM Step 1",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 42,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium Glycinate (400mg), ZMA, Casein Protein (before bed if not in meal plan), Ashwagandha (600mg)",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 39,
+          "cat": "skincare",
+          "time": "9:02 PM",
+          "title": "Foaming Cleanser",
+          "sub": "PM Step 2",
+          "sortKey": 1262,
+          "block": "evening"
+        },
+        {
+          "id": 40,
+          "cat": "skincare",
+          "time": "9:04 PM",
+          "title": "Night Cream",
+          "sub": "PM Step 3",
+          "sortKey": 1264,
+          "block": "evening"
+        },
+        {
+          "id": 41,
+          "cat": "skincare",
+          "time": "9:10 PM",
+          "title": "Retinol (0.5-1%)",
+          "sub": "PM Active · Monday",
+          "sortKey": 1270,
+          "block": "evening"
+        },
+        {
+          "id": 43,
+          "cat": "peptide",
+          "time": "9:15 PM",
+          "title": "CJC/Ipa Blend",
+          "sub": "100mcg each before bed · Daily · Draw 6u (30u syringe)",
+          "sortKey": 1275,
+          "block": "evening",
+          "pepId": 60
+        },
+        {
+          "id": 44,
+          "cat": "peptide_rec",
+          "time": "9:15 PM",
+          "title": "💡 DSIP",
+          "sub": "100-200mcg/bed · Recommended · Draw 8u (5mg vial + 2mL BAC, 30u syringe)",
+          "sortKey": 1275,
+          "block": "evening",
+          "pepId": 61,
+          "suggested": true
+        },
+        {
+          "id": 52,
+          "cat": "evening",
+          "time": "9:15 PM",
+          "title": "🧹 10-Min Reset",
+          "sub": "Dishes done, surfaces cleared, tomorrow's clothes out, bag packed.",
+          "sortKey": 1275,
+          "block": "evening"
+        },
+        {
+          "id": 55,
+          "cat": "mind",
+          "time": "9:20 PM",
+          "title": "📝 Evening Journal",
+          "sub": "What went well? What to improve? Capture insights before sleep.",
+          "sortKey": 1280,
+          "block": "evening"
+        },
+        {
+          "id": 45,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 46,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "8-9 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "Sunday / wellness / extreme intensity / purpose+environment / EOD + premixed custom peptide",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Mind primes Body — gratitude lowers cortisol, breathwork activates parasympathetic. Peptide absorption peaks when stress is low."
+        },
+        {
+          "id": "work",
+          "name": "Deep Work",
+          "icon": "⚡",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Focus block first, admin second. Your prefrontal cortex is sharpest in the first 3 hours after waking."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Mental energy spent → channel into physical. Post-focus training prevents overthinking."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Journal processes the day, magnesium calms the nervous system, darkness triggers melatonin. Each step compounds into deeper sleep."
+        }
+      ],
+      "items": [
+        {
+          "id": 4,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Good morning, Jo. Consistent wake time for circadian rhythm.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 0,
+          "cat": "mind",
+          "time": "6:05 AM",
+          "title": "🙏 Gratitude",
+          "sub": "3 things you're grateful for. Sets intention before the day.",
+          "sortKey": 365,
+          "block": "morning"
+        },
+        {
+          "id": 30,
+          "cat": "morning",
+          "time": "6:05 AM",
+          "title": "🛏️ Make Bed",
+          "sub": "First win of the day. 2 minutes. Sets the tone.",
+          "sortKey": 365,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "mind",
+          "time": "6:10 AM",
+          "title": "🌬️ Breathwork",
+          "sub": "Box breathing: 4 in, 4 hold, 4 out, 4 hold × 4 rounds. Primes nervous system.",
+          "sortKey": 370,
+          "block": "morning"
+        },
+        {
+          "id": 2,
+          "cat": "purpose",
+          "time": "6:15 AM",
+          "title": "🧭 Morning Intention",
+          "sub": "One sentence: what matters most today? Align your actions with your values.",
+          "sortKey": 375,
+          "block": "morning"
+        },
+        {
+          "id": 5,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "24oz water + pinch sea salt + lemon. Daily target: 120oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 6,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 7,
+          "cat": "peptide",
+          "time": "6:30 AM",
+          "title": "BPC-157",
+          "sub": "250-500mcg/day · Every other day · Draw 10u",
+          "sortKey": 390,
+          "block": "morning",
+          "pepId": 40
+        },
+        {
+          "id": 8,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2, Omega-3 (2g), Magnesium Glycinate (400mg), Probiotics (50B CFU), Vitamin C (1000mg)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 9,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "3 egg whites + 1 whole egg scramble, spinach, ½ avocado, everything seasoning · 280 cal · 28P/8C/16F — Running: 280/2200 cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 16,
+          "cat": "training",
+          "time": "8:00 AM",
+          "title": "\\u{1F525} Resistance Training A",
+          "sub": "45 min session · 🚨 EXTREME",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 17,
+          "cat": "training",
+          "time": "8:05 AM",
+          "title": "Warm-up",
+          "sub": "5 min walk + dynamic stretches + light warmup sets",
+          "sortKey": 485,
+          "block": "morning"
+        },
+        {
+          "id": 18,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Goblet Squats",
+          "sub": "4×10 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 19,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Flat DB Bench Press",
+          "sub": "4×10 · Rest 60s — ⬆ Last: 60lbs → Today: 65lbs (+5)",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 20,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Cable Rows",
+          "sub": "4×12 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 21,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "DB Lunges",
+          "sub": "4×10/leg · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 22,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Face Pulls",
+          "sub": "4×15 · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "purpose",
+          "time": "9:00 AM",
+          "title": "📊 Weekly Life Audit",
+          "sub": "Rate each life area. Where did you grow? Where to focus next week?",
+          "sortKey": 540,
+          "block": "morning"
+        },
+        {
+          "id": 23,
+          "cat": "training",
+          "time": "9:00 AM",
+          "title": "Cool Down",
+          "sub": "5 min stretch + foam roll",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 33,
+          "cat": "mind",
+          "time": "9:00 AM",
+          "title": "⚡ Focus Block",
+          "sub": "90 min deep work sprint. No distractions. Your sharpest hours.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 24,
+          "cat": "training",
+          "time": "9:05 AM",
+          "title": "Finisher: 10 min HIIT",
+          "sub": "Bike sprints or burpees — push through the clock",
+          "sortKey": 545,
+          "block": "work"
+        },
+        {
+          "id": 25,
+          "cat": "nutrition",
+          "time": "9:15 AM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + water/ice within 30 min",
+          "sortKey": 555,
+          "block": "work"
+        },
+        {
+          "id": 10,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Protein shake (whey) + 12 almonds · 230 cal · 30P/10C/8F — Running: 510/2200 cal",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 14,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "🛒 Weekly Meal Prep",
+          "sub": "Batch cook: chicken breast, salmon, ground turkey. Prep: sweet potatoes, oats, rice. Portion into containers for the week.",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 32,
+          "cat": "morning",
+          "time": "10:00 AM",
+          "title": "🧽 Weekly Deep Clean",
+          "sub": "Bathroom, kitchen, vacuum, laundry. 60-90 min. Fresh space = fresh mind.",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 35,
+          "cat": "mind",
+          "time": "10:00 AM",
+          "title": "📖 Reading Block",
+          "sub": "30 min non-fiction. Invest in your knowledge base.",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 11,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Grilled chicken breast (6oz), mixed greens, quinoa (½ cup), lemon olive oil dressing · 420 cal · 45P/30C/12F — Running: 930/2200 cal",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 15,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "72oz+ by now (of 120oz daily). Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 12,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Greek yogurt (1 cup) + ½ cup blueberries · 180 cal · 22P/18C/2F — Running: 1110/2200 cal",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 13,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Salmon fillet (5oz), roasted broccoli (2 cups), medium sweet potato · 450 cal · 36P/35C/15F — Running: 1560/2200 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 26,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium Glycinate (400mg), Ashwagandha (600mg), Chamomile or Valerian if needed",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 27,
+          "cat": "peptide",
+          "time": "9:15 PM",
+          "title": "Custom Peptide",
+          "sub": "1mg/day · Daily · SubQ — Enter your own values",
+          "sortKey": 1275,
+          "block": "evening",
+          "pepId": 130
+        },
+        {
+          "id": 31,
+          "cat": "evening",
+          "time": "9:15 PM",
+          "title": "🧹 10-Min Reset",
+          "sub": "Dishes done, surfaces cleared, tomorrow's clothes out, bag packed.",
+          "sortKey": 1275,
+          "block": "evening"
+        },
+        {
+          "id": 34,
+          "cat": "mind",
+          "time": "9:20 PM",
+          "title": "📝 Evening Journal",
+          "sub": "What went well? What to improve? Capture insights before sleep.",
+          "sortKey": 1280,
+          "block": "evening"
+        },
+        {
+          "id": 28,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 29,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7.5-8.5 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "female / follicular cycle day 7 / Tuesday / image domain / skincare+grooming",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Hydration → Sunlight → Peptides. Your circadian reset sequence."
+        },
+        {
+          "id": "work",
+          "name": "Deep Work",
+          "icon": "⚡",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Front-load hard decisions. Willpower depletes throughout the day."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Peak body temperature = peak strength. Afternoon is optimal for hypertrophy."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Every minute of deep sleep = recovery + GH release. Protect this window."
+        }
+      ],
+      "items": [
+        {
+          "id": 0,
+          "cat": "cycle",
+          "time": "6:00 AM",
+          "title": "🟢 Follicular Phase · Day 7",
+          "sub": "Peak performance window. Go heavy — PRs, high volume, HIIT. Estrogen rising = stronger recovery.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Good morning, Dana. Consistent wake time for circadian rhythm.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "morning",
+          "time": "6:18 AM",
+          "title": "⚖️ Weight",
+          "sub": "Current: 141 lbs (2026-07-08)",
+          "sortKey": 378,
+          "block": "morning"
+        },
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "17oz water + pinch sea salt + lemon. Daily target: 84oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 35,
+          "cat": "skincare",
+          "time": "6:35 AM",
+          "title": "🧔 Beard Trim/Shape — Due",
+          "sub": "Last done 15 days ago. Weekly recommended.",
+          "sortKey": 395,
+          "block": "morning"
+        },
+        {
+          "id": 5,
+          "cat": "skincare",
+          "time": "6:40 AM",
+          "title": "Gentle Cleanser",
+          "sub": "AM Step 1",
+          "sortKey": 400,
+          "block": "morning"
+        },
+        {
+          "id": 6,
+          "cat": "skincare",
+          "time": "6:42 AM",
+          "title": "Niacinamide (10%)",
+          "sub": "Active · Tuesday",
+          "sortKey": 402,
+          "block": "morning"
+        },
+        {
+          "id": 7,
+          "cat": "skincare",
+          "time": "6:44 AM",
+          "title": "Hyaluronic Acid",
+          "sub": "AM Step 3",
+          "sortKey": 404,
+          "block": "morning"
+        },
+        {
+          "id": 8,
+          "cat": "skincare",
+          "time": "6:45 AM",
+          "title": "Moisturizer",
+          "sub": "AM Step 4",
+          "sortKey": 405,
+          "block": "morning"
+        },
+        {
+          "id": 9,
+          "cat": "skincare",
+          "time": "6:46 AM",
+          "title": "SPF 50",
+          "sub": "AM Step 5",
+          "sortKey": 406,
+          "block": "morning"
+        },
+        {
+          "id": 10,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2 (100mcg), Omega-3 (2g EPA/DHA), L-Carnitine (2g), Green Tea Extract (500mg)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 11,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "Protein smoothie: 1 scoop whey, ½ cup berries, spinach, 1 tbsp almond butter, ice · 300 cal · 32P/20C/10F — Running: 300/1650 cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 17,
+          "cat": "training",
+          "time": "8:00 AM",
+          "title": "\\u{1F525} Full Body Circuit",
+          "sub": "50 min session · ⚡ HIGH INTENSITY · 🟢 Follicular",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 18,
+          "cat": "training",
+          "time": "8:05 AM",
+          "title": "Warm-up",
+          "sub": "5 min row + leg swings + arm circles",
+          "sortKey": 485,
+          "block": "morning"
+        },
+        {
+          "id": 19,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Goblet Squats",
+          "sub": "4×14 · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 20,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Push-ups",
+          "sub": "4×17 · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 21,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "DB Rows",
+          "sub": "3×12/arm · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 22,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Walking Lunges",
+          "sub": "3×12/leg · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 23,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Farmer Carries",
+          "sub": "3×40 yds · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 24,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Plank to Push-up",
+          "sub": "3×12 · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 25,
+          "cat": "training",
+          "time": "9:00 AM",
+          "title": "Cool Down",
+          "sub": "5 min walk + stretch",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 26,
+          "cat": "training",
+          "time": "9:05 AM",
+          "title": "Finisher: 10 min HIIT",
+          "sub": "Bike sprints or burpees — push through the clock",
+          "sortKey": 545,
+          "block": "work"
+        },
+        {
+          "id": 27,
+          "cat": "nutrition",
+          "time": "9:15 AM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + water/ice within 30 min",
+          "sortKey": 555,
+          "block": "work"
+        },
+        {
+          "id": 12,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Cottage cheese (1 cup) + cherry tomatoes · 190 cal · 28P/10C/4F — Running: 490/1650 cal",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 13,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Tuna poke bowl: 5oz tuna, ½ cup rice, edamame, cucumber, ponzu · 440 cal · 42P/35C/10F — Running: 930/1650 cal",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 16,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "50oz+ by now (of 84oz daily). Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 14,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Celery + 2 tbsp almond butter · 200 cal · 6P/8C/16F — Running: 1130/1650 cal",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 15,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Chicken thigh (5oz) baked, roasted Brussels sprouts, ½ cup brown rice · 420 cal · 38P/30C/14F — Running: 1550/1650 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 28,
+          "cat": "skincare",
+          "time": "9:00 PM",
+          "title": "Oil Cleanser",
+          "sub": "PM Step 1",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 32,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "B-Complex, CoQ10, Creatine",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 29,
+          "cat": "skincare",
+          "time": "9:02 PM",
+          "title": "Foaming Cleanser",
+          "sub": "PM Step 2",
+          "sortKey": 1262,
+          "block": "evening"
+        },
+        {
+          "id": 30,
+          "cat": "skincare",
+          "time": "9:04 PM",
+          "title": "Night Cream",
+          "sub": "PM Step 3",
+          "sortKey": 1264,
+          "block": "evening"
+        },
+        {
+          "id": 31,
+          "cat": "skincare",
+          "time": "9:10 PM",
+          "title": "Hydrating Mask",
+          "sub": "PM Active · Tuesday",
+          "sortKey": 1270,
+          "block": "evening"
+        },
+        {
+          "id": 33,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 34,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7.5-8.5 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "premium / money+credit+citizenship / Wednesday / sales partner / disputes ladder",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Mind primes Body — gratitude lowers cortisol, breathwork activates parasympathetic. Peptide absorption peaks when stress is low."
+        },
+        {
+          "id": "work",
+          "name": "Deep Work",
+          "icon": "⚡",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Focus block first, admin second. Your prefrontal cortex is sharpest in the first 3 hours after waking."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Mental energy spent → channel into physical. Post-focus training prevents overthinking."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Journal processes the day, magnesium calms the nervous system, darkness triggers melatonin. Each step compounds into deeper sleep."
+        }
+      ],
+      "items": [
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Good morning, Rico. Consistent wake time for circadian rhythm.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 0,
+          "cat": "mind",
+          "time": "6:05 AM",
+          "title": "🙏 Gratitude",
+          "sub": "3 things you're grateful for. Sets intention before the day.",
+          "sortKey": 365,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "mind",
+          "time": "6:10 AM",
+          "title": "🧘 Morning Meditation",
+          "sub": "10 min focused attention. Before stimulants — your brain is most receptive now.",
+          "sortKey": 370,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "23oz water + pinch sea salt + lemon. Daily target: 114oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 5,
+          "cat": "peptide",
+          "time": "6:30 AM",
+          "title": "Semax",
+          "sub": "200-600mcg/day · 3x/wk (M/W/F) · Draw 12u",
+          "sortKey": 390,
+          "block": "morning",
+          "pepId": 77
+        },
+        {
+          "id": 6,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2, Omega-3 (2g DHA-heavy), Lions Mane (1g), Alpha-GPC (300mg), Magnesium L-Threonate (2g)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 7,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "2 eggs + 2 whites, turkey sausage (2 links), ½ grapefruit · 290 cal · 30P/12C/14F — Running: 290/2400 cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 13,
+          "cat": "training",
+          "time": "8:00 AM",
+          "title": "\\u{1F525} Resistance Training B",
+          "sub": "45 min session",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 27,
+          "cat": "credit",
+          "time": "8:00 AM",
+          "title": "📬 Mail Dispute Letter",
+          "sub": "1 letter ready. Print, sign, and send via certified mail (USPS). Keep tracking number.",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 28,
+          "cat": "credit",
+          "time": "8:00 AM",
+          "title": "⏰ LVNV Funding — Experian deadline in 2d",
+          "sub": "Follow-up letter auto-generated. Print and send if no response by day 30.",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 29,
+          "cat": "credit",
+          "time": "8:00 AM",
+          "title": "🚨 ESCALATE: Portfolio Recovery (TransUnion)",
+          "sub": "30-day deadline passed. Send follow-up letter + file CFPB complaint. Bureau violated FCRA.",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 30,
+          "cat": "credit",
+          "time": "8:00 AM",
+          "title": "✅ Log Updated Credit Score",
+          "sub": "Dispute resolved! Pull your updated score and log it — new card recommendations may unlock.",
+          "sortKey": 480,
+          "block": "morning"
+        },
+        {
+          "id": 14,
+          "cat": "training",
+          "time": "8:05 AM",
+          "title": "Warm-up",
+          "sub": "5 min walk + dynamic stretches + light warmup sets",
+          "sortKey": 485,
+          "block": "morning"
+        },
+        {
+          "id": 15,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Trap Bar Deadlifts",
+          "sub": "3×8 · Rest 75s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 16,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Standing DB OHP",
+          "sub": "3×10 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 17,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Pull-ups (assisted if needed)",
+          "sub": "3×8 · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 18,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Farmer Carries",
+          "sub": "3×40 yds · Rest 60s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 19,
+          "cat": "training",
+          "time": "8:15 AM",
+          "title": "Plank Hold",
+          "sub": "3×30s · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 495,
+          "block": "morning"
+        },
+        {
+          "id": 20,
+          "cat": "training",
+          "time": "9:00 AM",
+          "title": "Cool Down",
+          "sub": "5 min stretch + foam roll",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 31,
+          "cat": "mind",
+          "time": "9:00 AM",
+          "title": "⚡ Focus Block",
+          "sub": "90 min deep work sprint. No distractions. Your sharpest hours.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 34,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "🌍 Italy — Gather Documents",
+          "sub": "Check your citizenship checklist. Scan and upload pending documents. Contact consulate if needed.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 35,
+          "cat": "work",
+          "time": "9:00 AM",
+          "title": "🌍 Ireland — Application Submitted",
+          "sub": "Check consulate portal for updates. Estimated wait: check your timeline.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 36,
+          "cat": "credit",
+          "time": "9:00 AM",
+          "title": "📈 Score Jump Detected",
+          "sub": "Up 23 points! Review card recommendations — you may qualify for better cards now.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 37,
+          "cat": "credit",
+          "time": "9:00 AM",
+          "title": "💳 Card Application Window",
+          "sub": "Score: 706. 4 5/24 slots open. Check Money tab for recommended next card.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 21,
+          "cat": "nutrition",
+          "time": "9:15 AM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + water/ice within 30 min",
+          "sortKey": 555,
+          "block": "work"
+        },
+        {
+          "id": 8,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Beef jerky (2oz) + apple slices · 220 cal · 20P/22C/4F — Running: 510/2400 cal",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 9,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Grilled salmon (5oz) over arugula, avocado (¼), balsamic vinaigrette · 440 cal · 36P/10C/28F — Running: 950/2400 cal",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 25,
+          "cat": "income",
+          "time": "1:00 PM",
+          "title": "Run Presentations",
+          "sub": "Deliver proposals to scheduled prospects",
+          "sortKey": 780,
+          "block": "midday"
+        },
+        {
+          "id": 12,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "68oz+ by now (of 114oz daily). Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 32,
+          "cat": "mind",
+          "time": "2:30 PM",
+          "title": "🎯 Visualization",
+          "sub": "5 min. Mentally rehearse your week's biggest goal as already achieved.",
+          "sortKey": 870,
+          "block": "midday"
+        },
+        {
+          "id": 10,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Protein bar (low sugar, 20g+ protein) · 210 cal · 22P/18C/7F — Running: 1160/2400 cal",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 11,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Lean ground beef (5oz) bowl, cauliflower rice, peppers, onions, salsa · 380 cal · 38P/15C/16F — Running: 1540/2400 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 26,
+          "cat": "purpose",
+          "time": "8:00 PM",
+          "title": "🤝 Midweek Pulse",
+          "sub": "Quick check with your partner — are you both on track? Adjust if needed.",
+          "sortKey": 1200,
+          "block": "evening"
+        },
+        {
+          "id": 22,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium L-Threonate (2g), L-Theanine (200mg), Glycine (3g)",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 33,
+          "cat": "mind",
+          "time": "9:20 PM",
+          "title": "📝 Evening Journal",
+          "sub": "What went well? What to improve? Capture insights before sleep.",
+          "sortKey": 1280,
+          "block": "evening"
+        },
+        {
+          "id": 23,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 24,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7.5-8.5 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "entrepreneur Saturday 8-4 / extreme intensity / rest workout / weight telemetry + peak day",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 480,
+          "color": "#F59E0B",
+          "synergy": "Mind primes Body — gratitude lowers cortisol, breathwork activates parasympathetic. Peptide absorption peaks when stress is low."
+        },
+        {
+          "id": "work",
+          "name": "Execution Protocol",
+          "icon": "🎯",
+          "startMin": 480,
+          "endMin": 720,
+          "color": "#60A5FA",
+          "synergy": "Focus block first, admin second. Your prefrontal cortex is sharpest in the first 3 hours after waking."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 720,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Mental energy spent → channel into physical. Post-focus training prevents overthinking."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Journal processes the day, magnesium calms the nervous system, darkness triggers melatonin. Each step compounds into deeper sleep."
+        }
+      ],
+      "items": [
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Good morning, Vic. Consistent wake time for circadian rhythm.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 28,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "🎯 Almost There!",
+          "sub": "Only 1.5lbs from your goal weight. Stay the course this week.",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "morning",
+          "time": "6:02 AM",
+          "title": "📋 Yesterday",
+          "sub": "💪 1 exercise logged · 🍽️ 2300 cal tracked · 😊 Mood: 5/5 · 🏆 PR: Squat 225×8",
+          "sortKey": 362,
+          "block": "morning"
+        },
+        {
+          "id": 26,
+          "cat": "morning",
+          "time": "6:02 AM",
+          "title": "🔥 Peak Day",
+          "sub": "Energy and sleep both high. Push hard today — add weight or reps to compound lifts.",
+          "sortKey": 362,
+          "block": "morning"
+        },
+        {
+          "id": 0,
+          "cat": "mind",
+          "time": "6:05 AM",
+          "title": "🙏 Gratitude",
+          "sub": "3 things you're grateful for. Sets intention before the day.",
+          "sortKey": 365,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "mind",
+          "time": "6:10 AM",
+          "title": "🌬️ Breathwork",
+          "sub": "Box breathing: 4 in, 4 hold, 4 out, 4 hold × 4 rounds. Primes nervous system.",
+          "sortKey": 370,
+          "block": "morning"
+        },
+        {
+          "id": 6,
+          "cat": "morning",
+          "time": "6:18 AM",
+          "title": "⚖️ Weight",
+          "sub": "📈 179.5 lbs (↑0.2 since last) — water/food weight fluctuation is normal",
+          "sortKey": 378,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "22oz water + pinch sea salt + lemon. Daily target: 108oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 5,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 7,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2, Creatine (5g), Omega-3 (2g), L-Carnitine (2g), Ashwagandha (600mg)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 27,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "⚠️ Weight Trending Up",
+          "sub": "Up 0.9lbs this week vs goal of losing. Tighten portions today. Extra 15 min cardio.",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 8,
+          "cat": "nutrition",
+          "time": "8:00 AM",
+          "title": "Brunch",
+          "sub": "Veggie omelet: 3 eggs, mushrooms, peppers, onions, feta, side of fruit · 418 cal · 31P/18C/22F — Running: 418/2500 cal · 📍 prep ahead",
+          "sortKey": 480,
+          "block": "work"
+        },
+        {
+          "id": 12,
+          "cat": "work",
+          "time": "8:00 AM",
+          "title": "🎯 Deep Work Block 1",
+          "sub": "High-leverage tasks. Phone off. No email. 90-min sprint.",
+          "sortKey": 480,
+          "block": "work"
+        },
+        {
+          "id": 23,
+          "cat": "mind",
+          "time": "9:00 AM",
+          "title": "⚡ Focus Block",
+          "sub": "90 min deep work. Phone off. Single task. Peak cognitive window.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 13,
+          "cat": "work",
+          "time": "9:30 AM",
+          "title": "☕ Break + Movement",
+          "sub": "Walk, stretch, clear your head. 15 min.",
+          "sortKey": 570,
+          "block": "work"
+        },
+        {
+          "id": 14,
+          "cat": "work",
+          "time": "10:00 AM",
+          "title": "📞 Admin Block",
+          "sub": "Calls, emails, meetings, ops. Batch process everything.",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 25,
+          "cat": "mind",
+          "time": "10:00 AM",
+          "title": "📖 Reading Block",
+          "sub": "30 min non-fiction. Invest in your knowledge base.",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 15,
+          "cat": "work",
+          "time": "11:00 AM",
+          "title": "🎯 Deep Work Block 2",
+          "sub": "Revenue-generating work. Sales, building, creating.",
+          "sortKey": 660,
+          "block": "work"
+        },
+        {
+          "id": 9,
+          "cat": "nutrition",
+          "time": "12:00 PM",
+          "title": "Lunch",
+          "sub": "Turkey burger (no bun), side salad, sweet potato wedges · 462 cal · 42P/30C/16F — Running: 880/2500 cal · 📍 prep ahead",
+          "sortKey": 720,
+          "block": "midday"
+        },
+        {
+          "id": 16,
+          "cat": "work",
+          "time": "12:30 PM",
+          "title": "⚡ Sprint Block",
+          "sub": "Quick wins, follow-ups, outreach. Clear the queue.",
+          "sortKey": 750,
+          "block": "midday"
+        },
+        {
+          "id": 17,
+          "cat": "work",
+          "time": "1:30 PM",
+          "title": "🧠 Strategy Hour",
+          "sub": "Planning, learning, big picture thinking. Review metrics.",
+          "sortKey": 810,
+          "block": "midday"
+        },
+        {
+          "id": 19,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "65oz+ by now (of 108oz daily). Keep water at desk. Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 10,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Protein shake + mixed berries · 220 cal · 33P/15C/2F — Running: 1100/2500 cal · 📍 prep ahead",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 18,
+          "cat": "work",
+          "time": "4:00 PM",
+          "title": "💼 Work Complete",
+          "sub": "Shut the laptop. Hard boundary. Protect your evening protocol.",
+          "sortKey": 960,
+          "block": "training"
+        },
+        {
+          "id": 11,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Grilled chicken (5oz), roasted Mediterranean veggies, tahini drizzle · 440 cal · 44P/20C/16F — Running: 1540/2500 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 20,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium Glycinate (400mg), ZMA, Ashwagandha (600mg), Melatonin (0.5mg if needed)",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 24,
+          "cat": "mind",
+          "time": "9:20 PM",
+          "title": "📝 Evening Journal",
+          "sub": "What went well? What to improve? Capture insights before sleep.",
+          "sortKey": 1280,
+          "block": "evening"
+        },
+        {
+          "id": 21,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 22,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7.5-8.5 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  },
+  {
+    "label": "money only / Thursday / recovery intensity / 5-24 full wallet / business partner",
+    "output": {
+      "blocks": [
+        {
+          "id": "morning",
+          "name": "Morning Protocol",
+          "icon": "☀️",
+          "startMin": 0,
+          "endMin": 540,
+          "color": "#F59E0B",
+          "synergy": "Hydration → Sunlight → Peptides. Your circadian reset sequence."
+        },
+        {
+          "id": "work",
+          "name": "Deep Work",
+          "icon": "⚡",
+          "startMin": 540,
+          "endMin": 780,
+          "color": "#60A5FA",
+          "synergy": "Front-load hard decisions. Willpower depletes throughout the day."
+        },
+        {
+          "id": "midday",
+          "name": "Midday Protocol",
+          "icon": "⚡",
+          "startMin": 780,
+          "endMin": 960,
+          "color": "#06B6D4",
+          "synergy": "Cortisol dips after lunch. Protein prevents the crash. Movement resets your focus for the afternoon."
+        },
+        {
+          "id": "training",
+          "name": "Training Protocol",
+          "icon": "🔥",
+          "startMin": 960,
+          "endMin": 1140,
+          "color": "#E8D5B7",
+          "synergy": "Peak body temperature = peak strength. Afternoon is optimal for hypertrophy."
+        },
+        {
+          "id": "evening",
+          "name": "Wind-Down Protocol",
+          "icon": "🌙",
+          "startMin": 1140,
+          "endMin": 1440,
+          "color": "#D4C4AA",
+          "synergy": "Every minute of deep sleep = recovery + GH release. Protect this window."
+        }
+      ],
+      "items": [
+        {
+          "id": 0,
+          "cat": "morning",
+          "time": "6:00 AM",
+          "title": "Wake Up",
+          "sub": "Consistent wake time for circadian rhythm",
+          "sortKey": 360,
+          "block": "morning"
+        },
+        {
+          "id": 1,
+          "cat": "morning",
+          "time": "6:20 AM",
+          "title": "Hydration Protocol",
+          "sub": "18oz water + pinch sea salt + lemon. Daily target: 90oz",
+          "sortKey": 380,
+          "block": "morning"
+        },
+        {
+          "id": 2,
+          "cat": "morning",
+          "time": "6:25 AM",
+          "title": "Sunlight Exposure",
+          "sub": "10-15 min outdoor light, no sunglasses. Sets circadian clock for better sleep tonight.",
+          "sortKey": 385,
+          "block": "morning"
+        },
+        {
+          "id": 3,
+          "cat": "supplement",
+          "time": "6:50 AM",
+          "title": "Morning Supplements",
+          "sub": "Vitamin D3 (5000 IU) + K2 (100mcg), Omega-3 (2g EPA/DHA), L-Carnitine (2g), Green Tea Extract (500mg)",
+          "sortKey": 410,
+          "block": "morning"
+        },
+        {
+          "id": 4,
+          "cat": "nutrition",
+          "time": "7:00 AM",
+          "title": "Breakfast",
+          "sub": "Greek yogurt parfait: 1 cup yogurt, ¼ cup granola, berries, honey drizzle · 310 cal · 26P/35C/8F — Running: 310/1700 cal",
+          "sortKey": 420,
+          "block": "morning"
+        },
+        {
+          "id": 26,
+          "cat": "credit",
+          "time": "9:00 AM",
+          "title": "💳 5/24 Slot Opening Soon",
+          "sub": "A card falls off 5/24 in 19 days. Plan your next application.",
+          "sortKey": 540,
+          "block": "work"
+        },
+        {
+          "id": 5,
+          "cat": "nutrition",
+          "time": "10:00 AM",
+          "title": "Snack",
+          "sub": "Turkey roll-ups (3oz turkey, mustard, lettuce) · 130 cal · 18P/3C/4F — Running: 440/1700 cal",
+          "sortKey": 600,
+          "block": "work"
+        },
+        {
+          "id": 6,
+          "cat": "nutrition",
+          "time": "12:30 PM",
+          "title": "Lunch",
+          "sub": "Chicken Caesar salad (6oz chicken), romaine, parmesan, light Caesar · 400 cal · 44P/12C/18F — Running: 840/1700 cal",
+          "sortKey": 750,
+          "block": "work"
+        },
+        {
+          "id": 9,
+          "cat": "supplement",
+          "time": "2:00 PM",
+          "title": "Hydration Check",
+          "sub": "54oz+ by now (of 90oz daily). Add electrolytes if training later.",
+          "sortKey": 840,
+          "block": "midday"
+        },
+        {
+          "id": 25,
+          "cat": "income",
+          "time": "3:00 PM",
+          "title": "On-Site Mentions",
+          "sub": "Mention referral program to today's customers",
+          "sortKey": 900,
+          "block": "midday"
+        },
+        {
+          "id": 7,
+          "cat": "nutrition",
+          "time": "3:30 PM",
+          "title": "Snack",
+          "sub": "Protein shake + ½ banana · 200 cal · 30P/18C/2F — Running: 1040/1700 cal",
+          "sortKey": 930,
+          "block": "midday"
+        },
+        {
+          "id": 10,
+          "cat": "training",
+          "time": "5:00 PM",
+          "title": "\\u{1F525} HIIT + Upper",
+          "sub": "45 min session · 🟢 RECOVERY",
+          "sortKey": 1020,
+          "block": "training"
+        },
+        {
+          "id": 11,
+          "cat": "training",
+          "time": "5:05 PM",
+          "title": "Warm-up",
+          "sub": "5 min row + band pull-aparts",
+          "sortKey": 1025,
+          "block": "training"
+        },
+        {
+          "id": 12,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Battle Ropes",
+          "sub": "3×30s on/30s off · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 13,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Push Press",
+          "sub": "3×10 · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 14,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Pull-ups",
+          "sub": "3×8-10 · Rest 45s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 15,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Dips",
+          "sub": "2×12 · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 16,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Renegade Rows",
+          "sub": "2×10/arm · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 17,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Ball Slams",
+          "sub": "2×12 · Rest 30s — First time! Start light, focus on form.",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 18,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Lateral Raises",
+          "sub": "2×15 · Rest 30s — Light weight, controlled — side delt isolation",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 19,
+          "cat": "training",
+          "time": "5:15 PM",
+          "title": "Face Pulls",
+          "sub": "2×15 · Rest 30s — Pull to forehead, elbows high — rear delt and rotator cuff health",
+          "sortKey": 1035,
+          "block": "training"
+        },
+        {
+          "id": 20,
+          "cat": "training",
+          "time": "6:00 PM",
+          "title": "Cool Down",
+          "sub": "5 min walk + shoulder stretches",
+          "sortKey": 1080,
+          "block": "training"
+        },
+        {
+          "id": 21,
+          "cat": "nutrition",
+          "time": "6:15 PM",
+          "title": "Post-Workout Shake",
+          "sub": "1 scoop whey (25g protein) + 5g creatine + water/ice within 30 min",
+          "sortKey": 1095,
+          "block": "training"
+        },
+        {
+          "id": 8,
+          "cat": "nutrition",
+          "time": "6:30 PM",
+          "title": "Dinner",
+          "sub": "Cod fillet (6oz) baked, asparagus, lemon, ½ cup couscous · 400 cal · 42P/28C/8F — Running: 1440/1700 cal",
+          "sortKey": 1110,
+          "block": "training"
+        },
+        {
+          "id": 22,
+          "cat": "supplement",
+          "time": "9:00 PM",
+          "title": "Evening Supplements",
+          "sub": "Magnesium Glycinate (400mg), ZMA (Zinc 30mg + Mag + B6), Ashwagandha (600mg KSM-66)",
+          "sortKey": 1260,
+          "block": "evening"
+        },
+        {
+          "id": 23,
+          "cat": "evening",
+          "time": "9:30 PM",
+          "title": "Wind Down",
+          "sub": "Blue light glasses on. Dim lights to 30%. 10 min reading or breathwork. Room temp to 65-68°F.",
+          "sortKey": 1290,
+          "block": "evening"
+        },
+        {
+          "id": 24,
+          "cat": "evening",
+          "time": "10:00 PM",
+          "title": "Lights Out",
+          "sub": "7.5-8.5 hours sleep for recovery & GH release. Phone on airplane mode. Blackout curtains.",
+          "sortKey": 1320,
+          "block": "evening"
+        }
+      ]
+    }
+  }
+]

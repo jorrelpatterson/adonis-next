@@ -1,0 +1,1748 @@
+[
+  {
+    "label": "GOAL_MAP constant (full characterization)",
+    "output": {
+      "Fat Loss": [
+        "Fat Loss",
+        "Weight Management",
+        "Growth Hormone"
+      ],
+      "Muscle Gain": [
+        "Growth Hormone",
+        "Recovery"
+      ],
+      "Recomposition": [
+        "Growth Hormone",
+        "Recovery",
+        "Fat Loss"
+      ],
+      "Aesthetics": [
+        "Skin & Recovery",
+        "Growth Hormone",
+        "Recovery",
+        "Longevity"
+      ],
+      "Anti-Aging": [
+        "Longevity",
+        "Skin & Recovery",
+        "Growth Hormone",
+        "Sleep"
+      ],
+      "Cognitive": [
+        "Cognitive",
+        "Recovery",
+        "Immune"
+      ],
+      "Hormonal": [
+        "Hormonal",
+        "Growth Hormone",
+        "Recovery",
+        "Sleep"
+      ],
+      "Wellness": [
+        "Recovery",
+        "Wellness",
+        "Longevity",
+        "Immune",
+        "Sleep"
+      ]
+    }
+  },
+  {
+    "label": "empty peptide list — all tiers empty, zero sums",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [],
+        "retail": 0,
+        "price": 0,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [],
+        "retail": 0,
+        "price": 0,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [],
+        "retail": 0,
+        "price": 0,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "single peptide — ess=opt=full",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 55,
+        "price": 44,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 55,
+        "price": 40,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 55,
+        "price": 36,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "exactly three peptides — Essentials boundary",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 199,
+        "price": 159,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 199,
+        "price": 143,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 199,
+        "price": 129,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "six peptides — Optimized boundary (opt === full)",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 233,
+        "price": 186,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          },
+          {
+            "id": 6,
+            "name": "Ipamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 45,
+            "margin": 38,
+            "desc": "Ipamorelin 10mg — test fixture",
+            "goals": [
+              "Muscle Gain",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "IPAMOR",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 382,
+        "price": 275,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          },
+          {
+            "id": 6,
+            "name": "Ipamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 45,
+            "margin": 38,
+            "desc": "Ipamorelin 10mg — test fixture",
+            "goals": [
+              "Muscle Gain",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "IPAMOR",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 382,
+        "price": 248,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "nine peptides incl. price ties — ess 3 / opt 6 / full 9",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 233,
+        "price": 186,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 9,
+            "name": "Semax 10mg",
+            "size": "10mg",
+            "cat": "Cognitive",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semax 10mg — test fixture",
+            "goals": [
+              "Cognitive"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAX1",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 392,
+        "price": 282,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 9,
+            "name": "Semax 10mg",
+            "size": "10mg",
+            "cat": "Cognitive",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semax 10mg — test fixture",
+            "goals": [
+              "Cognitive"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAX1",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          },
+          {
+            "id": 7,
+            "name": "NAD+ 500mg",
+            "size": "10mg",
+            "cat": "Longevity",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "NAD+ 500mg — test fixture",
+            "goals": [
+              "Anti-Aging",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "NAD500",
+            "orderUrl": "#"
+          },
+          {
+            "id": 6,
+            "name": "Ipamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 45,
+            "margin": 38,
+            "desc": "Ipamorelin 10mg — test fixture",
+            "goals": [
+              "Muscle Gain",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "IPAMOR",
+            "orderUrl": "#"
+          },
+          {
+            "id": 8,
+            "name": "GHK-Cu 100mg",
+            "size": "10mg",
+            "cat": "Skin & Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 39,
+            "margin": 33,
+            "desc": "GHK-Cu 100mg — test fixture",
+            "goals": [
+              "Aesthetics",
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "GHKCU1",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 525,
+        "price": 341,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "Fat Loss goal via GOAL_MAP cat filter (4 matches)",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 199,
+        "price": 159,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 6,
+            "name": "Ipamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 45,
+            "margin": 38,
+            "desc": "Ipamorelin 10mg — test fixture",
+            "goals": [
+              "Muscle Gain",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "IPAMOR",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 244,
+        "price": 176,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 2,
+            "name": "Tesamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 79,
+            "margin": 67,
+            "desc": "Tesamorelin 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TESAMO",
+            "orderUrl": "#"
+          },
+          {
+            "id": 3,
+            "name": "AOD-9604",
+            "size": "10mg",
+            "cat": "Fat Loss",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 65,
+            "margin": 55,
+            "desc": "AOD-9604 — test fixture",
+            "goals": [
+              "Fat Loss"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "AOD960",
+            "orderUrl": "#"
+          },
+          {
+            "id": 1,
+            "name": "Semaglutide 10mg",
+            "size": "10mg",
+            "cat": "Weight Management",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semaglutide 10mg — test fixture",
+            "goals": [
+              "Fat Loss",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAGL",
+            "orderUrl": "#"
+          },
+          {
+            "id": 6,
+            "name": "Ipamorelin 10mg",
+            "size": "10mg",
+            "cat": "Growth Hormone",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 45,
+            "margin": 38,
+            "desc": "Ipamorelin 10mg — test fixture",
+            "goals": [
+              "Muscle Gain",
+              "Anti-Aging"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "IPAMOR",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 244,
+        "price": 159,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  },
+  {
+    "label": "Cognitive goal via GOAL_MAP cat filter (3 matches)",
+    "output": [
+      {
+        "tier": "Essentials",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 9,
+            "name": "Semax 10mg",
+            "size": "10mg",
+            "cat": "Cognitive",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semax 10mg — test fixture",
+            "goals": [
+              "Cognitive"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAX1",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 193,
+        "price": 154,
+        "color": "#D4C4AA",
+        "desc": "Core peptides for your primary goal"
+      },
+      {
+        "tier": "Optimized",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 9,
+            "name": "Semax 10mg",
+            "size": "10mg",
+            "cat": "Cognitive",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semax 10mg — test fixture",
+            "goals": [
+              "Cognitive"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAX1",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 193,
+        "price": 139,
+        "color": "#E8D5B7",
+        "desc": "Full support across your goals",
+        "popular": true
+      },
+      {
+        "tier": "Full Protocol",
+        "peptides": [
+          {
+            "id": 5,
+            "name": "TB-500 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 89,
+            "margin": 76,
+            "desc": "TB-500 10mg — test fixture",
+            "goals": [
+              "Recovery"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "TB5001",
+            "orderUrl": "#"
+          },
+          {
+            "id": 9,
+            "name": "Semax 10mg",
+            "size": "10mg",
+            "cat": "Cognitive",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 55,
+            "margin": 47,
+            "desc": "Semax 10mg — test fixture",
+            "goals": [
+              "Cognitive"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "SEMAX1",
+            "orderUrl": "#"
+          },
+          {
+            "id": 4,
+            "name": "BPC-157 10mg",
+            "size": "10mg",
+            "cat": "Recovery",
+            "dose": "Per protocol",
+            "timing": "AM",
+            "dur": "8-12 wks",
+            "cycleDays": 56,
+            "freq": "daily",
+            "tod": "morning",
+            "premium": false,
+            "price": 49,
+            "margin": 42,
+            "desc": "BPC-157 10mg — test fixture",
+            "goals": [
+              "Recovery",
+              "Wellness"
+            ],
+            "vendor": "Eve",
+            "vendorSku": "BPC157",
+            "orderUrl": "#"
+          }
+        ],
+        "retail": 193,
+        "price": 125,
+        "color": "#B8C4D0",
+        "desc": "Complete stack + priority shipping + practitioner consult"
+      }
+    ]
+  }
+]

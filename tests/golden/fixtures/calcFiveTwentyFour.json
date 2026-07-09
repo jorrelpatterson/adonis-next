@@ -1,0 +1,30 @@
+[
+  {
+    "label": "empty wallet -> 0",
+    "output": 0
+  },
+  {
+    "label": "one recent counting card -> 1",
+    "output": 1
+  },
+  {
+    "label": "under 5/24: three recent counting, one older than 24 months",
+    "output": 3
+  },
+  {
+    "label": "exactly at 5/24: five recent counting cards",
+    "output": 5
+  },
+  {
+    "label": "over 5/24: six recent counting plus old cards",
+    "output": 6
+  },
+  {
+    "label": "recent cards with countsFor524=false (biz cards) are excluded",
+    "output": 1
+  },
+  {
+    "label": "all cards older than 24 months -> 0",
+    "output": 0
+  }
+]

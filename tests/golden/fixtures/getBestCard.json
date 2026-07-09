@@ -1,0 +1,170 @@
+[
+  {
+    "label": "empty wallet -> null",
+    "output": null
+  },
+  {
+    "label": "dining: amexgold 4x beats cfu 3x",
+    "output": {
+      "cardId": "amexgold",
+      "openDate": "2025-01-01",
+      "spent": 0,
+      "card": {
+        "id": "amexgold",
+        "name": "Amex Gold",
+        "issuer": "Amex",
+        "network": "Amex",
+        "af": 250,
+        "bonus": 60000,
+        "bonusCur": "MR",
+        "bonusVal": 720,
+        "minSpend": 6000,
+        "minDays": 180,
+        "cats": {
+          "grocery": 4,
+          "dining": 4,
+          "travel": 3,
+          "other": 1
+        },
+        "fivetwentyfour": false,
+        "rec": "Best grocery/dining card. 4x on both. $120 dining + $120 Uber credits offset AF.",
+        "tier": "starter",
+        "refUrl": "#",
+        "refPayout": 150
+      },
+      "rate": 4
+    }
+  },
+  {
+    "label": "grocery: bcp 6x beats amexgold 4x and csp 1x",
+    "output": {
+      "cardId": "bcp",
+      "openDate": "2025-01-01",
+      "spent": 0,
+      "card": {
+        "id": "bcp",
+        "name": "Amex Blue Cash Preferred",
+        "issuer": "Amex",
+        "network": "Amex",
+        "af": 95,
+        "bonus": 350,
+        "bonusCur": "cash",
+        "bonusVal": 350,
+        "minSpend": 3000,
+        "minDays": 180,
+        "cats": {
+          "grocery": 6,
+          "streaming": 6,
+          "transit": 3,
+          "gas": 3,
+          "other": 1
+        },
+        "fivetwentyfour": false,
+        "rec": "Best cashback grocery card. 6% grocery ($6k/yr), 6% streaming. Simple.",
+        "tier": "starter",
+        "refUrl": "#",
+        "refPayout": 100
+      },
+      "rate": 6
+    }
+  },
+  {
+    "label": "travel tie at 10x: csr wins over venture_x by wallet order (strict >)",
+    "output": {
+      "cardId": "csr",
+      "openDate": "2025-01-01",
+      "spent": 0,
+      "card": {
+        "id": "csr",
+        "name": "Chase Sapphire Reserve",
+        "issuer": "Chase",
+        "network": "Visa",
+        "af": 550,
+        "bonus": 60000,
+        "bonusCur": "UR",
+        "bonusVal": 900,
+        "minSpend": 4000,
+        "minDays": 90,
+        "cats": {
+          "travel": 10,
+          "dining": 3,
+          "streaming": 3,
+          "grocery": 1,
+          "gas": 1,
+          "other": 1
+        },
+        "fivetwentyfour": true,
+        "rec": "Premium travel. 10x hotels/car via portal, $300 travel credit, Priority Pass. Points worth 1.5cpp in portal.",
+        "tier": "premium",
+        "refUrl": "#",
+        "refPayout": 150
+      },
+      "rate": 10
+    }
+  },
+  {
+    "label": "category missing from cats falls back to cats.other: flights -> venture_x other=2 beats csp other=1",
+    "output": {
+      "cardId": "venture_x",
+      "openDate": "2025-01-01",
+      "spent": 0,
+      "card": {
+        "id": "venture_x",
+        "name": "Capital One Venture X",
+        "issuer": "Capital One",
+        "network": "Visa",
+        "af": 395,
+        "bonus": 75000,
+        "bonusCur": "miles",
+        "bonusVal": 750,
+        "minSpend": 4000,
+        "minDays": 90,
+        "cats": {
+          "travel": 10,
+          "other": 2
+        },
+        "fivetwentyfour": false,
+        "rec": "$300 travel portal credit + 10k anniversary bonus = effectively $0 AF. 10x travel portal, 2x everything.",
+        "tier": "premium",
+        "refUrl": "#",
+        "refPayout": 125
+      },
+      "rate": 2
+    }
+  },
+  {
+    "label": "unknown cardId is skipped; only unknowns -> null",
+    "output": null
+  },
+  {
+    "label": "unknown card skipped but known card still wins",
+    "output": {
+      "cardId": "discover",
+      "openDate": "2025-01-01",
+      "spent": 0,
+      "card": {
+        "id": "discover",
+        "name": "Discover it",
+        "issuer": "Discover",
+        "network": "Discover",
+        "af": 0,
+        "bonus": 0,
+        "bonusCur": "cash",
+        "bonusVal": 0,
+        "minSpend": 0,
+        "minDays": 0,
+        "cats": {
+          "rotating": 5,
+          "other": 1
+        },
+        "matchFirst": true,
+        "fivetwentyfour": false,
+        "rec": "Rotating 5% ($1500/qtr) + first year cash back match (effectively 10%). Great first card.",
+        "tier": "starter",
+        "refUrl": "#",
+        "refPayout": 50
+      },
+      "rate": 1
+    }
+  }
+]

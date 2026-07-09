@@ -1,0 +1,112 @@
+[
+  {
+    "label": "empty checkins — early-return info prompt",
+    "output": [
+      {
+        "type": "info",
+        "text": "Log at least 3 days of check-ins to unlock personalized insights.",
+        "icon": "📊"
+      }
+    ]
+  },
+  {
+    "label": "two checkins only — still below 3-day threshold",
+    "output": [
+      {
+        "type": "info",
+        "text": "Log at least 3 days of check-ins to unlock personalized insights.",
+        "icon": "📊"
+      }
+    ]
+  },
+  {
+    "label": "all metrics mid-range, no food logs — stable fallback",
+    "output": [
+      {
+        "type": "success",
+        "text": "All metrics stable. Keep logging for deeper insights.",
+        "icon": "✅"
+      }
+    ]
+  },
+  {
+    "label": "rough week — every warning branch (energy/sleep/mood/stress/focus/appetite); 2 food days ignored",
+    "output": [
+      {
+        "type": "warning",
+        "text": "Energy trending down. Consider CJC-1295/Ipamorelin or review caloric intake.",
+        "icon": "🔋"
+      },
+      {
+        "type": "warning",
+        "text": "Sleep below baseline. DSIP or MK-677 before bed may help.",
+        "icon": "😴"
+      },
+      {
+        "type": "warning",
+        "text": "Mood below baseline. Selank may help. Check protein and omega-3 intake.",
+        "icon": "😔"
+      },
+      {
+        "type": "warning",
+        "text": "Stress elevated. Selank and magnesium glycinate recommended.",
+        "icon": "😰"
+      },
+      {
+        "type": "warning",
+        "text": "Mental clarity low. Dihexa or Selank may help. Check hydration.",
+        "icon": "🌫️"
+      },
+      {
+        "type": "info",
+        "text": "Appetite elevated. Semaglutide or 5-Amino-1MQ can help manage hunger.",
+        "icon": "🍽️"
+      }
+    ]
+  },
+  {
+    "label": "dialed in — energy+mood success, ample food logs suppress food insights",
+    "output": [
+      {
+        "type": "success",
+        "text": "Energy and mood are excellent — your protocol is dialed in.",
+        "icon": "🔥"
+      }
+    ]
+  },
+  {
+    "label": "sparse checkins — only mood recorded (low), other averages null-skipped",
+    "output": [
+      {
+        "type": "warning",
+        "text": "Mood below baseline. Selank may help. Check protein and omega-3 intake.",
+        "icon": "😔"
+      }
+    ]
+  },
+  {
+    "label": "undereating — 3 food days low-cal AND low-protein, mid checkins",
+    "output": [
+      {
+        "type": "warning",
+        "text": "Averaging 320 cal — likely insufficient.",
+        "icon": "⚠️"
+      },
+      {
+        "type": "info",
+        "text": "Protein low (~6g/day). Aim for 0.8-1g/lb.",
+        "icon": "🥩"
+      }
+    ]
+  },
+  {
+    "label": "recency window — 3 rough days then 7 mid days: slice(-7) sees only mid",
+    "output": [
+      {
+        "type": "success",
+        "text": "All metrics stable. Keep logging for deeper insights.",
+        "icon": "✅"
+      }
+    ]
+  }
+]

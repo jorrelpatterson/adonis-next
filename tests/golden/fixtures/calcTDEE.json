@@ -1,0 +1,34 @@
+[
+  {
+    "label": "desk (1.2)",
+    "output": 2160
+  },
+  {
+    "label": "moderate (1.4)",
+    "output": 2520
+  },
+  {
+    "label": "physical (1.6)",
+    "output": 2880
+  },
+  {
+    "label": "sedentary (1.2)",
+    "output": 2160
+  },
+  {
+    "label": "light (1.375)",
+    "output": 2475
+  },
+  {
+    "label": "active (1.725)",
+    "output": 3105
+  },
+  {
+    "label": "very_active (1.9)",
+    "output": 3420
+  },
+  {
+    "label": "unknown activity falls back to 1.3",
+    "output": 2340
+  }
+]

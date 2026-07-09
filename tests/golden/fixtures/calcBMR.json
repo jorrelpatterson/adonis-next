@@ -1,0 +1,26 @@
+[
+  {
+    "label": "male typical (180lb, 70in, 30y)",
+    "output": 1782.7156
+  },
+  {
+    "label": "female typical (140lb, 65in, 28y)",
+    "output": 1365.9038
+  },
+  {
+    "label": "male older heavier (220lb, 74in, 55y)",
+    "output": 1902.6524
+  },
+  {
+    "label": "female lighter younger (115lb, 62in, 21y)",
+    "output": 1239.8808
+  },
+  {
+    "label": "non-male gender string falls into female branch",
+    "output": 1616.7156
+  },
+  {
+    "label": "zero-ish edge (0lb, 0in, 0y, male)",
+    "output": 5
+  }
+]

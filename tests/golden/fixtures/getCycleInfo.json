@@ -1,0 +1,188 @@
+[
+  {
+    "label": "null cycleData returns null",
+    "output": null
+  },
+  {
+    "label": "enabled but missing lastPeriod returns null",
+    "output": null
+  },
+  {
+    "label": "disabled with lastPeriod returns null",
+    "output": null
+  },
+  {
+    "label": "menstrual phase day 3",
+    "output": {
+      "dayInCycle": 3,
+      "cycleLen": 28,
+      "phase": {
+        "id": "menstrual",
+        "name": "Menstrual",
+        "days": [
+          1,
+          5
+        ],
+        "icon": "🔴",
+        "color": "#EF4444",
+        "calMod": 0,
+        "intensityMod": "recovery",
+        "training": "Focus on light movement, yoga, walking. Energy is lowest — honor recovery.",
+        "nutrition": "Iron-rich foods, hydration. Cravings normal — don't restrict too hard.",
+        "supplements": "Iron, Magnesium, Omega-3, Vitamin C",
+        "mood": "Energy and mood lowest. Self-compassion > discipline."
+      },
+      "daysUntilPeriod": 26,
+      "nextPeriod": "2026-08-02T12:00:00.000Z",
+      "isLateLuteal": false,
+      "waterRetention": 1.5,
+      "daysSincePeriod": 2,
+      "scale": 1
+    }
+  },
+  {
+    "label": "follicular phase day 8",
+    "output": {
+      "dayInCycle": 8,
+      "cycleLen": 28,
+      "phase": {
+        "id": "follicular",
+        "name": "Follicular",
+        "days": [
+          6,
+          13
+        ],
+        "icon": "🟢",
+        "color": "#34D399",
+        "calMod": 0,
+        "intensityMod": "high",
+        "training": "Peak performance window. Go heavy — PRs, high volume, HIIT. Estrogen rising = stronger recovery.",
+        "nutrition": "Higher carb tolerance. Fuel for performance.",
+        "supplements": "B-Complex, CoQ10, Creatine",
+        "mood": "Energy, confidence, motivation peak. Best window for hard sessions."
+      },
+      "daysUntilPeriod": 21,
+      "nextPeriod": "2026-08-02T12:00:00.000Z",
+      "isLateLuteal": false,
+      "waterRetention": 0,
+      "daysSincePeriod": 7,
+      "scale": 1
+    }
+  },
+  {
+    "label": "ovulatory phase day 15",
+    "output": {
+      "dayInCycle": 15,
+      "cycleLen": 28,
+      "phase": {
+        "id": "ovulatory",
+        "name": "Ovulatory",
+        "days": [
+          14,
+          16
+        ],
+        "icon": "⚡",
+        "color": "#FBBF24",
+        "calMod": 50,
+        "intensityMod": "normal",
+        "training": "Still strong but ligament laxity elevated. Maintain intensity, focus form.",
+        "nutrition": "Balanced macros. Anti-inflammatory foods.",
+        "supplements": "DIM, Calcium D-Glucarate, Zinc",
+        "mood": "Social energy and verbal fluency peak."
+      },
+      "daysUntilPeriod": 14,
+      "nextPeriod": "2026-07-23T12:00:00.000Z",
+      "isLateLuteal": false,
+      "waterRetention": 0,
+      "daysSincePeriod": 14,
+      "scale": 1
+    }
+  },
+  {
+    "label": "early luteal day 18 (waterRetention, not late)",
+    "output": {
+      "dayInCycle": 18,
+      "cycleLen": 28,
+      "phase": {
+        "id": "luteal",
+        "name": "Luteal",
+        "days": [
+          17,
+          28
+        ],
+        "icon": "🟡",
+        "color": "#F59E0B",
+        "calMod": 150,
+        "intensityMod": "normal",
+        "training": "Early: moderate intensity. Late (PMS): deload, reduce volume 20-30%.",
+        "nutrition": "BMR +100-300 cal/day. Increase healthy fats, complex carbs. Magnesium for cramps.",
+        "supplements": "Magnesium Glycinate, B6, Evening Primrose Oil, Calcium",
+        "mood": "Progesterone rises then drops. PMS days 24-28. Plan lighter workload."
+      },
+      "daysUntilPeriod": 11,
+      "nextPeriod": "2026-07-20T12:00:00.000Z",
+      "isLateLuteal": false,
+      "waterRetention": 0.3,
+      "daysSincePeriod": 17,
+      "scale": 1
+    }
+  },
+  {
+    "label": "late luteal day 26 (isLateLuteal true)",
+    "output": {
+      "dayInCycle": 26,
+      "cycleLen": 28,
+      "phase": {
+        "id": "luteal",
+        "name": "Luteal",
+        "days": [
+          17,
+          28
+        ],
+        "icon": "🟡",
+        "color": "#F59E0B",
+        "calMod": 150,
+        "intensityMod": "normal",
+        "training": "Early: moderate intensity. Late (PMS): deload, reduce volume 20-30%.",
+        "nutrition": "BMR +100-300 cal/day. Increase healthy fats, complex carbs. Magnesium for cramps.",
+        "supplements": "Magnesium Glycinate, B6, Evening Primrose Oil, Calcium",
+        "mood": "Progesterone rises then drops. PMS days 24-28. Plan lighter workload."
+      },
+      "daysUntilPeriod": 3,
+      "nextPeriod": "2026-07-12T12:00:00.000Z",
+      "isLateLuteal": true,
+      "waterRetention": 2.3,
+      "daysSincePeriod": 25,
+      "scale": 1
+    }
+  },
+  {
+    "label": "35-day cycle wraparound day 35, today omitted (pinned clock)",
+    "output": {
+      "dayInCycle": 35,
+      "cycleLen": 35,
+      "phase": {
+        "id": "luteal",
+        "name": "Luteal",
+        "days": [
+          17,
+          28
+        ],
+        "icon": "🟡",
+        "color": "#F59E0B",
+        "calMod": 150,
+        "intensityMod": "normal",
+        "training": "Early: moderate intensity. Late (PMS): deload, reduce volume 20-30%.",
+        "nutrition": "BMR +100-300 cal/day. Increase healthy fats, complex carbs. Magnesium for cramps.",
+        "supplements": "Magnesium Glycinate, B6, Evening Primrose Oil, Calcium",
+        "mood": "Progesterone rises then drops. PMS days 24-28. Plan lighter workload."
+      },
+      "daysUntilPeriod": 1,
+      "nextPeriod": "2026-06-05T12:00:00.000Z",
+      "isLateLuteal": true,
+      "waterRetention": 2.8,
+      "daysSincePeriod": 69,
+      "scale": 1.25
+    }
+  }
+]
