@@ -98,6 +98,32 @@ Each phase is one working session (plan → build → review), ends with tests g
 - **Phase close:** targeted diff of that phase's shared files against `v2-revival-archive` to catch polish buried in the 81 shared files.
 - **Pre-cutover:** end-to-end run of the full Definition of Done (all 10 items + subscriber wiring) on production, real device — sound/haptics don't reproduce on desktop.
 
+### Addendum 2026-07-09 — v1 parity & UI-survival gates
+
+The above verifies against the revival archive and the DoD, but nothing verified against **v1
+(`public/app.html`) — where the actual shipped product behavior lives**. Four additional gates,
+effective Phase 2 onward:
+
+1. **v1 feature-parity ledger** (`docs/v1-feature-parity-ledger.md`, built from
+   `docs/v1-app-feature-inventory.md`): every v1 feature carries an explicit ruling —
+   port / adapt / defer / drop — and an owning phase. Phase close requires that phase's rows
+   resolved; ruling changes are edited into the ledger with a dated note. Silent drops are a
+   process violation, deliberate cuts are recorded decisions.
+2. **Characterization (golden) tests** for every pure-logic v1 engine being ported (rows tagged 🧪
+   in the ledger): v1 function copied verbatim into `tests/golden/v1/` with provenance header,
+   fixture outputs snapshotted, v2 module must reproduce them; intentional divergence is a
+   documented exception in the test.
+3. **Screenshot baseline** (`scripts/screenshot-baseline.sh`): at each phase close, shoot every
+   reachable screen at phone viewport into `docs/visual-baselines/phase-N/` and compare against
+   the prior phase's set — catches integration-level UI regressions the file-level archive diff
+   cannot. Until Phase 2 replaces the personal Google-only auth gate, only the gate screen is
+   reachable headlessly; **Phase 2 must ship a dev-only auth bypass or seeded test session** so
+   the shooter can reach inner screens from then on.
+4. **Per-screen design contract:** every new screen's task checklist includes — H header (with
+   eyebrow where appropriate), theme tokens only (no ad-hoc colors), `animations.css` classes for
+   transitions, Skeleton for loading, EmptyState for zero-data, Toast for confirmations. Enforced
+   at task review, not discovered at QA.
+
 ## Risks
 
 | Risk | Mitigation |
