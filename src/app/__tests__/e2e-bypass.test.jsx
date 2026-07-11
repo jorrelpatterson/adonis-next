@@ -47,6 +47,17 @@ describe('App dev/E2E bypass', () => {
     expect(queryByText('Tell us about you')).toBeFalsy();
   });
 
+  it('?e2e=1&tab=home (signed-out) skips auth+onboarding, lands on the home tab (Task 13 default)', async () => {
+    useAuth.mockReturnValue({ user: null, tier: 'free', loading: false, signOut: vi.fn() });
+    setSearch('?e2e=1&tab=home');
+
+    const { container, queryByText } = renderApp();
+
+    await waitFor(() => expect(container.querySelector('[data-testid="home-dashboard"]')).toBeTruthy());
+    expect(queryByText('Welcome back')).toBeFalsy();
+    expect(queryByText('Tell us about you')).toBeFalsy();
+  });
+
   it('?screen=auth forces AuthScreen despite an empty (incomplete) profile', () => {
     useAuth.mockReturnValue({ user: null, tier: 'free', loading: false, signOut: vi.fn() });
     setSearch('?screen=auth');

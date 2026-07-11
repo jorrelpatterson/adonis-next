@@ -66,11 +66,15 @@ describe('App funnel gate', () => {
     expect(queryByText('Routine')).toBeFalsy();
   });
 
-  it('complete profile + signed-in user renders the tab shell (Routine tab)', () => {
+  it('complete profile + signed-in user renders the tab shell (Home tab, the default landing tab)', () => {
+    // Task 13: default landing tab is now 'home' (HomeDashboard), not
+    // 'routine' — assert via the dashboard's test id rather than matching
+    // on the text "Routine", which now also appears as a stat-tile label
+    // inside HomeDashboard itself (in addition to the TabNav tab).
     useAuth.mockReturnValue({ user: { id: 'u1' }, tier: 'free', loading: false, signOut: vi.fn() });
-    const { getByText, queryByText } = renderApp(COMPLETE_PROFILE);
+    const { container, queryByText } = renderApp(COMPLETE_PROFILE);
 
-    expect(getByText('Routine')).toBeTruthy();
+    expect(container.querySelector('[data-testid="home-dashboard"]')).toBeTruthy();
     expect(queryByText('Welcome back')).toBeFalsy();
     expect(queryByText('Tell us about you')).toBeFalsy();
   });

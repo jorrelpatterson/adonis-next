@@ -11,8 +11,9 @@
 // loadState() only survives because it's try/catch-wrapped internally).
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import React, { useEffect } from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, fireEvent } from '@testing-library/react';
 import { StateProvider, useAppState } from '../../state/store';
+import { CHECKIN_FIELDS } from '../../state/checkin.js';
 import App from '../App';
 
 vi.mock('../../services/useAuth.js', () => ({
@@ -30,6 +31,16 @@ function Seed() {
     replaceState({ profile: COMPLETE_PROFILE });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  return null;
+}
+
+// Exposes the live store state to the test via a mutable box — used by the
+// Task 13 check-in test below to assert on logs.checkins after a save.
+function StateSpy({ box }) {
+  const { state } = useAppState();
+  useEffect(() => {
+    box.current = state;
+  });
   return null;
 }
 
@@ -62,5 +73,49 @@ describe('App shell', () => {
     const contentIdx = kids.findIndex((el) => el.style.zIndex === '2');
     expect(firstBackdropIdx).toBe(0);           // backdrop is the first thing rendered
     expect(contentIdx).toBeGreaterThan(firstBackdropIdx); // content sits above it
+  });
+});
+
+describe('Task 13: home tab + daily check-in', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('lands on the home tab (HomeDashboard) by default', () => {
+    const { container } = render(
+      <StateProvider>
+        <Seed />
+        <App />
+      </StateProvider>
+    );
+    expect(container.querySelector('[data-testid="home-dashboard"]')).toBeTruthy();
+  });
+
+  it('tapping the check-in card, rating all fields, and saving writes logs.checkins[today]', () => {
+    const box = { current: null };
+    const { container, getByText } = render(
+      <StateProvider>
+        <Seed />
+        <StateSpy box={box} />
+        <App />
+      </StateProvider>
+    );
+
+    // Open the modal from the Home dashboard's check-in card.
+    fireEvent.click(container.querySelector('[data-testid="checkin-card"]'));
+
+    // Rate every field's first (lowest) option so allRated flips true.
+    for (const field of CHECKIN_FIELDS) {
+      fireEvent.click(container.querySelector(`[aria-label="${field.label} rating 1"]`));
+    }
+
+    fireEvent.click(getByText('Save'));
+
+    const today = new Date().toISOString().slice(0, 10);
+    const saved = box.current.logs.checkins[today];
+    expect(saved).toBeTruthy();
+    for (const field of CHECKIN_FIELDS) {
+      expect(saved[field.id]).toBe(1);
+    }
   });
 });

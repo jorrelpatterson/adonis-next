@@ -27,6 +27,7 @@ OUT_DIR="$REPO_ROOT/docs/visual-baselines/$LABEL"
 ROUTES=(
   "/?screen=onboarding|onboarding-step0"
   "/?screen=auth|auth"
+  "/?e2e=1&tab=home|home"
   "/?e2e=1&tab=routine|routine"
   "/?e2e=1&tab=body|body"
   "/?e2e=1&tab=profile|profile"

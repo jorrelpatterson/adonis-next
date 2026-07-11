@@ -6,8 +6,11 @@ import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
 import { DOMAINS, SUB_TIERS } from '../design/constants';
 import { buildDailyRoutine } from '../routine/pipeline';
+import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
 import { getAllProtocols } from '../protocols/registry';
 import GoalSetup from '../goals/GoalSetup';
+import HomeDashboard from '../routine/HomeDashboard';
+import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import RoutineView from '../routine/RoutineView';
 import WorkoutView from './views/WorkoutView';
 import TabNav from './TabNav';
@@ -33,12 +36,13 @@ export default function App() {
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
   const tierInfo = SUB_TIERS[profile.tier] || SUB_TIERS.free;
 
-  const [activeTab, setActiveTab] = useState('routine');
+  const [activeTab, setActiveTab] = useState('home');
   const [showGoalSetup, setShowGoalSetup] = useState(false);
   const [goalSetupDomain, setGoalSetupDomain] = useState(null);
   const [viewDay, setViewDay] = useState(new Date());
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
+  const [showCheckinModal, setShowCheckinModal] = useState(false);
 
   // ─── auth-gated funnel (spec decision 4: signup gate BEFORE protocol
   // delivery) — onboarding → signup → calculating → gameplan → app ────────
@@ -131,6 +135,17 @@ export default function App() {
   const todayKey = viewDay.toISOString().slice(0, 10);
   const completedTasks = (logs.routine && logs.routine[todayKey]) || [];
 
+  // Task 13: primaryGoal — same fallback chain WorkoutView/FoodLogger already
+  // use for computeAdaptive's goal param (profile.primary is the intended
+  // source of truth; protocolStates.workout.primary is the onboarding-time
+  // answer it's derived from). adaptive is memoized alongside the routine
+  // build below since both key off profile/logs.weight/today.
+  const primaryGoal = profile.primary || protocolStates.workout?.primary || 'Wellness';
+  const adaptive = useMemo(
+    () => computeAdaptive(profile, logs.weight, today, primaryGoal),
+    [profile, logs.weight, today, primaryGoal]
+  );
+
   const handleCheckTask = useCallback((taskId) => {
     const current = (logs.routine && logs.routine[todayKey]) || [];
     const updated = current.includes(taskId)
@@ -138,6 +153,13 @@ export default function App() {
       : [...current, taskId];
     log('routine', { ...logs.routine, [todayKey]: updated });
   }, [logs.routine, todayKey, log]);
+
+  // Task 13: Daily check-in save — writes today's ratings into logs.checkins
+  // keyed by today's date, then closes the modal (CheckinModal also
+  // auto-closes itself after its own "Got it" confirmation beat).
+  const handleSaveCheckin = useCallback((ratings) => {
+    log('checkins', { ...logs.checkins, [todayKey]: ratings });
+  }, [logs.checkins, todayKey, log]);
 
   const handleCreateGoal = useCallback((goal) => {
     // Prevent duplicate goals from same template
@@ -273,6 +295,17 @@ export default function App() {
             onCancel={() => { setShowGoalSetup(false); setGoalSetupDomain(null); }}
             profile={profile}
             initialDomain={goalSetupDomain}
+          />
+        ) : activeTab === 'home' ? (
+          <HomeDashboard
+            profile={profile}
+            logs={logs}
+            today={today}
+            routine={routine}
+            completedTasks={completedTasks}
+            adaptive={adaptive}
+            day={viewDay}
+            onCheckinTap={() => setShowCheckinModal(true)}
           />
         ) : activeTab === 'routine' ? (
           <div>
@@ -514,6 +547,15 @@ export default function App() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           domains={profile.domains || ['body']}
+        />
+      )}
+
+      {/* Daily Check-in modal (Task 13) — fixed-position overlay, mounted
+          alongside the tab content rather than replacing it. */}
+      {showCheckinModal && (
+        <CheckinModal
+          onSave={handleSaveCheckin}
+          onClose={() => setShowCheckinModal(false)}
         />
       )}
     </div>

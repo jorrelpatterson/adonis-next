@@ -4,6 +4,7 @@ import { P, FN } from '../design/theme';
 import { DOMAINS } from '../design/constants';
 
 const FIXED_TABS = [
+  { id: 'home', icon: '\u{1F3E0}', label: 'Home' },
   { id: 'routine', icon: '\u{1F4CB}', label: 'Routine' },
 ];
 
