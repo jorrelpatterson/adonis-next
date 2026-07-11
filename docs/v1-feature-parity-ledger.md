@@ -120,18 +120,18 @@ Findings recorded during extraction (parity decisions for the port):
 - [ ] Order history — **drop** with in-app commerce.
 - [ ] Data reset — **port** (soft reset, Phase 4).
 
-## Onboarding & Auth — Phase 2
+## Onboarding & Auth — Phase 2 ✅ (closed 2026-07-11, branch phase2-onboarding-auth-tiers)
 
-- [ ] v1 onboarding wizard (`view` landing/onboard 3119) — **adapt**: revival OnboardingFlow→Calculating→GamePlan is the successor. Parity bar: v1's domain-selection + goal questions all have a home in the new flow.
-- [ ] Optional/anonymous use — **drop**: signup required is locked decision 4.
-- [ ] Email+password auth (3043-3079) — **port** (Supabase Auth).
-- [ ] ⚠ Google OAuth (`authGoogle`) — **defer**: spec says email signup; add back post-MVP if signup friction shows. (Note: the current `src/` auth gate is Google-only and personal — Phase 2 replaces it wholesale.)
-- [ ] Cloud state sync (`user_data` cloudSave/cloudLoad 3083-3090) — **defer**: post-MVP #3. MVP is local-first + tier in user metadata (spec'd).
+- [x] v1 onboarding wizard (`view` landing/onboard 3119) — **adapt** DONE: revival OnboardingFlow→Calculating→GamePlan ported verbatim; per-protocol questions grafted into 11 main protocols; wizard driven end-to-end by test.
+- [x] Optional/anonymous use — **drop** DONE: funnel gates the shell on a session (`!user → AuthScreen`); no anonymous path to protocol delivery.
+- [x] Email+password auth (3043-3079) — **port** DONE: `src/services/auth.js` + `useAuth` + AuthScreen (email-only), signup gate opens in signup mode.
+- [x] ⚠ Google OAuth (`authGoogle`) — **defer** CONFIRMED: removed from service + UI with ledger-ref comment. (Correction to the old note: the Google-locked gate seen earlier was a different app on a shared dev port — main's `src/` had NO auth gate before Phase 2.)
+- [x] Cloud state sync (`user_data` cloudSave/cloudLoad 3083-3090) — **defer** CONFIRMED: local-first; only tier+code stamped to user metadata.
 
-## Tiers & payments
+## Tiers & payments (Phase 2 rows closed 2026-07-11)
 
-- [ ] Free/Pro/Elite gating (`TIERS` 668, `FREE_DOMAINS` 7600, `isLockedTab` 7606) — **adapt**: v2 model is Free-by-default, polished locked states, access-code unlock only (decision 5).
-- [ ] Stripe subscription links (`STRIPE_LINKS` 672) — **defer**: ported code stays dark; relights with post-MVP #1 (Bucket List + Stripe).
+- [x] Free/Pro/Elite gating (`TIERS` 668, `FREE_DOMAINS` 7600, `isLockedTab` 7606) — **adapt** DONE: Free default, access-code-only unlock (`FOUNDER`→elite, `ADONIS2026`→pro), code stamped to Supabase user metadata + no-downgrade restore on login; 🔒 Pro badges in onboarding; GamePlan free-tier upsell card is informational only.
+- [x] Stripe subscription links (`STRIPE_LINKS` 672) — **defer** CONFIRMED dark: `PAYMENTS_ENABLED=false`, `redirectToCheckout` throws, links preserved for post-MVP #1 relight; no UI path reaches it.
 
 ## PWA & shell — Phase 5
 
