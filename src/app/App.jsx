@@ -1,5 +1,5 @@
 // src/app/App.jsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useAppState } from '../state/store';
 import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
@@ -13,9 +13,16 @@ import WorkoutView from './views/WorkoutView';
 import TabNav from './TabNav';
 import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
+import { useAuth } from '../services/useAuth.js';
+import { isProfileIncomplete } from '../auth/ProfileSetup.jsx';
+import AuthScreen from '../auth/AuthScreen.jsx';
+import OnboardingFlow from '../onboarding/OnboardingFlow.jsx';
+import CalculatingScreen from '../onboarding/CalculatingScreen.jsx';
+import GamePlanScreen from '../onboarding/GamePlanScreen.jsx';
+import { buildInitialGoals } from '../onboarding/initial-goals.js';
 
 export default function App() {
-  const { state, addGoal, removeGoal, setProfile, log, updateGoal } = useAppState();
+  const { state, addGoal, removeGoal, setProfile, setProtocolState, log, updateGoal } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
   const tierInfo = SUB_TIERS[profile.tier] || SUB_TIERS.free;
 
@@ -25,6 +32,19 @@ export default function App() {
   const [viewDay, setViewDay] = useState(new Date());
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
+
+  // ─── auth-gated funnel (spec decision 4: signup gate BEFORE protocol
+  // delivery) — onboarding → signup → calculating → gameplan → app ────────
+  const { user, loading: authLoading } = useAuth();
+  const [funnel, setFunnel] = useState(null); // null = derive from profile/user; 'signup' | 'calculating' | 'gameplan' are transient stages
+
+  // Signup gate resolves (user just authenticated) → advance to calculating.
+  // This is a state transition, not a render-time decision, so it lives in
+  // an effect rather than `if (funnel === 'signup' && user) setFunnel(...)`
+  // during render (which would be a setState-during-render violation).
+  useEffect(() => {
+    if (funnel === 'signup' && user) setFunnel('calculating');
+  }, [funnel, user]);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -82,6 +102,36 @@ export default function App() {
   }, [accessCodeInput, setProfile]);
 
   const activeGoals = goals.filter(g => g.status === 'active');
+
+  const handleOnboardingComplete = (profileUpdates, protocolAnswers) => {
+    const answers = protocolAnswers || {};
+    const primary = answers.workout?.primary;
+    if (primary) profileUpdates.fitnessPillars = [primary];
+    setProfile(profileUpdates);
+    Object.entries(answers).forEach(([pid, data]) => setProtocolState(pid, data));
+    buildInitialGoals({ ...profile, ...profileUpdates }, answers).forEach(addGoal);
+    setFunnel('signup'); // signup gate BEFORE protocol delivery (spec decision 4)
+  };
+
+  // ─── funnel gate — resolves before the tab shell renders below ─────────
+  if (authLoading || (funnel === 'signup' && user)) {
+    return <BootSplash />;
+  }
+  if (funnel === 'signup' && !user) {
+    return <AuthScreen subheading="Create your account to unlock your game plan" />;
+  }
+  if (funnel === 'calculating') {
+    return <CalculatingScreen profile={profile} onComplete={() => setFunnel('gameplan')} />;
+  }
+  if (funnel === 'gameplan') {
+    return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => setFunnel(null)} />;
+  }
+  if (isProfileIncomplete(profile)) {
+    return <OnboardingFlow initialProfile={profile} onComplete={handleOnboardingComplete} />;
+  }
+  if (!user) {
+    return <AuthScreen />; // returning device, signed out
+  }
 
   return (
     <div className="adn-noise" style={{
@@ -374,6 +424,27 @@ export default function App() {
           domains={profile.domains || ['body']}
         />
       )}
+    </div>
+  );
+}
+
+// Minimal boot splash — shown while the auth session resolves, and during the
+// signup→calculating handoff so the user never sees an AuthScreen flash after
+// they've just authenticated. Phase-1-deferred boot splash lands here (Task 11).
+function BootSplash() {
+  return (
+    <div
+      data-testid="boot-splash"
+      className="adn-noise adn-reveal"
+      style={{
+        fontFamily: FN, background: P.bg, color: P.tx,
+        position: 'fixed', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+    >
+      <span style={{ fontFamily: FD, fontSize: 28, fontWeight: 300, fontStyle: 'italic' }}>
+        <GradText>Adonis</GradText>
+      </span>
     </div>
   );
 }
