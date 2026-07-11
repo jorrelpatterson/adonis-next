@@ -32,6 +32,7 @@ export default function WorkoutView({ fixedDayIdx }) {
 
   const setLog = useCallback((exName, setIdx, entry) => {
     const k = logKey(resolvedGoal, week, dayIdx, exName, setIdx);
+    const prev = wk.wkLogs?.[k];
     const nextLogs = { ...wk.wkLogs, [k]: entry };
     let nextPRs = wk.wkPRs;
     if (entry.c && entry.wt) {
@@ -39,13 +40,26 @@ export default function WorkoutView({ fixedDayIdx }) {
       const cur = nextPRs[pk] || 0;
       const w = Number(entry.wt) || 0;
       if (w > cur) {
+        // wkPRs record fires on EVERY qualifying edit (every keystroke while checked) —
+        // this is main's pre-existing PR-record behavior and SetGrid's badge depends on it.
+        // Do not gate this part.
         nextPRs = { ...nextPRs, [pk]: w };
-        setCelebration({ exercise: exName, weight: w, reps: entry.r });
-        const todayISO = new Date().toISOString().slice(0, 10);
-        log('exercise', [
-          ...(logs.exercise || []),
-          { date: todayISO, exercise: exName, sets: [entry], isPR: true },
-        ]);
+        // Celebration + log.exercise append, however, must fire only once per set
+        // completion: on the checkbox false->true transition. setLog fires on every
+        // field onChange, so gating on entry.c alone (checked) would re-fire on each
+        // keystroke while typing weight after checking, corrupting WeeklyRecap's
+        // prCount with duplicate isPR:true entries.
+        // Trade-off: a set checked BEFORE its weight is typed gets a PR record + badge
+        // but no celebration/log entry (prev is undefined/unchecked at check-time, so
+        // the weight isn't known yet) — acceptable; the celebration-grade log stays clean.
+        if (entry.c && !prev?.c) {
+          setCelebration({ exercise: exName, weight: w, reps: entry.r });
+          const todayISO = new Date().toISOString().slice(0, 10);
+          log('exercise', [
+            ...(logs.exercise || []),
+            { date: todayISO, exercise: exName, sets: [entry], isPR: true },
+          ]);
+        }
       }
     }
     setProtocolState('workout', { wkLogs: nextLogs, wkPRs: nextPRs });

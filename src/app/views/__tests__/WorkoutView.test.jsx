@@ -142,5 +142,68 @@ describe('WorkoutView', () => {
       expect(queryByText('Personal Record')).toBeFalsy();
       expect(snap.logs.exercise.length).toBe(1);
     });
+
+    it('does not celebrate when the box is checked before weight is typed, even across multiple keystrokes (transition-gated trade-off)', () => {
+      let snap;
+      function Spy() { snap = useAppState().state; return null; }
+      const { container, queryByText } = render(withState(
+        <>
+          <Spy />
+          <WorkoutView fixedDayIdx={1} />
+        </>,
+        (ctx) => ctx.setProfile({ primary: 'Muscle Gain' }),
+      ));
+
+      const weightInput = container.querySelector('input[type="number"]');
+      const checkbox = container.querySelector('input[type="checkbox"]');
+
+      // Check the box first, with no weight entered yet.
+      fireEvent.click(checkbox);
+
+      // Now type the weight in steps, as a real keyboard would produce
+      // incremental onChange events: "3", then "315".
+      fireEvent.input(weightInput, { target: { value: '3' } });
+      fireEvent.change(weightInput, { target: { value: '315' } });
+
+      // The checkbox->weight ordering means every keystroke sees prev.c === true,
+      // so the false->true transition never happens — zero celebrations, zero
+      // isPR log appends. (wkPRs itself may still have been bumped, per the
+      // unchanged pre-existing badge behavior — that's not asserted here.)
+      expect(queryByText('Personal Record')).toBeFalsy();
+      expect(snap.logs.exercise.length).toBe(0);
+    });
+
+    it('does not re-celebrate when weight is raised further while the box remains checked', () => {
+      let snap;
+      function Spy() { snap = useAppState().state; return null; }
+      const { container, getByText, queryByText } = render(withState(
+        <>
+          <Spy />
+          <WorkoutView fixedDayIdx={1} />
+        </>,
+        (ctx) => ctx.setProfile({ primary: 'Muscle Gain' }),
+      ));
+
+      const weightInput = container.querySelector('input[type="number"]');
+      const checkbox = container.querySelector('input[type="checkbox"]');
+
+      // Type weight, then check — the false->true transition fires exactly once.
+      fireEvent.change(weightInput, { target: { value: '300' } });
+      fireEvent.click(checkbox);
+
+      expect(getByText('Personal Record')).toBeTruthy();
+      expect(snap.logs.exercise.length).toBe(1);
+
+      // Close the celebration.
+      fireEvent.click(getByText('Continue'));
+      expect(queryByText('Personal Record')).toBeFalsy();
+
+      // Raise the weight further while the box is still checked (a correction).
+      // prev.c is already true, so this must NOT fire a second celebration/append.
+      fireEvent.change(weightInput, { target: { value: '350' } });
+
+      expect(queryByText('Personal Record')).toBeFalsy();
+      expect(snap.logs.exercise.length).toBe(1);
+    });
   });
 });
