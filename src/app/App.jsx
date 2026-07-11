@@ -12,7 +12,7 @@ import GoalSetup from '../goals/GoalSetup';
 import HomeDashboard from '../routine/HomeDashboard';
 import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import RoutineView from '../routine/RoutineView';
-import WorkoutView from './views/WorkoutView';
+import BodyView from './views/BodyView';
 import TabNav from './TabNav';
 import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
@@ -485,7 +485,12 @@ export default function App() {
                 <div>
                   <H t={(domain?.icon || '') + ' ' + (domain?.name || activeTab)}
                     sub={domain?.sub || ''} />
-                  <WorkoutView />
+                  <BodyView
+                    profile={profile}
+                    protocolStates={protocolStates}
+                    logs={logs}
+                    log={log}
+                  />
                 </div>
               );
             }
