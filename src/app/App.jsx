@@ -43,7 +43,16 @@ export default function App() {
   // an effect rather than `if (funnel === 'signup' && user) setFunnel(...)`
   // during render (which would be a setState-during-render violation).
   useEffect(() => {
-    if (funnel === 'signup' && user) setFunnel('calculating');
+    if (funnel === 'signup' && user) {
+      // Lead capture: upsert into `subscribers` so the existing welcome-drip
+      // cron (app/api/cron/welcome-emails) picks the new app signup up.
+      // Fire-and-forget — must never block the funnel on fetch failure.
+      fetch('/api/app-signup', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, firstName: profile.name }),
+      }).catch(() => {}); // relative URL resolves in prod (app served under the Next domain) and no-ops in vite dev
+      setFunnel('calculating');
+    }
   }, [funnel, user]);
 
   // Build protocol map from registry
