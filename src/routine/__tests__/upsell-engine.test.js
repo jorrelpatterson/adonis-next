@@ -64,4 +64,75 @@ describe('checkUpsells', () => {
     const result = checkUpsells([], protocolStates, eliteProfile, {}, undefined, undefined);
     expect(result).toEqual([]);
   });
+
+  it('does not suggest elite upgrade for pro user with a fully-active week (real logs, no override)', () => {
+    // Real logs.routine data with completions every day of the trailing window
+    // should compute skipped=0 via countSkippedTasks and never trip the (currently
+    // unreachable via real data, since max is 7 < threshold 8) elite threshold.
+    const logs = { routine: buildRoutineLog({ allDays: ['task1'] }) };
+    const result = checkUpsells([], [], proProfile, logs, undefined, undefined);
+    expect(result).toEqual([]);
+  });
+});
+
+// Builds a date-keyed logs.routine fixture for the trailing 7-day window
+// (today .. today-6), matching the real `{ 'YYYY-MM-DD': [taskId, ...] }` shape.
+function buildRoutineLog({ allDays } = {}) {
+  const routine = {};
+  for (let i = 0; i < 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    if (allDays) routine[key] = allDays;
+  }
+  return routine;
+}
+
+describe('countSkippedTasks', () => {
+  it('returns 0 for missing/malformed logs', () => {
+    expect(countSkippedTasks(null)).toBe(0);
+    expect(countSkippedTasks(undefined)).toBe(0);
+    expect(countSkippedTasks({})).toBe(0);
+  });
+
+  it('ignores the dead array shape (logs.routine as an array of entries)', () => {
+    // Old shape: [{ date, completions }] — no longer honored; must not throw
+    // and must not be treated as valid data.
+    const logs = { routine: [{ date: '2026-04-29', completions: 0 }] };
+    expect(countSkippedTasks(logs)).toBe(0);
+  });
+
+  it('counts all 7 days as skipped when logs.routine is present but empty', () => {
+    // Container exists but every date key in the window is absent.
+    expect(countSkippedTasks({ routine: {} })).toBe(7);
+  });
+
+  it('does not count a day as skipped when it has at least one completion', () => {
+    const logs = { routine: buildRoutineLog({ allDays: ['task1', 'task2'] }) };
+    expect(countSkippedTasks(logs)).toBe(0);
+  });
+
+  it('counts a day as skipped when its completions array is empty', () => {
+    const routine = buildRoutineLog({ allDays: ['task1'] });
+    const today = new Date().toISOString().slice(0, 10);
+    routine[today] = []; // explicitly logged in, but nothing completed
+    const skipped = countSkippedTasks({ routine });
+    expect(skipped).toBe(1);
+  });
+
+  it('counts a day as skipped when its date key is absent entirely', () => {
+    const routine = buildRoutineLog({ allDays: ['task1'] });
+    const sixDaysAgo = new Date();
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+    delete routine[sixDaysAgo.toISOString().slice(0, 10)];
+    const skipped = countSkippedTasks({ routine });
+    expect(skipped).toBe(1);
+  });
+
+  it('only counts skipped days within the trailing 7-day window', () => {
+    const routine = buildRoutineLog({ allDays: ['task1'] });
+    // A completion logged well outside the window should not offset skips.
+    routine['2000-01-01'] = ['old-task'];
+    expect(countSkippedTasks({ routine })).toBe(0);
+  });
 });

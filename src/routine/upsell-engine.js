@@ -8,31 +8,33 @@ const SUPPLY_CRITICAL_THRESHOLD = 2;
 const SKIPPED_TASKS_THRESHOLD = 8;
 
 /**
- * Counts skipped tasks from the last 7 days of routine logs.
- * A day is considered "skipped" if it has fewer than 3 completions,
- * and we sum the gaps (3 - completions) across those days.
+ * Counts skipped days from the last 7 days of routine logs.
  *
- * @param {object} logs - Log object with a `routine` array of daily entries
- * @returns {number} Total count of skipped task slots
+ * `logs.routine` is date-keyed: { 'YYYY-MM-DD': [taskId, ...] } — there is no
+ * per-day "scheduled task count" to diff completions against, so we can't
+ * derive a skipped *task* count from completions alone. Instead we preserve
+ * the original intent (penalize inactivity) with the data we actually have:
+ * a day counts as skipped if it has zero completions — either the array for
+ * that date is empty, or the date key is absent entirely.
+ *
+ * @param {object} logs - Log object with a date-keyed `routine` map
+ * @returns {number} Count of skipped days (0-7) in the trailing 7-day window
  */
 export function countSkippedTasks(logs) {
-  if (!logs || !Array.isArray(logs.routine) || logs.routine.length === 0) {
+  if (!logs || !logs.routine || typeof logs.routine !== 'object' || Array.isArray(logs.routine)) {
     return 0;
   }
 
   const now = new Date();
-  const sevenDaysAgo = new Date(now);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
   let skipped = 0;
 
-  for (const entry of logs.routine) {
-    const entryDate = new Date(entry.date);
-    if (entryDate >= sevenDaysAgo && entryDate <= now) {
-      const completions = entry.completions || 0;
-      if (completions < 3) {
-        skipped += 3 - completions;
-      }
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const completions = logs.routine[key];
+    if (!Array.isArray(completions) || completions.length === 0) {
+      skipped += 1;
     }
   }
 
