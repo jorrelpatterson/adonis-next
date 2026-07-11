@@ -66,6 +66,50 @@ const environmentProtocol = {
   getAutomations() { return []; },
   getRecommendations() { return []; },
   getUpsells() { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'livingSituation',
+        type: 'select',
+        label: 'Living situation',
+        required: true,
+        options: [
+          { value: 'apartment', label: 'Apartment' },
+          { value: 'house', label: 'House' },
+          { value: 'condo', label: 'Condo' },
+          { value: 'shared', label: 'Shared housing' },
+          { value: 'other', label: 'Other' },
+        ],
+      },
+      {
+        id: 'priorityArea',
+        type: 'select',
+        label: 'Top priority',
+        subtitle: 'Where to focus the 36-item daily checklist',
+        options: [
+          { value: 'sleep', label: 'Sleep environment' },
+          { value: 'workspace', label: 'Workspace setup' },
+          { value: 'air', label: 'Air quality' },
+          { value: 'digital', label: 'Digital wellness' },
+          { value: 'all', label: 'All of it' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    return {
+      title: 'Environment',
+      icon: '\u{1F3E0}',
+      lines: [
+        '36-item daily checklist activated',
+        state?.priorityArea && state.priorityArea !== 'all'
+          ? `Priority: ${state.priorityArea}`
+          : 'Sleep, workspace, air, light, digital, cleanliness',
+      ],
+    };
+  },
 };
 
 export default environmentProtocol;

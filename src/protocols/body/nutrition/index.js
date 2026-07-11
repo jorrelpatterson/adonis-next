@@ -70,6 +70,63 @@ const nutritionProtocol = {
   getAutomations() { return []; },
   getRecommendations(state, profile, goal) { return []; },
   getUpsells(state, profile, goal) { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'goalWeight',
+        type: 'number',
+        label: 'Goal weight (lbs)',
+        subtitle: 'Where you want to land',
+        placeholder: '180',
+        unit: 'lbs',
+        min: 50, max: 800,
+        required: true,
+      },
+      {
+        id: 'targetDate',
+        type: 'date',
+        label: 'Target date',
+        subtitle: 'When you want to hit it — we\'ll calc a safe pace',
+        required: true,
+      },
+      {
+        id: 'dietary',
+        type: 'multi',
+        label: 'Dietary restrictions',
+        subtitle: 'Any?',
+        options: [
+          { value: 'none', label: 'None' },
+          { value: 'vegetarian', label: 'Vegetarian' },
+          { value: 'vegan', label: 'Vegan' },
+          { value: 'pescatarian', label: 'Pescatarian' },
+          { value: 'gluten_free', label: 'Gluten-free' },
+          { value: 'dairy_free', label: 'Dairy-free' },
+          { value: 'halal', label: 'Halal' },
+          { value: 'kosher', label: 'Kosher' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const lines = [];
+    if (state?.goalWeight && profile?.weight) {
+      const delta = Math.abs(Number(state.goalWeight) - Number(profile.weight));
+      const direction = Number(state.goalWeight) < Number(profile.weight) ? 'lose' : 'gain';
+      lines.push(`Target: ${direction} ${delta.toFixed(0)} lbs`);
+    }
+    if (state?.targetDate) lines.push(`By ${state.targetDate}`);
+    if (state?.dietary && state.dietary.length && !state.dietary.includes('none')) {
+      lines.push(`Diet: ${state.dietary.join(', ').replace(/_/g, '-')}`);
+    }
+    if (!lines.length) lines.push('Calorie + macro plan ready');
+    return {
+      title: 'Eat',
+      icon: '\u{1F37D}️',
+      lines,
+    };
+  },
 };
 
 export default nutritionProtocol;

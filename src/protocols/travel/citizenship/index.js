@@ -93,6 +93,51 @@ const citizenshipProtocol = {
   getAutomations(state, profile, goal) {
     return [];
   },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'pathwayInterest',
+        type: 'multi',
+        label: 'Pathways that interest you',
+        subtitle: 'You can pick more than one',
+        required: true,
+        options: [
+          { value: 'descent', label: 'Descent', sub: 'Italy, Ireland, Poland — by ancestry' },
+          { value: 'investment', label: 'Investment', sub: 'Caribbean CBI, golden visas' },
+          { value: 'residency', label: 'Residency', sub: 'Portugal, Mexico, Argentina' },
+          { value: 'just_passport', label: 'Just better travel', sub: 'Visa-free + power index' },
+        ],
+      },
+      {
+        id: 'budgetTier',
+        type: 'select',
+        label: 'Investment budget',
+        subtitle: 'Citizenship-by-investment range you\'re comfortable with',
+        options: [
+          { value: 'low', label: 'Under $50k' },
+          { value: 'mid', label: '$50k-250k' },
+          { value: 'high', label: '$250k+' },
+          { value: 'na', label: 'Not relevant — descent or residency only' },
+        ],
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const paths = state?.pathwayInterest || [];
+    const lines = [];
+    if (paths.includes('descent')) lines.push('Descent pathway: Italy, Ireland, Poland eligible');
+    if (paths.includes('investment')) lines.push('CBI options ranked by your budget');
+    if (paths.includes('residency')) lines.push('Residency pathways: 24-84 month timelines');
+    if (paths.includes('just_passport')) lines.push('Visa-free travel optimization');
+    if (!lines.length) lines.push('11 country pathways tracked · quiz unlocks ranked picks');
+    return {
+      title: 'Travel',
+      icon: '\u{1F30D}',
+      lines: lines.slice(0, 2),
+    };
+  },
 };
 
 export default citizenshipProtocol;

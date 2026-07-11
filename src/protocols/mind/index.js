@@ -53,6 +53,42 @@ const mindProtocol = {
   getAutomations() { return []; },
   getRecommendations() { return []; },
   getUpsells() { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'focusAreas',
+        type: 'multi',
+        label: 'What do you want to work on?',
+        subtitle: 'Pick all that apply',
+        required: true,
+        options: [
+          { value: 'calm', label: 'Calm', sub: 'Anxiety, stress, sleep' },
+          { value: 'clarity', label: 'Clarity', sub: 'Focus, mental sharpness' },
+          { value: 'performance', label: 'Performance', sub: 'Cognitive output, flow' },
+          { value: 'resilience', label: 'Resilience', sub: 'Mood stability, recovery' },
+        ],
+      },
+      {
+        id: 'nootropicsOpen',
+        type: 'toggle',
+        label: 'Open to nootropic stacks?',
+        subtitle: 'Adonis can recommend research-backed stacks for your focus areas',
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const areas = state?.focusAreas || [];
+    return {
+      title: 'Mind',
+      icon: '\u{1F9E0}',
+      lines: [
+        areas.length ? `Working on: ${areas.join(', ')}` : 'Meditation + breathwork queued',
+        state?.nootropicsOpen ? '8-compound nootropic stack unlocked (Pro)' : '5 breathwork patterns + meditation timer',
+      ],
+    };
+  },
 };
 
 export default mindProtocol;

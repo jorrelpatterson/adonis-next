@@ -44,6 +44,41 @@ const communityProtocol = {
   getAutomations() { return []; },
   getRecommendations() { return []; },
   getUpsells() { return []; },
+
+  getOnboardingQuestions() {
+    return [
+      {
+        id: 'lookingFor',
+        type: 'select',
+        label: 'What are you looking for?',
+        required: true,
+        options: [
+          { value: 'accountability', label: 'Accountability partner', sub: 'Someone tracking similar goals' },
+          { value: 'mastermind', label: 'Mastermind group', sub: 'Small group, weekly check-ins' },
+          { value: 'just_streaks', label: 'Just my own streaks', sub: 'No matching, solo mode' },
+        ],
+      },
+      {
+        id: 'shareStreaks',
+        type: 'toggle',
+        label: 'Share streaks publicly?',
+        subtitle: 'Lets others find you for matching',
+      },
+    ];
+  },
+
+  getOnboardingSummary(profile, state) {
+    const looking = state?.lookingFor;
+    if (looking === 'just_streaks') return null;
+    return {
+      title: 'Community',
+      icon: '\u{1F91D}',
+      lines: [
+        looking === 'mastermind' ? 'Mastermind group matching' : 'Accountability partner matching',
+        state?.shareStreaks ? 'Public streak sharing on' : 'Streaks private until you flip the switch',
+      ],
+    };
+  },
 };
 
 export default communityProtocol;
