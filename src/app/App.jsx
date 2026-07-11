@@ -154,6 +154,15 @@ export default function App() {
     log('routine', { ...logs.routine, [todayKey]: updated });
   }, [logs.routine, todayKey, log]);
 
+  // Task 14: RoutineView's long-press/tap surface — mirrors how the archive's
+  // App.jsx wired the same prop (`handleTaskTap`, v2-revival-archive:src/app/
+  // App.jsx): the only task `type` RoutineView ever makes tappable is
+  // 'check-in' (see RoutineView.jsx's `isTappable` check), so this opens the
+  // same check-in modal the Home tab's `onCheckinTap` already opens.
+  const handleTaskTap = useCallback((task) => {
+    if (task.type === 'check-in') setShowCheckinModal(true);
+  }, []);
+
   // Task 13: Daily check-in save — writes today's ratings into logs.checkins
   // keyed by REAL today (`today`, not the Routine view-day `todayKey`), then
   // closes the modal (CheckinModal also auto-closes itself after its own
@@ -326,10 +335,14 @@ export default function App() {
             <RoutineView
               routine={routine}
               onCheckTask={handleCheckTask}
+              onTaskTap={handleTaskTap}
               completedTasks={completedTasks}
               day={viewDay}
               goals={activeGoals}
               onDayChange={setViewDay}
+              logs={logs}
+              profile={profile}
+              today={today}
             />
           </div>
         ) : activeTab === 'profile' ? (

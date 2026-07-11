@@ -34,6 +34,36 @@ export function buildDailyRoutine({
 }) {
   const allTasks = collectTasks(goals, protocolMap, profile, day);
 
+  // System protocols (domain: '_system') run independently of goals.
+  // Currently: daily check-in. They emit tasks once per day, not per-goal.
+  //
+  // Ported additively from v2-revival-archive:src/routine/pipeline.js
+  // (task-14 brief, binding-review follow-up): main's checkinProtocol
+  // (src/protocols/_system/checkin/index.js) was registered via
+  // register-all.js but its getTasks() was never invoked anywhere —
+  // collectTasks() above only walks each goal's activeProtocols, and
+  // checkin isn't attached to any goal. This block is the missing link
+  // that actually surfaces the "Daily Check-in" task in the routine.
+  //
+  // Scoped narrowly to this block only: the archive's collectTasks() call
+  // ALSO threads `logs`/`protocolStates` through to `proto.getState()` for
+  // the per-goal path (a broader behavior change to how every protocol's
+  // state is computed). That's out of scope here — main's collectTasks()
+  // signature is left untouched; only the `_system` domain sweep, which
+  // uses this function's own `logs`/`protocolStates` params directly, is
+  // ported.
+  if (goals.length > 0) {
+    for (const proto of Object.values(protocolMap)) {
+      if (proto.domain !== '_system' || typeof proto.getTasks !== 'function') continue;
+      if (typeof proto.canServe === 'function' && !proto.canServe()) continue;
+      const sysState = proto.getState ? proto.getState(profile, logs, null, protocolStates[proto.id]) : {};
+      const sysTasks = proto.getTasks(sysState, profile, day);
+      for (const task of sysTasks) {
+        allTasks.push({ ...task, protocolId: proto.id });
+      }
+    }
+  }
+
   const goalPriorities = {};
   for (const goal of goals) {
     goalPriorities[goal.id] = goal.priority || goals.indexOf(goal) + 1;
