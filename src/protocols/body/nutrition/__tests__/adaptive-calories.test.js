@@ -153,6 +153,59 @@ describe('computeAdaptive — no-goal path', () => {
   });
 });
 
+describe('computeAdaptive — invalid-profile guard (review finding, Task 11)', () => {
+  // Prior behavior: weight/height/age missing pieces were coerced to 0 via
+  // `Number(...) || 0`, which kept BMR/TDEE/adaptedTarget finite but
+  // fabricated (e.g. ~1352 cal for a real-looking partial profile) instead
+  // of signaling "not enough data." The guard added in adaptive-calories.js
+  // now short-circuits to a zeroed-out no-goal shape whenever the resolved
+  // current weight, height, or age is not a positive number — before any
+  // BMR/TDEE/target math runs — so FoodLogger's `target <= 0` empty-state
+  // gate fires correctly instead of rendering a fabricated number.
+
+  it('(a) missing weight + no weight log → adaptedTarget 0, pace no_goal', () => {
+    // The reviewer's exact partial profile: weight is absent and there's no
+    // weight log to fall back on, so the resolved current weight is 0.
+    const profile = { hFt: 5, hIn: 10, age: 30, gender: 'male', activity: 'moderate' };
+    const res = computeAdaptive(profile, [], '2026-01-01', 'Fat Loss');
+    expect(res.pace).toBe('no_goal');
+    expect(res.baseTDEE).toBe(0);
+    expect(res.baseTarget).toBe(0);
+    expect(res.adaptedTarget).toBe(0);
+    expect(res.adaptedDeficit).toBe(0);
+  });
+
+  it('(b) valid weight log resolves a real current weight, but missing age still guards to 0', () => {
+    // Weight log alone is NOT enough — currentWeight(weightLog, profile)
+    // resolves a real weight (200), but age is still missing, so the guard
+    // must still fire and must not let a "valid-looking" weight source mask
+    // the missing age/height inputs BMR needs.
+    const weightLog = [
+      { date: '2025-12-20', weight: 198 },
+      { date: '2025-12-27', weight: 199 },
+      { date: '2026-01-01', weight: 200 },
+    ];
+    const profile = { hFt: 5, hIn: 10, gender: 'male', activity: 'moderate' }; // no age, no profile.weight
+    const res = computeAdaptive(profile, weightLog, '2026-01-01', 'Fat Loss');
+    expect(res.pace).toBe('no_goal');
+    expect(res.baseTDEE).toBe(0);
+    expect(res.baseTarget).toBe(0);
+    expect(res.adaptedTarget).toBe(0);
+  });
+
+  it('(c) fully valid profile is unaffected by the guard (regression guard)', () => {
+    // Same profile shape as the existing "no-goal path" case above — weight,
+    // height, and age are all present, so the guard must not fire and the
+    // pre-existing no-goal-return math (baseTarget-derived adaptedTarget)
+    // must still run unchanged.
+    const res = computeAdaptive(maleProfile(), [], '2026-01-01', 'Fat Loss');
+    expect(res.pace).toBe('no_goal');
+    expect(res.baseTDEE).toBeGreaterThan(0);
+    expect(res.adaptedTarget).toBeGreaterThan(0);
+    expect(res.paceLabel).toBe('Set a goal weight + date to activate adaptive mode');
+  });
+});
+
 describe('computeAdaptive — NaN gate (Task 3 hard gate)', () => {
   function assertNoNaN(res) {
     for (const [key, value] of Object.entries(res)) {

@@ -86,10 +86,23 @@ function currentWeight(weightLog, profile) {
  */
 export function computeAdaptive(profile, weightLog, today, goal) {
   const heightInches = (Number(profile?.hFt) || 0) * 12 + (Number(profile?.hIn) || 0);
-  const weight = Number(profile?.weight) || 0;
   const age = Number(profile?.age) || 0;
-  const bmr = calcBMR(weight, heightInches, age, profile?.gender);
-  const tdee = calcTDEE(bmr, profile?.activity);
+  const current = currentWeight(weightLog, profile);
+
+  // guard: incomplete profile must not fabricate a target (review finding,
+  // Task 11) — BMR/TDEE need weight+height+age, so baseTDEE/baseTarget/
+  // adaptedTarget/adaptedDeficit are zeroed out below whenever any of the
+  // three is missing, rather than computed from Number(...)||0-coerced
+  // garbage. Deliberately scoped to the calorie-target math only: pace/
+  // workoutMode/lbsToGo are goal-progress math (current weight vs
+  // goalW/targetDate) that don't need height/age, so they still compute
+  // normally when a goal is set even without a complete profile —
+  // computeWorkoutIntensity (routine/intelligence.js) relies on that
+  // decoupling and has its own passing tests exercising exactly that case.
+  const validProfile = current > 0 && heightInches > 0 && age > 0;
+
+  const bmr = validProfile ? calcBMR(current, heightInches, age, profile?.gender) : 0;
+  const tdee = validProfile ? calcTDEE(bmr, profile?.activity) : 0;
   const baseTDEE = tdee;
 
   // Goal-direction primary key from workout protocol
@@ -97,16 +110,15 @@ export function computeAdaptive(profile, weightLog, today, goal) {
   const baseAdj = {
     'Fat Loss': -500, 'Muscle Gain': 350, 'Recomposition': -200, 'Aesthetics': -300,
   }[goalLabel] || 0;
-  const baseTarget = Math.round(tdee + baseAdj);
+  const baseTarget = validProfile ? Math.round(tdee + baseAdj) : 0;
 
   const goalW = Number(profile?.goalW);
   const targetDate = profile?.targetDate;
-  const current = currentWeight(weightLog, profile);
   if (!goalW || !targetDate || !current) {
     return {
       baseTDEE: Math.round(tdee), baseTarget,
       requiredWeeklyRate: null, actualRate: null,
-      pace: 'no_goal', adaptedTarget: baseTarget, adaptedDeficit: baseAdj,
+      pace: 'no_goal', adaptedTarget: baseTarget, adaptedDeficit: validProfile ? baseAdj : 0,
       workoutMode: 'normal', paceLabel: 'Set a goal weight + date to activate adaptive mode',
       weeksRemaining: null, daysRemaining: null, lbsToGo: null, direction: 'unset',
     };
@@ -174,12 +186,19 @@ export function computeAdaptive(profile, weightLog, today, goal) {
     adaptedDeficit = baseAdj;
   }
 
-  let adaptedTarget = Math.round(tdee + adaptedDeficit);
-  // Floor at minimum safe calories
-  const minCal = profile?.gender === 'female' ? MIN_CAL_FEMALE : MIN_CAL_MALE;
-  if (adaptedTarget < minCal) {
-    adaptedTarget = minCal;
-    adaptedDeficit = adaptedTarget - tdee;
+  // guard: without a valid profile there's no real BMR/TDEE to adapt off of
+  // — keep adaptedTarget/adaptedDeficit at 0 rather than floor a fabricated
+  // number up to the minimum-safe-calories floor (review finding, Task 11).
+  let adaptedTarget = validProfile ? Math.round(tdee + adaptedDeficit) : 0;
+  if (validProfile) {
+    // Floor at minimum safe calories
+    const minCal = profile?.gender === 'female' ? MIN_CAL_FEMALE : MIN_CAL_MALE;
+    if (adaptedTarget < minCal) {
+      adaptedTarget = minCal;
+      adaptedDeficit = adaptedTarget - tdee;
+    }
+  } else {
+    adaptedDeficit = 0;
   }
 
   // v2 addition beyond archive: v1 cycle calMod (parity ledger Food row)
@@ -188,7 +207,7 @@ export function computeAdaptive(profile, weightLog, today, goal) {
     const info = getCycleInfo(profile.cycleData, today);
     if (info?.phase) {
       cycle = info;
-      adaptedTarget += info.phase.calMod;
+      if (validProfile) adaptedTarget += info.phase.calMod;
     }
   }
 

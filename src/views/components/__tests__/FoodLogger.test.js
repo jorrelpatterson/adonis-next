@@ -282,6 +282,21 @@ describe('FoodLogger — adaptive target rendering', () => {
     screen.getByText(/Add weight, height, age, and activity in your profile/i);
   });
 
+  it('shows the empty state (not a fabricated target) for the reviewer\'s exact partial profile — weight missing (Task 11 guard)', () => {
+    // Regression test for the review finding: weight missing (but height/
+    // age/gender/activity present) used to coerce weight to 0 and still
+    // compute a garbage-but-finite adaptedTarget (~1352 cal), so this empty
+    // state never rendered and a fabricated target/macros showed instead.
+    const profile = { hFt: 5, hIn: 10, age: 30, gender: 'male', activity: 'moderate' };
+    const { container } = render(
+      React.createElement(FoodLogger, { profile, protocolStates: {}, logs: {}, log: vi.fn() })
+    );
+
+    screen.getByText(/Add weight, height, age, and activity in your profile/i);
+    // No fabricated calorie target ("/ NNNN cal") should render alongside the empty state.
+    expect(container.textContent).not.toMatch(/\/\s*\d+\s*cal/);
+  });
+
   it('renders an adaptive calorie target when profile has goal weight + target date set', () => {
     const profile = {
       weight: 200, hFt: 6, hIn: 0, age: 32, gender: 'male', activity: 'moderate',
