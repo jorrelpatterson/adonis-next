@@ -10,8 +10,10 @@
 # Compare against the prior phase's folder by eye or with:
 #   for f in docs/visual-baselines/<new>/*.png; do compare -metric AE "$f" "docs/visual-baselines/<old>/$(basename "$f")" null: ; done
 #
-# NOTE: until Phase 2 ships the dev auth bypass / seeded test session, only the
-# auth gate is reachable headlessly — add inner routes here as they open up.
+# Task 14 shipped the dev/E2E URL-param bypass (App.jsx, DEV-only —
+# `?e2e=1` seeds a complete profile + skips auth/onboarding, `&tab=` picks
+# the initial tab, `?screen=onboarding|auth` forces those screens
+# unauthenticated) so every inner screen is now reachable headlessly.
 
 set -euo pipefail
 
@@ -23,8 +25,11 @@ OUT_DIR="$REPO_ROOT/docs/visual-baselines/$LABEL"
 
 # route (URL path or #hash) -> output name
 ROUTES=(
-  "/|auth-gate"
-  # Phase 2+: add e.g. "/#/onboarding|onboarding", "/#/home|home", "/#/routine|routine", ...
+  "/?screen=onboarding|onboarding-step0"
+  "/?screen=auth|auth"
+  "/?e2e=1&tab=routine|routine"
+  "/?e2e=1&tab=body|body"
+  "/?e2e=1&tab=profile|profile"
 )
 
 if ! curl -sf -o /dev/null "$BASE_URL/"; then

@@ -45,6 +45,20 @@ export default function App() {
   const { user, tier: authTier, loading: authLoading } = useAuth();
   const [funnel, setFunnel] = useState(null); // null = derive from profile/user; 'signup' | 'calculating' | 'gameplan' are transient stages
 
+  // Task 14: dev/E2E URL-param bypass (Verification addendum) — lets the
+  // headless screenshot shooter (scripts/screenshot-baseline.sh) reach inner
+  // screens without driving the real auth+onboarding funnel. DEV-gated so
+  // `import.meta.env.DEV` (true under vitest and `vite dev`, false in
+  // `vite build`) tree-shakes this whole branch — including the seeded
+  // profile literal — out of production bundles. Params read once via
+  // `useState` initializer rather than on every render; the search string
+  // isn't expected to change during a session.
+  const [e2eParams] = useState(() => (
+    import.meta.env.DEV ? new URLSearchParams(window.location.search) : null
+  ));
+  const e2e = e2eParams?.get('e2e') === '1';
+  const forcedScreen = e2eParams?.get('screen');
+
   // Signup gate resolves (user just authenticated) → advance to calculating.
   // This is a state transition, not a render-time decision, so it lives in
   // an effect rather than `if (funnel === 'signup' && user) setFunnel(...)`
@@ -73,6 +87,23 @@ export default function App() {
       setProfile({ tier: authTier });
     }
   }, [user, authTier]);
+
+  // Task 14: `?e2e=1` seeds a complete profile (so isProfileIncomplete()
+  // passes and the funnel/onboarding gates below never trigger) and jumps
+  // straight to a requested tab. Both no-op once the profile is already
+  // complete / activeTab already matches, so they're safe across re-renders.
+  useEffect(() => {
+    if (e2e && isProfileIncomplete(profile)) {
+      setProfile({
+        name: 'E2E', age: 30, gender: 'male', weight: 185, goalW: 175,
+        hFt: 5, hIn: 11, activity: 'moderate', domains: ['body'], tier: 'elite',
+      });
+    }
+  }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const tab = e2eParams?.get('tab');
+    if (e2e && tab) setActiveTab(tab);
+  }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -145,23 +176,35 @@ export default function App() {
   };
 
   // ─── funnel gate — resolves before the tab shell renders below ─────────
-  if (authLoading || (funnel === 'signup' && user)) {
-    return <BootSplash />;
+  // Task 14: dev/E2E bypass goes first — `?screen=auth|onboarding` forces
+  // that screen unauthenticated (for the screenshot shooter), and `?e2e=1`
+  // skips the whole funnel below (the seeding effect above makes the
+  // profile complete, so the tab shell renders straight away).
+  if (forcedScreen === 'auth') {
+    return <AuthScreen />;
   }
-  if (funnel === 'signup' && !user) {
-    return <AuthScreen subheading="Create your account to unlock your game plan" initialMode="signup" />;
+  if (forcedScreen === 'onboarding') {
+    return <OnboardingFlow initialProfile={{}} onComplete={handleOnboardingComplete} />;
   }
-  if (funnel === 'calculating') {
-    return <CalculatingScreen profile={profile} onComplete={() => setFunnel('gameplan')} />;
-  }
-  if (funnel === 'gameplan') {
-    return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => setFunnel(null)} />;
-  }
-  if (isProfileIncomplete(profile)) {
-    return <OnboardingFlow initialProfile={profile} onComplete={handleOnboardingComplete} />;
-  }
-  if (!user) {
-    return <AuthScreen />; // returning device, signed out
+  if (!e2e) {
+    if (authLoading || (funnel === 'signup' && user)) {
+      return <BootSplash />;
+    }
+    if (funnel === 'signup' && !user) {
+      return <AuthScreen subheading="Create your account to unlock your game plan" initialMode="signup" />;
+    }
+    if (funnel === 'calculating') {
+      return <CalculatingScreen profile={profile} onComplete={() => setFunnel('gameplan')} />;
+    }
+    if (funnel === 'gameplan') {
+      return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => setFunnel(null)} />;
+    }
+    if (isProfileIncomplete(profile)) {
+      return <OnboardingFlow initialProfile={profile} onComplete={handleOnboardingComplete} />;
+    }
+    if (!user) {
+      return <AuthScreen />; // returning device, signed out
+    }
   }
 
   return (
