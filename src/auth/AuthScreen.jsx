@@ -5,8 +5,8 @@ import { H, GradText } from '../design/components';
 // Google OAuth deferred — see parity ledger 2026-07-09
 import { signUpWithEmail, signInWithEmail } from '../services/auth.js';
 
-export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up to unlock your protocol' }) {
-  const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
+export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up to unlock your protocol', initialMode = 'signin' }) {
+  const [mode, setMode] = useState(initialMode); // 'signin' | 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

@@ -118,7 +118,7 @@ export default function App() {
     return <BootSplash />;
   }
   if (funnel === 'signup' && !user) {
-    return <AuthScreen subheading="Create your account to unlock your game plan" />;
+    return <AuthScreen subheading="Create your account to unlock your game plan" initialMode="signup" />;
   }
   if (funnel === 'calculating') {
     return <CalculatingScreen profile={profile} onComplete={() => setFunnel('gameplan')} />;

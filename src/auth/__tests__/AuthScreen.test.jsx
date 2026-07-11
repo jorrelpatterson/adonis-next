@@ -52,6 +52,13 @@ describe('AuthScreen', () => {
     expect(submitBtn().textContent).toMatch(/sign up/i);
   });
 
+  it('renders in signup mode without toggling when initialMode="signup"', () => {
+    const { container } = render(<AuthScreen initialMode="signup" />);
+    const submitBtn = container.querySelector('button[type="submit"]');
+    expect(submitBtn.textContent).toMatch(/sign up/i);
+    expect(screen.getByText('Create your account')).toBeTruthy();
+  });
+
   it('renders the error message when signUpWithEmail resolves with an error', async () => {
     signUpWithEmail.mockResolvedValue({ user: null, error: { message: 'boom' } });
 
