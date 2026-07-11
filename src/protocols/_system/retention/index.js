@@ -12,6 +12,13 @@ const RENEWAL_WINDOW_DAYS = 7;
  * @returns {number}
  */
 export function countConsecutiveMissedDays(routineLogs, today) {
+  // A user who has never completed anything has no streak to break —
+  // no date key with a nonempty completion array exists at all.
+  const hasAnyHistory = Object.values(routineLogs || {}).some(
+    (entries) => Array.isArray(entries) && entries.length > 0
+  );
+  if (!hasAnyHistory) return 0;
+
   const todayDate = new Date(today);
   let count = 0;
   let cursor = new Date(todayDate);

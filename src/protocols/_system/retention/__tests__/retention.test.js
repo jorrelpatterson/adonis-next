@@ -39,6 +39,19 @@ describe('checkRetention', () => {
     expect(result).toEqual([]);
   });
 
+  it('does NOT fire streak_broken for a brand-new profile with zero routine history', () => {
+    // No history at all — nothing to break a streak from.
+    const logs = { routine: {} };
+    const goals = [];
+    const protocolStates = {};
+    const profile = {};
+
+    const result = checkRetention(profile, logs, goals, protocolStates, TODAY);
+    const streakIntervention = result.find(r => r.signal === 'streak_broken');
+
+    expect(streakIntervention).toBeUndefined();
+  });
+
   it('detects broken streak (3+ consecutive missed days) with encouraging tone', () => {
     // Last active 4 days ago → 3 consecutive missed days (days -1, -2, -3)
     const logs = makeLogs([offsetDate(-4)]);
