@@ -80,6 +80,7 @@ Findings recorded during extraction (parity decisions for the port):
 - [ ] PR detection + celebration (`wkPRs` 3263) — **adapt**: revival WorkoutLogger/PRCelebration on main's architecture (spec pair ruling) 🧪 (PR detection).
 - [ ] `exercises.js` (112 exercises) + `programs.js` (Adonis PPL 16-week) — **port** into `src/` protocol data; delete `public/lib` at Phase 5 cutover (spec'd).
 - [ ] Goal→program map (3243) — **port**.
+- [x] GoalCompleteScreen pulled forward from Phase 4 (WeightLogger dependency) — 2026-07-11. Ported verbatim alongside `WeightLogger` (Phase 3, Task 12): sister screen to `PRCelebration`, same design-system deps only (`theme`, `GradText`, `sound`, `haptics`), no substitution needed.
 
 ## Tools (`ToolsV` 6324) — Phase 4
 
