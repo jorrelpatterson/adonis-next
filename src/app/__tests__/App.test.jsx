@@ -14,6 +14,10 @@ import React, { useEffect } from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { StateProvider, useAppState } from '../../state/store';
 import { CHECKIN_FIELDS } from '../../state/checkin.js';
+// OnboardingFlow (driven in the C1 test) reads getAllProtocols() from the
+// shared registry — populate it exactly like the real app boot does.
+import '../../protocols/register-all.js';
+import { computeAdaptive } from '../../protocols/body/nutrition/adaptive-calories';
 import App from '../App';
 
 vi.mock('../../services/useAuth.js', () => ({
@@ -41,6 +45,17 @@ function StateSpy({ box }) {
   useEffect(() => {
     box.current = state;
   });
+  return null;
+}
+
+// Seeds an arbitrary profile (the shared Seed above is hardwired to
+// COMPLETE_PROFILE) — used by the I2 viewDay-leak test.
+function SeedProfile({ profile }) {
+  const { replaceState } = useAppState();
+  useEffect(() => {
+    replaceState({ profile });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return null;
 }
 
@@ -73,6 +88,95 @@ describe('App shell', () => {
     const contentIdx = kids.findIndex((el) => el.style.zIndex === '2');
     expect(firstBackdropIdx).toBe(0);           // backdrop is the first thing rendered
     expect(contentIdx).toBeGreaterThan(firstBackdropIdx); // content sits above it
+  });
+});
+
+describe('C1: onboarding goal answers reach the profile (adaptive layer live)', () => {
+  afterEach(() => {
+    cleanup();
+    delete global.fetch;
+  });
+
+  it('completing onboarding writes goalW + targetDate to the profile, activating computeAdaptive', () => {
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true })); // funnel-resume lead-capture
+    const box = { current: null };
+    const { getByText, getByPlaceholderText, container } = render(
+      <StateProvider>
+        <StateSpy box={box} />
+        <App />
+      </StateProvider>
+    );
+
+    // Drive the full wizard (labels verbatim from the protocol question defs,
+    // mirroring src/onboarding/__tests__/OnboardingFlow.test.jsx).
+    // basics
+    fireEvent.change(getByPlaceholderText('Your name'), { target: { value: 'Test User' } });
+    fireEvent.change(getByPlaceholderText('32'), { target: { value: '32' } });
+    fireEvent.click(getByText('Select…')); fireEvent.click(getByText('Male'));
+    fireEvent.change(getByPlaceholderText('180'), { target: { value: '190' } });
+    fireEvent.change(getByPlaceholderText('5'), { target: { value: '5' } });
+    fireEvent.change(getByPlaceholderText('11'), { target: { value: '11' } });
+    fireEvent.click(getByText('Moderately active'));
+    fireEvent.click(getByText('Continue'));
+    // domains — Body locked on
+    fireEvent.click(getByText('Continue'));
+    // workout
+    fireEvent.click(getByText('Lose fat'));
+    fireEvent.click(getByText('Morning'));
+    fireEvent.click(getByText('Full gym'));
+    fireEvent.click(getByText('Continue'));
+    // peptides
+    fireEvent.click(getByText('\u{1F525} Drop body fat'));
+    fireEvent.click(getByText('Never — I\'m new to this'));
+    fireEvent.click(getByText('No'));
+    fireEvent.click(getByText('Under $150/mo'));
+    fireEvent.click(getByText('Fine with daily SubQ'));
+    fireEvent.click(getByText('Continue'));
+    // nutrition — goalWeight + targetDate are the answers C1 hoists onto profile
+    fireEvent.change(getByPlaceholderText('180'), { target: { value: '165' } });
+    fireEvent.change(container.querySelector('input[type="date"]'), { target: { value: '2026-12-31' } });
+    fireEvent.click(getByText('Continue'));
+    // schedule
+    fireEvent.click(getByText('Employee'));
+    fireEvent.click(getByText('Build my protocol'));
+
+    const profile = box.current.profile;
+    expect(profile.goalW).toBe(165);
+    expect(typeof profile.goalW).toBe('number');
+    expect(profile.targetDate).toBe('2026-12-31');
+
+    // The whole point: the adaptive engine now leaves its no_goal early-return.
+    const today = new Date().toISOString().slice(0, 10);
+    expect(computeAdaptive(profile, [], today, 'Fat Loss').pace).not.toBe('no_goal');
+  });
+});
+
+describe('I2: viewDay does not leak into the Home tab', () => {
+  afterEach(() => cleanup());
+
+  it('browsing Routine to another day, then returning Home, snaps the dashboard back to real today', () => {
+    const todayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()];
+    // goalW + targetDate activate the adaptive pace line, which renders the
+    // dashboard's day-name label ("{weekday} · {paceLabel}") we assert on.
+    const profile = { ...COMPLETE_PROFILE, goalW: 170, targetDate: '2026-12-31' };
+    const { container } = render(
+      <StateProvider>
+        <SeedProfile profile={profile} />
+        <App />
+      </StateProvider>
+    );
+
+    // Routine → move viewDay off today via a different day chip.
+    fireEvent.click(container.querySelector('[data-testid="tab-routine"]'));
+    const todayDow = new Date().getDay();
+    const otherIdx = (todayDow + 3) % 7; // guaranteed != todayDow
+    fireEvent.click(container.querySelector(`[data-testid="day-chip-${otherIdx}"]`));
+
+    // Back to Home — the dashboard must reflect TODAY, not the browsed day.
+    fireEvent.click(container.querySelector('[data-testid="tab-home"]'));
+    const dash = container.querySelector('[data-testid="home-dashboard"]');
+    expect(dash).toBeTruthy();
+    expect(dash.textContent).toContain(todayName);
   });
 });
 

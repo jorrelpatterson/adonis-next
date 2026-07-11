@@ -105,6 +105,7 @@ export default function App() {
     if (e2e && isProfileIncomplete(profile)) {
       setProfile({
         name: 'E2E', age: 30, gender: 'male', weight: 185, goalW: 175,
+        targetDate: '2026-12-31',
         hFt: 5, hIn: 11, activity: 'moderate', domains: ['body'], tier: 'elite',
       });
     }
@@ -113,6 +114,15 @@ export default function App() {
     const tab = e2eParams?.get('tab');
     if (e2e && tab) setActiveTab(tab);
   }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // I2: the Home tab is a "today" surface — it reads the same viewDay-built
+  // routine/completedTasks/day that Routine does. Browsing Routine to another
+  // day chip moves viewDay off today; without this reset, switching back to
+  // Home would leak that browsed day into the dashboard (wrong routine tile,
+  // wrong day label). Snap viewDay back to real today whenever Home activates.
+  useEffect(() => {
+    if (activeTab === 'home') setViewDay(new Date());
+  }, [activeTab]);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -135,11 +145,15 @@ export default function App() {
   const todayKey = viewDay.toISOString().slice(0, 10);
   const completedTasks = (logs.routine && logs.routine[todayKey]) || [];
 
-  // Task 13: primaryGoal — same fallback chain WorkoutView/FoodLogger already
-  // use for computeAdaptive's goal param (profile.primary is the intended
+  // I1: primaryGoal — the single source of truth for the active goal label,
+  // derived ONCE here so RoutineView (pace banner), HomeDashboard and
+  // buildWeekStats (Sunday recap scoring) all key off the SAME target rather
+  // than each recomputing their own. Chain: profile.primary is the intended
   // source of truth; protocolStates.workout.primary is the onboarding-time
-  // answer it's derived from). adaptive is memoized alongside the routine
-  // build below since both key off profile/logs.weight/today.
+  // answer it's derived from. (WorkoutView/FoodLogger use a shorter
+  // `profile.primary || 'Wellness'` chain — that's pre-existing main behavior,
+  // deliberately left untouched here.) adaptive is memoized here since it keys
+  // off profile/logs.weight/today, then threaded down as a prop.
   const primaryGoal = profile.primary || protocolStates.workout?.primary || 'Wellness';
   const adaptive = useMemo(
     () => computeAdaptive(profile, logs.weight, today, primaryGoal),
@@ -219,6 +233,16 @@ export default function App() {
     const answers = protocolAnswers || {};
     const primary = answers.workout?.primary;
     if (primary) profileUpdates.fitnessPillars = [primary];
+    // C1: hoist the nutrition goal answers onto the profile — exactly parallel
+    // to the workout.primary → fitnessPillars hoist above. computeAdaptive
+    // gates its whole adaptive layer on profile.goalW + profile.targetDate
+    // (adaptive-calories.js), but the wizard only ever landed these answers in
+    // protocolStates.nutrition + the derived goal object; nothing wrote them
+    // back to the profile, so the adaptive engine sat permanently on its
+    // no_goal early-return. This is the missing write.
+    const n = answers.nutrition;
+    if (n?.goalWeight) profileUpdates.goalW = Number(n.goalWeight);
+    if (n?.targetDate) profileUpdates.targetDate = n.targetDate;
     // funnelPending persists (store deep-merges profile) so the calculating→
     // gameplan hop resumes even across an email-confirmation reload — see the
     // funnel-resume effect above. Cleared on GamePlanScreen's onStart.
@@ -343,6 +367,8 @@ export default function App() {
               logs={logs}
               profile={profile}
               today={today}
+              adaptive={adaptive}
+              goal={primaryGoal}
             />
           </div>
         ) : activeTab === 'profile' ? (
