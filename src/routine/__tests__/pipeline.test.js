@@ -138,4 +138,88 @@ describe('buildDailyRoutine', () => {
     expect(tierUpsell).toBeDefined();
     expect(tierUpsell.target).toBe('pro');
   });
+
+  describe('_system domain sweep regression coverage', () => {
+    it('surfaces _system protocol tasks when ≥1 active goal exists', () => {
+      const systemProto = makeProtocol('sys-check', '_system', [
+        { id: 'sys-task-1', title: 'Daily Check-in', category: 'morning', priority: 1, skippable: true },
+      ]);
+      const workoutProto = makeProtocol('workout', 'body', [
+        { id: 't1', label: 'Morning lift', priority: 1, category: 'training', skippable: false },
+      ]);
+
+      const goals = [
+        {
+          id: 'goal_1',
+          title: 'Get Shredded',
+          priority: 1,
+          activeProtocols: [{ protocolId: 'workout' }],
+        },
+      ];
+
+      const result = buildDailyRoutine({
+        goals,
+        protocolMap: { 'sys-check': systemProto, workout: workoutProto },
+        profile: {},
+        settings: { routineCapacity: 'normal' },
+      });
+
+      const allTasks = [...result.scheduled, ...result.deferred];
+      expect(allTasks.some(t => t.id === 'sys-task-1')).toBe(true);
+      const sysTask = allTasks.find(t => t.id === 'sys-task-1');
+      expect(sysTask.protocolId).toBe('sys-check');
+    });
+
+    it('does not sweep _system protocols when goals array is empty', () => {
+      const systemProto = makeProtocol('sys-check', '_system', [
+        { id: 'sys-task-1', title: 'Daily Check-in', category: 'morning', priority: 1, skippable: true },
+      ]);
+
+      const result = buildDailyRoutine({
+        goals: [],
+        protocolMap: { 'sys-check': systemProto },
+        profile: {},
+        settings: { routineCapacity: 'normal' },
+      });
+
+      const allTasks = [...result.scheduled, ...result.deferred];
+      expect(allTasks.some(t => t.id === 'sys-task-1')).toBe(false);
+    });
+
+    it('does not crash when _system protocol lacks getTasks function', () => {
+      const systemProtoNoGetTasks = {
+        id: 'sys-broken',
+        domain: '_system',
+        name: 'sys-broken',
+        icon: '',
+        canServe: () => true,
+        getState: () => ({ phase: 'active' }),
+        // Missing getTasks intentionally
+        getAutomations: () => [],
+        getRecommendations: () => [],
+        getUpsells: () => [],
+      };
+      const workoutProto = makeProtocol('workout', 'body', [
+        { id: 't1', label: 'Morning lift', priority: 1, category: 'training', skippable: false },
+      ]);
+
+      const goals = [
+        {
+          id: 'goal_1',
+          title: 'Get Shredded',
+          priority: 1,
+          activeProtocols: [{ protocolId: 'workout' }],
+        },
+      ];
+
+      expect(() => {
+        buildDailyRoutine({
+          goals,
+          protocolMap: { 'sys-broken': systemProtoNoGetTasks, workout: workoutProto },
+          profile: {},
+          settings: { routineCapacity: 'normal' },
+        });
+      }).not.toThrow();
+    });
+  });
 });
