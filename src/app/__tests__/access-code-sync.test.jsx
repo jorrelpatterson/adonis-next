@@ -74,6 +74,24 @@ describe('access code -> user metadata sync', () => {
     expect(getAllByText('Elite').length).toBeGreaterThan(0);
   });
 
+  it('does NOT downgrade: an Elite user redeeming a pro-tier code keeps elite and never stamps metadata', () => {
+    useAuth.mockReturnValue({ user: { id: 'u1' }, tier: 'free', loading: false, signOut: vi.fn() });
+    updateUserTier.mockResolvedValue({ user: { id: 'u1' }, error: null });
+
+    const { getByText, getByPlaceholderText, getAllByText } = renderApp({ ...COMPLETE_PROFILE, tier: 'elite' });
+
+    fireEvent.click(getByText('Profile'));
+
+    const input = getByPlaceholderText('Enter code');
+    fireEvent.change(input, { target: { value: 'ADONIS2026' } }); // pro tier — a downgrade for an elite user
+    fireEvent.click(getByText('Apply'));
+
+    expect(updateUserTier).not.toHaveBeenCalled();
+    expect(getByText(/already have/i)).toBeTruthy();
+    // Tier badge stays Elite (never drops to pro)
+    expect(getAllByText('Elite').length).toBeGreaterThan(0);
+  });
+
   it('restores local profile tier from metadata on sign-in when metadata outranks local (never downgrades)', () => {
     // authTier 'pro' from metadata; local profile seeded fresh at 'free' —
     // restore effect should upgrade local to 'pro'.

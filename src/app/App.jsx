@@ -156,17 +156,27 @@ export default function App() {
 
   const handleAccessCode = useCallback(() => {
     const result = validateAccessCode(accessCodeInput);
-    if (result) {
-      setProfile({ tier: result.tier });
-      // Stamp into Supabase user metadata so the unlock survives reinstall
-      // (Task 13). Best-effort — never block the local unlock on this.
-      if (user) updateUserTier(result.tier, accessCodeInput).catch(() => {});
-      setAccessCodeMsg('Activated: ' + result.name + ' (' + result.tier + ' tier)');
-      setAccessCodeInput('');
-    } else {
+    if (!result) {
       setAccessCodeMsg('Invalid code');
+      return;
     }
-  }, [accessCodeInput, setProfile, user]);
+    // Guard against a durable DOWNGRADE: a redeemed code must only ever raise
+    // the tier. Without this an Elite user typing a pro-tier code (e.g.
+    // ADONIS2026) drops to pro both locally AND in user metadata — and the
+    // no-downgrade restore-on-login can't recover it. Same TIER_RANK rule the
+    // metadata-restore effect uses.
+    const currentTier = profile.tier || 'free';
+    if (TIER_RANK[result.tier] <= TIER_RANK[currentTier]) {
+      setAccessCodeMsg('You already have ' + (SUB_TIERS[currentTier]?.name || currentTier) + ' access');
+      return;
+    }
+    setProfile({ tier: result.tier });
+    // Stamp into Supabase user metadata so the unlock survives reinstall
+    // (Task 13). Best-effort — never block the local unlock on this.
+    if (user) updateUserTier(result.tier, accessCodeInput).catch(() => {});
+    setAccessCodeMsg('Activated: ' + result.name + ' (' + result.tier + ' tier)');
+    setAccessCodeInput('');
+  }, [accessCodeInput, setProfile, user, profile.tier]);
 
   const activeGoals = goals.filter(g => g.status === 'active');
 
