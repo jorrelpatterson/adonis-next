@@ -14,12 +14,19 @@ import TabNav from './TabNav';
 import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
 import { useAuth } from '../services/useAuth.js';
+import { updateUserTier } from '../services/auth.js';
 import { isProfileIncomplete } from '../auth/ProfileSetup.jsx';
 import AuthScreen from '../auth/AuthScreen.jsx';
 import OnboardingFlow from '../onboarding/OnboardingFlow.jsx';
 import CalculatingScreen from '../onboarding/CalculatingScreen.jsx';
 import GamePlanScreen from '../onboarding/GamePlanScreen.jsx';
 import { buildInitialGoals } from '../onboarding/initial-goals.js';
+
+// Task 13: metadata tier (stamped on redemption, see updateUserTier) is the
+// source of truth on sign-in — the restore effect below only ever upgrades
+// the local profile toward it, never downgrades (a code redeemed while
+// signed out must survive a subsequent login with a lower/blank metadata tier).
+const TIER_RANK = { free: 0, pro: 1, elite: 2 };
 
 export default function App() {
   const { state, addGoal, removeGoal, setProfile, setProtocolState, log, updateGoal } = useAppState();
@@ -35,7 +42,7 @@ export default function App() {
 
   // ─── auth-gated funnel (spec decision 4: signup gate BEFORE protocol
   // delivery) — onboarding → signup → calculating → gameplan → app ────────
-  const { user, loading: authLoading } = useAuth();
+  const { user, tier: authTier, loading: authLoading } = useAuth();
   const [funnel, setFunnel] = useState(null); // null = derive from profile/user; 'signup' | 'calculating' | 'gameplan' are transient stages
 
   // Signup gate resolves (user just authenticated) → advance to calculating.
@@ -54,6 +61,18 @@ export default function App() {
       setFunnel('calculating');
     }
   }, [funnel, user]);
+
+  // Metadata tier restore-on-login (Task 13): a tier stamped into Supabase
+  // user metadata (via updateUserTier, e.g. an access code redeemed on
+  // another device) survives reinstall — on any sign-in where it outranks
+  // the local profile tier, upgrade the local profile to match. Never
+  // downgrades: TIER_RANK comparison means a locally-redeemed elite code
+  // stays elite even if metadata is still 'free'.
+  useEffect(() => {
+    if (user && TIER_RANK[authTier] > TIER_RANK[profile.tier || 'free']) {
+      setProfile({ tier: authTier });
+    }
+  }, [user, authTier]);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -103,12 +122,15 @@ export default function App() {
     const result = validateAccessCode(accessCodeInput);
     if (result) {
       setProfile({ tier: result.tier });
+      // Stamp into Supabase user metadata so the unlock survives reinstall
+      // (Task 13). Best-effort — never block the local unlock on this.
+      if (user) updateUserTier(result.tier, accessCodeInput).catch(() => {});
       setAccessCodeMsg('Activated: ' + result.name + ' (' + result.tier + ' tier)');
       setAccessCodeInput('');
     } else {
       setAccessCodeMsg('Invalid code');
     }
-  }, [accessCodeInput, setProfile]);
+  }, [accessCodeInput, setProfile, user]);
 
   const activeGoals = goals.filter(g => g.status === 'active');
 
