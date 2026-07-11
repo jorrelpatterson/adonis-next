@@ -36,6 +36,30 @@ describe('auth service', () => {
       }));
     });
 
+    it('flags needsConfirmation when signUp returns no session (email confirmations ON)', async () => {
+      const fakeUser = { id: 'user-123', email: 'a@b.com' };
+      mockSupabase.auth.signUp.mockResolvedValue({ data: { user: fakeUser, session: null }, error: null });
+
+      const result = await auth.signUpWithEmail('a@b.com', 'password123');
+
+      expect(result.needsConfirmation).toBe(true);
+      expect(result.user).toEqual(fakeUser);
+      expect(result.error).toBeNull();
+    });
+
+    it('does not flag needsConfirmation when a session is returned immediately', async () => {
+      const fakeUser = { id: 'user-123', email: 'a@b.com' };
+      mockSupabase.auth.signUp.mockResolvedValue({
+        data: { user: fakeUser, session: { access_token: 'tok' } },
+        error: null,
+      });
+
+      const result = await auth.signUpWithEmail('a@b.com', 'password123');
+
+      expect(result.needsConfirmation).toBe(false);
+      expect(result.user).toEqual(fakeUser);
+    });
+
     it('returns error message on failure', async () => {
       mockSupabase.auth.signUp.mockResolvedValue({
         data: { user: null },

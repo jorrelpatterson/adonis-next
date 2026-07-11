@@ -46,6 +46,7 @@ describe('App funnel gate', () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
+    delete global.fetch;
   });
 
   it('fresh state (empty profile) + no user renders onboarding, not the tab shell', () => {
@@ -72,6 +73,21 @@ describe('App funnel gate', () => {
     expect(getByText('Routine')).toBeTruthy();
     expect(queryByText('Welcome back')).toBeFalsy();
     expect(queryByText('Tell us about you')).toBeFalsy();
+  });
+
+  it('complete profile + funnelPending + signed-in user resumes at CalculatingScreen (not the tab shell)', () => {
+    // Confirmation-reload / signup→calculating resume path: the onboarding-
+    // complete handler stamps funnelPending onto the (persisted) profile, so
+    // when the user is present the funnel-resume effect must advance to
+    // calculating rather than silently landing on the tab shell.
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true }));
+    useAuth.mockReturnValue({ user: { id: 'u1', email: 'a@b.com' }, tier: 'free', loading: false, signOut: vi.fn() });
+
+    const { getByText, queryByText } = renderApp({ ...COMPLETE_PROFILE, funnelPending: true });
+
+    expect(getByText(/Analyzing your profile/)).toBeTruthy();
+    expect(queryByText('Routine')).toBeFalsy();
+    expect(global.fetch).toHaveBeenCalledWith('/api/app-signup', expect.objectContaining({ method: 'POST' }));
   });
 
   it('loading renders the boot splash, with no AuthScreen flash', () => {

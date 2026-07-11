@@ -28,7 +28,11 @@ export async function signUpWithEmail(email, password) {
     },
   });
   if (error) return { user: null, error: error.message };
-  return { user: data.user, error: null };
+  // With Supabase email confirmations ON (spec-mandated), signUp resolves
+  // {user, session: null} and no error — the user must click the emailed
+  // link before a session exists. Surface that so AuthScreen can show a
+  // "check your email" state instead of silently sitting at the gate.
+  return { user: data.user, needsConfirmation: !data?.session, error: null };
 }
 
 export async function signInWithEmail(email, password) {

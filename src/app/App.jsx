@@ -59,12 +59,16 @@ export default function App() {
   const e2e = e2eParams?.get('e2e') === '1';
   const forcedScreen = e2eParams?.get('screen');
 
-  // Signup gate resolves (user just authenticated) → advance to calculating.
-  // This is a state transition, not a render-time decision, so it lives in
-  // an effect rather than `if (funnel === 'signup' && user) setFunnel(...)`
-  // during render (which would be a setState-during-render violation).
+  // Funnel resume — keyed on (user, profile.funnelPending) rather than the
+  // transient `funnel` stage. `funnelPending` is stamped onto the profile at
+  // onboarding-complete and PERSISTS (store deep-merges profile), so BOTH
+  // resume paths land here: (a) immediate session — user authenticates while
+  // funnel==='signup'; (b) email-confirmation reload — the app reloads with
+  // funnel=null after the user clicks the confirm link, but the persisted
+  // funnelPending flag re-triggers this. Either way we resume at calculating
+  // → gameplan instead of silently dumping the user into the tab shell.
   useEffect(() => {
-    if (funnel === 'signup' && user) {
+    if (user && profile.funnelPending && funnel !== 'calculating' && funnel !== 'gameplan') {
       // Lead capture: upsert into `subscribers` so the existing welcome-drip
       // cron (app/api/cron/welcome-emails) picks the new app signup up.
       // Fire-and-forget — must never block the funnel on fetch failure.
@@ -74,7 +78,8 @@ export default function App() {
       }).catch(() => {}); // relative URL resolves in prod (app served under the Next domain) and no-ops in vite dev
       setFunnel('calculating');
     }
-  }, [funnel, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, profile.funnelPending]);
 
   // Metadata tier restore-on-login (Task 13): a tier stamped into Supabase
   // user metadata (via updateUserTier, e.g. an access code redeemed on
@@ -169,7 +174,10 @@ export default function App() {
     const answers = protocolAnswers || {};
     const primary = answers.workout?.primary;
     if (primary) profileUpdates.fitnessPillars = [primary];
-    setProfile(profileUpdates);
+    // funnelPending persists (store deep-merges profile) so the calculating→
+    // gameplan hop resumes even across an email-confirmation reload — see the
+    // funnel-resume effect above. Cleared on GamePlanScreen's onStart.
+    setProfile({ ...profileUpdates, funnelPending: true });
     Object.entries(answers).forEach(([pid, data]) => setProtocolState(pid, data));
     buildInitialGoals({ ...profile, ...profileUpdates }, answers).forEach(addGoal);
     setFunnel('signup'); // signup gate BEFORE protocol delivery (spec decision 4)
@@ -197,7 +205,7 @@ export default function App() {
       return <CalculatingScreen profile={profile} onComplete={() => setFunnel('gameplan')} />;
     }
     if (funnel === 'gameplan') {
-      return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => setFunnel(null)} />;
+      return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => { setProfile({ funnelPending: false }); setFunnel(null); }} />;
     }
     if (isProfileIncomplete(profile)) {
       return <OnboardingFlow initialProfile={profile} onComplete={handleOnboardingComplete} />;

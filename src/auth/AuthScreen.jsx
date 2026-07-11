@@ -11,6 +11,10 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  // Set to the submitted email once a signup succeeds but still needs email
+  // confirmation (Supabase confirmations ON → no session yet). Swaps the form
+  // for a "check your email" card so the user isn't left staring at a dead end.
+  const [confirmSentTo, setConfirmSentTo] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +29,17 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
     }
     setLoading(true);
     const fn = mode === 'signup' ? signUpWithEmail : signInWithEmail;
-    const { error: err } = await fn(email, password);
+    const { error: err, needsConfirmation } = await fn(email, password);
     setLoading(false);
-    if (err) setError(typeof err === 'string' ? err : (err.message || 'Something went wrong'));
-    // On success, useAuth's onAuthStateChange listener will rerender App
+    if (err) {
+      setError(typeof err === 'string' ? err : (err.message || 'Something went wrong'));
+      return;
+    }
+    if (mode === 'signup' && needsConfirmation) {
+      setConfirmSentTo(email);
+      return;
+    }
+    // On session-bearing success, useAuth's onAuthStateChange listener rerenders App
   };
 
   return (
@@ -53,6 +64,19 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
           <H t={heading} sub={subheading} eyebrow="Protocol OS" />
         </div>
 
+        {confirmSentTo ? (
+          <div className="adn-reveal" style={{ ...s.card, padding: 24, textAlign: 'center' }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>{'✉'}</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: P.txS, marginBottom: 8 }}>
+              Check your email
+            </div>
+            <div style={{ fontSize: 12, color: P.txD, lineHeight: 1.6 }}>
+              We sent a confirmation link to{' '}
+              <span style={{ color: P.txS, fontWeight: 600 }}>{confirmSentTo}</span>.
+              Click it to unlock your game plan.
+            </div>
+          </div>
+        ) : (
         <div className="adn-reveal" style={{ ...s.card, padding: 24 }}>
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
             <div style={{ fontSize: 16, fontWeight: 600, color: P.txS }}>
@@ -125,6 +149,7 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
             </button>
           </div>
         </div>
+        )}
 
         <div style={{ textAlign: 'center', marginTop: 16, fontSize: 9, color: P.txD, letterSpacing: 1, lineHeight: 1.6 }}>
           By signing up you agree to the protocol design as research<br />and education, not medical advice.

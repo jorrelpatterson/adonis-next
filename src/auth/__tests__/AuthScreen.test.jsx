@@ -79,4 +79,20 @@ describe('AuthScreen', () => {
     });
     expect(signUpWithEmail).toHaveBeenCalledWith('a@b.com', 'password1');
   });
+
+  it('renders a "check your email" state when signup succeeds needing confirmation', async () => {
+    signUpWithEmail.mockResolvedValue({ user: { id: 'u1' }, needsConfirmation: true, error: null });
+
+    render(<AuthScreen initialMode="signup" />);
+
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'new@user.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password1' } });
+    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/check your email/i)).toBeTruthy();
+    });
+    // The submitted email is surfaced so the user knows where to look
+    expect(screen.getByText('new@user.com')).toBeTruthy();
+  });
 });
