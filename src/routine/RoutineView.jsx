@@ -58,6 +58,7 @@ export default function RoutineView({
   routine, onCheckTask, onTaskTap, completedTasks = [],
   day, goals = [], onDayChange,
   logs = {}, profile = {}, today,
+  adaptive: adaptiveProp = null, goal,
 }) {
   const dayIdx = day.getDay();
   const completed = new Set(Array.isArray(completedTasks) ? completedTasks : []);
@@ -83,10 +84,21 @@ export default function RoutineView({
     if (typeof window === 'undefined' || !recapKey) return false;
     try { return localStorage.getItem(recapKey) === '1'; } catch { return false; }
   });
-  const showRecap = !recapShown && day && isRecapDay(day) && (logs?.routine || logs?.exercise);
+  // I6: fire only when the user is viewing REAL today and it's Sunday. The
+  // dismissal key (recapKey) is tied to `today`, so gating on the browsed
+  // `day` alone let a user browse a future/past Sunday chip on a non-Sunday
+  // and trigger a recap that could never be dismissed against the right key.
+  // isToday already guarantees day===today, so isRecapDay(day) here is
+  // equivalent to isRecapDay(today).
+  const showRecap = !recapShown && isToday && isRecapDay(day) && (logs?.routine || logs?.exercise);
   const weekStats = useMemo(
-    () => showRecap ? buildWeekStats({ logs, profile, today }) : null,
-    [showRecap, logs, profile, today]
+    // I1: score the recap against the SAME primary goal the pace banner uses
+    // (threaded from App as a prop) rather than letting buildWeekStats fall
+    // back to profile?.primary alone — otherwise a user whose active goal
+    // label lives in protocolStates (not yet mirrored to profile.primary)
+    // gets scored against 'Wellness' (no deficit) instead of their real goal.
+    () => showRecap ? buildWeekStats({ logs, profile, today, goal }) : null,
+    [showRecap, logs, profile, today, goal]
   );
   const dismissRecap = () => {
     try { if (recapKey) localStorage.setItem(recapKey, '1'); } catch { /* noop */ }
@@ -100,7 +112,13 @@ export default function RoutineView({
   const deloadAlert = isToday ? buildDeloadAlert(logs, today) : null;
   const intensity = isToday ? computeWorkoutIntensity(profile, logs, today) : 'normal';
   const intensityLabel = getIntensityLabel(intensity);
-  const adaptive = isToday ? computeAdaptive(profile, logs?.weight, today, profile?.primary) : null;
+  // I1: prefer the memoized `adaptive` App threads down (computed off the same
+  // primaryGoal everything else scores against). Fall back to a local recompute
+  // only when the prop is absent (unit tests render RoutineView standalone).
+  // Still gated on isToday so the pace banner stays a today-only surface.
+  const adaptive = isToday
+    ? (adaptiveProp ?? computeAdaptive(profile, logs?.weight, today, goal ?? profile?.primary))
+    : null;
 
   return (
     <div>

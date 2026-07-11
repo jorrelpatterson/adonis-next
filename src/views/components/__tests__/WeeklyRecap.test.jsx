@@ -59,6 +59,25 @@ describe('buildWeekStats — calorie target derivation (archive bug fixes a+b)',
   });
 });
 
+describe('buildWeekStats — I1 goal threading (scores calsOnTarget against the passed goal)', () => {
+  // baseProfile → weight 200, 5'10", 30, male, sedentary → TDEE 2248.
+  // Fat Loss baseAdj is -500 → deficit target 1748 (10% band [1573.2, 1922.8]).
+  // Wellness → maintenance target 2248 (10% band [2023.2, 2472.8]).
+  const foodDay = (cal) => ({ routine: {}, exercise: [], weight: [], food: { '2026-01-08': [{ name: 'day', cal }] } });
+
+  it('goal="Fat Loss": a TDEE-500 day counts (under the deficit target), a maintenance-TDEE day does not', () => {
+    const profile = baseProfile();
+    expect(buildWeekStats({ logs: foodDay(1748), profile, today: TODAY, goal: 'Fat Loss' }).calsOnTarget).toBe(1);
+    expect(buildWeekStats({ logs: foodDay(2248), profile, today: TODAY, goal: 'Fat Loss' }).calsOnTarget).toBe(0);
+  });
+
+  it('default goal (Wellness, no override) scores against maintenance instead — flips which day is on-target', () => {
+    const profile = baseProfile(); // no profile.primary → effectiveGoal defaults to 'Wellness'
+    expect(buildWeekStats({ logs: foodDay(1748), profile, today: TODAY }).calsOnTarget).toBe(0);
+    expect(buildWeekStats({ logs: foodDay(2248), profile, today: TODAY }).calsOnTarget).toBe(1);
+  });
+});
+
 describe('buildWeekStats — prCount', () => {
   it('counts isPR entries from logs.exercise that fall within the 7-day window, and excludes entries outside it', () => {
     const profile = baseProfile();

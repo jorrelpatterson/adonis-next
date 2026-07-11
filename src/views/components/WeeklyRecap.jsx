@@ -84,14 +84,19 @@ export function buildWeekStats({ logs, profile, today = ymd(new Date()), goal })
   // nowhere on the profile shape (targetCals was always 0/undefined, so
   // calsOnTarget always computed to 0 regardless of actual adherence).
   // Derive the day's calorie target the same way the rest of the app does:
-  // the adaptive engine's `adaptedTarget` when a goal weight/date is set,
-  // falling back to the static `calcCalorieTarget` otherwise. Both tolerate
-  // a sparse profile (missing weight/height/age all coerce to 0 rather than
-  // NaN-propagating), so `targetCals` is always a finite number.
-  const targetCals = Number(
+  // the adaptive engine's `adaptedTarget` when it's real, else the static
+  // `calcCalorieTarget`. adaptedTarget uses 0 as a "no valid profile" sentinel
+  // (see adaptive-calories.js + HomeDashboard's calories tile) — it is never
+  // nullish, so the old `?? calcCalorieTarget` chain was dead code that could
+  // never fall back. Gate on `> 0` explicitly instead. Both branches tolerate
+  // a sparse profile (missing weight/height/age coerce to 0, not NaN), so
+  // `targetCals` is always a finite number.
+  const adaptedTarget = Number(
     computeAdaptive(profile, logs?.weight, today, effectiveGoal)?.adaptedTarget
-      ?? calcCalorieTarget(profile, effectiveGoal)
   ) || 0;
+  const targetCals = adaptedTarget > 0
+    ? adaptedTarget
+    : (Number(calcCalorieTarget(profile, effectiveGoal)) || 0);
   const calsOnTarget = targetCals
     ? caloriesByDay.filter(c => c > 0 && Math.abs(c - targetCals) <= targetCals * 0.1).length
     : 0;
