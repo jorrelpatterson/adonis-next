@@ -53,6 +53,17 @@ describe('useAppState', () => {
     expect(result.current.state.goals[0].title).toBe('Lose 30lbs');
     expect(result.current.state.goals[0].status).toBe('active');
     expect(result.current.state.goals[0].id).toBeDefined();
+    expect(result.current.state.goals[0].parentId).toBeNull();
+    expect(result.current.state.goals[0].progress).toEqual({ percent: 0, current: null, trend: 'on_track', projectedCompletion: null });
+    expect(result.current.state.goals[0].revenue).toEqual({ total: 0, items: [] });
+  });
+
+  it('addGoal preserves an explicit parentId from the payload (decomposition-ready)', () => {
+    const { result } = renderHook(() => useAppState(), { wrapper });
+    act(() => {
+      result.current.addGoal({ title: 'Save $3k', domain: 'money', parentId: 'goal_parent123' });
+    });
+    expect(result.current.state.goals[0].parentId).toBe('goal_parent123');
   });
 
   it('updates protocol state via setProtocolState', () => {

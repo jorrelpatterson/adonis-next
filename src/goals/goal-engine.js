@@ -7,13 +7,23 @@ function generateId() {
   return 'goal_' + Date.now().toString(36) + '_' + idCounter.toString(36);
 }
 
+function emptyProgress() {
+  return { percent: 0, current: null, trend: 'on_track', projectedCompletion: null };
+}
+
+function emptyRevenue() {
+  return { total: 0, items: [] };
+}
+
 /**
  * Creates a goal from a template and user answers.
  * @param {object} template - A GOAL_TEMPLATES entry
  * @param {object} answers  - Key/value answers from setupQuestions
+ * @param {object} [opts]   - Optional overrides
+ * @param {string|null} [opts.parentId] - Parent goal id for decomposition (null = top-level)
  * @returns {object} goal
  */
-export function createGoalFromTemplate(template, answers) {
+export function createGoalFromTemplate(template, answers, opts = {}) {
   const target = template.buildTarget(answers);
   return {
     id: generateId(),
@@ -25,8 +35,9 @@ export function createGoalFromTemplate(template, answers) {
     target,
     deadline: answers.deadline || target.deadline || null,
     activeProtocols: [...template.protocols],
-    progress: 0,
-    revenue: 0,
+    parentId: opts.parentId || null,
+    progress: emptyProgress(),
+    revenue: emptyRevenue(),
     createdAt: new Date().toISOString(),
   };
 }
@@ -34,9 +45,11 @@ export function createGoalFromTemplate(template, answers) {
 /**
  * Creates a structured goal from a raw input object.
  * @param {object} input
+ * @param {object} [opts]   - Optional overrides
+ * @param {string|null} [opts.parentId] - Parent goal id for decomposition (null = top-level)
  * @returns {object} goal
  */
-export function createGoalFromInput(input) {
+export function createGoalFromInput(input, opts = {}) {
   return {
     id: generateId(),
     title: input.title,
@@ -47,10 +60,29 @@ export function createGoalFromInput(input) {
     target: input.target || {},
     deadline: input.deadline || null,
     activeProtocols: input.activeProtocols || [],
-    progress: 0,
-    revenue: 0,
+    parentId: opts.parentId || null,
+    progress: emptyProgress(),
+    revenue: emptyRevenue(),
     createdAt: new Date().toISOString(),
   };
+}
+
+/**
+ * Creates a child goal decomposed from a parent goal, inheriting the
+ * parent's deadline unless the child input specifies its own. This is
+ * the groundwork for the post-MVP Bucket List orchestrator, where a
+ * top-level goal (e.g. "Egypt trip") decomposes into child goals
+ * (e.g. "Save $3k") that share a deadline by default.
+ * @param {object} parentGoal - The parent goal object
+ * @param {object} input      - Raw input for the child goal (same shape as createGoalFromInput)
+ * @returns {object} child goal
+ */
+export function createChildGoal(parentGoal, input) {
+  const childInput = {
+    ...input,
+    deadline: input.deadline || parentGoal.deadline || null,
+  };
+  return createGoalFromInput(childInput, { parentId: parentGoal.id });
 }
 
 /**
@@ -58,7 +90,7 @@ export function createGoalFromInput(input) {
  * @param {object} goal
  * @param {number} currentValue
  * @param {string} today - ISO date string (YYYY-MM-DD)
- * @returns {{ percent: number, trend: string }}
+ * @returns {{ percent: number, current: number, trend: string, projectedCompletion: null }}
  */
 export function updateGoalProgress(goal, currentValue, today) {
   const { start, end } = goal.target;
@@ -95,7 +127,7 @@ export function updateGoalProgress(goal, currentValue, today) {
     }
   }
 
-  return { percent, trend };
+  return { percent, current: currentValue, trend, projectedCompletion: null };
 }
 
 /**

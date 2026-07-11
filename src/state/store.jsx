@@ -34,6 +34,7 @@ function reducer(state, action) {
         id: 'goal_' + Date.now().toString(36),
         status: 'active',
         priority: state.goals.length + 1,
+        parentId: null,
         activeProtocols: [],
         progress: { percent: 0, current: null, trend: 'on_track', projectedCompletion: null },
         revenue: { total: 0, items: [] },

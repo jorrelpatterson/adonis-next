@@ -3,6 +3,7 @@ import { GOAL_TEMPLATES } from "../goal-templates";
 import {
   createGoalFromTemplate,
   createGoalFromInput,
+  createChildGoal,
   updateGoalProgress,
   activateProtocolsForGoal,
   decomposeGoal,
@@ -34,8 +35,9 @@ describe("createGoalFromTemplate", () => {
     expect(goal.deadline).toBe("2026-12-31");
     expect(Array.isArray(goal.activeProtocols)).toBe(true);
     expect(goal.activeProtocols.length).toBe(3);
-    expect(goal.progress).toBe(0);
-    expect(goal.revenue).toBe(0);
+    expect(goal.parentId).toBeNull();
+    expect(goal.progress).toEqual({ percent: 0, current: null, trend: 'on_track', projectedCompletion: null });
+    expect(goal.revenue).toEqual({ total: 0, items: [] });
     expect(goal.createdAt).toBeDefined();
     expect(typeof goal.createdAt).toBe("string");
   });
@@ -83,8 +85,9 @@ describe("createGoalFromInput", () => {
     expect(goal.target).toEqual(input.target);
     expect(goal.deadline).toBe("2026-12-31");
     expect(goal.activeProtocols).toEqual([]);
-    expect(goal.progress).toBe(0);
-    expect(goal.revenue).toBe(0);
+    expect(goal.parentId).toBeNull();
+    expect(goal.progress).toEqual({ percent: 0, current: null, trend: 'on_track', projectedCompletion: null });
+    expect(goal.revenue).toEqual({ total: 0, items: [] });
     expect(goal.createdAt).toBeDefined();
   });
 });
@@ -158,6 +161,30 @@ describe("updateGoalProgress", () => {
     };
     const result = updateGoalProgress(noDeadlineGoal, 200, "2026-04-06");
     expect(result.trend).toBe("on_track");
+  });
+});
+
+describe("decomposition-ready goal model (parentId, createChildGoal, object progress/revenue)", () => {
+  it('goals carry parentId (null by default, settable via opts)', () => {
+    const g = createGoalFromInput({ title: 'x', domain: 'body' });
+    expect(g.parentId).toBeNull();
+    const c = createGoalFromInput({ title: 'y', domain: 'money' }, { parentId: g.id });
+    expect(c.parentId).toBe(g.id);
+  });
+
+  it('createChildGoal inherits parent deadline when input has none', () => {
+    const parent = createGoalFromInput({ title: 'Egypt', domain: 'purpose', deadline: '2027-06-01' });
+    const child = createChildGoal(parent, { title: 'Save $3k', domain: 'money' });
+    expect(child.parentId).toBe(parent.id);
+    expect(child.deadline).toBe('2027-06-01');
+    const child2 = createChildGoal(parent, { title: 'Visa', domain: 'travel', deadline: '2027-03-01' });
+    expect(child2.deadline).toBe('2027-03-01');
+  });
+
+  it('progress and revenue are always objects', () => {
+    const g = createGoalFromInput({ title: 'x', domain: 'body' });
+    expect(g.progress).toEqual({ percent: 0, current: null, trend: 'on_track', projectedCompletion: null });
+    expect(g.revenue).toEqual({ total: 0, items: [] });
   });
 });
 

@@ -209,8 +209,9 @@ describe('buildInitialGoals', () => {
     for (const goal of goals) {
       expect(goal.id).toMatch(/^goal_/);
       expect(goal.status).toBe('active');
-      expect(goal.progress).toBe(0);
-      expect(goal.revenue).toBe(0);
+      expect(goal.parentId).toBeNull();
+      expect(goal.progress).toEqual({ percent: 0, current: null, trend: 'on_track', projectedCompletion: null });
+      expect(goal.revenue).toEqual({ total: 0, items: [] });
       expect(typeof goal.createdAt).toBe('string');
     }
   });
