@@ -43,29 +43,29 @@ Findings recorded during extraction (parity decisions for the port):
 
 ---
 
-## Home / Check-in (`CheckinV` 5350) — Phase 3
+## Home / Check-in (`CheckinV` 5350) — Phase 3 ✅ (closed 2026-07-11, branch phase3-daily-loop)
 
-- [ ] Daily check-in, 8 sliders (`CHECKIN_FIELDS` 195) — **adapt**: revival CheckinModal on main's check-in data model (spec duplicate-pair ruling). Parity bar: all 8 fields survive.
-- [ ] Domain-aware stat cards (5375-5407) — **adapt** into HomeDashboard stat tiles.
-- [ ] Weight logging + sparkline — **port** (WeightLogger, Phase 3).
-- [ ] 7-day mood strip — **port** (explicitly in Phase 3).
-- [ ] Daily notes — **port**.
-- [ ] Menstrual-cycle phase banner, `getCycleInfo` water-retention + BMR adjustments — **port** 🧪. Easy to lose; it's buried in Home, not Food.
-- [ ] Bonus-deadline + low-supply alert banners — **adapt** into routine-intelligence alerts (Phase 3).
-- [ ] Quick-action deep-link tiles — **adapt** to v2 nav.
+- [x] Daily check-in, 8 sliders (`CHECKIN_FIELDS` 195) — **adapt** DONE: CheckinModal on main's CHECKIN_FIELDS (all 8 fields, save-gated), writes `logs.checkins[today]` (real-today key, view-day misfile bug fixed a5d7782).
+- [x] Domain-aware stat cards (5375-5407) — **adapt** DONE: HomeDashboard stat tiles (calories-left w/ adaptedTarget>0 sentinel gate, routine %, weight) + protocol score ring.
+- [x] Weight logging + sparkline — **port** DONE: WeightLogger w/ 14-day chart, regression trend, goal-cross → GoalCompleteScreen.
+- [x] 7-day mood strip — **port** DONE (HomeDashboard, colors from CHECKIN_FIELDS.mood).
+- [ ] Daily notes — ruling changed **port → defer** (2026-07-11): archive HomeDashboard never had notes; low-value vs check-in sliders. Revisit with Phase 4 Insights if journaling matters.
+- [x] Menstrual-cycle phase banner, `getCycleInfo` water-retention + BMR adjustments — **port** DONE 🧪: cycle.js verbatim, golden 9/9; calMod bump in adaptive layer; banner on Home when cycleData present.
+- [x] Bonus-deadline + low-supply alert banners — **adapt** DONE: intelligence.js alert stack (check-in alerts, weight-trend, deload); v1's cards-bonus deadline alert itself follows the Money view in Phase 4.
+- [x] Quick-action deep-link tiles — **adapt** DONE as Next-Up card + check-in card tap (tile grid superseded by tab nav).
 
 ## Routine (`RoutineV` 6608) — Phase 3
 
-- [ ] `buildRoutine` daily merged timeline (peptides/workouts/meals/skincare/supplements/mind/work) — **adapt**: v2's protocol pipeline (collect→prioritize→schedule) is the successor. Parity bar: every v1 category emits tasks through some protocol; time-block calendar view.
-- [ ] Checkbox completion → routine % — **port** (drives protocol score on HomeDashboard).
+- [x] `buildRoutine` daily merged timeline — **adapt** DONE (2026-07-11): pipeline + `groupTasksByTimeBlock` calendar renders scheduledBlock; body categories (training/nutrition/supplement/peptide) + _system check-in emit today; skincare/mind/work protocol tasks arrive with their Phase 4 views. buildRoutine golden fixtures remain the v1 behavior reference.
+- [x] Checkbox completion → routine % — **port** DONE (drives HomeDashboard protocol score).
 - [x] RoutineView time-block calendar + intelligence surfaces — **ported** (Task 14, 2026-07-11): pace banner, yesterday recap, check-in/weight-trend alert stack, goal-progress cards, `groupTasksByTimeBlock` calendar (training collapses via `CollapsibleGroup`, peptides stay top-level), long-press `TaskContextMenu`, Sunday `WeeklyRecap` gated by the caller-owned `adonis_recap_dismissed_<date>` key, `StreakMilestone` tier-crossing takeover. TaskContextMenu pulled forward from Phase 4 (RoutineView dependency) — 2026-07-11. Also: `pipeline.js` additively gained the archive's `_system`-domain sweep (goals.length > 0 → walk `protocolMap` for `domain === '_system'` protocols and call `getTasks` directly) so the already-registered `checkinProtocol` (registered via `register-all.js`, previously dead code — its `getTasks` was never invoked because `collectTasks` only walks `goal.activeProtocols`) actually surfaces the "Daily Check-in" task in the routine. The archive's embedded `<HomeDashboard>` render inside RoutineView was intentionally NOT ported — Task 13 already promoted HomeDashboard to its own first-class Home tab in `App.jsx`; keeping the inline embed would have double-rendered it. See `.superpowers/sdd/task-14-report.md`.
 
 ## Food (`FoodV` 5409) — Phase 3
 
-- [ ] Food logging, `FOOD_DB` (204) + custom foods, per-day macro totals — **port**. FOOD_DB moves to protocol data file (single-source rule).
-- [ ] Adaptive engine: `calcBMR`/`calcTDEE`/`calcMacros`, deadline-pace, yesterday-overshoot carryover, cycle-phase bump, burn gap — **port** 🧪. This is the core Body IP.
-- [ ] 7-day intake chart + protein compliance — **port**.
-- [ ] Auto-scaled suggested meal plan — **port**.
+- [x] Food logging, `FOOD_DB` (204) + custom foods, per-day macro totals — **port** DONE: FoodLogger on single-source food-db.js (51 foods), custom entry, macro grid.
+- [x] Adaptive engine — **port** DONE 🧪 (2026-07-11): calorie-engine (calcMacros golden-exact; BMR/TDEE rounding + ||1.2 fallback = documented divergences), adaptive-calories pace engine (deadline-pace, yesterday nudge via getYesterdayDelta, burn-gap card, cycle calMod bump), validProfile guard (no fabricated targets).
+- [ ] 7-day intake chart + protein compliance — ruling changed **port → defer** (2026-07-11): archive FoodLogger never had the chart; fold into Phase 4 Insights view where weekly trends live.
+- [x] Auto-scaled suggested meal plan — **port** DONE via nutrition protocol MEALS task emission in the daily routine.
 
 ## Peptides (`StackV` 5851) — Phase 4
 
@@ -78,9 +78,9 @@ Findings recorded during extraction (parity decisions for the port):
 ## Train (`WorkoutV` 6369) — Phases 0✅/3
 
 - [x] Workout player, set logging, rest timer — **ported** (WorkoutView merged in Phase 0).
-- [ ] PR detection + celebration (`wkPRs` 3263) — **adapt**: revival WorkoutLogger/PRCelebration on main's architecture (spec pair ruling) 🧪 (PR detection).
-- [ ] `exercises.js` (112 exercises) + `programs.js` (Adonis PPL 16-week) — **port** into `src/` protocol data; delete `public/lib` at Phase 5 cutover (spec'd).
-- [ ] Goal→program map (3243) — **port**.
+- [x] PR detection + celebration (`wkPRs` 3263) — **adapt** DONE: PRCelebration fires transition-gated on main's setLog PR branch + celebration-grade `logs.exercise` session append; main's wkPRs record/badge unchanged. (v1 PR-detection golden fixture note: v1 stored max weight only — main's semantics match.)
+- [x] `exercises.js` + `programs.js` — **port** DONE (main's src/protocols/body/workout owns both; `public/lib` deletion stays a Phase 5 cutover step).
+- [x] Goal→program map (3243) — **port** DONE (getProgram/GOAL_ALIASES).
 - [x] GoalCompleteScreen pulled forward from Phase 4 (WeightLogger dependency) — 2026-07-11. Ported verbatim alongside `WeightLogger` (Phase 3, Task 12): sister screen to `PRCelebration`, same design-system deps only (`theme`, `GradText`, `sound`, `haptics`), no substitution needed.
 
 ## Tools (`ToolsV` 6324) — Phase 4
