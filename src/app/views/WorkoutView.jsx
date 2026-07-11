@@ -11,10 +11,11 @@ import WeekSelector from './workout/WeekSelector';
 import DeloadBanner from './workout/DeloadBanner';
 import ExerciseCard from './workout/ExerciseCard';
 import RestTimer from './workout/RestTimer';
+import PRCelebration from '../../views/components/PRCelebration';
 
 export default function WorkoutView({ fixedDayIdx }) {
-  const { state, setProtocolState } = useAppState();
-  const { profile, protocolState } = state;
+  const { state, setProtocolState, log } = useAppState();
+  const { profile, protocolState, logs } = state;
   const wk = protocolState.workout || { wkWeek: 1, wkLogs: {}, wkPRs: {}, wkSwaps: {} };
   const goal = profile.primary || 'Wellness';
   const resolvedGoal = GOAL_ALIASES[goal] || goal;
@@ -24,6 +25,7 @@ export default function WorkoutView({ fixedDayIdx }) {
   const initialDay = fixedDayIdx != null ? fixedDayIdx : (wk.wkViewDay ?? todayIdx);
   const [dayIdx, setDayIdx] = useState(initialDay);
   const [rest, setRest] = useState(null);
+  const [celebration, setCelebration] = useState(null);
 
   const dayWorkout = program[dayIdx];
   const week = wk.wkWeek || 1;
@@ -36,10 +38,18 @@ export default function WorkoutView({ fixedDayIdx }) {
       const pk = prKey(resolvedGoal, exName);
       const cur = nextPRs[pk] || 0;
       const w = Number(entry.wt) || 0;
-      if (w > cur) nextPRs = { ...nextPRs, [pk]: w };
+      if (w > cur) {
+        nextPRs = { ...nextPRs, [pk]: w };
+        setCelebration({ exercise: exName, weight: w, reps: entry.r });
+        const todayISO = new Date().toISOString().slice(0, 10);
+        log('exercise', [
+          ...(logs.exercise || []),
+          { date: todayISO, exercise: exName, sets: [entry], isPR: true },
+        ]);
+      }
     }
     setProtocolState('workout', { wkLogs: nextLogs, wkPRs: nextPRs });
-  }, [resolvedGoal, week, dayIdx, wk.wkLogs, wk.wkPRs, setProtocolState]);
+  }, [resolvedGoal, week, dayIdx, wk.wkLogs, wk.wkPRs, setProtocolState, logs.exercise, log]);
 
   const setSwap = useCallback((exName, altName) => {
     const k = swapKey(resolvedGoal, week, dayIdx, exName);
@@ -119,6 +129,15 @@ export default function WorkoutView({ fixedDayIdx }) {
           seconds={rest.seconds}
           onDone={() => setRest(null)}
           onSkip={() => setRest(null)}
+        />
+      )}
+
+      {celebration && (
+        <PRCelebration
+          exercise={celebration.exercise}
+          weight={celebration.weight}
+          reps={celebration.reps}
+          onClose={() => setCelebration(null)}
         />
       )}
     </div>

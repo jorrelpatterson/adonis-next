@@ -1,5 +1,5 @@
 // src/app/views/__tests__/WorkoutView.test.jsx
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import WorkoutView from '../WorkoutView';
@@ -74,5 +74,73 @@ describe('WorkoutView', () => {
     const goal = 'Muscle Gain';
     const expectedKey = logKey(goal, 1, 1, 'Conventional Deadlifts', 0);
     expect(snap.protocolState.workout.wkLogs[expectedKey]?.wt).toBe(315);
+  });
+
+  describe('PR celebration + session log', () => {
+    // countUpTo (design/motion.js) honors prefers-reduced-motion by resolving
+    // onUpdate(to) synchronously instead of animating via rAF — force that
+    // branch so PRCelebration's count-up settles immediately (same pattern
+    // as src/views/components/__tests__/PRCelebration.test.jsx).
+    beforeEach(() => {
+      vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query) => ({
+        matches: true,
+        media: query,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })));
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('shows PRCelebration and appends an isPR entry to logs.exercise when a set beats the seeded PR, then returns to the grid on close', () => {
+      let snap;
+      function Spy() { snap = useAppState().state; return null; }
+      const { container, getByText, queryByText } = render(withState(
+        <>
+          <Spy />
+          <WorkoutView fixedDayIdx={1} />
+        </>,
+        (ctx) => {
+          ctx.setProfile({ primary: 'Muscle Gain' });
+          ctx.setProtocolState('workout', {
+            wkPRs: { [prKey('Muscle Gain', 'Conventional Deadlifts')]: 300 },
+          });
+        },
+      ));
+
+      const weightInput = container.querySelector('input[type="number"]');
+      const repsInput = container.querySelectorAll('input[type="number"]')[1];
+      const checkbox = container.querySelector('input[type="checkbox"]');
+
+      fireEvent.change(weightInput, { target: { value: '315' } });
+      fireEvent.change(repsInput, { target: { value: '5' } });
+      fireEvent.click(checkbox);
+
+      expect(getByText('Personal Record')).toBeTruthy();
+      expect(snap.logs.exercise.length).toBe(1);
+      expect(snap.logs.exercise[0].isPR).toBe(true);
+      expect(snap.logs.exercise[0].exercise).toBe('Conventional Deadlifts');
+      expect(snap.logs.exercise[0].sets).toEqual([{ wt: 315, r: 5, c: true }]);
+      expect(snap.logs.exercise[0].date).toBe(new Date().toISOString().slice(0, 10));
+
+      fireEvent.click(getByText('Continue'));
+      expect(queryByText('Personal Record')).toBeFalsy();
+
+      // Second set, below the (now-updated) PR — no celebration, no append.
+      const secondCheckbox = container.querySelectorAll('input[type="checkbox"]')[1];
+      const secondWeightInput = container.querySelectorAll('input[type="number"]')[2];
+      const secondRepsInput = container.querySelectorAll('input[type="number"]')[3];
+      fireEvent.change(secondWeightInput, { target: { value: '200' } });
+      fireEvent.change(secondRepsInput, { target: { value: '8' } });
+      fireEvent.click(secondCheckbox);
+
+      expect(queryByText('Personal Record')).toBeFalsy();
+      expect(snap.logs.exercise.length).toBe(1);
+    });
   });
 });
