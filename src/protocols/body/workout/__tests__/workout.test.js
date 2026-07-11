@@ -56,6 +56,31 @@ describe('workout protocol', () => {
     expect(task.data).toHaveProperty('exercises');
   });
 
+  it('I5: per-exercise sub-tasks carry data.exercise (so RoutineView renders them as ExerciseDetail), while the parent session task keeps data.exercises + no data.exercise', () => {
+    const profile = { primary: 'Muscle Gain' };
+    const state = workoutProtocol.getState(profile, [], { domain: 'body' });
+    const monday = new Date('2026-04-06T12:00:00'); // Monday, a training day
+    const tasks = workoutProtocol.getTasks(state, profile, monday);
+
+    const parent = tasks[0];
+    // Parent stays the completion unit: it keeps data.exercises (plural) and
+    // must NOT carry data.exercise (singular), or it would render checkbox-less.
+    expect(parent.id).toBe('workout-1');
+    expect(Array.isArray(parent.data.exercises)).toBe(true);
+    expect(parent.data.exercise).toBeUndefined();
+
+    const subTasks = tasks.filter(t => t.id.startsWith('exercise-'));
+    expect(subTasks.length).toBeGreaterThan(0);
+    for (const t of subTasks) {
+      expect(t.category).toBe('training');
+      expect(t.data).toBeTruthy();
+      expect(t.data.exercise).toBeTruthy();
+      expect(typeof t.data.exercise.name).toBe('string');
+      // The attached exercise is the same object the program emits (name matches title).
+      expect(t.data.exercise.name).toBe(t.title);
+    }
+  });
+
   it('getTasks returns empty training tasks for rest day (Saturday = day 6)', () => {
     const profile = { primary: 'Muscle Gain' };
     const state = workoutProtocol.getState(profile, [], { domain: 'body' });

@@ -34,7 +34,12 @@ const workoutProtocol = {
       data: { warmup: workout.warmup, cooldown: workout.cooldown, exercises: workout.exercises },
     }];
 
-    // Add individual exercises as sub-tasks
+    // Add individual exercises as sub-tasks. I5: each carries `data.exercise`
+    // so RoutineView's TaskRow renders it as an expandable ExerciseDetail
+    // (form guide + target muscles + Watch Form Video) instead of a bare
+    // checkbox row. The parent session task above keeps `data.exercises`
+    // (plural) and its checkbox \u2014 it, not these detail rows, carries the day's
+    // completion.
     if (workout.exercises) {
       workout.exercises.forEach((ex, i) => {
         tasks.push({
@@ -46,6 +51,7 @@ const workoutProtocol = {
           time: null,
           priority: 3,
           skippable: true,
+          data: { exercise: ex },
         });
       });
     }
