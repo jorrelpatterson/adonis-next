@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { P, FN } from '../design/theme';
+import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
-import { H } from '../design/components';
+import { H, GradText } from '../design/components';
 // Google OAuth deferred — see parity ledger 2026-07-09
 import { signUpWithEmail, signInWithEmail } from '../services/auth.js';
 
@@ -46,8 +46,8 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
             background: 'rgba(14,16,22,0.7)', border: '1px solid rgba(232,213,183,0.08)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <span style={{ fontFamily: FN, fontSize: 28, fontWeight: 300, fontStyle: 'italic' }}>
-              A
+            <span style={{ fontFamily: FD, fontSize: 28, fontWeight: 300, fontStyle: 'italic' }}>
+              <GradText>A</GradText>
             </span>
           </div>
           <H t={heading} sub={subheading} eyebrow="Protocol OS" />
