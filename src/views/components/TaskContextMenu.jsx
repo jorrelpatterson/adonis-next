@@ -17,7 +17,12 @@ import { sound } from '../../design/sound';
 import { haptics } from '../../design/haptics';
 
 export default function TaskContextMenu({ task, isCompleted, onAction, onClose }) {
-  const fire = (action) => {
+  // I4: the menu is rendered INSIDE the tappable task row (RoutineView's
+  // TaskRow div), so an unstopped click here bubbles up into that row's
+  // onClick → onTaskTap → a surprise CheckinModal. Swallow propagation on
+  // every interactive surface (backdrop, action buttons, cancel).
+  const fire = (action, e) => {
+    e?.stopPropagation();
     sound.tap();
     haptics.light();
     onAction(action);
@@ -35,7 +40,7 @@ export default function TaskContextMenu({ task, isCompleted, onAction, onClose }
 
   return (
     <div
-      onClick={onClose}
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
       style={{
         position: 'fixed', inset: 0, zIndex: 11000,
         background: 'rgba(8,10,16,0.65)',
@@ -85,7 +90,7 @@ export default function TaskContextMenu({ task, isCompleted, onAction, onClose }
             <button
               key={item.id}
               type="button"
-              onClick={() => fire(item.id)}
+              onClick={(e) => fire(item.id, e)}
               style={{
                 textAlign: 'left',
                 padding: '14px 14px', borderRadius: 12,
@@ -113,7 +118,7 @@ export default function TaskContextMenu({ task, isCompleted, onAction, onClose }
 
         <button
           type="button"
-          onClick={() => { sound.tap(); onClose(); }}
+          onClick={(e) => { e.stopPropagation(); sound.tap(); onClose(); }}
           style={{
             marginTop: 12, padding: '15px 24px', borderRadius: 14,
             background: 'rgba(232,213,183,0.04)',

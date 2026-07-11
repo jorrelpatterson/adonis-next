@@ -96,6 +96,23 @@ describe('HomeDashboard', () => {
     expect(weightTile.textContent).toContain('30d left');
   });
 
+  it('I3: an orphan completed id (completed but not in routine.scheduled) does not push the routine tile past 100%', () => {
+    // 1 scheduled task, both a real completion (t1) and an orphan id present.
+    const routine = { scheduled: [{ id: 't1' }], deferred: [], upsells: [], retention: [] };
+    const { container } = renderHome({ routine, completedTasks: ['t1', 'orphan-checkin'] });
+
+    const routineTile = container.querySelector('[data-testid="routine-tile"]');
+    expect(routineTile.textContent).toContain('100%');   // not 200%
+    expect(routineTile.textContent).toContain('1/1');
+    expect(routineTile.textContent).not.toContain('200%');
+
+    // The protocol-score ring shares the same intersection — its dash arc must
+    // stay non-negative (a >100 score would render a negative second dash).
+    const ringArc = container.querySelectorAll('[data-testid="protocol-score-ring"] circle')[1];
+    const [, remainder] = ringArc.getAttribute('stroke-dasharray').split(' ').map(Number);
+    expect(remainder).toBeGreaterThanOrEqual(0);
+  });
+
   it('check-in dots reflect seeded logs.checkins across the 7-day window', () => {
     const dates = datesBack(TODAY, 6); // oldest -> newest, dates[6] === TODAY
     const logs = {

@@ -62,9 +62,14 @@ function dayName(date) {
  *   40% routine completion %, 30% check-in 7-day streak, 30% weight pace
  */
 function computeProtocolScore({ routine, completedTasks, logs, today, adaptive }) {
-  // 40% — today's routine completion
-  const routineDone = (completedTasks || []).length;
-  const routineTotal = routine?.scheduled?.length || 0;
+  // 40% — today's routine completion. I3: intersect completed ids with the
+  // tasks actually scheduled today before dividing — completedTasks can carry
+  // orphan ids (e.g. a check-in completed on a day that no longer schedules
+  // it), which would otherwise push routineDone past routineTotal and yield a
+  // >100% score.
+  const scheduled = routine?.scheduled || [];
+  const routineDone = (completedTasks || []).filter(id => scheduled.some(t => t.id === id)).length;
+  const routineTotal = scheduled.length;
   const routineScore = routineTotal > 0 ? (routineDone / routineTotal) : 0;
 
   // 30% — check-in 7-day completion rate
@@ -183,9 +188,12 @@ export default function HomeDashboard({
   const consumed = sumDayMeals(todaysMeals).cal;
   const calLeft = hasCalorieTarget ? Math.max(0, adaptive.adaptedTarget - consumed) : null;
 
-  // Routine completion
-  const totalTasks = routine?.scheduled?.length || 0;
-  const doneTasks = completedTasks.length;
+  // Routine completion. I3: same orphan-id intersection as the protocol score
+  // above — count only completed ids that are actually scheduled today, so the
+  // Routine tile can't render >100% or a negative ring dash.
+  const scheduledTasks = routine?.scheduled || [];
+  const totalTasks = scheduledTasks.length;
+  const doneTasks = (completedTasks || []).filter(id => scheduledTasks.some(t => t.id === id)).length;
   const routinePct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
   // Weight + days left
