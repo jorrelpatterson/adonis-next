@@ -118,4 +118,42 @@ describe('Task 13: home tab + daily check-in', () => {
       expect(saved[field.id]).toBe(1);
     }
   });
+
+  it('regression: a check-in saved from Home after browsing Routine to another day still writes to REAL today, not the Routine view-day', () => {
+    const box = { current: null };
+    const { container, getByText } = render(
+      <StateProvider>
+        <Seed />
+        <StateSpy box={box} />
+        <App />
+      </StateProvider>
+    );
+
+    // Navigate to Routine (TabNav tab, data-testid="tab-routine" — "Routine"
+    // text alone is ambiguous, HomeDashboard also has a "Routine" stat tile)
+    // and move viewDay off today by clicking a different day chip
+    // (RoutineView renders 7 chips as data-testid="day-chip-<i>", one per
+    // weekday index; pick any index other than today's).
+    fireEvent.click(container.querySelector('[data-testid="tab-routine"]'));
+    const todayDow = new Date().getDay();
+    const otherIdx = (todayDow + 3) % 7; // guaranteed != todayDow
+    fireEvent.click(container.querySelector(`[data-testid="day-chip-${otherIdx}"]`));
+
+    // Back to Home — the check-in card lives there — and save a check-in.
+    fireEvent.click(container.querySelector('[data-testid="tab-home"]'));
+    fireEvent.click(container.querySelector('[data-testid="checkin-card"]'));
+    for (const field of CHECKIN_FIELDS) {
+      fireEvent.click(container.querySelector(`[aria-label="${field.label} rating 1"]`));
+    }
+    fireEvent.click(getByText('Save'));
+
+    const today = new Date().toISOString().slice(0, 10);
+    const checkins = box.current.logs.checkins;
+    expect(checkins[today]).toBeTruthy();
+    for (const field of CHECKIN_FIELDS) {
+      expect(checkins[today][field.id]).toBe(1);
+    }
+    // No other date key should have been written by this save.
+    expect(Object.keys(checkins)).toEqual([today]);
+  });
 });

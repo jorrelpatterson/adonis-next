@@ -155,11 +155,15 @@ export default function App() {
   }, [logs.routine, todayKey, log]);
 
   // Task 13: Daily check-in save — writes today's ratings into logs.checkins
-  // keyed by today's date, then closes the modal (CheckinModal also
-  // auto-closes itself after its own "Got it" confirmation beat).
+  // keyed by REAL today (`today`, not the Routine view-day `todayKey`), then
+  // closes the modal (CheckinModal also auto-closes itself after its own
+  // "Got it" confirmation beat). A check-in saved from Home must land on the
+  // real date regardless of which day the user last browsed to in Routine —
+  // otherwise it misfiles onto that day's key and silently overwrites its
+  // existing check-in, while Home (which reads real-today) shows nothing.
   const handleSaveCheckin = useCallback((ratings) => {
-    log('checkins', { ...logs.checkins, [todayKey]: ratings });
-  }, [logs.checkins, todayKey, log]);
+    log('checkins', { ...logs.checkins, [today]: ratings });
+  }, [logs.checkins, today, log]);
 
   const handleCreateGoal = useCallback((goal) => {
     // Prevent duplicate goals from same template

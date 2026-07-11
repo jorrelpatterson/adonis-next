@@ -29,7 +29,7 @@ export default function TabNav({ activeTab, onTabChange, domains = [] }) {
         {tabs.map(tab => {
           const isActive = tab.id === activeTab;
           return (
-            <button key={tab.id} onClick={() => onTabChange(tab.id)}
+            <button key={tab.id} data-testid={`tab-${tab.id}`} onClick={() => onTabChange(tab.id)}
               style={{
                 flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 2, padding: '6px 4px', cursor: 'pointer',

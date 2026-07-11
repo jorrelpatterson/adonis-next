@@ -17,7 +17,7 @@ export default function RoutineView({ routine, onCheckTask, completedTasks = [],
           const d = new Date(day);
           d.setDate(d.getDate() + (i - dayIdx));
           return (
-            <button key={i} onClick={() => onDayChange && onDayChange(d)}
+            <button key={i} data-testid={`day-chip-${i}`} onClick={() => onDayChange && onDayChange(d)}
               style={{
                 width: 36, height: 36, borderRadius: 18,
                 border: isSelected ? '1.5px solid ' + P.gW : '1px solid ' + P.bd,
