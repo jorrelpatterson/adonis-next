@@ -10,6 +10,7 @@ import mindProtocol from './mind/index';
 import purposeProtocol from './purpose/index';
 import environmentProtocol from './environment/index';
 import communityProtocol from './community/index';
+import checkinProtocol from './_system/checkin/index';
 
 registerProtocol(workoutProtocol);
 registerProtocol(peptideProtocol);
@@ -22,3 +23,4 @@ registerProtocol(mindProtocol);
 registerProtocol(purposeProtocol);
 registerProtocol(environmentProtocol);
 registerProtocol(communityProtocol);
+registerProtocol(checkinProtocol);

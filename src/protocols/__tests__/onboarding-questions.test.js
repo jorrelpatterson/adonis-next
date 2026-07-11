@@ -9,6 +9,11 @@ describe('protocol onboarding layer', () => {
     const all = getAllProtocols();
     expect(all.length).toBeGreaterThanOrEqual(11);
     for (const p of all) {
+      // `_system` protocols (e.g. checkin) serve every user and don't
+      // contribute onboarding questions; the collectors in
+      // protocol-interface.js treat these methods as optional and skip
+      // protocols that lack them, so we don't require them here either.
+      if (p.domain === '_system') continue;
       expect(typeof p.getOnboardingQuestions, `${p.id} missing getOnboardingQuestions`).toBe('function');
       expect(typeof p.getOnboardingSummary, `${p.id} missing getOnboardingSummary`).toBe('function');
       const qs = p.getOnboardingQuestions();
