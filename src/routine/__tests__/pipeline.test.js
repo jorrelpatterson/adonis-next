@@ -1,6 +1,7 @@
 // src/routine/__tests__/pipeline.test.js
 import { describe, it, expect } from 'vitest';
 import { buildDailyRoutine } from '../pipeline.js';
+import creditProtocol from '../../protocols/money/credit/index.js';
 
 function makeProtocol(id, domain, tasks, recs) {
   return {
@@ -220,6 +221,51 @@ describe('buildDailyRoutine', () => {
           settings: { routineCapacity: 'normal' },
         });
       }).not.toThrow();
+    });
+  });
+
+  describe('credit-repair protocol wiring (object-shaped logs regression)', () => {
+    it('buildDailyRoutine with an active money/credit-repair goal + object-shaped logs does not throw and returns a routine', () => {
+      // The store keeps `logs` as an OBJECT keyed by log type (e.g.
+      // logs.peptideCatalog, logs.weight — see src/state/store.jsx), never
+      // an array. creditProtocol.getState() used to assume `logs` was an
+      // array and called `.filter()` directly on it, which throws once a
+      // goal actually wires up credit-repair as an activeProtocol and
+      // real (non-empty-default) object-shaped logs flow through
+      // assembler.js's collectTasks() → proto.getState(profile, logs, goal, ...).
+      const goals = [
+        {
+          id: 'goal_money',
+          title: 'Fix My Credit',
+          priority: 1,
+          domain: 'money',
+          activeProtocols: [{ protocolId: 'credit-repair' }],
+        },
+      ];
+
+      const objectShapedLogs = {
+        peptideCatalog: [{ id: 'bpc-157' }],
+        weight: [{ date: '2026-07-01', lbs: 180 }],
+      };
+
+      let result;
+      expect(() => {
+        result = buildDailyRoutine({
+          goals,
+          protocolMap: { 'credit-repair': creditProtocol },
+          profile: {},
+          protocolStates: {},
+          logs: objectShapedLogs,
+          settings: { routineCapacity: 'normal' },
+        });
+      }).not.toThrow();
+
+      expect(result).toHaveProperty('scheduled');
+      expect(result).toHaveProperty('deferred');
+      expect(result).toHaveProperty('upsells');
+      expect(result).toHaveProperty('retention');
+      expect(Array.isArray(result.scheduled)).toBe(true);
+      expect(Array.isArray(result.deferred)).toBe(true);
     });
   });
 });

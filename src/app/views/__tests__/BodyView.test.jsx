@@ -5,6 +5,25 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import BodyView from '../BodyView';
 import { StateProvider, useAppState } from '../../../state/store';
 import { PROTO_STACKS } from '../../../protocols/body/peptides/proto-stacks';
+import { PEPTIDES } from '../../../protocols/body/peptides/catalog';
+
+// BodyView's Peptides pane calls the real loadLiveCatalog() (a Supabase
+// fetch) on mount. Left un-mocked, happy-dom tears down mid-flight and the
+// fetch's rejection surfaces as unhandled AbortError noise in stderr — the
+// effect's `cancelled` flag only guards the state write, it never actually
+// aborts the request. Mock the service so the promise resolves instantly
+// with the same static catalog the component already falls back to
+// synchronously — no network, no dangling fetch, no AbortError, and the
+// mocked resolution mirrors loadLiveCatalog()'s real offline-fallback shape
+// (see src/services/peptide-catalog.js's loadLiveCatalog: `_live: false,
+// inStock: false` on every entry when Supabase is unreachable).
+vi.mock('../../../services/peptide-catalog', async () => {
+  const { PEPTIDES: staticCatalog } = await import('../../../protocols/body/peptides/catalog');
+  const resolved = staticCatalog.map(p => ({ ...p, _live: false, inStock: false }));
+  return {
+    loadLiveCatalog: vi.fn(() => Promise.resolve(resolved)),
+  };
+});
 
 // WorkoutView's content varies by real weekday (training vs rest day), and on
 // training days SetGrid renders a "Weight" column header that collides with
@@ -56,9 +75,19 @@ describe('BodyView', () => {
     expect(getByRole('button', { name: /tools/i })).toBeTruthy();
   });
 
-  it('defaults to the Peptides sub-tab, showing the stack empty state', () => {
+  it('defaults to the Peptides sub-tab, showing the stack empty state', async () => {
     const { container } = renderBodyView();
     expect(container.textContent).toContain('Build your stack');
+
+    // loadLiveCatalog is mocked (see top of file) to resolve instantly with
+    // the static catalog. Wait for the mount effect to finish and assert
+    // the empty-state copy's compound count reflects the mock's resolved
+    // catalog (same length as the static PEPTIDES catalog) — this proves
+    // the effect resolves cleanly against the mock rather than a real,
+    // possibly-aborted network fetch.
+    await waitFor(() => {
+      expect(container.textContent).toContain(`${PEPTIDES.length} compounds`);
+    });
   });
 
   it('switching to Train renders WorkoutView content', () => {

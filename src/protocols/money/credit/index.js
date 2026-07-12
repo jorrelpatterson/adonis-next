@@ -11,8 +11,13 @@ const creditProtocol = {
   },
 
   getState(profile, logs, goal) {
-    const disputes = (logs || []).filter((l) => l.type === 'dispute');
-    const scores = (logs || []).filter((l) => l.type === 'credit_score');
+    // `logs` arrives as the store's logs OBJECT (see assembler.js
+    // collectTasks → proto.getState(profile, logs, goal, ...)), not an
+    // array — guard so a real (non-empty-default) logs value doesn't throw
+    // when this protocol is wired into a goal's activeProtocols.
+    const logArr = Array.isArray(logs) ? logs : [];
+    const disputes = logArr.filter((l) => l.type === 'dispute');
+    const scores = logArr.filter((l) => l.type === 'credit_score');
     return { disputes, scores };
   },
 
