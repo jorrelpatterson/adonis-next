@@ -13,6 +13,7 @@ import HomeDashboard from '../routine/HomeDashboard';
 import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import RoutineView from '../routine/RoutineView';
 import BodyView from './views/BodyView';
+import InsightsView from '../views/InsightsView';
 import TabNav from './TabNav';
 import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
@@ -371,6 +372,8 @@ export default function App() {
               goal={primaryGoal}
             />
           </div>
+        ) : activeTab === 'insights' ? (
+          <InsightsView profile={profile} logs={logs} />
         ) : activeTab === 'profile' ? (
           <div>
             <H t="Profile" sub={profile.name || 'Set up your profile'} />

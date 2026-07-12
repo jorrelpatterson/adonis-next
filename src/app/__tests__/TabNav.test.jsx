@@ -11,6 +11,21 @@ describe('TabNav', () => {
     expect(container.textContent).toContain('Profile');
   });
 
+  it('always shows the Insights tab, regardless of active domains', () => {
+    const { container } = render(<TabNav activeTab="routine" onTabChange={() => {}} domains={[]} />);
+    expect(container.textContent).toContain('Insights');
+  });
+
+  it('places Insights between domain tabs and Profile', () => {
+    const { container } = render(<TabNav activeTab="routine" onTabChange={() => {}} domains={['body']} />);
+    const ids = Array.from(container.querySelectorAll('button')).map(b => b.getAttribute('data-testid'));
+    const insightsIdx = ids.indexOf('tab-insights');
+    const profileIdx = ids.indexOf('tab-profile');
+    const bodyIdx = ids.indexOf('tab-body');
+    expect(insightsIdx).toBeGreaterThan(bodyIdx);
+    expect(insightsIdx).toBeLessThan(profileIdx);
+  });
+
   it('shows domain tabs for active domains', () => {
     const { container } = render(<TabNav activeTab="routine" onTabChange={() => {}} domains={['body', 'money']} />);
     expect(container.textContent).toContain('Body');

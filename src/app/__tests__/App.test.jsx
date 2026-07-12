@@ -91,6 +91,22 @@ describe('App shell', () => {
   });
 });
 
+describe('Task 11: Insights tab', () => {
+  afterEach(() => cleanup());
+
+  it('clicking the Insights tab renders InsightsView', () => {
+    const { container } = render(
+      <StateProvider>
+        <Seed />
+        <App />
+      </StateProvider>
+    );
+    fireEvent.click(container.querySelector('[data-testid="tab-insights"]'));
+    expect(container.textContent).toContain('90-Day Consistency');
+    expect(container.textContent).toContain('Correlations');
+  });
+});
+
 describe('C1: onboarding goal answers reach the profile (adaptive layer live)', () => {
   afterEach(() => {
     cleanup();

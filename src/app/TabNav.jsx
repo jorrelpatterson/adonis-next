@@ -8,6 +8,11 @@ const FIXED_TABS = [
   { id: 'routine', icon: '\u{1F4CB}', label: 'Routine' },
 ];
 
+// Task 11: fixed tab, always present between domain tabs and Profile \u2014
+// InsightsView reads across all domains' logs, so it isn't gated by which
+// domains a user has active (unlike the domain tabs above).
+const INSIGHTS_TAB = { id: 'insights', icon: '\u{1F4CA}', label: 'Insights' };
+
 const PROFILE_TAB = { id: 'profile', icon: '\u2699\uFE0F', label: 'Profile' };
 
 export default function TabNav({ activeTab, onTabChange, domains = [] }) {
@@ -15,7 +20,7 @@ export default function TabNav({ activeTab, onTabChange, domains = [] }) {
     .filter(d => domains.includes(d.id))
     .map(d => ({ id: d.id, icon: d.icon, label: d.name }));
 
-  const tabs = [...FIXED_TABS, ...domainTabs, PROFILE_TAB];
+  const tabs = [...FIXED_TABS, ...domainTabs, INSIGHTS_TAB, PROFILE_TAB];
 
   return (
     <div style={{
