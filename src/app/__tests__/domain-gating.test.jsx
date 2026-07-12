@@ -58,8 +58,8 @@ describe('free-tier locked domain states', () => {
 
     expect(getByText(/Locked — Pro feature/)).toBeTruthy();
     expect(getByText('Redeem an access code')).toBeTruthy();
-    // The generic (unlocked) domain view never mounted
-    expect(queryByText('No Money goals yet')).toBeNull();
+    // The Money domain view (Task 14 dispatch) never mounted.
+    expect(queryByText(/No money goals yet/i)).toBeNull();
   });
 
   it('Body never locks, even on free tier', () => {
@@ -82,7 +82,7 @@ describe('free-tier locked domain states', () => {
     expect(queryByText(/Locked — Pro feature/)).toBeNull();
   });
 
-  it('pro tier: Money tab renders the generic (unlocked) domain view', () => {
+  it('pro tier: Money tab renders the dispatched MoneyView (Task 14), not the locked state', () => {
     useAuth.mockReturnValue({ user: { id: 'u1' }, tier: 'pro', loading: false, signOut: vi.fn() });
 
     const { getByTestId, queryByText, getByText } = renderApp({ ...BASE_PROFILE, tier: 'pro' });
@@ -90,7 +90,7 @@ describe('free-tier locked domain states', () => {
     fireEvent.click(getByTestId('tab-money'));
 
     expect(queryByText(/Locked — Pro feature/)).toBeNull();
-    expect(getByText('No Money goals yet')).toBeTruthy();
+    expect(getByText(/No money goals yet/i)).toBeTruthy();
   });
 
   it('CTA on the locked state switches to the Profile tab', () => {
@@ -124,9 +124,9 @@ describe('free-tier locked domain states', () => {
     fireEvent.click(getByText('Apply'));
     expect(updateUserTier).toHaveBeenCalledWith('pro', 'ADONIS2026');
 
-    // 4. Back to Money — now unlocked.
+    // 4. Back to Money — now unlocked (Task 14: dispatches to MoneyView).
     fireEvent.click(getByTestId('tab-money'));
     expect(queryByText(/Locked — Pro feature/)).toBeNull();
-    expect(getByText('No Money goals yet')).toBeTruthy();
+    expect(getByText(/No money goals yet/i)).toBeTruthy();
   });
 });

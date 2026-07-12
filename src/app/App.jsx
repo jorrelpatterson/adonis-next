@@ -14,6 +14,16 @@ import CheckinModal from '../protocols/_system/checkin/CheckinModal';
 import RoutineView from '../routine/RoutineView';
 import BodyView from './views/BodyView';
 import InsightsView from '../views/InsightsView';
+// Task 14: the other 7 domain views (Task 8/9/10 ports), dispatched via
+// DOMAIN_VIEWS below — 'body' keeps its own dedicated branch (main's
+// ./views/BodyView, not the archive's src/views/BodyView).
+import MoneyView from '../views/MoneyView';
+import TravelView from '../views/TravelView';
+import MindView from '../views/MindView';
+import ImageView from '../views/ImageView';
+import PurposeView from '../views/PurposeView';
+import EnvironmentView from '../views/EnvironmentView';
+import CommunityView from '../views/CommunityView';
 import TabNav from './TabNav';
 import LockedDomain from './LockedDomain';
 import { isDomainLocked } from './tier-gate';
@@ -34,6 +44,19 @@ import FitnessPillarsModal from './components/FitnessPillarsModal';
 import ResetConfirmModal from './components/ResetConfirmModal';
 import AppSettings from './components/AppSettings';
 import { WORKOUT_GOAL_TO_OPTIMIZE } from '../protocols/body/peptides/proto-stacks';
+
+// Task 14: the 7 non-body domain views, dispatched by activeTab in the
+// domain-tab branch below. 'body' is deliberately absent — it keeps its own
+// branch (with main's ./views/BodyView) ahead of this map.
+const DOMAIN_VIEWS = {
+  money: MoneyView,
+  travel: TravelView,
+  mind: MindView,
+  image: ImageView,
+  purpose: PurposeView,
+  environment: EnvironmentView,
+  community: CommunityView,
+};
 
 // Task 13: metadata tier (stamped on redemption, see updateUserTier) is the
 // source of truth on sign-in — the restore effect below only ever upgrades
@@ -694,70 +717,34 @@ export default function App() {
                 </div>
               );
             }
+            // Task 14: dispatch to the per-domain view component. Every id
+            // reachable here is one of the 8 DOMAINS entries selected into
+            // profile.domains and surfaced as a tab by TabNav - 'body'
+            // already returned above, and the remaining 7 all have an entry
+            // in DOMAIN_VIEWS, so `View` is never undefined in practice. The
+            // old generic Goals/Tasks/description fallback (and its "No
+            // view for {activeTab} yet" defensive branch) is deleted rather
+            // than kept dead - see task-14-report.md.
+            const View = DOMAIN_VIEWS[activeTab];
             const domainGoals = activeGoals.filter(g => g.domain === activeTab);
             const domainTasks = routine.scheduled.filter(t => {
               const proto = protocolMap[t.protocolId];
               return proto && proto.domain === activeTab;
             });
+            const handleAddGoal = () => { setGoalSetupDomain(activeTab); setShowGoalSetup(true); };
             return (
-              <div>
-                <H t={(domain?.icon || '') + ' ' + (domain?.name || activeTab)}
-                  sub={domain?.sub || ''} />
-
-                {/* Domain Goals */}
-                {domainGoals.length > 0 ? (
-                  <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-                    <div style={{ ...s.lab }}>Goals</div>
-                    {domainGoals.map(g => (
-                      <div key={g.id} style={{ padding: '8px 0', borderBottom: '1px solid ' + P.bd }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: P.txS }}>{g.title}</div>
-                          <div style={{ fontSize: 11, color: P.gW }}>{g.progress?.percent || 0}%</div>
-                        </div>
-                        <div style={{ marginTop: 4, height: 3, borderRadius: 2, background: 'rgba(232,213,183,0.08)' }}>
-                          <div style={{ height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, ' + P.gW + ', ' + P.ok + ')', width: (g.progress?.percent || 0) + '%' }} />
-                        </div>
-                        <div style={{ fontSize: 10, color: P.txD, marginTop: 3 }}>{g.activeProtocols?.length || 0} protocols active</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ ...s.card, padding: 20, textAlign: 'center', marginBottom: 12 }}>
-                    <div style={{ fontSize: 13, color: P.txM }}>No {domain?.name} goals yet</div>
-                    <button onClick={() => { setGoalSetupDomain(activeTab); setShowGoalSetup(true); }}
-                      style={{ ...s.pri, marginTop: 10, padding: '8px 20px', fontSize: 12 }}>
-                      + Add {domain?.name} Goal
-                    </button>
-                  </div>
-                )}
-
-                {/* Today's tasks for this domain */}
-                {domainTasks.length > 0 && (
-                  <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-                    <div style={{ ...s.lab }}>Today's Tasks</div>
-                    {domainTasks.map(task => {
-                      const isDone = completedTasks.includes(task.id);
-                      return (
-                        <div key={task.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid ' + P.bd, opacity: isDone ? 0.5 : 1 }}>
-                          <button onClick={() => handleCheckTask(task.id)}
-                            style={{ width: 20, height: 20, borderRadius: 10, border: isDone ? 'none' : '1.5px solid ' + P.gW + '44', background: isDone ? P.ok : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff', fontFamily: FN, flexShrink: 0 }}>
-                            {isDone ? '\u2713' : ''}
-                          </button>
-                          <div>
-                            <div style={{ fontSize: 13, color: isDone ? P.txD : P.txS, textDecoration: isDone ? 'line-through' : 'none' }}>{task.title}</div>
-                            {task.subtitle && <div style={{ fontSize: 10, color: P.txD }}>{task.subtitle}</div>}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Domain description */}
-                <div style={{ ...s.card, padding: 14 }}>
-                  <div style={{ fontSize: 12, color: P.txM, lineHeight: 1.6 }}>{domain?.desc || ''}</div>
-                </div>
-              </div>
+              <View
+                profile={profile}
+                protocolStates={protocolStates}
+                setProtocolState={setProtocolState}
+                logs={logs}
+                log={log}
+                domainGoals={domainGoals}
+                domainTasks={domainTasks}
+                completedTasks={completedTasks}
+                onCheckTask={handleCheckTask}
+                onAddGoal={handleAddGoal}
+              />
             );
           })()
         )}
