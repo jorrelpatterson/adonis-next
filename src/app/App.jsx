@@ -185,7 +185,16 @@ export default function App() {
   // Build today's routine
   const today = new Date().toISOString().slice(0, 10);
   const routine = useMemo(() => {
-    const activeGoals = goals.filter(g => g.status === 'active');
+    // I1: tier-filter the routine build. A free user keeps their locked-domain
+    // goals in state (dormant — still visible in profile/views), but those
+    // goals emit NO routine tasks until upgrade — matching onboarding's
+    // "Locked domains stay set up, ready to activate when you upgrade" and
+    // spec decision 5 ("Free = 1 Body goal"). Body (never locks) and _system
+    // (swept independently of goals below) are unaffected. Home's protocol
+    // score/routine tile follow automatically — they read routine.scheduled.
+    const activeGoals = goals.filter(
+      g => g.status === 'active' && !isDomainLocked(g.domain, profile.tier)
+    );
     return buildDailyRoutine({
       goals: activeGoals, protocolMap, profile, protocolStates, logs, settings,
       day: viewDay, today,
