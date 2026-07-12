@@ -227,6 +227,18 @@ describe('RoutineView — exercise sub-tasks as ExerciseDetail (I5)', () => {
     expect(container.textContent).toMatch(/Watch/);
   });
 
+  it('group checkmark reflects only completable tasks — detail-only exercise rows are excluded from the denominator', () => {
+    // workout-1 is the only completable task in this group; the two
+    // exercise-detail sub-tasks are informational and checkbox-less. Marking
+    // just workout-1 done must flip the group to "all done" (✓), not get
+    // stuck at 1/3 forever because the detail rows can never be completed.
+    const { container } = render(
+      <RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={vi.fn()} completedTasks={['workout-1']} />
+    );
+    const groupButton = Array.from(container.querySelectorAll('button')).find(b => b.textContent.includes('Training'));
+    expect(groupButton.textContent).toContain('✓');
+  });
+
   it('keeps the parent workout row checkable (its checkbox checks workout-1, not an exercise)', () => {
     const onCheckTask = vi.fn();
     const { container } = render(<RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={onCheckTask} completedTasks={[]} />);

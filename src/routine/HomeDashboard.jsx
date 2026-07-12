@@ -67,7 +67,8 @@ function computeProtocolScore({ routine, completedTasks, logs, today, adaptive }
   // orphan ids (e.g. a check-in completed on a day that no longer schedules
   // it), which would otherwise push routineDone past routineTotal and yield a
   // >100% score.
-  const scheduled = routine?.scheduled || [];
+  // detail-only rows (data.exercise) are informational — excluded from completion math
+  const scheduled = (routine?.scheduled || []).filter(t => !t.data?.exercise);
   const routineDone = (completedTasks || []).filter(id => scheduled.some(t => t.id === id)).length;
   const routineTotal = scheduled.length;
   const routineScore = routineTotal > 0 ? (routineDone / routineTotal) : 0;
@@ -191,7 +192,8 @@ export default function HomeDashboard({
   // Routine completion. I3: same orphan-id intersection as the protocol score
   // above — count only completed ids that are actually scheduled today, so the
   // Routine tile can't render >100% or a negative ring dash.
-  const scheduledTasks = routine?.scheduled || [];
+  // detail-only rows (data.exercise) are informational — excluded from completion math
+  const scheduledTasks = (routine?.scheduled || []).filter(t => !t.data?.exercise);
   const totalTasks = scheduledTasks.length;
   const doneTasks = (completedTasks || []).filter(id => scheduledTasks.some(t => t.id === id)).length;
   const routinePct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;

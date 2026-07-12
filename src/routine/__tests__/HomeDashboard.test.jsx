@@ -113,6 +113,50 @@ describe('HomeDashboard', () => {
     expect(remainder).toBeGreaterThanOrEqual(0);
   });
 
+  it('completion math excludes detail-only exercise rows (data.exercise) from the denominator', () => {
+    // 2 completable tasks + 2 detail-only exercise sub-tasks (data.exercise,
+    // introduced by d50e009 — they render as checkbox-less ExerciseDetail
+    // rows in RoutineView and must not count toward completion totals).
+    const routine = {
+      scheduled: [
+        { id: 't1' }, { id: 't2' },
+        { id: 'ex1', category: 'training', data: { exercise: { name: 'Bench Press' } } },
+        { id: 'ex2', category: 'training', data: { exercise: { name: 'Squat' } } },
+      ],
+      deferred: [], upsells: [], retention: [],
+    };
+    const { container } = renderHome({ routine, completedTasks: ['t1', 't2'] });
+
+    const routineTile = container.querySelector('[data-testid="routine-tile"]');
+    expect(routineTile.textContent).toContain('100%'); // not 50% (2/4)
+    expect(routineTile.textContent).toContain('2/2');  // detail rows excluded from both sides
+
+    // Protocol score's routine term (40% weight) must be FULL (1.0), not 0.5
+    // (which is what 2-done/4-total would yield if detail rows still counted).
+    const circ = 2 * Math.PI * 38;
+    const expectedScore = Math.round(100 * (1 * 0.4 + 0 * 0.3 + 0.5 * 0.3)); // checkinScore=0 (no logs.checkins), paceScore=0.5 (adaptive=null)
+    const expectedRemainder = circ - (expectedScore / 100) * circ;
+    const ringArc = container.querySelectorAll('[data-testid="protocol-score-ring"] circle')[1];
+    const [, remainder] = ringArc.getAttribute('stroke-dasharray').split(' ').map(Number);
+    expect(remainder).toBeCloseTo(expectedRemainder, 5);
+  });
+
+  it('zero completable tasks (detail-only rows only) does not divide by zero', () => {
+    const routine = {
+      scheduled: [
+        { id: 'ex1', category: 'training', data: { exercise: { name: 'Bench Press' } } },
+        { id: 'ex2', category: 'training', data: { exercise: { name: 'Squat' } } },
+      ],
+      deferred: [], upsells: [], retention: [],
+    };
+    const { container } = renderHome({ routine, completedTasks: [] });
+
+    const routineTile = container.querySelector('[data-testid="routine-tile"]');
+    expect(routineTile.textContent).toContain('0%');
+    expect(routineTile.textContent).toContain('0/0');
+    expect(routineTile.textContent).not.toContain('NaN');
+  });
+
   it('check-in dots reflect seeded logs.checkins across the 7-day window', () => {
     const dates = datesBack(TODAY, 6); // oldest -> newest, dates[6] === TODAY
     const logs = {

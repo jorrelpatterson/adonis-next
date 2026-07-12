@@ -615,8 +615,10 @@ function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLab
 function CollapsibleGroup({ item, isLast, completed, onCheckTask, intensityLabel }) {
   const [expanded, setExpanded] = useState(false);
   const { summary, tasks, category } = item;
-  const doneCount = tasks.filter(t => completed.has(t.id)).length;
-  const allDone = doneCount === tasks.length && tasks.length > 0;
+  // detail-only rows (data.exercise) are informational — excluded from completion math
+  const completableTasks = tasks.filter(t => !t.data?.exercise);
+  const doneCount = completableTasks.filter(t => completed.has(t.id)).length;
+  const allDone = doneCount === completableTasks.length && completableTasks.length > 0;
 
   return (
     <div style={{ borderBottom: isLast && !expanded ? 'none' : '1px solid ' + P.bd }}>
