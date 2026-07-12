@@ -15,6 +15,8 @@ import RoutineView from '../routine/RoutineView';
 import BodyView from './views/BodyView';
 import InsightsView from '../views/InsightsView';
 import TabNav from './TabNav';
+import LockedDomain from './LockedDomain';
+import { isDomainLocked } from './tier-gate';
 import AmbientBackdrop from '../design/AmbientBackdrop';
 import { validateAccessCode } from '../state/access-codes';
 import { useAuth } from '../services/useAuth.js';
@@ -229,6 +231,12 @@ export default function App() {
   }, [accessCodeInput, setProfile, user, profile.tier]);
 
   const activeGoals = goals.filter(g => g.status === 'active');
+
+  // Task 12 (DoD item 7): domain ids currently locked for this profile's
+  // tier — passed to TabNav so it can render the 🔒 glyph on gated tabs.
+  // TabNav stays presentational; this is the single source of truth also
+  // used by the domain-tab dispatch above.
+  const lockedDomainIds = DOMAINS.filter(d => isDomainLocked(d.id, profile.tier)).map(d => d.id);
 
   const handleOnboardingComplete = (profileUpdates, protocolAnswers) => {
     const answers = protocolAnswers || {};
@@ -509,6 +517,16 @@ export default function App() {
           /* Domain tab view */
           (() => {
             const domain = DOMAINS.find(d => d.id === activeTab);
+            // Task 12 (DoD item 7): checked first, ahead of the body branch
+            // AND the generic fallback below — body always returns false
+            // from isDomainLocked, so this never blocks it, but every other
+            // domain renders the polished locked state instead of its
+            // content until the user is pro/elite.
+            if (isDomainLocked(activeTab, profile.tier)) {
+              return (
+                <LockedDomain domain={domain} onGoToProfile={() => setActiveTab('profile')} />
+              );
+            }
             if (activeTab === 'body') {
               return (
                 <div>
@@ -599,6 +617,7 @@ export default function App() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           domains={profile.domains || ['body']}
+          lockedIds={lockedDomainIds}
         />
       )}
 

@@ -36,4 +36,21 @@ describe('TabNav', () => {
     const { container } = render(<TabNav activeTab="routine" onTabChange={() => {}} domains={['body']} />);
     expect(container.textContent).not.toContain('Travel');
   });
+
+  // Task 12 (DoD item 7) — lockedIds is a presentational prop from App.jsx
+  // (via tier-gate.js's isDomainLocked); TabNav just draws the glyph.
+  it('shows a lock glyph on a gated domain tab (free tier w/ money domain)', () => {
+    const { getByTestId } = render(
+      <TabNav activeTab="routine" onTabChange={() => {}} domains={['body', 'money']} lockedIds={['money']} />
+    );
+    expect(getByTestId('tab-lock-money')).toBeTruthy();
+  });
+
+  it('shows no lock glyph when no domains are locked (pro/elite tier)', () => {
+    const { queryByTestId } = render(
+      <TabNav activeTab="routine" onTabChange={() => {}} domains={['body', 'money']} lockedIds={[]} />
+    );
+    expect(queryByTestId('tab-lock-money')).toBeNull();
+    expect(queryByTestId('tab-lock-body')).toBeNull();
+  });
 });

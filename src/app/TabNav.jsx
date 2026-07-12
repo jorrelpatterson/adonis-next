@@ -15,7 +15,11 @@ const INSIGHTS_TAB = { id: 'insights', icon: '\u{1F4CA}', label: 'Insights' };
 
 const PROFILE_TAB = { id: 'profile', icon: '\u2699\uFE0F', label: 'Profile' };
 
-export default function TabNav({ activeTab, onTabChange, domains = [] }) {
+// Task 12 (DoD item 7): `lockedIds` is a plain array of domain ids the
+// caller (App.jsx, via tier-gate.js's isDomainLocked) has determined are
+// gated for the current profile's tier. TabNav stays presentational — it
+// only decides whether to draw the 🔒 suffix, never the gating logic itself.
+export default function TabNav({ activeTab, onTabChange, domains = [], lockedIds = [] }) {
   const domainTabs = DOMAINS
     .filter(d => domains.includes(d.id))
     .map(d => ({ id: d.id, icon: d.icon, label: d.name }));
@@ -33,6 +37,7 @@ export default function TabNav({ activeTab, onTabChange, domains = [] }) {
       <div style={{ display: 'flex', gap: 2, maxWidth: 640, width: '100%', justifyContent: 'space-around' }}>
         {tabs.map(tab => {
           const isActive = tab.id === activeTab;
+          const isLocked = lockedIds.includes(tab.id);
           return (
             <button key={tab.id} data-testid={`tab-${tab.id}`} onClick={() => onTabChange(tab.id)}
               style={{
@@ -40,7 +45,16 @@ export default function TabNav({ activeTab, onTabChange, domains = [] }) {
                 gap: 2, padding: '6px 4px', cursor: 'pointer',
                 background: 'transparent', border: 'none', fontFamily: FN,
               }}>
-              <span style={{ fontSize: 18, opacity: isActive ? 1 : 0.4 }}>{tab.icon}</span>
+              <span style={{ position: 'relative', fontSize: 18, opacity: isActive ? 1 : 0.4 }}>
+                {tab.icon}
+                {isLocked && (
+                  <span data-testid={`tab-lock-${tab.id}`} style={{
+                    position: 'absolute', bottom: -3, right: -7, fontSize: 9,
+                  }}>
+                    {'\u{1F512}'}
+                  </span>
+                )}
+              </span>
               <span style={{
                 fontSize: 8, fontWeight: isActive ? 700 : 500,
                 color: isActive ? P.gW : P.txD,
