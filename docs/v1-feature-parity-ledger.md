@@ -69,11 +69,11 @@ Findings recorded during extraction (parity decisions for the port):
 
 ## Peptides (`StackV` 5851) — Phase 4
 
-- [ ] Protocol viewer (dosing/timing/cycle/mechanism, `PEP_RESEARCH` 381) — **port** via revival's proto-stacks + Supabase catalog w/ static fallback (spec'd).
-- [ ] Goal-matched stack recommendations (`buildStacks`, `GOAL_MAP` 173) — **port** 🧪 (goal→stack sync is spec'd).
-- [ ] In-app shop/cart/checkout (`pepCart` 3151, checkout 4200-4244) — **drop**: spec ruling — order CTAs become plain links to advncelabs.com. Ref-attribution deep link = post-MVP #7. Kills the hardcoded payment handle/phone in the bundle too.
-- [ ] `SOURCE_ROUTES` affiliate/vendor routing (165) — **drop** with the cart (revisit with post-MVP #7).
-- [ ] Live pricing/stock from Supabase `products` (3042) — **port** (revival `peptide-catalog.js`).
+- [x] Protocol viewer — **port** DONE 2026-07-12: BodyView Peptides pane (PROTO_STACKS browser, research/compat modules already on main, live Supabase catalog w/ static fallback via peptide-catalog.js).
+- [x] Goal-matched stack recommendations — **port** DONE 2026-07-12 🧪: stack-builder.js golden parity (buildStacks/GOAL_MAP) + recommend-stack/getStackForFinder + pillar→optimizeFor sync.
+- [x] In-app shop/cart/checkout — **drop** CONFIRMED 2026-07-12: order CTAs are plain advncelabs.com links in BodyView; no payment handle/phone in v2 bundle.
+- [x] `SOURCE_ROUTES` affiliate routing — **drop** CONFIRMED 2026-07-12.
+- [x] Live pricing/stock from Supabase `products` — **port** DONE 2026-07-12 (enrichCatalog/loadLiveCatalog, graceful static fallback).
 
 ## Train (`WorkoutV` 6369) — Phases 0✅/3
 
@@ -85,42 +85,42 @@ Findings recorded during extraction (parity decisions for the port):
 
 ## Tools (`ToolsV` 6324) — Phase 4
 
-- [ ] Dosing calculators — **port** (BodyView Tools sub-tab).
-- [ ] Supply/inventory tracking + reorder alerts — **port**; alerts wire into Phase 3 routine intelligence.
+- [ ] Dosing calculators — ruling changed **port → defer** (2026-07-12): archive BodyView Tools pane hosts WeightLogger+PhotoJournal only; v1's dosing calculators (PEP_DB pane) have no archive successor. Revisit post-MVP with the peptide deep-dive; PEP_DB data already lives in catalog.js.
+- [ ] Supply/inventory tracking — ruling changed **port → defer** (2026-07-12): peptides getUpsells supply_low hook exists but nothing computes supplyDaysLeft yet (needs order/usage data that arrives with post-MVP commerce). Deferred with it.
 
 ## Money (`CreditCardV` 5584, `IncomeV` 6869) — Phase 4 / deferred
 
-- [ ] 5/24 tracking (`calcFiveTwentyFour`), `getBestCard`, bonus/min-spend deadlines, wallet — **port** 🧪. DoD says Money is "real"; also a named Bucket List input.
+- [x] 5/24 tracking, `getBestCard`, wallet — **port** DONE 2026-07-12 🧪: cards-logic verified golden-parity (0 divergences); MoneyView wallet/score/optimizer/recommendations live on main's CC_DB.
 - [ ] ⚠ Credit-repair dispute engine (`generateDisputeLetter`/`generateLetterByType` 1238-1274, `getScoreAnalysis`, `disputeQueue`) — **defer**: substantial standalone product, in no MVP DoD item or phase. Golden-fixture it anyway at defer time (cheap insurance while v1 source is fresh).
 - [ ] ⚠ MLM/referral income tracker (`INCOME_REWARDS` 1506, lead pipeline, `REFERRAL_VERTICALS`, `buildIncomePlan`) — **defer**: spec accepts stub income `getState` for MVP; real income protocol is post-MVP #6. The 5-level comp plan + solar vertical data should be preserved as protocol data when that lands.
 
 ## Mind (`MindV` 7043) — Phase 4
 
-- [ ] Breathing timers, 5 patterns (4246-4252), animated guide — **adapt**: revival MindView's live breathwork timer is the successor. Parity bar: all 5 v1 patterns present.
-- [ ] Nootropic stacks, focus blocks — **port** at "light" depth (DoD tier for Mind).
+- [x] Breathing timers, 5 patterns — **adapt** DONE 2026-07-12: MindView breathwork modal, all 5 patterns single-sourced in mind/data.js (count-asserted).
+- [x] Nootropic stacks, focus blocks — **port** DONE 2026-07-12 (8-compound data module; Pro-gated card; focus areas persisted).
 
 ## Passport / Citizenship (`CitizenshipV` 7195) — Phase 4 (Travel view)
 
-- [ ] `scoreCitizenshipPaths`, country options (1767), budget/timeline filters, document checklists, passport-power score — **port** 🧪. DoD says Travel is "real".
+- [x] Citizenship pathways — **port** DONE 2026-07-12 🧪: scoreCitizenshipPaths golden-parity verified (0 divergences); TravelView pathways/countries/budget/doc-tracker (persisted)/passport-power live.
 
 ## Purpose / Image / Space / Community — Phase 4 ("light")
 
-- [ ] Purpose: values — **port** light. ⚠ v1 bucket-list — **adapt**: absorbed by the Bucket List orchestrator (Elite teaser in MVP); don't ship a competing flat list.
-- [ ] Image: skincare/wardrobe/grooming — **port** ("real" per DoD); skincare tasks feed routine.
-- [ ] Space/Environment: workspace/sleep — **port** light.
-- [ ] Community: accountability matching — **port** light (matching logic can stay scaffold).
+- [x] Purpose — **port** DONE 2026-07-12: Life Wheel + Core Values (data module); v1 bucket-list ABSORBED into BucketListTeaser (Elite-gated, zero-interactive, spec decision 7 promise copy) — no competing flat list ships.
+- [x] Image — **port** DONE 2026-07-12: ImageView on main's skincare data (grooming: main's item set canonical — archive-only body/teeth items not ported, product decision open; wardrobe editable, counts start 0).
+- [x] Space/Environment — **port** DONE 2026-07-12 (36-item checklist data module, persisted per-day, progress ring).
+- [x] Community — **port** DONE 2026-07-12 (real streak via computeRoutineStreak; matching stays scaffold with visible Preview labels).
 
 ## Insights (`InsightV` 5452) — Phase 4
 
-- [ ] `generateInsights` cross-domain correlations — **port** 🧪 (it's deterministic heuristics — cheap to golden-test).
+- [x] `generateInsights` correlations — **port** DONE 2026-07-12 🧪: insights-engine.js golden parity; rendered as InsightsView Correlations section (+ archive's heatmap/7-day grid/analysis).
 - [ ] "AI insights" Elite flag — **defer** (post-MVP, with Bucket List/Claude backend).
 
 ## Profile (`ProfV` 7478) — Phases 2/4
 
-- [ ] Profile/goals/domains editor — **port** (Phase 4 profile rebuild: ProfileHeader, pillars, settings).
-- [ ] Tier management + promo redemption (`PROMO_CODES` 676, `redeemPromo` 7576) — **adapt** to access-code model (decision 5). FOUNDER→elite and ADONIS2026→pro carry over 1:1.
-- [ ] Order history — **drop** with in-app commerce.
-- [ ] Data reset — **port** (soft reset, Phase 4).
+- [x] Profile/goals/domains editor — **port** DONE 2026-07-12 (ProfileHeader/pillars modal/AppSettings/soft reset/sign-out; goals list w/ remove).
+- [x] Tier management + promo redemption — **adapt** DONE 2026-07-12: access-code model live end-to-end (locked domains → redeem → unlock, DoD item 7 test-driven); Stripe upgrade buttons are info rows only.
+- [x] Order history — **drop** CONFIRMED 2026-07-12.
+- [x] Data reset — **port** DONE 2026-07-12 (type-RESET soft reset; logs+goals survive, no re-signup).
 
 ## Onboarding & Auth — Phase 2 ✅ (closed 2026-07-11, branch phase2-onboarding-auth-tiers)
 
