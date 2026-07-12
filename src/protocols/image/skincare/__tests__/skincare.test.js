@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import skincareProtocol from '../index';
 import { validateProtocol } from '../../../protocol-interface';
-import { SKIN_AM, SKIN_PM, SKIN_AM_BASE, SKIN_PM_BASE, GROOMING_ITEMS } from '../data';
+import { SKIN_AM, SKIN_PM, SKIN_AM_BASE, SKIN_PM_BASE, GROOMING_ITEMS, WARDROBE } from '../data';
 
 describe('skincare data', () => {
   it('SKIN_AM has 7 entries', () => { expect(SKIN_AM).toHaveLength(7); });
@@ -9,6 +9,20 @@ describe('skincare data', () => {
   it('SKIN_AM_BASE has 4 steps', () => { expect(SKIN_AM_BASE).toHaveLength(4); });
   it('SKIN_PM_BASE has 3 steps', () => { expect(SKIN_PM_BASE).toHaveLength(3); });
   it('GROOMING_ITEMS has entries', () => { expect(GROOMING_ITEMS.length).toBeGreaterThan(0); });
+});
+
+describe('wardrobe data', () => {
+  it('WARDROBE has 6 categories', () => { expect(WARDROBE).toHaveLength(6); });
+  it('every category starts with have: 0', () => {
+    WARDROBE.forEach((cat) => { expect(cat.have).toBe(0); });
+  });
+  it('every category has id, name, target', () => {
+    WARDROBE.forEach((cat) => {
+      expect(typeof cat.id).toBe('string');
+      expect(typeof cat.name).toBe('string');
+      expect(typeof cat.target).toBe('number');
+    });
+  });
 });
 
 describe('skincare protocol', () => {

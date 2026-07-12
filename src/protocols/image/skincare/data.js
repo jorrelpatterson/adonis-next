@@ -89,3 +89,14 @@ export const GROOMING_ITEMS = [
     tip: "Trim, don't pluck. Use dedicated trimmer."
   }
 ];
+
+// Wardrobe categories with current vs target item counts.
+// have starts 0 — archive shipped fake counts
+export const WARDROBE = [
+  { id: 'shirts',      name: 'Shirts',      have: 0, target: 8 },
+  { id: 'pants',       name: 'Pants',       have: 0, target: 5 },
+  { id: 'outerwear',   name: 'Outerwear',   have: 0, target: 4 },
+  { id: 'shoes',       name: 'Shoes',       have: 0, target: 5 },
+  { id: 'accessories', name: 'Accessories', have: 0, target: 5 },
+  { id: 'layers',      name: 'Layers',      have: 0, target: 3 },
+];

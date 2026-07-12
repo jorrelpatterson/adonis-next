@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import citizenshipProtocol from '../index';
 import { validateProtocol } from '../../../protocol-interface';
-import { CZ_PATHWAYS, CZ_COUNTRIES, CZ_QUESTIONS } from '../data';
+import { CZ_PATHWAYS, CZ_COUNTRIES, CZ_QUESTIONS, DEFAULT_TRAVEL_DOCS, PASSPORT_POWER } from '../data';
 
 describe('citizenship data', () => {
   it('has 4 pathways', () => { expect(CZ_PATHWAYS).toHaveLength(4); });
@@ -12,6 +12,26 @@ describe('citizenship data', () => {
     expect(italy.pathway).toBe('descent');
     expect(italy.docs.length).toBeGreaterThan(0);
   });
+});
+
+describe('travel docs data', () => {
+  it('DEFAULT_TRAVEL_DOCS has 5 docs', () => { expect(DEFAULT_TRAVEL_DOCS).toHaveLength(5); });
+  it('every doc has id, name, status', () => {
+    DEFAULT_TRAVEL_DOCS.forEach((d) => {
+      expect(typeof d.id).toBe('string');
+      expect(typeof d.name).toBe('string');
+      expect(['Active', 'Inactive']).toContain(d.status);
+    });
+  });
+  it('includes expected doc ids', () => {
+    const ids = DEFAULT_TRAVEL_DOCS.map((d) => d.id);
+    expect(ids).toEqual(['us_passport', 'real_id', 'global_entry', 'tsa', 'nexus']);
+  });
+});
+
+describe('passport power data', () => {
+  it('PASSPORT_POWER is numeric', () => { expect(typeof PASSPORT_POWER).toBe('number'); });
+  it('PASSPORT_POWER matches archive hardcoded hero value', () => { expect(PASSPORT_POWER).toBe(186); });
 });
 
 describe('citizenship protocol', () => {

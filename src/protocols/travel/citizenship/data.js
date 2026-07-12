@@ -440,6 +440,19 @@ export const CZ_STATUS_LABELS = {
 
 export const CZ_DOC_STATUS = ['pending', 'ordered', 'in_progress', 'complete'];
 
+// Default travel document tracker rows, extracted from archive TravelView
+// (v2-revival-archive:src/views/TravelView.jsx).
+export const DEFAULT_TRAVEL_DOCS = [
+  { id: 'us_passport',  name: 'US Passport',   status: 'Active'   },
+  { id: 'real_id',      name: 'Real ID',       status: 'Active'   },
+  { id: 'global_entry', name: 'Global Entry',  status: 'Active'   },
+  { id: 'tsa',          name: 'TSA PreCheck',  status: 'Inactive' },
+  { id: 'nexus',        name: 'NEXUS',         status: 'Inactive' },
+];
+
+// US passport visa-free count — v1 hardcoded 186; single value until a per-country dataset lands
+export const PASSPORT_POWER = 186;
+
 export function scoreCitizenshipPaths(answers) {
   return CZ_COUNTRIES.map((c) => {
     let score = 0;

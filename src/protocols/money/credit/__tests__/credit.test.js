@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import creditProtocol from '../index';
 import { validateProtocol } from '../../../protocol-interface';
-import { DISPUTE_TYPES, BUREAUS, CREDIT_FACTORS } from '../data';
+import { DISPUTE_TYPES, BUREAUS, CREDIT_FACTORS, SCORE_MAP } from '../data';
 import { generateLetterByType } from '../letters';
 
 describe('credit data', () => {
@@ -11,6 +11,20 @@ describe('credit data', () => {
   it('has 5 credit factors', () => { expect(CREDIT_FACTORS).toHaveLength(5); });
   it('credit factors sum to 100', () => {
     expect(CREDIT_FACTORS.reduce((s, f) => s + f.weight, 0)).toBe(100);
+  });
+});
+
+describe('SCORE_MAP', () => {
+  it('covers the same range keys the archive used', () => {
+    expect(Object.keys(SCORE_MAP).sort()).toEqual(
+      ['600_700', '700_800', '800_plus', 'rebuild'].sort()
+    );
+  });
+  it('maps ranges to representative score numbers', () => {
+    expect(SCORE_MAP.rebuild).toBe(550);
+    expect(SCORE_MAP['600_700']).toBe(650);
+    expect(SCORE_MAP['700_800']).toBe(750);
+    expect(SCORE_MAP['800_plus']).toBe(800);
   });
 });
 

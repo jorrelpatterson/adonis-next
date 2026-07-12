@@ -42,6 +42,15 @@ export const CREDIT_FACTORS = [
   { id: 'inquiries', label: 'Hard Inquiries', weight: 10, icon: '\u{1F50D}', desc: 'Recent credit applications' },
 ];
 
+// Map onboarding credit-score range answer -> representative score number.
+// Extracted from archive MoneyView (v2-revival-archive:src/views/MoneyView.jsx).
+export const SCORE_MAP = {
+  rebuild: 550,
+  '600_700': 650,
+  '700_800': 750,
+  '800_plus': 800,
+};
+
 export const LETTER_TYPES = [
   { id: 'initial', label: 'Initial Dispute', icon: '\u{1F4DD}', desc: 'Standard FCRA Section 611 dispute' },
   { id: 'followup', label: 'Follow-Up (Round 2)', icon: '\u{1F4EC}', desc: '30-day deadline passed, demand removal' },
