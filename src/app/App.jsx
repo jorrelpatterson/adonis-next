@@ -151,13 +151,19 @@ export default function App() {
       setProfile({
         name: 'E2E', age: 30, gender: 'male', weight: 185, goalW: 175,
         targetDate: '2026-12-31',
-        hFt: 5, hIn: 11, activity: 'moderate', domains: ['body'], tier: 'elite',
+        hFt: 5, hIn: 11, activity: 'moderate', tier: 'elite',
+        // All 8 domains so the phase-close screenshot shooter reaches every tab.
+        domains: ['body', 'money', 'travel', 'mind', 'image', 'purpose', 'environment', 'community'],
       });
     }
   }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const tab = e2eParams?.get('tab');
-    if (e2e && tab) setActiveTab(tab);
+    // Guard unknown ids: the generic domain fallback is gone (Task 14), so an
+    // invalid ?tab= would render <undefined/>. DEV-only path; fail soft to home.
+    const KNOWN = ['home', 'routine', 'insights', 'profile', 'body',
+      'money', 'travel', 'mind', 'image', 'purpose', 'environment', 'community'];
+    if (e2e && tab && KNOWN.includes(tab)) setActiveTab(tab);
   }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // I2: the Home tab is a "today" surface — it reads the same viewDay-built

@@ -31,6 +31,14 @@ ROUTES=(
   "/?e2e=1&tab=routine|routine"
   "/?e2e=1&tab=body|body"
   "/?e2e=1&tab=profile|profile"
+  "/?e2e=1&tab=money|money"
+  "/?e2e=1&tab=travel|travel"
+  "/?e2e=1&tab=mind|mind"
+  "/?e2e=1&tab=image|image"
+  "/?e2e=1&tab=purpose|purpose"
+  "/?e2e=1&tab=environment|environment"
+  "/?e2e=1&tab=community|community"
+  "/?e2e=1&tab=insights|insights"
 )
 
 if ! curl -sf -o /dev/null "$BASE_URL/"; then
