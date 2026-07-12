@@ -166,13 +166,18 @@ export default function App() {
     if (e2e && tab && KNOWN.includes(tab)) setActiveTab(tab);
   }, [e2e]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // I2: the Home tab is a "today" surface — it reads the same viewDay-built
-  // routine/completedTasks/day that Routine does. Browsing Routine to another
-  // day chip moves viewDay off today; without this reset, switching back to
-  // Home would leak that browsed day into the dashboard (wrong routine tile,
-  // wrong day label). Snap viewDay back to real today whenever Home activates.
+  // I2: viewDay browsing is a Routine-tab-only concept. Every OTHER surface —
+  // the Home dashboard AND the 7 domain views — is a "today" surface that reads
+  // the same viewDay-built routine/completedTasks/todayKey Routine does.
+  // Browsing Routine to another day chip moves viewDay off today; without this
+  // reset, leaving Routine for Home (wrong routine tile/day label) or for a
+  // domain tab (its "Today's Tasks" would show the browsed day, and checking
+  // one would misfile the completion to that day's logs.routine key — streak/
+  // score pollution) would leak the browsed day. Snap viewDay back to real
+  // today whenever we leave (or never enter) Routine. Entering Routine already
+  // starts at today, so this is a no-op there.
   useEffect(() => {
-    if (activeTab === 'home') setViewDay(new Date());
+    if (activeTab !== 'routine') setViewDay(new Date());
   }, [activeTab]);
 
   // Build protocol map from registry

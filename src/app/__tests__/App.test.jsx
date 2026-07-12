@@ -236,6 +236,60 @@ describe('I1: locked-domain protocols emit no routine tasks for free tier', () =
   });
 });
 
+describe('I2: browsed viewDay does not leak into the domain views', () => {
+  afterEach(() => cleanup());
+
+  const MIND_GOAL = {
+    id: 'g_mind', status: 'active', domain: 'mind', title: 'Sharpen Mind',
+    priority: 1, activeProtocols: [{ protocolId: 'mind' }],
+    progress: { percent: 0 },
+  };
+  // Pro tier so the Mind tab renders its real view (with the day-built
+  // "Today's Tasks" card) rather than LockedDomain.
+  const PRO = {
+    name: 'Jordan', age: 30, gender: 'male', weight: 180,
+    hFt: 5, hIn: 10, activity: 'moderate', domains: ['body', 'mind'], tier: 'pro',
+  };
+
+  it('browsing Routine forward then opening a domain tab files completions to REAL today, not the browsed day', () => {
+    const box = { current: null };
+    const { container } = render(
+      <StateProvider>
+        <SeedProfileGoals profile={PRO} goals={[MIND_GOAL]} />
+        <StateSpy box={box} />
+        <App />
+      </StateProvider>
+    );
+
+    // Routine → browse viewDay off today via a different day chip.
+    fireEvent.click(container.querySelector('[data-testid="tab-routine"]'));
+    const todayDow = new Date().getDay();
+    const otherIdx = (todayDow + 3) % 7; // guaranteed != todayDow
+    fireEvent.click(container.querySelector(`[data-testid="day-chip-${otherIdx}"]`));
+
+    // Open the Mind tab and check a task in its "Today's Tasks" card. Without
+    // the snap-back (I2), the routine + completedTasks + todayKey are all still
+    // keyed on the browsed day, so this completion would misfile there —
+    // polluting that day's streak/score. The mind protocol always emits a
+    // "🙏 Gratitude" task (id 'mind-gratitude').
+    fireEvent.click(container.querySelector('[data-testid="tab-mind"]'));
+    // Target the routine task row in the "Today's Tasks" card (its subtitle
+    // "Sets intention…" is unique to the mind-gratitude routine task — this
+    // avoids MindView's own "Daily Gratitude" journaling widget, which shares
+    // the word "Gratitude" but does not call onCheckTask).
+    const checkbox = [...container.querySelectorAll('button')]
+      .find(b => b.parentElement?.textContent?.includes('Sets intention'));
+    expect(checkbox).toBeTruthy();
+    fireEvent.click(checkbox);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const routineLogs = box.current.logs.routine;
+    // Completion landed on TODAY's key, and no browsed-day key was written.
+    expect(routineLogs[today]).toContain('mind-gratitude');
+    expect(Object.keys(routineLogs)).toEqual([today]);
+  });
+});
+
 describe('I2: viewDay does not leak into the Home tab', () => {
   afterEach(() => cleanup());
 
