@@ -27,6 +27,13 @@ import OnboardingFlow from '../onboarding/OnboardingFlow.jsx';
 import CalculatingScreen from '../onboarding/CalculatingScreen.jsx';
 import GamePlanScreen from '../onboarding/GamePlanScreen.jsx';
 import { buildInitialGoals } from '../onboarding/initial-goals.js';
+// Task 13: profile rebuild — ported from v2-revival-archive/src/app/components/
+// (adaptations documented inline below and in task-13-report.md).
+import ProfileHeader, { getFitnessPillars } from './components/ProfileHeader';
+import FitnessPillarsModal from './components/FitnessPillarsModal';
+import ResetConfirmModal from './components/ResetConfirmModal';
+import AppSettings from './components/AppSettings';
+import { WORKOUT_GOAL_TO_OPTIMIZE } from '../protocols/body/peptides/proto-stacks';
 
 // Task 13: metadata tier (stamped on redemption, see updateUserTier) is the
 // source of truth on sign-in — the restore effect below only ever upgrades
@@ -46,10 +53,22 @@ export default function App() {
   const [accessCodeInput, setAccessCodeInput] = useState('');
   const [accessCodeMsg, setAccessCodeMsg] = useState('');
   const [showCheckinModal, setShowCheckinModal] = useState(false);
+  // Task 13: profile-surface modal state — pillars editor, soft-reset
+  // confirmation, and the "View My Protocol" game-plan replay overlay.
+  const [showPillarsModal, setShowPillarsModal] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showProtocolPlan, setShowProtocolPlan] = useState(false);
+  // Task 13 soft reset: true while the user is re-running onboarding via
+  // "Reset & Start Over" even though their profile is already complete.
+  // See handleOnboardingComplete and the funnel gate below for how this is
+  // reconciled with the signup-gate funnel machine (report: forceOnboarding
+  // section) — goals are never re-seeded and the signup screen is never
+  // re-shown for an already-signed-in user.
+  const [forceOnboarding, setForceOnboarding] = useState(false);
 
   // ─── auth-gated funnel (spec decision 4: signup gate BEFORE protocol
   // delivery) — onboarding → signup → calculating → gameplan → app ────────
-  const { user, tier: authTier, loading: authLoading } = useAuth();
+  const { user, tier: authTier, loading: authLoading, signOut } = useAuth();
   const [funnel, setFunnel] = useState(null); // null = derive from profile/user; 'signup' | 'calculating' | 'gameplan' are transient stages
 
   // Task 14: dev/E2E URL-param bypass (Verification addendum) — lets the
@@ -252,6 +271,26 @@ export default function App() {
     const n = answers.nutrition;
     if (n?.goalWeight) profileUpdates.goalW = Number(n.goalWeight);
     if (n?.targetDate) profileUpdates.targetDate = n.targetDate;
+
+    // Task 13 soft reset: the user re-ran onboarding from the Profile tab's
+    // "Reset & Start Over" (ResetConfirmModal, RESET-typed gate) while
+    // already signed in with an already-complete profile. Two things must
+    // NOT happen here, unlike first-time onboarding below: (1) goals must
+    // not be re-seeded — buildInitialGoals would duplicate the user's
+    // existing goals; (2) the signup gate must never re-fire — this branch
+    // never sets funnelPending or funnel='signup' at all, so the
+    // `funnel === 'signup' && !user` AuthScreen branch is structurally
+    // unreachable from a soft reset (not just incidentally guarded by the
+    // `user` check). It jumps straight to the calculating→gameplan replay,
+    // which IS wanted — it re-shows the (possibly updated) game plan.
+    if (forceOnboarding) {
+      setProfile(profileUpdates);
+      Object.entries(answers).forEach(([pid, data]) => setProtocolState(pid, data));
+      setForceOnboarding(false);
+      setFunnel('calculating');
+      return;
+    }
+
     // funnelPending persists (store deep-merges profile) so the calculating→
     // gameplan hop resumes even across an email-confirmation reload — see the
     // funnel-resume effect above. Cleared on GamePlanScreen's onStart.
@@ -285,7 +324,11 @@ export default function App() {
     if (funnel === 'gameplan') {
       return <GamePlanScreen profile={profile} protocolStates={protocolStates} onStart={() => { setProfile({ funnelPending: false }); setFunnel(null); }} />;
     }
-    if (isProfileIncomplete(profile)) {
+    if (isProfileIncomplete(profile) || forceOnboarding) {
+      // forceOnboarding (Task 13 soft reset) re-enters this same screen even
+      // though the profile is already complete — initialProfile={profile}
+      // pre-fills the wizard with the user's existing answers rather than
+      // a blank form.
       return <OnboardingFlow initialProfile={profile} onComplete={handleOnboardingComplete} />;
     }
     if (!user) {
@@ -386,32 +429,134 @@ export default function App() {
           <div>
             <H t="Profile" sub={profile.name || 'Set up your profile'} />
 
-            {/* Name */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Name</label>
-              <input
-                value={profile.name || ''}
-                onChange={e => setProfile({ name: e.target.value })}
-                style={{ ...s.inp, width: '100%' }}
-                placeholder="Your name"
-              />
-            </div>
+            {/* Header summary — avatar, name, fitness pillars, stat grid
+                (Task 13, ported from archive ProfileHeader.jsx). */}
+            <ProfileHeader
+              profile={profile}
+              protocolStates={protocolStates}
+              goals={goals}
+              onViewProtocol={() => setShowProtocolPlan(true)}
+              onEditPillars={() => setShowPillarsModal(true)}
+            />
 
-            {/* Primary Goal — derived from first active goal */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Primary Goal</div>
-              <div style={{ fontSize: 13, color: P.txS }}>
-                {activeGoals.length > 0 ? activeGoals[0].title : 'Add a goal to get started'}
+            {/* Account — Task 13 adaptation #2: synced badge + "Log Out"
+                wired to useAuth().signOut. Only rendered when a user
+                session exists (archive pattern, App.jsx:426 — read `user.email`
+                directly since this branch never renders without `user`). */}
+            {user && (
+              <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 8 }}>Account</div>
+                <div style={{ fontSize: 13, color: P.txS, marginBottom: 10, wordBreak: 'break-all' }}>
+                  {user.email}
+                </div>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <div style={{
+                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    padding: '8px 12px', borderRadius: 8,
+                    background: 'rgba(52,211,153,0.05)', border: '1px solid rgba(52,211,153,0.2)',
+                    fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase',
+                    color: P.ok,
+                  }}>
+                    <span style={{ fontSize: 12 }}>{'☁️'}</span>
+                    Synced
+                  </div>
+                  <button
+                    onClick={signOut}
+                    style={{ ...s.btn, ...s.out, fontSize: 11, padding: '8px 14px', minHeight: 36 }}
+                  >
+                    Log Out
+                  </button>
+                </div>
               </div>
-              {activeGoals.length > 0 && (
-                <div style={{ fontSize: 10, color: P.txD, marginTop: 2 }}>
-                  Set by your first active goal. Determines workout program + supplement stack.
+            )}
+
+            {/* Subscription — Task 13 adaptation #1: NO STRIPE. The
+                archive's upgrade buttons called redirectToCheckout
+                (Stripe); that import is never brought into this file.
+                Non-elite tiers instead get non-interactive tier-info rows
+                pointing at the access-code input below, the only real
+                unlock path in this build. */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 6 }}>
+                Subscription
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 10 }}>
+                <span style={{ fontFamily: FD, fontSize: 22, fontWeight: 300, fontStyle: 'italic', color: tierInfo.color }}>
+                  {tierInfo.name}
+                </span>
+                {tierInfo.price > 0 && (
+                  <span style={{ fontSize: 11, color: P.txD }}>${tierInfo.price}/mo</span>
+                )}
+              </div>
+              {tierInfo.features?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                  {tierInfo.features.map((f, i) => (
+                    <span key={i} style={{
+                      fontSize: 10, padding: '4px 10px', borderRadius: 100,
+                      background: 'rgba(232,213,183,0.04)', border: '1px solid ' + P.bd,
+                      color: P.txM,
+                    }}>
+                      {'✓'} {f}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {profile.tier !== 'elite' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                  {profile.tier !== 'pro' && (
+                    <div style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      padding: '8px 12px', borderRadius: 8,
+                      background: 'rgba(232,213,183,0.03)', border: '1px solid ' + P.bd,
+                      fontSize: 11, color: P.txM,
+                    }}>
+                      <span>{SUB_TIERS.pro?.name || 'Pro'}</span>
+                      <span style={{ color: P.txD }}>Redeem a code to unlock</span>
+                    </div>
+                  )}
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '8px 12px', borderRadius: 8,
+                    background: 'rgba(184,196,208,0.03)', border: '1px solid ' + P.bd,
+                    fontSize: 11, color: P.txM,
+                  }}>
+                    <span>{SUB_TIERS.elite?.name || 'Elite'}</span>
+                    <span style={{ color: P.txD }}>Redeem a code to unlock</span>
+                  </div>
+                </div>
+              )}
+              {/* Access code — markup/placeholder/button text kept byte-for-byte
+                  identical to the pre-Task-13 inline card: Task 12's DoD
+                  loop (domain-gating.test.jsx) and access-code-sync.test.jsx
+                  both query getByPlaceholderText('Enter code') / getByText('Apply'). */}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  value={accessCodeInput}
+                  onChange={e => setAccessCodeInput(e.target.value)}
+                  style={{ ...s.inp, flex: 1 }}
+                  placeholder="Enter code"
+                />
+                <button onClick={handleAccessCode} style={{ ...s.pri, padding: '8px 16px' }}>
+                  Apply
+                </button>
+              </div>
+              {accessCodeMsg && (
+                <div style={{ fontSize: 11, color: accessCodeMsg.includes('Activated') ? P.ok : P.err, marginTop: 6 }}>
+                  {accessCodeMsg}
                 </div>
               )}
             </div>
 
-            {/* Weight */}
+            {/* Profile basics */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 10 }}>Profile</div>
+              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Name</label>
+              <input
+                value={profile.name || ''}
+                onChange={e => setProfile({ name: e.target.value })}
+                style={{ ...s.inp, width: '100%', marginBottom: 10 }}
+                placeholder="Your name"
+              />
               <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Current Weight (lbs)</label>
               <input
                 type="number"
@@ -422,7 +567,7 @@ export default function App() {
               />
             </div>
 
-            {/* Domains */}
+            {/* Active Domains */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
               <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 8 }}>Active Domains</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
@@ -450,57 +595,64 @@ export default function App() {
               </div>
             </div>
 
-            {/* Access Code */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 600, color: P.txD, display: 'block', marginBottom: 4 }}>Access Code</label>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  value={accessCodeInput}
-                  onChange={e => setAccessCodeInput(e.target.value)}
-                  style={{ ...s.inp, flex: 1 }}
-                  placeholder="Enter code"
-                />
-                <button onClick={handleAccessCode} style={{ ...s.pri, padding: '8px 16px' }}>
-                  Apply
-                </button>
-              </div>
-              {accessCodeMsg && (
-                <div style={{ fontSize: 11, color: accessCodeMsg.includes('Activated') ? P.ok : P.err, marginTop: 6 }}>
-                  {accessCodeMsg}
-                </div>
-              )}
-            </div>
-
-            {/* Tier Info */}
-            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 4 }}>Current Tier</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 16, fontWeight: 700, color: tierInfo.color }}>{tierInfo.name}</span>
-                {tierInfo.price > 0 && <span style={{ fontSize: 11, color: P.txD }}>${tierInfo.price}/mo</span>}
-              </div>
-              <div style={{ marginTop: 8 }}>
-                {tierInfo.features.map((f, i) => (
-                  <div key={i} style={{ fontSize: 11, color: P.txM, padding: '2px 0' }}>
-                    {'✓'} {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Active Goals */}
+            {/* Active Goals — kept from the pre-Task-13 card, with a remove
+                affordance (removeGoal was already destructured from
+                useAppState above but previously unused). Uses window.confirm
+                rather than the archive's actionSheet.confirm/toast.info —
+                ActionSheetProvider/ToastProvider aren't wrapped around this
+                composed tree and adding one wasn't requested by the brief. */}
             <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
               <div style={{ fontSize: 10, fontWeight: 600, color: P.txD, marginBottom: 8 }}>Active Goals ({activeGoals.length})</div>
               {activeGoals.length === 0 ? (
                 <div style={{ fontSize: 11, color: P.txD }}>No active goals</div>
               ) : activeGoals.map(g => (
                 <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid ' + P.bd }}>
-                  <div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ fontSize: 12, color: P.txS }}>{g.title}</div>
-                    <div style={{ fontSize: 9, color: P.txD }}>{g.domain} {'·'} {g.activeProtocols?.length || 0} protocols</div>
+                    <div style={{ fontSize: 9, color: P.txD }}>{g.domain} {'·'} {g.activeProtocols?.length || 0} protocols {'·'} {g.progress?.percent || 0}%</div>
                   </div>
-                  <span style={{ fontSize: 11, color: P.gW }}>{g.progress?.percent || 0}%</span>
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Remove "${g.title}"? You can add it back anytime.`)) {
+                        removeGoal(g.id);
+                      }
+                    }}
+                    style={{ background: 'transparent', border: 'none', color: P.txD, cursor: 'pointer', fontSize: 16, padding: '4px 8px' }}
+                    title="Remove goal"
+                    aria-label={`Remove ${g.title}`}
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
+            </div>
+
+            {/* Feel & Feedback — sound + reduced-motion toggles (Task 13,
+                ported verbatim from archive AppSettings.jsx). */}
+            <AppSettings />
+
+            {/* Reset — Task 13 adaptation #3: soft reset. Typed-RESET gate
+                (ResetConfirmModal) sets forceOnboarding, which re-enters
+                OnboardingFlow without wiping logs and without re-seeding
+                goals — see handleOnboardingComplete's forceOnboarding branch
+                and task-13-report.md for the full funnel reconciliation. */}
+            <div style={{ ...s.card, padding: 14, marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: P.txD, marginBottom: 6 }}>Reset</div>
+              <div style={{ fontSize: 11, color: P.txM, marginBottom: 10, lineHeight: 1.5 }}>
+                Re-run onboarding from scratch. Your weight history, food logs, workout logs, and goals are preserved — only your profile answers get overwritten.
+              </div>
+              <button
+                onClick={() => setShowResetConfirm(true)}
+                style={{
+                  ...s.btn, width: '100%', justifyContent: 'center',
+                  background: 'transparent',
+                  border: '1px solid rgba(245,158,11,0.3)',
+                  color: P.warn || '#F59E0B',
+                  fontSize: 12, fontWeight: 600,
+                }}
+              >
+                Reset & Start Over
+              </button>
             </div>
 
             {/* System Status */}
@@ -628,6 +780,65 @@ export default function App() {
           onSave={handleSaveCheckin}
           onClose={() => setShowCheckinModal(false)}
         />
+      )}
+
+      {/* Fitness pillars editor (Task 13 adaptation #5) — saving syncs
+          workout.primary AND the peptide protocol's optimizeFor via
+          WORKOUT_GOAL_TO_OPTIMIZE, keeping both protocol states in sync
+          with the newly-promoted primary pillar. */}
+      {showPillarsModal && (
+        <FitnessPillarsModal
+          initial={getFitnessPillars(profile, protocolStates)}
+          onSave={(pillars) => {
+            setProfile({ fitnessPillars: pillars });
+            const newPrimary = pillars[0];
+            if (newPrimary) {
+              setProtocolState('workout', { primary: newPrimary });
+              const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newPrimary];
+              if (optimizeFor) {
+                setProtocolState('peptides', { optimizeFor, selectedStackId: undefined });
+              }
+            }
+          }}
+          onClose={() => setShowPillarsModal(false)}
+        />
+      )}
+
+      {/* Soft-reset confirmation (Task 13 adaptation #3) — typed "RESET"
+          gate. Confirming only flips forceOnboarding; it never touches
+          funnel/funnelPending directly (see handleOnboardingComplete). */}
+      {showResetConfirm && (
+        <ResetConfirmModal
+          onConfirm={() => setForceOnboarding(true)}
+          onClose={() => setShowResetConfirm(false)}
+        />
+      )}
+
+      {/* View My Protocol — re-shows the Game Plan summary screen as an
+          overlay (ProfileHeader's CTA requires an onViewProtocol handler;
+          GamePlanScreen is already imported for the onboarding funnel above,
+          so this reuses it rather than introducing a new component). */}
+      {showProtocolPlan && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: P.bg }}>
+          <button
+            onClick={() => setShowProtocolPlan(false)}
+            aria-label="Close"
+            style={{
+              position: 'fixed', top: 16, left: 16, zIndex: 1001,
+              width: 40, height: 40, borderRadius: 20,
+              background: 'rgba(14,16,22,0.7)', border: '1px solid ' + P.bd,
+              color: P.txS, fontSize: 18, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            ×
+          </button>
+          <GamePlanScreen
+            profile={profile}
+            protocolStates={protocolStates}
+            onStart={() => setShowProtocolPlan(false)}
+          />
+        </div>
       )}
     </div>
   );
