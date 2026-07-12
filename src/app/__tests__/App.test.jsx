@@ -319,6 +319,47 @@ describe('I2: viewDay does not leak into the Home tab', () => {
   });
 });
 
+describe('V3: fitness pillars save drives the Train program', () => {
+  afterEach(() => cleanup());
+
+  it('promoting Muscle Gain in the pillars editor re-points the Train view to the Muscle Gain program', () => {
+    // Seed an existing pillar so ProfileHeader renders its "+ EDIT" chip
+    // (the chip only shows when pillars exist). profile.primary is left unset,
+    // so the Train view initially resolves to the default 'Anti-Aging' program
+    // (WorkoutView: profile.primary || 'Wellness' → GOAL_ALIASES.Wellness).
+    const profile = { ...COMPLETE_PROFILE, fitnessPillars: ['Wellness'] };
+    const { container, getByText, getAllByText } = render(
+      <StateProvider>
+        <SeedProfile profile={profile} />
+        <App />
+      </StateProvider>
+    );
+
+    // Sanity: before any pillar change, the Train view shows the default program.
+    fireEvent.click(container.querySelector('[data-testid="tab-body"]'));
+    fireEvent.click(getByText('Train'));
+    expect(container.textContent).toContain('Anti-Aging');
+    expect(container.textContent).not.toContain('Muscle Gain');
+
+    // Open the pillars editor from the Profile tab and promote Muscle Gain to
+    // primary (first click adds it; second click promotes it to slot 0).
+    fireEvent.click(container.querySelector('[data-testid="tab-profile"]'));
+    fireEvent.click(getByText('+ EDIT'));
+    fireEvent.click(getByText('Muscle Gain')); // add
+    fireEvent.click(getByText('Muscle Gain')); // promote to primary
+    fireEvent.click(getByText('Save'));
+
+    // Back to the Train view — the program must now be Muscle Gain. This only
+    // holds if the pillars save wrote profile.primary (V3 fix); both WorkoutView
+    // and workout.getState read profile.primary, so without that write the Train
+    // program stays on the default.
+    fireEvent.click(container.querySelector('[data-testid="tab-body"]'));
+    fireEvent.click(getByText('Train'));
+    expect(getAllByText('Muscle Gain').length).toBeGreaterThan(0);
+    expect(container.textContent).not.toContain('Anti-Aging');
+  });
+});
+
 describe('Task 13: home tab + daily check-in', () => {
   afterEach(() => {
     cleanup();

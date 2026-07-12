@@ -800,6 +800,13 @@ export default function App() {
             setProfile({ fitnessPillars: pillars });
             const newPrimary = pillars[0];
             if (newPrimary) {
+              // V3 (v1 parity): the primary fitness pillar drives the Train
+              // program + goal-label chain, both of which read profile.primary
+              // FIRST (WorkoutView, workout.getState, primaryGoal above). The
+              // pillars editor previously only wrote protocolStates.workout.primary,
+              // which neither of those consult — so a pillar change never
+              // re-pointed the program. Write profile.primary too.
+              setProfile({ primary: newPrimary });
               setProtocolState('workout', { primary: newPrimary });
               const optimizeFor = WORKOUT_GOAL_TO_OPTIMIZE[newPrimary];
               if (optimizeFor) {
