@@ -514,6 +514,7 @@ export default function App() {
                   <BodyView
                     profile={profile}
                     protocolStates={protocolStates}
+                    setProtocolState={setProtocolState}
                     logs={logs}
                     log={log}
                   />

@@ -1,5 +1,19 @@
 // src/protocols/body/peptides/index.js
-import { getPeptidesByGoal } from './catalog.js';
+import { getPeptidesByGoal, PEPTIDES } from './catalog.js';
+import { getCheckinAverages } from '../../_system/checkin/selectors.js';
+import { getStackAdjustments } from './stack-adjustments.js';
+import { getStackForFinder, findCatalogPeptide } from './proto-stacks.js';
+
+// Returns the live peptide catalog if loaded into logs, otherwise falls back
+// to the static v2 catalog. The live catalog is populated by BodyView's
+// Peptides pane on mount (src/services/peptide-catalog.js → logs.peptideCatalog) —
+// ported from v2-revival-archive, which loaded it from App.jsx instead (see
+// task-7-report.md for the wiring rationale).
+function resolveCatalog(logs) {
+  return (logs && Array.isArray(logs.peptideCatalog) && logs.peptideCatalog.length > 0)
+    ? logs.peptideCatalog
+    : PEPTIDES;
+}
 
 // Determine if a peptide should be shown today based on frequency
 // dayIdx: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
@@ -41,18 +55,75 @@ const peptideProtocol = {
     return goal?.domain === 'body';
   },
 
-  getState(profile, logs, goal) {
+  getState(profile, logs, goal, protocolState) {
+    const activePeptides = profile?.activePeptides || [];
+    const stackNames = activePeptides.map(p => p.name).filter(Boolean);
+    const checkinAverages = getCheckinAverages(logs);
+    const catalog = resolveCatalog(logs);
     return {
-      activePeptides: profile?.activePeptides || [],
+      activePeptides,
+      stackNames,
       supplyDaysLeft: profile?.supplyDaysLeft ?? null,
       activeProduct: profile?.activeProduct ?? null,
+      checkinAverages,
+      catalog,
+      // Peptide Finder answers / manual stack pick (protocolState.peptides,
+      // written by BodyView's Peptides pane via setProtocolState) — used to
+      // surface "Browse →" suggestion tasks before the user commits to a
+      // stack. Requires src/routine/assembler.js to thread protocolStates
+      // through to getState (task-7 wiring fix — see task-7-report.md).
+      finderAnswers: protocolState || {},
     };
   },
 
   getTasks(state, profile, day) {
     const activePeptides = state?.activePeptides || [];
-    if (!activePeptides.length) return [];
 
+    // BROWSE MODE — user hasn't committed to peptides yet but has finder
+    // answers (or a manually selected stack). Surface the curated NAMED
+    // STACK (SHRED/SCULPT/EDGE/etc.) on the routine as "Browse →" tasks
+    // linking to advnce labs. Adonis recommends, advnce sells.
+    //
+    // FILTERED BY FREQUENCY — only items due today appear on the routine.
+    // Weekly peptides (e.g. Retatrutide, Tirzepatide) only show on Mondays.
+    // 'as_needed' compounds (PT-141, Oxytocin) never appear automatically.
+    // The full stack is still visible on the Body tab as a reference.
+    if (activePeptides.length === 0) {
+      const finder = state?.finderAnswers || {};
+      const stack = getStackForFinder(finder);
+      if (!stack) return [];
+      const catalog = state?.catalog || [];
+      const dayIdx = day.getUTCDay();
+      const tasks = [];
+      stack.items.forEach((itemName) => {
+        const peptide = findCatalogPeptide(itemName, catalog);
+        // No catalog match → can't determine freq → skip routine emission
+        // (still browseable from Body tab)
+        if (!peptide) return;
+        if (!pepShowsToday(peptide.freq, dayIdx)) return;
+        tasks.push({
+          id: 'peptide-browse-' + peptide.id,
+          title: '\u{1F489} ' + itemName,
+          subtitle: stack.name + ' stack · ' + (peptide.dose || 'See product page'),
+          type: 'browse',
+          category: 'peptide_rec',
+          time: peptide.tod || null,
+          priority: 4,
+          skippable: true,
+          data: {
+            peptide,
+            url: 'https://advncelabs.com/?q=' + encodeURIComponent(itemName),
+            inStock: peptide.inStock !== false,
+            price: peptide.price,
+            stackName: stack.name,
+            stackId: stack.id,
+          },
+        });
+      });
+      return tasks;
+    }
+
+    // ACTIVE MODE — user has committed peptides; emit dose tasks
     const dayIdx = day.getUTCDay();
 
     return activePeptides
@@ -76,6 +147,28 @@ const peptideProtocol = {
 
   getRecommendations(state, profile, goal) {
     if (!profile || profile.tier === 'free') return [];
+
+    // Adaptive recommendations based on 7-day check-in averages take
+    // precedence over generic goal-based suggestions when available —
+    // they're personalized (ported from v2-revival-archive; task-7).
+    const catalog = state?.catalog || PEPTIDES;
+    const adjustments = getStackAdjustments(
+      state?.checkinAverages,
+      state?.stackNames || [],
+      catalog,
+    );
+    const adaptiveRecs = adjustments
+      .filter(adj => adj.type === 'add')
+      .map(adj => ({
+        type: 'product',
+        id: 'peptide-adaptive-' + adj.peptide.id,
+        name: adj.peptide.name,
+        description: adj.reason,
+        price: adj.peptide.price,
+        revenue: { model: 'direct', margin: adj.peptide.margin },
+        data: { peptide: adj.peptide, adaptive: true, reason: adj.reason },
+      }));
+    if (adaptiveRecs.length > 0) return adaptiveRecs;
 
     const templateId = goal?.templateId;
     const catalogGoal = GOAL_TEMPLATE_MAP[templateId];

@@ -32,7 +32,7 @@ export function buildDailyRoutine({
   day = new Date(),
   today = new Date().toISOString().slice(0, 10),
 }) {
-  const allTasks = collectTasks(goals, protocolMap, profile, day);
+  const allTasks = collectTasks(goals, protocolMap, profile, day, logs, protocolStates);
 
   // System protocols (domain: '_system') run independently of goals.
   // Currently: daily check-in. They emit tasks once per day, not per-goal.
@@ -45,13 +45,11 @@ export function buildDailyRoutine({
   // checkin isn't attached to any goal. This block is the missing link
   // that actually surfaces the "Daily Check-in" task in the routine.
   //
-  // Scoped narrowly to this block only: the archive's collectTasks() call
-  // ALSO threads `logs`/`protocolStates` through to `proto.getState()` for
-  // the per-goal path (a broader behavior change to how every protocol's
-  // state is computed). That's out of scope here — main's collectTasks()
-  // signature is left untouched; only the `_system` domain sweep, which
-  // uses this function's own `logs`/`protocolStates` params directly, is
-  // ported.
+  // task-7 follow-up: collectTasks() now ALSO threads `logs`/`protocolStates`
+  // through to the per-goal `proto.getState()` path (previously scoped out
+  // here as "a broader behavior change") — the peptides protocol needed it
+  // to resolve `protocolStates.peptides` into routine browse tasks. See
+  // src/routine/assembler.js and .superpowers/sdd/task-7-report.md.
   if (goals.length > 0) {
     for (const proto of Object.values(protocolMap)) {
       if (proto.domain !== '_system' || typeof proto.getTasks !== 'function') continue;
