@@ -4,8 +4,10 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/app/',
+  publicDir: 'src/static',
   build: {
-    outDir: 'dist',
+    outDir: 'public/app',
   },
   test: {
     environment: 'happy-dom',

@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "dev:app": "vite",
-    "build": "next build",
+    "build": "vite build && next build",
     "build:app": "vite build",
+    "build:next-only": "next build",
     "start": "next start",
     "lint": "next lint",
     "preview": "vite preview",

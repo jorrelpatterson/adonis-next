@@ -25,6 +25,17 @@ const nextConfig = {
       },
     ];
   },
+  // Mirrors the vercel.json rewrite for /app: vercel.json only applies to the
+  // Vercel edge, so `next start` (local verification, `npm run dev`) needs its
+  // own rewrite to serve the v2 SPA shell at /app.
+  async rewrites() {
+    return [
+      {
+        source: '/app',
+        destination: '/app/index.html',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
