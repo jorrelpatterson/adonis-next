@@ -4,9 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#060709" />
-  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-title" content="Adonis" />
+  <meta name="theme-color" content="#0A0A0C" />
+  <link rel="manifest" href="/app/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/app/icon.svg" />
+  <link rel="apple-touch-icon" href="/app/icon.svg" />
   <title>Adonis</title>
+  <script>
+    // v1-parity SW/cache cleanup (mirrors public/app.html's killer): any stale
+    // service worker registration or cache from a prior install must be wiped
+    // so v2 doesn't serve cached v1 assets under the same origin.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (r) { r.unregister(); });
+      });
+    }
+    if (typeof caches !== 'undefined') {
+      caches.keys().then(function (names) {
+        names.forEach(function (name) { caches.delete(name); });
+      });
+    }
+  </script>
 </head>
 <body>
   <div id="root"></div>
