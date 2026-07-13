@@ -137,10 +137,15 @@ Findings recorded during extraction (parity decisions for the port):
 
 ## PWA & shell — Phase 5
 
-- [ ] Manifest, apple-web-app meta, install prompt (240-263), splash — **port**.
-- [ ] ⚠ SW-killer (unregister + cache-wipe on load, app.html:2) — **adapt**: keep the no-service-worker stance for MVP (fresh deploys > offline), but v2's killer must also clean up v1's registrations at cutover.
-- [ ] Versioned localStorage with wipe-on-bump (`adonis_version` 3097) — **adapt**: keep versioned storage under a new v2 key; no v1 migration (locked decision 2).
-- [ ] Marketing landing `index.html` — **port** as-is; CTA repoints to `/app` (Phase 5); `app.html` → redirect.
+> **Phase 5 staged**: 5a (manifest, SW-killer, versioned storage, ride-along build) is additive and
+> merges to main independently. The cutover flip (CTA repoint, `app.html` redirect, `public/lib`
+> removal) is staged on branch `phase5-cutover` and does **not** merge until Jorrel signs off on the
+> real-device DoD walkthrough.
+
+- [x] Manifest, apple-web-app meta, install prompt (240-263), splash — **port**. DONE 5a (v2 manifest + icons + splash under `src/static/`, rides the `/app` build) — 2026-07-12 (phase5-cutover, HELD for Jorrel).
+- [x] ⚠ SW-killer (unregister + cache-wipe on load, app.html:2) — **adapt**: keep the no-service-worker stance for MVP (fresh deploys > offline), but v2's killer must also clean up v1's registrations at cutover. DONE — v2 shell carries the killer (5a) and the cutover `app.html` redirect keeps the same killer snippet so installed v1 PWAs clean up their registrations/caches on next load — 2026-07-12 (phase5-cutover, HELD for Jorrel).
+- [x] Versioned localStorage with wipe-on-bump (`adonis_version` 3097) — **adapt**: keep versioned storage under a new v2 key; no v1 migration (locked decision 2). DONE 5a (`STORAGE_VERSION = 1` stamped as `_v` in `src/state/store.jsx`; missing `_v` back-compat loads, future mismatch wipes) — 2026-07-12 (phase5-cutover, HELD for Jorrel).
+- [x] Marketing landing `index.html` — **port** as-is; CTA repoints to `/app` (Phase 5); `app.html` → redirect. DONE at cutover: CTA `href` changed `./app.html` → `/app`; `public/app.html` replaced with a redirect document (meta refresh + `location.replace('/app')` + fallback link, SW-killer preserved); `public/lib` (exercises.js/programs.js) removed — 2026-07-12 (phase5-cutover, HELD for Jorrel).
 
 ---
 
