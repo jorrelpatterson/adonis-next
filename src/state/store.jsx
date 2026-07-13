@@ -4,6 +4,12 @@ import { DEFAULT_STATE } from './defaults';
 
 const STORAGE_KEY = 'adonis_v2';
 const DEBOUNCE_MS = 500;
+// Bump this when a persisted-shape change makes old blobs unsafe to deep-merge
+// into DEFAULT_STATE. Missing `_v` (pre-versioning testers) is treated as
+// current — they keep their data. A stamped `_v` that doesn't match this
+// version (older OR newer — we don't support downgrades either) wipes to
+// DEFAULT_STATE, mirroring v1's adonis_version wipe-on-bump semantics.
+const STORAGE_VERSION = 1;
 
 const StateContext = createContext(null);
 
@@ -12,12 +18,17 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
     const parsed = JSON.parse(raw);
+    if (parsed._v !== undefined && parsed._v !== STORAGE_VERSION) {
+      return DEFAULT_STATE;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const { _v, ...rest } = parsed;
     return {
       ...DEFAULT_STATE,
-      ...parsed,
-      profile: { ...DEFAULT_STATE.profile, ...parsed.profile },
-      logs: { ...DEFAULT_STATE.logs, ...parsed.logs },
-      settings: { ...DEFAULT_STATE.settings, ...parsed.settings },
+      ...rest,
+      profile: { ...DEFAULT_STATE.profile, ...rest.profile },
+      logs: { ...DEFAULT_STATE.logs, ...rest.logs },
+      settings: { ...DEFAULT_STATE.settings, ...rest.settings },
     };
   } catch {
     return DEFAULT_STATE;
@@ -72,7 +83,7 @@ export function StateProvider({ children }) {
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, _v: STORAGE_VERSION }));
     }, DEBOUNCE_MS);
     return () => clearTimeout(saveTimer.current);
   }, [state]);
