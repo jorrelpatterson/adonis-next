@@ -62,10 +62,39 @@ CC_DB, golden-verified engines), income *stub* (fixed targets, spec-sanctioned f
 - **Dispute engine port** 🧪 — the engines are golden-ready; needs letter UI + dispute queue
   state (v1 had `disputeQueue`). ⚖️ Ship in-app (Pro feature, strong differentiator) or keep
   deferred? ⚖️ Letters print/copy only, or mail-api later (v1 had Lob stubbed)?
-- **Income protocol, real state** — replace the stub. ⚖️ Product decision first: v1's model
-  was the 5-level referral/MLM tracker (preserved in golden fixtures + ledger notes). Keep
-  that (ambassador synergy!), or pivot to a generic income-goals model (side-income pipeline,
-  freelance tracker)? This decision gates the whole build.
+- **Income protocol, real state — RESOLVED 2026-07-14 (Jorrel): it's the CAREER ENGINE.**
+  Port the jobs.jorrel.io engine (lives in the `jorrel-os` repo, powers jobs.jorrel.io +
+  chris.jorrel.io in daily production) into the Money module as the income model.
+  **Half is already here and LIVE:** `lib/career/{dedup,pre-filter,types,supabase}.js` +
+  6 source adapters + `app/api/cron/career/ingest` (registered in vercel.json @ 14:00 UTC).
+  **Verified 2026-07-14: `career_jobs` = 254 rows and filling. But `career_user_jobs`,
+  `career_profiles`, `career_applications` = 0 rows — nothing is being scored or surfaced.
+  We're ingesting blind.** Adonis's schema (per-user + RLS) is BETTER than jorrel-os's
+  (flat `user_key`) — keep it; the ports remap fields onto it.
+  What's missing (the valuable half), in build order:
+  1. **`scoreJob`/`scoreBatch`** ← `jorrel-os/lib/matcher.ts` (129 lines, Claude Haiku
+     ~$0.001/job, free title pre-filter short-circuit, returns
+     `{score 0-100, fit_reasoning, red_flags[], recommended_action}`). Port TS→JS, read the
+     profile from `career_profiles.profile_summary_md`, write `career_user_jobs`. ~2h. **Do first.**
+  2. **Profile onboarding — the only genuinely NEW work.** jorrel-os reads
+     `config/<tenant>/profile-master.md` off DISK (fine for 3 hardcoded people, impossible for
+     N users). Needs: resume upload → parse → wizard → (optional Claude interview) → finalize
+     into `career_profiles`. Nothing to port; build from scratch. **This is the real gap.**
+  3. **Operator-stack hard filter** — geo/comp/training-schedule/sleep-protocol gate BEFORE
+     scoring. No jorrel-os analog; it's the Adonis differentiator (jobs that fit your protocol,
+     not just your resume).
+  4. `tailorForJob` + `prepJob` + templates ← `jorrel-os/lib/{tailor,prep,cover-letter}.ts`
+     (Claude Sonnet, forced-tool JSON schema, 10 no-fabrication rules — the schema + system
+     prompt ARE the IP; ~$1.50/tailor). Re-skin templates in Adonis dark/serif.
+  5. `decideFollowUp` ← `jorrel-os/lib/follow-up.ts` — PURE function, ~40 lines, the only
+     unit-tested code in that repo. Trivial lift; do last.
+  New env var needed: `ANTHROPIC_API_KEY` (+ optional `SCORING_MODEL`/`TAILOR_MODEL`).
+  Gotcha to carry: use `process.env.X?.trim() || 'default'` — never `??` (empty-string env
+  vars silently produce `model: ''`).
+  NOTE: adonis's career spec lists "merging with `money/income/`" as a NON-GOAL — that ruling
+  is now superseded: career IS the income protocol. Re-rule in the Wave 2 spec.
+  ⚖️ Still open: does the v1 referral/MLM tracker survive alongside it (ambassador synergy)
+  or retire? Recommend: keep as a small "Referrals" card, career is the main surface.
 - CC_DB freshness: move to Supabase table (admin-editable like products) so card offers update
   without deploys. ⚖️ Worth it now, or annual manual refresh acceptable?
 
@@ -157,7 +186,7 @@ infrastructure, post-MVP #1.5).
 |---|---|---|---|
 | **0. Cutover + niggles** | Jorrel phone walkthrough → merge `phase5-cutover`; forgot-password flow; `subscribers.email` constraint check; backlog Minors sweep | S | Unblocks everything; v1 retires |
 | **1. Bucket List + Stripe** (Purpose + goal engine + Claude backend, w/ Travel trip-primitives + Money wallet-v2 as its two strongest legs) | L | Spec's own post-MVP #1: the Elite reason-to-pay; forces the cross-domain contract every later wave builds against |
-| **2. Money depth** (dispute engine 🧪, income model ⚖️→build, CC_DB freshness) | L | Biggest v1 IP still unshipped; fixtures ready; Bucket List's funding leg gets real |
+| **2. Money depth = CAREER ENGINE** (score → profile onboarding → operator-filter → tailor → follow-up; then dispute engine 🧪, CC_DB freshness) | L | Income model RESOLVED: port jobs.jorrel.io. Half already live in-repo (254 jobs ingesting, 0 scored). Biggest unshipped IP in the portfolio; Bucket List's funding leg gets real |
 | **3. Body commerce loop** (commit-a-stack → dose tasks → supply tracking → ref-attributed ordering) | M | Revenue path: app recommends → advnce sells → app tracks usage → reorder |
 | **4. Daily-loop depth across Mind/Image/Environment** (session logs, task emission, grooming decision) | M | Cheap wins that make the routine feel alive across all domains; Insights riders |
 | **5. Community** (⚖️ growth-light vs social-full) | L | Needs users; possibly split: growth-light much earlier |
@@ -168,8 +197,9 @@ Sizing: S ≈ one session, M ≈ one phase-like cycle (10-15 tasks), L ≈ full 
 
 1. **Wave 1:** Stripe pricing stands ($14.99/$29.99)? Bucket List archetypes to launch with
    (trip/marathon/house/physique)? Claude decomposition = Elite-only confirmed?
-2. **Money:** income model — keep v1's referral/ambassador tracker or pivot generic? Dispute
-   engine in-app now (Pro) or hold? CC_DB → Supabase or manual refresh?
+2. **Money:** ~~income model~~ RESOLVED (career engine — see Money section). Still open:
+   does the referral/MLM tracker survive as a side card? Dispute engine in-app now (Pro) or
+   hold? CC_DB → Supabase or manual refresh? Career tier placement (Pro? Elite? free-with-limits)?
 3. **Body:** commit-a-stack creates a goal vs standalone? PhotoJournal → Supabase Storage
    (needs a storage bucket) — green light?
 4. **Image:** grooming canonical item set (main's vs archive's vs union)? Wardrobe stays a
