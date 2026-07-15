@@ -134,4 +134,52 @@ describe('auth service', () => {
       expect(auth.tierFromUser(null)).toBe('free');
     });
   });
+
+  // appRedirectUrl/setNativePlatform mutate module-level state (nativeFlag)
+  // that persists across tests in this file (a single `const auth = await
+  // import('../auth.js')` at the top, not a fresh module per test) — every
+  // test here restores it to the default (false) in its own afterEach so it
+  // can never leak into an unrelated describe block.
+  describe('appRedirectUrl / setNativePlatform (iOS P3 deep-link auth)', () => {
+    afterEach(() => {
+      auth.setNativePlatform(false);
+    });
+
+    it('defaults to origin+pathname (web) before setNativePlatform is ever called', () => {
+      expect(auth.appRedirectUrl()).toBe(window.location.origin + window.location.pathname);
+    });
+
+    it('still returns origin+pathname after setNativePlatform(false)', () => {
+      auth.setNativePlatform(false);
+      expect(auth.appRedirectUrl()).toBe(window.location.origin + window.location.pathname);
+    });
+
+    it('returns the adonis:// custom scheme once setNativePlatform(true) has been called', () => {
+      auth.setNativePlatform(true);
+      expect(auth.appRedirectUrl()).toBe('adonis://auth-callback');
+    });
+
+    it('signUpWithEmail passes emailRedirectTo: adonis://auth-callback on native', async () => {
+      auth.setNativePlatform(true);
+      const fakeUser = { id: 'user-123', email: 'a@b.com' };
+      mockSupabase.auth.signUp.mockResolvedValue({ data: { user: fakeUser, session: null }, error: null });
+
+      await auth.signUpWithEmail('a@b.com', 'password123');
+
+      expect(mockSupabase.auth.signUp).toHaveBeenCalledWith(expect.objectContaining({
+        options: { emailRedirectTo: 'adonis://auth-callback' },
+      }));
+    });
+
+    it('signUpWithEmail passes emailRedirectTo: origin+pathname on web', async () => {
+      const fakeUser = { id: 'user-123', email: 'a@b.com' };
+      mockSupabase.auth.signUp.mockResolvedValue({ data: { user: fakeUser, session: null }, error: null });
+
+      await auth.signUpWithEmail('a@b.com', 'password123');
+
+      expect(mockSupabase.auth.signUp).toHaveBeenCalledWith(expect.objectContaining({
+        options: { emailRedirectTo: window.location.origin + window.location.pathname },
+      }));
+    });
+  });
 });

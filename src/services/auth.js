@@ -10,14 +10,42 @@
 //   signOut() — clears local session
 //   getSession() — current session (null if not logged in)
 //   onAuthStateChange(callback) — subscribe to login/logout events
+//   setNativePlatform(isNative) — called once at boot, native builds only
+//     (see main.jsx), so appRedirectUrl() below knows to target the app
+//     instead of the web origin
 
 import { supabase } from './supabase.js';
 
-// Build a redirect URL that points back to wherever the app is currently
-// served from (origin + pathname), so email-confirm links land back on
-// the same page instead of a hardcoded route.
-const appRedirectUrl = () =>
-  window.location.origin + window.location.pathname;
+// appRedirectUrl() is called SYNCHRONOUSLY, inline, while building
+// supabase.auth.signUp's options (see signUpWithEmail below) — it can't
+// itself await Capacitor's async isNativePlatform() check (the
+// dynamic-import-behind-a-cached-promise pattern every platform/*.js
+// adapter uses — see platform/camera.js's header for why). Instead, the
+// native/web decision is resolved ONCE at boot, before React mounts:
+// main.jsx awaits the native check and calls `setNativePlatform(...)`
+// BEFORE ReactDOM.render — so by the time any UI exists that could call
+// signUpWithEmail, nativeFlag already holds the right value. Deterministic,
+// no race: unlike resolving the check lazily on first use here, there's no
+// window where a real tap could observe a stale default. Web builds never
+// call setNativePlatform, so nativeFlag stays false and appRedirectUrl()'s
+// web behavior is provably unchanged.
+let nativeFlag = false;
+
+export function setNativePlatform(isNative) {
+  nativeFlag = isNative;
+}
+
+// Build a redirect URL Supabase's email-confirm link points back to.
+// Web: the app's own current origin + pathname, so the link lands back on
+// the same page instead of a hardcoded route (unchanged behavior). Native:
+// WKWebView hands an http(s) redirect off to Safari instead of back into
+// this app, so the target instead is a custom URL scheme iOS routes back
+// to us — see platform/deep-link.js, which listens for that scheme and
+// completes the Supabase session from it. (Universal Links — no scheme
+// visible in the URL — are the nicer P4 upgrade, needing an Apple
+// Developer account + an AASA file; this custom scheme ships now.)
+export const appRedirectUrl = () =>
+  nativeFlag ? 'adonis://auth-callback' : window.location.origin + window.location.pathname;
 
 export async function signUpWithEmail(email, password) {
   const { data, error } = await supabase.auth.signUp({
