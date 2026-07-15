@@ -29,6 +29,8 @@ import TabNav from './TabNav';
 import LockedDomain from './LockedDomain';
 import { isDomainLocked } from './tier-gate';
 import AmbientBackdrop from '../design/AmbientBackdrop';
+import PushPermissionExplainer from './PushPermissionExplainer';
+import { getPushPermissionState, initPushListeners } from '../platform/push';
 import { validateAccessCode } from '../state/access-codes';
 import { useAuth } from '../services/useAuth.js';
 import { updateUserTier } from '../services/auth.js';
@@ -65,6 +67,14 @@ const DOMAIN_VIEWS = {
 // signed out must survive a subsequent login with a lower/blank metadata tier).
 const TIER_RANK = { free: 0, pro: 1, elite: 2 };
 
+// iOS P3 Task 3: allowlist for push-notification tap routing (see the
+// initPushListeners wiring below) — a notification's data.tab could in
+// principle be any string, and blindly setActiveTab-ing it would reach the
+// domain-tab dispatch further down and crash on an unrecognized id
+// (DOMAIN_VIEWS[activeTab] would be undefined). Same defensive idea as the
+// e2e `?tab=` KNOWN guard already below, applied to this new external input.
+const KNOWN_TABS = ['home', 'routine', 'insights', 'profile', ...DOMAINS.map(d => d.id)];
+
 export default function App() {
   const { state, addGoal, removeGoal, setProfile, setProtocolState, log, updateGoal } = useAppState();
   const { profile, goals, protocolState: protocolStates, logs, settings } = state;
@@ -89,6 +99,13 @@ export default function App() {
   // section) — goals are never re-seeded and the signup screen is never
   // re-shown for an already-signed-in user.
   const [forceOnboarding, setForceOnboarding] = useState(false);
+  // iOS P3 Task 3: whether the Home tab's "Turn on reminders" card
+  // (PushPermissionExplainer) is eligible to show — set true by the
+  // getPushPermissionState() effect below. Passing 'prompt' is necessary
+  // but not sufficient: PushPermissionExplainer also self-gates on its own
+  // localStorage flag (see that component's header) — this state is purely
+  // "is this a native install that hasn't been asked at the OS level yet".
+  const [showPushCard, setShowPushCard] = useState(false);
 
   // ─── auth-gated funnel (spec decision 4: signup gate BEFORE protocol
   // delivery) — onboarding → signup → calculating → gameplan → app ────────
@@ -180,6 +197,31 @@ export default function App() {
   useEffect(() => {
     if (activeTab !== 'routine') setViewDay(new Date());
   }, [activeTab]);
+
+  // iOS P3 Task 3: push-notification tap routing, registered once at boot —
+  // independent of auth/funnel state, same "fire-and-forget, boot-time"
+  // tier as main.jsx's initDeepLinks/initStatusBar, just wired here instead
+  // of main.jsx because setActiveTab only exists once this component's
+  // state does (per the brief's own fallback for this exact situation).
+  // No-op on web. onTapRoute is deliberately NOT raw setActiveTab — see
+  // KNOWN_TABS above for why the tab id gets validated first.
+  useEffect(() => {
+    initPushListeners((tab) => {
+      if (KNOWN_TABS.includes(tab)) setActiveTab(tab);
+    });
+  }, []);
+
+  // iOS P3 Task 3: resolves once at boot whether the Home tab's "Turn on
+  // reminders" card is eligible to show. getPushPermissionState() itself
+  // resolves 'denied' on web without importing anything, so `state ===
+  // 'prompt'` is already false there without a separate isNative() check.
+  useEffect(() => {
+    let cancelled = false;
+    getPushPermissionState().then((state) => {
+      if (!cancelled && state === 'prompt') setShowPushCard(true);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   // Build protocol map from registry
   const protocolMap = useMemo(() => {
@@ -453,16 +495,24 @@ export default function App() {
             initialDomain={goalSetupDomain}
           />
         ) : activeTab === 'home' ? (
-          <HomeDashboard
-            profile={profile}
-            logs={logs}
-            today={today}
-            routine={routine}
-            completedTasks={completedTasks}
-            adaptive={adaptive}
-            day={viewDay}
-            onCheckinTap={() => setShowCheckinModal(true)}
-          />
+          <>
+            {/* iOS P3 Task 3: "simplest clean approach" from the brief — a
+                dismissible card on Home, shown once (see showPushCard/
+                PushPermissionExplainer's own localStorage self-gate). */}
+            {showPushCard && (
+              <PushPermissionExplainer onDismiss={() => setShowPushCard(false)} />
+            )}
+            <HomeDashboard
+              profile={profile}
+              logs={logs}
+              today={today}
+              routine={routine}
+              completedTasks={completedTasks}
+              adaptive={adaptive}
+              day={viewDay}
+              onCheckinTap={() => setShowCheckinModal(true)}
+            />
+          </>
         ) : activeTab === 'routine' ? (
           <div>
             {/* Add Goal Button */}
