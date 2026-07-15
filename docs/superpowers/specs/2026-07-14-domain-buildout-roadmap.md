@@ -193,7 +193,7 @@ infrastructure, post-MVP #1.5).
 
 | Wave | Scope | Size | Why this order |
 |---|---|---|---|
-| **0. Cutover + niggles** | Jorrel phone walkthrough → merge `phase5-cutover`; forgot-password flow; `subscribers.email` constraint check; backlog Minors sweep | S | Unblocks everything; v1 retires |
+| **0. Cutover + niggles** | ✅ CUTOVER DONE 2026-07-14 (merged 465d674, deployed, verified live — walkthrough skipped per Jorrel 'flip now'; v1 RETIRED). Remaining: forgot-password flow; `subscribers.email` constraint check; backlog Minors sweep | S | v1 retired — adonis.pro/app is the front door |
 | **1. Bucket List + Stripe** (Purpose + goal engine + Claude backend, w/ Travel trip-primitives + Money wallet-v2 as its two strongest legs) | L | Spec's own post-MVP #1: the Elite reason-to-pay; forces the cross-domain contract every later wave builds against |
 | **2. Money depth = CAREER ENGINE** (score → profile onboarding → operator-filter → tailor → follow-up; then dispute engine 🧪, CC_DB freshness) | L | Income model RESOLVED: port jobs.jorrel.io. Half already live in-repo (254 jobs ingesting, 0 scored). Biggest unshipped IP in the portfolio; Bucket List's funding leg gets real |
 | **3. Body commerce loop** (commit-a-stack → dose tasks → supply tracking → ref-attributed ordering) | M | Revenue path: app recommends → advnce sells → app tracks usage → reorder |
