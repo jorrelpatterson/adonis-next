@@ -10,6 +10,7 @@ import App from './app/App';
 import './design/fonts.css';
 import './design/safe-area.css';
 import './design/animations.css';
+import './design/native-shell.css';
 import './protocols/register-all';
 
 // Boot sequence: on iOS, restore localStorage from the native Preferences

@@ -1,0 +1,107 @@
+/* src/design/native-shell.css
+ *
+ * Webview tell-killers (iOS P1 Task 5 — Premium Contract item 4: no
+ * rubber-band revealing the shell, no tap-highlight flash, no long-press
+ * callout/selection on chrome, no double-tap zoom). A wrapped web app
+ * "tells" on itself with a handful of default WebKit/browser behaviors
+ * that read as "this is a website in a box," not a native app. This file
+ * is the single place that documents and (where not already handled)
+ * kills each one — see main.jsx for the import.
+ *
+ * Two of the four tells are already handled elsewhere and are cross-
+ * referenced here rather than duplicated (one rule, one place to look,
+ * per the task brief):
+ *   - tap-highlight flash: `-webkit-tap-highlight-color: transparent` —
+ *     global `* { }` reset in ./animations.css.
+ *   - double-tap-zoom delay: `touch-action: manipulation` — same global
+ *     `* { }` reset in ./animations.css.
+ *
+ * Contract item 7 (keyboard: inputs never hidden, dark keyboard, no
+ * viewport jump) is handled by capacitor.config.json's `plugins.Keyboard`
+ * block (`resize: "native"` + `style: "DARK"`) plus the input-zoom audit
+ * below — no CSS is needed for the resize/style behavior itself, it's
+ * native config read by the Keyboard plugin at launch.
+ *
+ * Input focus-zoom audit (iOS zooms the viewport on focus if an input's
+ * font-size is < 16px — every input in this app renders at 11-13px via
+ * design/styles.js's s.inp/s.sel and a few one-off overrides in
+ * SetGrid.jsx/FoodLogger.jsx, all well under the threshold). No CSS
+ * change was made for this because it's already covered by two
+ * independent, pre-existing layers:
+ *   1. index.html's viewport meta already ships `maximum-scale=1.0,
+ *      user-scalable=no`, which suppresses iOS's auto-zoom-on-focus
+ *      app-wide regardless of an input's rendered font-size.
+ *   2. animations.css also force-sets `font-size: 16px !important` on
+ *      input/select/textarea, but ONLY below a 420px viewport width
+ *      (`@media (min-width: 420px) { ... font-size: inherit !important }`
+ *      reverts it above that). That breakpoint is narrower than the
+ *      428-430px logical width of the "Plus"/"Pro Max" iPhones, so on
+ *      those specific devices this second layer is inert and layer 1
+ *      (the viewport meta) is the only thing preventing focus-zoom. It
+ *      still fully prevents it — flagging the gap here for visibility,
+ *      not fixing it, since fixing it (widening/removing the breakpoint)
+ *      is a pre-existing responsive-layout rule outside this task's
+ *      scope and the viewport meta already closes the gap.
+ *
+ * Web impact is called out per-rule below. Nothing in this file is gated
+ * behind a native-only check (unlike platform/status-bar.js,
+ * platform/storage.js) because every rule here is either already-standard
+ * CSS or degrades to a no-op on desktop/web — there's no native plugin
+ * call in this file, just CSS.
+ */
+
+/* ─── Rubber-band / overscroll kill ────────────────────────────────────────
+ * On iOS, scrolling past the top/bottom of a scroll container's own bounds
+ * chains into a system rubber-band bounce that reveals whatever is drawn
+ * behind the WKWebView — a visible "seam" that breaks the native illusion.
+ * `overscroll-behavior: none` on the two ancestors that can receive that
+ * chained scroll (html and body) stops the chain at the document boundary.
+ * Elements with their own `overflow: auto/scroll` (the `.adn-noise` view
+ * wrappers, modals, inner lists) are untouched by this rule — they keep
+ * their own momentum scrolling and their own bounce; only chaining OUT to
+ * the document (and the shell behind it) is blocked. (design/
+ * PullToRefresh.jsx is not currently mounted anywhere in the app, so there
+ * is no live gesture handler that depends on that chaining either.)
+ *
+ * Web impact: none visible. `overscroll-behavior` is a standard, widely
+ * supported CSS property (Chrome, Firefox, Safari 16+) — on desktop it
+ * just suppresses the "glow"/chain-scroll some browsers show at page
+ * boundaries, which most app-like sites already disable.
+ */
+html, body {
+  overscroll-behavior: none;
+}
+
+/* ─── No callout / no selection on chrome ──────────────────────────────────
+ * A long-press on a native app's buttons or tab bar doesn't pop up a
+ * text-selection handle or a "Copy/Look Up" callout menu — that's a
+ * webpage behavior. Scoped to `button`, `a`, and `[role="button"]` — an
+ * audit of every tappable control in src/ found the app uses exclusively
+ * `<button>` elements for chrome/CTAs (TabNav tabs, form submits, option
+ * pickers, ActionSheet rows) plus exactly two `<a>` tags, both button-
+ * styled external-link chips (BodyView's "Browse →", RoutineView's task
+ * link) — no inline prose hyperlinks exist. `[role="button"]` catches the
+ * one div-as-button case (FitnessPillarsModal).
+ *
+ * Deliberately NOT applied broadly to headings or via `*` — goal
+ * descriptions, insights text, and other prose stay selectable/copyable
+ * (animations.css already styles `::selection`, i.e. selection is a
+ * designed-for feature here, not an oversight to blanket-suppress).
+ * There's also no reliable selector for "header" as a distinct category
+ * in this codebase — headings are inline content-flow `<div>`s
+ * indistinguishable from prose at the CSS level, not a separate chrome
+ * layer — so leaving them alone is the conservative reading of "chrome,
+ * not content" while every actual interactive control is 100% covered.
+ *
+ * Web impact: negligible. `user-select: none` on buttons/links is
+ * near-universal on the web already (nobody expects to select a button's
+ * label); `-webkit-touch-callout` is Safari/WebKit-only and a no-op
+ * everywhere else.
+ */
+button,
+a,
+[role="button"] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
