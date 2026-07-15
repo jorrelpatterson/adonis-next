@@ -32,7 +32,7 @@ export default function GamePlanScreen({ profile, protocolStates, onStart }) {
         pointerEvents: 'none', filter: 'blur(60px)',
       }} />
 
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '48px 24px 32px', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: 'calc(48px + var(--safe-top)) 24px calc(32px + var(--safe-bottom))', position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 36 }}>

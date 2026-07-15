@@ -46,7 +46,8 @@ export default function AuthScreen({ heading = 'Adonis', subheading = 'Sign up t
     <div className="adn-noise" style={{
       fontFamily: FN, background: P.bg, color: P.tx,
       position: 'fixed', inset: 0, display: 'flex',
-      alignItems: 'center', justifyContent: 'center', padding: 16,
+      alignItems: 'center', justifyContent: 'center',
+      padding: 'calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom))',
     }}>
       <div style={{ width: '100%', maxWidth: 380 }}>
 

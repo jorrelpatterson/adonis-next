@@ -146,7 +146,7 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
       fontFamily: FN, background: P.bg, color: P.tx,
       position: 'fixed', inset: 0, overflowY: 'auto',
     }}>
-      <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 16px 32px' }}>
+      <div style={{ maxWidth: 480, margin: '0 auto', padding: 'calc(24px + var(--safe-top)) 16px calc(32px + var(--safe-bottom))' }}>
 
         {/* Brand + progress */}
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
