@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { P, FN } from '../../../design/theme';
 import { s } from '../../../design/styles';
 import { CHECKIN_FIELDS } from '../../../state/checkin.js';
+import { haptics } from '../../../design/haptics';
 
 export default function CheckinModal({ onSave, onClose }) {
   const [ratings, setRatings] = useState({});
@@ -77,7 +78,7 @@ export default function CheckinModal({ onSave, onClose }) {
                     return (
                       <button
                         key={idx}
-                        onClick={() => setRating(field.id, value)}
+                        onClick={() => { haptics.selection(); setRating(field.id, value); }}
                         aria-label={field.label + ' rating ' + value}
                         style={{
                           flex: 1,

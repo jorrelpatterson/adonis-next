@@ -5,6 +5,7 @@ import { GradText, H } from '../design/components';
 import { DOMAINS } from '../design/constants';
 import { GOAL_TEMPLATES, getTemplatesForDomain } from './goal-templates';
 import { createGoalFromTemplate } from './goal-engine';
+import { haptics } from '../design/haptics';
 
 export default function GoalSetup({ onCreateGoal, onCancel, profile, initialDomain }) {
   const [step, setStep] = useState(initialDomain ? 2 : 1);
@@ -104,7 +105,7 @@ export default function GoalSetup({ onCreateGoal, onCancel, profile, initialDoma
           {goal.deadline && <div style={{ fontSize: 11, color: P.txM }}>Deadline: {goal.deadline}</div>}
           <div style={{ fontSize: 11, color: P.txD, marginTop: 6 }}>{goal.activeProtocols.length} protocols will activate</div>
         </div>
-        <button onClick={() => onCreateGoal(goal)} style={{ ...s.pri, marginTop: 12, width: '100%' }}>
+        <button onClick={() => { haptics.medium(); onCreateGoal(goal); }} style={{ ...s.pri, marginTop: 12, width: '100%' }}>
           Activate Goal
         </button>
         <button onClick={() => setStep(3)} style={{ ...s.out, marginTop: 8, width: '100%' }}>Back</button>

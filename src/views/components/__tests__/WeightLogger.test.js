@@ -24,7 +24,7 @@ vi.mock('../../../design/sound', () => ({
   sound: { success: vi.fn(), pr: vi.fn() },
 }));
 vi.mock('../../../design/haptics', () => ({
-  haptics: { success: vi.fn() },
+  haptics: { success: vi.fn(), medium: vi.fn() },
 }));
 
 import WeightLogger, {
@@ -213,6 +213,11 @@ describe('WeightLogger — goal-cross ceremony', () => {
     // celebration screen (local state, independent of the `logs` prop).
     screen.getByText(/Hit your goal weight: 170 lbs/);
     expect(sound.pr).toHaveBeenCalledTimes(1);
+    // iOS P2 Task 2: the log itself is a save (medium); `success` now comes
+    // from GoalCompleteScreen's own mount effect firing the celebration
+    // burst, not from WeightLogger's handleLog directly (was `success`
+    // unconditionally — corrected, since most saves don't cross a goal).
+    expect(haptics.medium).toHaveBeenCalledTimes(1);
     expect(haptics.success).toHaveBeenCalled();
   });
 
@@ -235,6 +240,9 @@ describe('WeightLogger — goal-cross ceremony', () => {
 
     expect(logFn).toHaveBeenCalledTimes(1);
     expect(screen.queryByText(/Goal Complete/)).toBeNull();
+    // A regular save (no goal crossed) fires medium only — no success burst.
+    expect(haptics.medium).toHaveBeenCalledTimes(1);
+    expect(haptics.success).not.toHaveBeenCalled();
   });
 });
 
@@ -257,5 +265,6 @@ describe('WeightLogger — same-date re-log', () => {
     // Same-date re-log REPLACES — still exactly one entry, not two.
     expect(next).toHaveLength(1);
     expect(next[0]).toEqual({ date: todayKey, weight: 178 });
+    expect(haptics.medium).toHaveBeenCalledTimes(1);
   });
 });

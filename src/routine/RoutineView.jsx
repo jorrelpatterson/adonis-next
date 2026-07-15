@@ -520,6 +520,10 @@ function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLab
           onClick={(e) => {
             if (isAuto) return;
             if (isTappable) { e.stopPropagation(); onTaskTap(task); return; }
+            // iOS P2 Task 2: light tap on the completing edge only — checking
+            // a task OFF (isDone -> not done) is a correction, not a
+            // "complete", so it stays haptically silent.
+            if (!isDone) haptics.light();
             onCheckTask && onCheckTask(task.id);
           }}
           style={{

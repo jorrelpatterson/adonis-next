@@ -155,7 +155,11 @@ export default function WeightLogger({ profile, logs, log }) {
     log('weight', next);
     setDraftWeight('');
     sound.success();
-    haptics.success();
+    // iOS P2 Task 2: save/confirm -> medium (was success — corrected;
+    // `success` is reserved for the celebration burst GoalCompleteScreen
+    // fires below when this save happens to cross the goal, not for an
+    // everyday weight log).
+    haptics.medium();
 
     // Goal completion detection — fire ceremony if this log crosses the goal.
     // Goal is "lose to X" when goalW < startW; "gain to X" when goalW > startW.

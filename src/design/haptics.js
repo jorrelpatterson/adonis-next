@@ -10,11 +10,13 @@
 // changing.
 //
 // Premium apps fire haptics with intent: not on every tap, but on:
-//   - successful save / completion  → light
-//   - PR / streak milestone         → medium / success
-//   - error / destructive confirm   → warning / error
-//   - discrete slider/stepper tick  → selection
+//   - discrete nav/state change (tab switch, task check-off)  → light
+//   - successful save / confirm (the terminal tap of a form)  → medium
+//   - celebration burst (PR / goal complete / streak tier)    → success
+//   - error / destructive confirm                             → warning / error
+//   - discrete slider/stepper/picker tick                     → selection
 // All call sites should be additive — never the only feedback for an action.
+// Never fire on scroll, typing, or other passive/continuous events.
 //
 // --- Native bridge -------------------------------------------------------
 // When Capacitor-wrapped (isNative() below resolves true), each method
@@ -69,6 +71,64 @@
 // gesture — a slider that wants one start/many-changed/one-end over a drag
 // can call the native plugin directly; haptics.selection() only exposes
 // the discrete one-shot form call sites need.
+//
+// --- Call-site inventory (WHERE each fires — iOS P2 Task 2 audit) --------
+// Single source of truth for the vocabulary in practice. Additive only —
+// none of these are the sole feedback for their action, and none fire on
+// scroll/typing/passive events. Kept in sync by hand; re-grep
+// `grep -rn "haptics\." src/ | grep -v "__tests__\|design/haptics.js"`
+// whenever a call site is added, removed, or its trigger condition changes.
+//
+//   light
+//     - app/TabNav.jsx              — tab switch (only when the active tab
+//                                      actually changes, not re-tapping it)
+//     - routine/RoutineView.jsx      — day-chip select (only on day change)
+//     - routine/RoutineView.jsx      — task check-off (only completing;
+//                                      unchecking stays silent)
+//     - views/components/TaskContextMenu.jsx — any long-press menu action
+//     - views/components/FoodLogger.jsx      — meal removed
+//     - views/components/PhotoJournal.jsx    — photo deleted; lightbox open
+//     - design/Toast.jsx             — info toast
+//
+//   medium
+//     - onboarding/OnboardingFlow.jsx — "Build my protocol" (final save)
+//     - goals/GoalSetup.jsx           — "Activate Goal"
+//     - views/components/FoodLogger.jsx   — meal logged
+//     - views/components/WeightLogger.jsx — weight logged/updated
+//     - design/useLongPress.js        — long-press hold triggers
+//     - design/PullToRefresh.jsx      — pull-to-refresh triggered
+//
+//   success (celebration burst)
+//     - views/components/PRCelebration.jsx    — new PR logged
+//     - views/components/GoalCompleteScreen.jsx — goal reaches 100%
+//     - views/components/StreakMilestone.jsx  — streak tier crossed
+//     - onboarding/CalculatingScreen.jsx  — "your protocol is ready" reveal
+//     - views/components/PhotoJournal.jsx — photo uploaded
+//     - design/Select.jsx              — bottom-sheet option picked (pre-
+//                                        existing; a candidate for
+//                                        `selection` in a future pass, since
+//                                        it's a discrete picker choice, not
+//                                        a celebration — left as-is here,
+//                                        out of this task's named scope)
+//     - design/Toast.jsx               — success toast
+//     - design/ActionSheet.jsx         — non-destructive confirm
+//
+//   selection
+//     - protocols/_system/checkin/CheckinModal.jsx — check-in rating pick
+//       (8 mood/energy/... fields; button-row style, so each button pick
+//       fires once — not a drag gesture, so no continuous tick stream)
+//
+//   warning / error
+//     - design/Toast.jsx        — warning / error toast
+//     - design/ActionSheet.jsx  — warning on destructive confirm
+//
+// NOT wired (found during the iOS P2 Task 2 audit, same "task complete"
+// semantics as RoutineView's check-off, but out of this task's named
+// scope — flagged for a follow-up, not fixed here): the per-domain browse
+// views each have their own independent task checkbox that never routes
+// through RoutineView — views/PurposeView.jsx, views/CommunityView.jsx,
+// views/ImageView.jsx, views/EnvironmentView.jsx, views/TravelView.jsx,
+// views/MoneyView.jsx, views/MindView.jsx.
 
 const isClient = typeof window !== 'undefined';
 

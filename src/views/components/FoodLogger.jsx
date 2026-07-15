@@ -141,7 +141,9 @@ export default function FoodLogger({ profile, protocolStates, logs, log }) {
     const next = [...todaysMeals, { ...meal, time }];
     log('food', { ...food, [todayKey]: next });
     sound.success();
-    haptics.light();
+    // iOS P2 Task 2: save/confirm -> medium (was light — corrected to match
+    // the Premium Contract vocabulary; a logged meal is a save, not a tap).
+    haptics.medium();
   };
 
   const removeMeal = (idx) => {

@@ -1,10 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import { render, cleanup, fireEvent, act } from '@testing-library/react';
+
+// useLongPress.js (the long-press-to-open-context-menu gesture) also fires
+// haptics.medium() — must be stubbed too or the I4 propagation tests below
+// (which drive a real long press) throw "haptics.medium is not a function".
+vi.mock('../../design/haptics', () => ({
+  haptics: { light: vi.fn(), medium: vi.fn() },
+}));
+
 import RoutineView from '../RoutineView';
+import { haptics } from '../../design/haptics';
 
 afterEach(() => {
   cleanup();
+  vi.clearAllMocks();
 });
 
 describe('RoutineView', () => {
@@ -328,5 +338,42 @@ describe('RoutineView — Sunday WeeklyRecap (Task 14)', () => {
 
     expect(container.textContent).not.toContain('Sunday Recap');
     expect(fakeLocalStorage.getItem(`adonis_recap_dismissed_${SUNDAY}`)).toBe('1');
+  });
+});
+
+// ─── iOS P2 Task 2: task check-off haptics ─────────────────────────────────
+describe('RoutineView — task check-off haptics', () => {
+  const routine = {
+    scheduled: [{ id: 't1', title: 'Push Day', type: 'guided', category: 'training', time: '06:00' }],
+    deferred: [], upsells: [], retention: [],
+  };
+
+  it('fires haptics.light when checking off an incomplete task', () => {
+    const onCheckTask = vi.fn();
+    const { container } = render(
+      <RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={onCheckTask} completedTasks={[]} />
+    );
+    // The lone checkbox for an unchecked, non-auto, non-browse task renders
+    // with no glyph — same lookup the existing "keeps the parent workout
+    // row checkable" test (I5) uses for an empty-text checkbox button.
+    const checkboxBtn = Array.from(container.querySelectorAll('button')).find(b => b.textContent.trim() === '');
+    expect(checkboxBtn).toBeTruthy();
+
+    fireEvent.click(checkboxBtn);
+    expect(haptics.light).toHaveBeenCalledTimes(1);
+    expect(onCheckTask).toHaveBeenCalledWith('t1');
+  });
+
+  it('does not fire haptics.light when unchecking an already-completed task', () => {
+    const onCheckTask = vi.fn();
+    const { container } = render(
+      <RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={onCheckTask} completedTasks={['t1']} />
+    );
+    const checkboxBtn = Array.from(container.querySelectorAll('button')).find(b => b.textContent.trim() === '✓');
+    expect(checkboxBtn).toBeTruthy();
+
+    fireEvent.click(checkboxBtn);
+    expect(haptics.light).not.toHaveBeenCalled();
+    expect(onCheckTask).toHaveBeenCalledWith('t1');
   });
 });

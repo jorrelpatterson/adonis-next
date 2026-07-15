@@ -1,12 +1,25 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
+
+// Select.jsx (used for the Sex + Rest Day fields) fires haptics.success() on
+// every pick — must be stubbed alongside `medium` or the existing "Male"
+// pick below throws (haptics.success is not a function on a partial mock).
+vi.mock('../../design/haptics', () => ({
+  haptics: { success: vi.fn(), medium: vi.fn() },
+}));
+
 import OnboardingFlow from '../OnboardingFlow';
+import { haptics } from '../../design/haptics';
 
 // Protocols aren't self-registering — OnboardingFlow reads getAllProtocols()
 // from the shared registry, so the suite must populate it exactly like the
 // real app boot does.
 import '../../protocols/register-all.js';
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 // Drives the full wizard end-to-end: basics → domains (Body locked on) →
 // workout/peptides/nutrition question sections → schedule → onComplete.
@@ -78,6 +91,9 @@ describe('OnboardingFlow', () => {
 
     // ── onComplete assertions ───────────────────────────────────────────
     expect(onComplete).toHaveBeenCalledTimes(1);
+    // iOS P2 Task 2: save/confirm -> medium on the terminal "Build my
+    // protocol" tap.
+    expect(haptics.medium).toHaveBeenCalledTimes(1);
     const [finalProfile, protocolAnswers] = onComplete.mock.calls[0];
 
     expect(finalProfile.age).toBe(32);

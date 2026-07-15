@@ -20,6 +20,7 @@ import { getAllProtocols } from '../protocols/registry';
 import { shouldShowQuestion } from './question-types';
 import QuestionField from './QuestionField';
 import Select from '../design/Select';
+import { haptics } from '../design/haptics';
 
 const ACTIVITY_OPTIONS = [
   { value: 'sedentary',   label: 'Sedentary',           sub: 'Desk job, minimal exercise' },
@@ -119,6 +120,9 @@ export default function OnboardingFlow({ initialProfile, onComplete }) {
       setError('Pick how you work — drives when we schedule training');
       return;
     }
+    // iOS P2 Task 2: save/confirm -> medium — this is the "Build my
+    // protocol" tap, the terminal save of the whole wizard.
+    haptics.medium();
     const finalProfile = {
       ...profile,
       age: Number(profile.age),

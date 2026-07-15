@@ -2,6 +2,7 @@
 import React from 'react';
 import { P, FN } from '../design/theme';
 import { DOMAINS } from '../design/constants';
+import { haptics } from '../design/haptics';
 
 const FIXED_TABS = [
   { id: 'home', icon: '\u{1F3E0}', label: 'Home' },
@@ -44,7 +45,13 @@ export default function TabNav({ activeTab, onTabChange, domains = [], lockedIds
           const isActive = tab.id === activeTab;
           const isLocked = lockedIds.includes(tab.id);
           return (
-            <button key={tab.id} data-testid={`tab-${tab.id}`} onClick={() => onTabChange(tab.id)}
+            <button key={tab.id} data-testid={`tab-${tab.id}`} onClick={() => {
+              // iOS P2 Task 2: light tap only when the active tab actually
+              // changes — re-tapping the tab you're already on is a no-op,
+              // not a "switch", so it stays haptically silent.
+              if (tab.id !== activeTab) haptics.light();
+              onTabChange(tab.id);
+            }}
               style={{
                 flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 2, padding: '6px 4px', cursor: 'pointer',

@@ -20,7 +20,7 @@
 // `.jsx`/`.tsx` files, so the new render-based tests below use
 // `React.createElement` directly instead of JSX syntax.
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import {
@@ -31,7 +31,17 @@ import {
   sumDayMeals,
 } from '../../../protocols/body/nutrition/calorie-engine';
 import { COMMON_FOODS } from '../../../protocols/body/nutrition/food-db';
+
+vi.mock('../../../design/haptics', () => ({
+  haptics: { light: vi.fn(), medium: vi.fn() },
+}));
+
 import FoodLogger, { getYesterdayDelta } from '../FoodLogger';
+import { haptics } from '../../../design/haptics';
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('calcBMR', () => {
   it('computes male BMR via Mifflin-St Jeor', () => {
@@ -273,6 +283,19 @@ describe('FoodLogger — logging a food', () => {
     expect(payload[todayKey]).toHaveLength(2);
     expect(payload[todayKey][0].name).toBe('Existing Meal');
     expect(payload[todayKey][1].name).toBe(edamame.n);
+  });
+
+  // iOS P2 Task 2: save/confirm -> medium (was light — corrected).
+  it('fires haptics.medium (not light) when a meal is successfully logged', () => {
+    const profile = { weight: 180, hFt: 5, hIn: 10, age: 30, gender: 'male', activity: 'moderate' };
+    render(React.createElement(FoodLogger, { profile, protocolStates: {}, logs: {}, log: vi.fn() }));
+
+    fireEvent.change(screen.getByPlaceholderText('Search foods…'), { target: { value: 'edamame' } });
+    const edamame = COMMON_FOODS.find(f => f.n.includes('Edamame'));
+    fireEvent.click(screen.getByText(edamame.n));
+
+    expect(haptics.medium).toHaveBeenCalledTimes(1);
+    expect(haptics.light).not.toHaveBeenCalled();
   });
 });
 

@@ -5,8 +5,14 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import React from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
+
+vi.mock('../../../../design/haptics', () => ({
+  haptics: { selection: vi.fn() },
+}));
+
 import CheckinModal from '../CheckinModal';
 import { CHECKIN_FIELDS } from '../../../../state/checkin.js';
+import { haptics } from '../../../../design/haptics';
 
 function rate(container, label, value) {
   fireEvent.click(container.querySelector(`[aria-label="${label} rating ${value}"]`));
@@ -16,6 +22,7 @@ describe('CheckinModal', () => {
   afterEach(() => {
     cleanup();
     vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   it('renders a rating row for every CHECKIN_FIELDS entry', () => {
@@ -111,5 +118,36 @@ describe('CheckinModal', () => {
     const src = readFileSync(join(process.cwd(), 'src/protocols/_system/checkin/CheckinModal.jsx'), 'utf8');
     expect(src).toContain('var(--safe-bottom)');
     expect(src).toContain('calc(24px');
+  });
+});
+
+// ─── iOS P2 Task 2: check-in rating haptics ─────────────────────────────
+describe('CheckinModal — haptics', () => {
+  afterEach(() => {
+    // This describe block is a sibling of the top-level one above, not a
+    // child — that block's own afterEach (clearAllMocks) does not apply
+    // here, so the mock needs its own reset or calls leak between the two
+    // tests below.
+    vi.clearAllMocks();
+  });
+
+  it('fires haptics.selection when picking a rating value', () => {
+    const { container } = render(<CheckinModal onSave={() => {}} onClose={() => {}} />);
+    const first = CHECKIN_FIELDS[0];
+    rate(container, first.label, 3);
+    expect(haptics.selection).toHaveBeenCalledTimes(1);
+  });
+
+  it('fires haptics.selection once per button pick (not on Save)', () => {
+    const { container, getByText } = render(<CheckinModal onSave={() => {}} onClose={() => {}} />);
+    for (const field of CHECKIN_FIELDS) {
+      rate(container, field.label, 2);
+    }
+    expect(haptics.selection).toHaveBeenCalledTimes(CHECKIN_FIELDS.length);
+
+    fireEvent.click(getByText('Save'));
+    // Save itself is not part of this task's medium/save vocabulary target —
+    // the count must stay exactly what the rating picks produced.
+    expect(haptics.selection).toHaveBeenCalledTimes(CHECKIN_FIELDS.length);
   });
 });

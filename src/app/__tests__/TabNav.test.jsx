@@ -1,10 +1,16 @@
 // src/app/__tests__/TabNav.test.jsx
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+
+vi.mock('../../design/haptics', () => ({
+  haptics: { light: vi.fn() },
+}));
+
 import TabNav from '../TabNav';
+import { haptics } from '../../design/haptics';
 
 describe('TabNav', () => {
   it('always shows Routine and Profile tabs', () => {
@@ -71,5 +77,33 @@ describe('TabNav', () => {
     const src = readFileSync(join(process.cwd(), 'src/app/TabNav.jsx'), 'utf8');
     expect(src).toContain('var(--safe-bottom)');
     expect(src).toContain('calc(6px');
+  });
+});
+
+// ─── iOS P2 Task 2: tab-switch haptics ──────────────────────────────────
+describe('TabNav — haptics', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('fires haptics.light when switching to a different tab', () => {
+    const onTabChange = vi.fn();
+    const { getByTestId } = render(
+      <TabNav activeTab="routine" onTabChange={onTabChange} domains={[]} />
+    );
+    fireEvent.click(getByTestId('tab-home'));
+    expect(haptics.light).toHaveBeenCalledTimes(1);
+    expect(onTabChange).toHaveBeenCalledWith('home');
+  });
+
+  it('does not fire haptics.light when re-tapping the already-active tab', () => {
+    const onTabChange = vi.fn();
+    const { getByTestId } = render(
+      <TabNav activeTab="routine" onTabChange={onTabChange} domains={[]} />
+    );
+    fireEvent.click(getByTestId('tab-routine'));
+    expect(haptics.light).not.toHaveBeenCalled();
+    // onTabChange itself is unconditional — only the haptic is gated.
+    expect(onTabChange).toHaveBeenCalledWith('routine');
   });
 });
