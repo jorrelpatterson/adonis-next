@@ -1,5 +1,5 @@
 {
-  "appId": "com.adonis.app",
+  "appId": "pro.adonis.app",
   "appName": "Adonis",
   "webDir": "dist-ios",
   "ios": {

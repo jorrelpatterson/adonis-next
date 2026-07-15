@@ -7,7 +7,7 @@
 ## Identity
 - **App Name** (30 char): `Adonis — Protocol OS` (20)
 - **Subtitle** (30 char): `Run your life like a system` (27)
-- **Bundle ID**: `com.adonis.app`
+- **Bundle ID**: `pro.adonis.app`
 - **Primary category**: Health & Fitness
 - **Secondary category**: Lifestyle
 - **[JORREL] Age rating**: answer the questionnaire honestly → likely **17+**. The peptide/

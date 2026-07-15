@@ -18,7 +18,7 @@ The whole path exists and is tested; it sends NOTHING until these are set:
    - `APNS_KEY_P8` = the full .p8 file contents (BEGIN/END PRIVATE KEY block)
    - `APNS_KEY_ID` = the key's ID
    - `APNS_TEAM_ID` = your Apple Team ID
-   - `APNS_BUNDLE_ID` = `com.adonis.app`
+   - `APNS_BUNDLE_ID` = `pro.adonis.app`
 3. **Supabase table**: apply `sql/2026-07-14-push-tokens.sql` in the Supabase SQL editor (no linked
    CLI — manual, per repo convention). Verify: `curl .../rest/v1/push_tokens?select=id&limit=1`
    flips from 404 to `[]`.

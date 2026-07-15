@@ -93,7 +93,7 @@ flag token-acquisition as device-verified-at-P4.
 denied→no register); explainer shows Enable/Not-now, Enable calls requestAndRegister, Not-now
 persists + doesn't call; tap-handler routes to routine. Keep suite green.
 **Verify:** suite; build:ios + xcodebuild SUCCEEDED; sim: launch, trigger the explainer, Enable
-(sim permission prompt), then `xcrun simctl push <UDID> com.adonis.app payload.json` with a routine
+(sim permission prompt), then `xcrun simctl push <UDID> pro.adonis.app payload.json` with a routine
 reminder payload → the notification appears in the sim → screenshot; tap → app routes to routine.
 Commit `feat(ios-p3): push notifications — permission explainer + receive/tap (send staged for P4)`.
 
