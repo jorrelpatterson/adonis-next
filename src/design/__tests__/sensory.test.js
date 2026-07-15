@@ -27,17 +27,24 @@ describe('motion', () => {
 });
 
 describe('haptics', () => {
-  it('exposes the six intents and never throws without navigator.vibrate', () => {
-    for (const k of ['light', 'medium', 'heavy', 'success', 'warning', 'error']) {
+  it('exposes the seven intents and never throws without navigator.vibrate', () => {
+    for (const k of ['light', 'medium', 'heavy', 'success', 'warning', 'error', 'selection']) {
       expect(() => haptics[k](), k).not.toThrow();
     }
   });
 
-  it('vibrates with the intent pattern when the platform supports it', () => {
+  // haptics.js now gates every call behind an async isNative() check (see
+  // src/design/__tests__/haptics.test.js for the full native-vs-web
+  // matrix), so navigator.vibrate no longer fires synchronously — this
+  // waits for the platform check's microtask to resolve before asserting,
+  // same idiom as platform/storage.test.js and platform/status-bar.test.js.
+  it('vibrates with the intent pattern when the platform supports it', async () => {
     const spy = vi.fn();
     vi.stubGlobal('navigator', { vibrate: spy });
     haptics.heavy();
-    expect(spy).toHaveBeenCalledWith([20, 10, 20]);
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith([20, 10, 20]);
+    });
   });
 });
 
