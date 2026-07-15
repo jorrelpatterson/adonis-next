@@ -68,3 +68,15 @@ The spec/plan's "BASE_URL flip" was based on a bad grep (`BASE_URL` substring-ma
 **Copy removals (T8):** ~~lib/constants/theme.js~~ (dead).
 **Strip additions (T16):** `app/api/me`, `lib/constants/peptides.js`, `templates/social`, the 8 business scripts, the 9 business sql files. (env-check NOT stripped.)
 **Redirect additions (T17):** `me` in MOVED_API_ROUTES array.
+
+## Phase 1 execution log (2026-07-15)
+
+- Rename done: GitHub `advnce-site`→`advncelabs` (auto-redirect verified via fetch), local folder moved, remote URL updated. No advnce-site Claude memory dir existed (nothing to migrate). Site 200 throughout.
+- Admin scaffold + full copy done. Verified counts: 58 api entries, 5 crons, lib 23, sql merged.
+- **Copy-list addition found by build:** `lib/constants/peptide-explanations.js` (imported by admin/purchases pages). Copied; added to T16 strip list. Constants sweep confirms admin imports exactly 2 constants (peptides, peptide-explanations).
+- Fixed in the copy: hardcoded `adonis.pro/admin/orders` → `admin.advncelabs.com/admin/orders` (notify email); drip fallback origin → `join.advncelabs.com` (was adonis.pro; prod always sets ADVNCE_ORIGIN).
+- Tests: `businessCard` is real vitest (7/7 ✓); reorderDuration + 3 news tests are plain `node` assertion scripts — test script runs both kinds, all green.
+- `npm run build` green: 58 routes + 16 pages + middleware (26.8 kB).
+- **Local authenticated smoke: 16/16 surfaces 200** (login POST → cookies → every admin section + /ambassadors/apply + /ambassador/invoices/new). `/api/env-check` correctly 401s unauthenticated. Note: `/ambassador/invoices` has no index page — `/new` is the real path (matches storefront link).
+- **NEW STEP — repo-root `.vercelignore`** (admin/, docs/, sql/) so the static storefront project never serves admin source or business docs. Verified motive: Vercel static serves arbitrary tracked files (track.js 200) with only convention-based exclusions (package.json 404). advnce-admin project is unaffected (its root is admin/).
+- Storefront CORS note for later: advnce vercel.json allows origin `https://adonis.pro` on /api/* — v1-era; revisit after split (not in scope).

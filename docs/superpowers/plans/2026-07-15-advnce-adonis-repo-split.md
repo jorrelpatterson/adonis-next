@@ -537,7 +537,7 @@ for r in "${ROUTES[@]}"; do git rm -r "app/api/$r"; done
 for c in welcome-emails reorder-reminders news-scrape news-curate recruitment-drip; do git rm -r "app/api/cron/$c"; done
 git rm middleware.js
 git rm -r lib/admin-roles.js lib/admin-users.js lib/buildRecipientList.js lib/businessCard.js lib/businessCard.test.mjs lib/enrichItemSizes.js lib/get-current-admin.js lib/invoiceId.js lib/invoiceImage.js lib/news lib/onStockRise.js lib/po-email-template.js lib/renderCompoundEmail.js lib/renderRecruitmentEmail.js lib/reorderDuration.js lib/reorderDuration.test.mjs lib/requireAdmin.js lib/requireAdminOrCron.js lib/revenue.js lib/rewardsAnnounce.js lib/unsubToken.js
-git rm -r templates public/social-images lib/constants/peptides.js
+git rm -r templates public/social-images lib/constants/peptides.js lib/constants/peptide-explanations.js
 for s in import-recruitment-csv.js migrate-content-calendar-2026-05-29.js render-social-posts.js send-recruitment-drip.js smoke-ambassador-flow.js smoke-compound-email.js smoke-recruitment-drip.js sync-compound-marketing.js; do git rm "scripts/$s"; done
 for q in 2026-04-23-invoice-columns 2026-04-23-support-tickets 2026-04-27-invoice-paid-amount 2026-04-27-reorder-reminders 2026-04-29-news-candidate-flag 2026-04-29-news-carousel 2026-05-06-inventory-adjustments 2026-05-28-ambassador-recruitment-blast 2026-05-28-compound-email-campaigns; do git rm "sql/$q.sql"; done
 for d in ambassadors brand clients marketing pricing vendors; do git rm -r "docs/$d"; done
