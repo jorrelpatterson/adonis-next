@@ -1,9 +1,11 @@
 // PhotoJournal — progress photo capture + storage with date watermark.
 //
 // Flow:
-//   1. Tap "Add photo" → file input (camera or library on mobile)
-//   2. Image is read, drawn to canvas with brand watermark (date + logo
-//      monogram in lower-right corner)
+//   1. Tap "Add photo" → native camera/library prompt (iOS, via
+//      platform/camera.js) or a file input (web)
+//   2. Either way we end up with a dataUrl, which is drawn to canvas with
+//      brand watermark (date + logo monogram in lower-right corner) —
+//      ingestPhoto() is the single seam both sources feed
 //   3. Result saved as base64 string in logs.progressPhotos[]
 //   4. Grid renders thumbnails sorted desc by date; tap opens lightbox
 //
@@ -12,7 +14,7 @@
 // goes into the logs blob — Supabase handles compression and the photos
 // list is pruned to the most recent 30 to keep the row size sane.
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { P, FN, FD, FM } from '../../design/theme';
 import { s } from '../../design/styles';
 import { GradText } from '../../design/components';
@@ -20,6 +22,7 @@ import { sound } from '../../design/sound';
 import { haptics } from '../../design/haptics';
 import EmptyState from '../../design/EmptyState';
 import { IllusFood } from '../../design/illustrations';
+import { isNativePlatform, pickProgressPhoto } from '../../platform/camera';
 
 const MAX_PHOTOS = 30;
 
@@ -33,15 +36,23 @@ function formatDate(iso) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-// Read a File → Image → canvas with watermark → base64 PNG.
-async function watermarkImage(file) {
-  const dataUrl = await new Promise((resolve, reject) => {
+// Read a File → dataUrl (web file-input path only — the native camera
+// path already hands ingestPhoto a dataUrl directly, via
+// platform/camera.js's Camera.getPhoto({ resultType: DataUrl }), so it
+// never touches FileReader at all).
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => resolve(e.target.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
 
+// dataUrl → Image → canvas with watermark → base64 JPEG. The shared seam:
+// both the web file input (via fileToDataUrl above) and the native camera
+// (platform/camera.js's pickProgressPhoto()) feed a dataUrl in here.
+async function watermarkDataUrl(dataUrl) {
   const img = await new Promise((resolve, reject) => {
     const i = new Image();
     i.onload = () => resolve(i);
@@ -93,17 +104,33 @@ async function watermarkImage(file) {
 export default function PhotoJournal({ logs, log }) {
   const [busy, setBusy] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [native, setNative] = useState(false);
   const inputRef = useRef(null);
 
   const photos = Array.isArray(logs?.progressPhotos) ? logs.progressPhotos : [];
 
-  const handleSelect = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
+  // Resolved once on mount, well before any tap — see platform/camera.js's
+  // isNativePlatform() comment for why the Add button's click handler
+  // can't just `await` this inline: WebKit requires the web `<input
+  // type="file">.click()` fallback to fire synchronously inside the real
+  // user-gesture handler, with nothing awaited first, or the OS file
+  // picker silently fails to open.
+  useEffect(() => {
+    let cancelled = false;
+    isNativePlatform().then((result) => {
+      if (!cancelled) setNative(result);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Shared pipeline for a dataUrl from EITHER source (web file input via
+  // handleSelect below, or the native camera/library via handleAddClick) —
+  // watermark, cap at MAX_PHOTOS, save, celebrate. Unchanged from the
+  // pre-native-camera version, just re-entered from two call sites now.
+  const ingestPhoto = async (dataUrl) => {
     setBusy(true);
     try {
-      const watermarked = await watermarkImage(file);
+      const watermarked = await watermarkDataUrl(dataUrl);
       const next = [
         { date: ymd(new Date()), iso: new Date().toISOString(), data: watermarked },
         ...photos,
@@ -115,6 +142,32 @@ export default function PhotoJournal({ logs, log }) {
       console.error('Photo upload failed', err);
     } finally {
       setBusy(false);
+    }
+  };
+
+  const handleSelect = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      await ingestPhoto(dataUrl);
+    } catch (err) {
+      console.error('Photo upload failed', err);
+    }
+  };
+
+  // Native: open the real camera/library prompt and feed its dataUrl into
+  // the same pipeline as the web file input. Web: unchanged — synchronously
+  // click the hidden file input (see the useEffect above for why this
+  // can't await anything first).
+  const handleAddClick = () => {
+    if (native) {
+      pickProgressPhoto().then((dataUrl) => {
+        if (dataUrl) ingestPhoto(dataUrl);
+      });
+    } else {
+      inputRef.current?.click();
     }
   };
 
@@ -136,7 +189,7 @@ export default function PhotoJournal({ logs, log }) {
           </div>
         </div>
         <button
-          onClick={() => inputRef.current?.click()}
+          onClick={handleAddClick}
           disabled={busy}
           style={{
             padding: '8px 14px', borderRadius: 100,
