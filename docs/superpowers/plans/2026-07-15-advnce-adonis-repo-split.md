@@ -298,7 +298,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```bash
 cd "/Volumes/(626)806-4475/Ai Projects/adonis-next" && ls app/api/
 ```
-Expected: exactly these 60 entries; the 55 MOVED = all EXCEPT `app-signup`, `cron`, `env-check`, `me`, `push` (adjust `me`/`env-check` per Task 4 verdicts):
+Expected: exactly these 60 entries; the 56 MOVED = all EXCEPT `app-signup`, `cron`, `env-check`, `push` (Task 4 verdicts applied: `me` MOVES — admin whoami; `env-check` stays AND is copied to admin as a cutover diagnostic):
 
 ```
 MOVED_API_ROUTES: admin admin-auth ambassador-apply ambassador-content-digest
@@ -307,7 +307,7 @@ ambassador-welcome ambassador-write compound-email-draft-list compound-email-dra
 compound-email-generate compound-email-preview compound-email-resume compound-email-send
 discount-code-write email-unsub inventory inventory-adjust inventory-adjustments
 inventory-loss-stats invoice-get invoice-list invoice-stats invoice-transition
-invoice-write jorrel-os notify notify-customer order-customer-update order-status
+invoice-write jorrel-os me notify notify-customer order-customer-update order-status
 orders orders-list past-customers payment-reminder place-order presell-cancel
 presell-po-placed presell-queue product-write purchase-receive purchase-write
 recruitment-application-write recruitment-click rewards-announce shipping-confirm
@@ -342,28 +342,34 @@ cp    "$SRC/middleware.js"   "$DST/middleware.js"
 - [ ] **Step 2: Copy the 55 API routes + 5 crons**
 
 ```bash
-ROUTES=(admin admin-auth ambassador-apply ambassador-content-digest ambassador-images ambassador-message ambassador-past-customers ambassador-payout ambassador-welcome ambassador-write compound-email-draft-list compound-email-draft-write compound-email-generate compound-email-preview compound-email-resume compound-email-send discount-code-write email-unsub inventory inventory-adjust inventory-adjustments inventory-loss-stats invoice-get invoice-list invoice-stats invoice-transition invoice-write jorrel-os notify notify-customer order-customer-update order-status orders orders-list past-customers payment-reminder place-order presell-cancel presell-po-placed presell-queue product-write purchase-receive purchase-write recruitment-application-write recruitment-click rewards-announce shipping-confirm social-image-proxy social-post-write subscribe-welcome-2 subscribe-welcome-3 subscribers-admin support-tickets vendor-prices-write vendor-write)
+ROUTES=(admin admin-auth ambassador-apply ambassador-content-digest ambassador-images ambassador-message ambassador-past-customers ambassador-payout ambassador-welcome ambassador-write compound-email-draft-list compound-email-draft-write compound-email-generate compound-email-preview compound-email-resume compound-email-send discount-code-write email-unsub inventory inventory-adjust inventory-adjustments inventory-loss-stats invoice-get invoice-list invoice-stats invoice-transition invoice-write jorrel-os me notify notify-customer order-customer-update order-status orders orders-list past-customers payment-reminder place-order presell-cancel presell-po-placed presell-queue product-write purchase-receive purchase-write recruitment-application-write recruitment-click rewards-announce shipping-confirm social-image-proxy social-post-write subscribe-welcome-2 subscribe-welcome-3 subscribers-admin support-tickets vendor-prices-write vendor-write)
 for r in "${ROUTES[@]}"; do cp -R "$SRC/app/api/$r" "$DST/app/api/$r"; done
+cp -R "$SRC/app/api/env-check" "$DST/app/api/env-check"   # copy-to-both (cutover diagnostic; NOT stripped from adonis)
 
 for c in welcome-emails reorder-reminders news-scrape news-curate recruitment-drip; do
   cp -R "$SRC/app/api/cron/$c" "$DST/app/api/cron/$c"
 done
 ```
-Verify: `ls "$DST/app/api" | wc -l` → `56` (55 routes + cron dir); `ls "$DST/app/api/cron" | wc -l` → `5`.
+Verify: `ls "$DST/app/api" | wc -l` → `58` (56 routes + env-check copy + cron dir); `ls "$DST/app/api/cron" | wc -l` → `5`.
 
 - [ ] **Step 3: Copy business lib/, templates, scripts, assets**
 
 ```bash
 LIBS=(admin-roles.js admin-users.js buildRecipientList.js businessCard.js businessCard.test.mjs enrichItemSizes.js get-current-admin.js invoiceId.js invoiceImage.js news onStockRise.js po-email-template.js renderCompoundEmail.js renderRecruitmentEmail.js reorderDuration.js reorderDuration.test.mjs requireAdmin.js requireAdminOrCron.js revenue.js rewardsAnnounce.js supabase.js unsubToken.js)
 for l in "${LIBS[@]}"; do cp -R "$SRC/lib/$l" "$DST/lib/$l"; done
-cp "$SRC/lib/constants/theme.js" "$DST/lib/constants/theme.js"
-# Only if Task 4 verdict says a moved file imports it:
-# cp "$SRC/lib/constants/peptides.js" "$DST/lib/constants/peptides.js"
+cp "$SRC/lib/constants/peptides.js" "$DST/lib/constants/peptides.js"  # reorderDuration imports it (Task 4 verdict)
+# theme.js NOT copied — zero importers anywhere (dead v1 code; Task 4 verdict)
 
 cp -R "$SRC/templates/email"        "$DST/templates/email"
-cp    "$SRC/scripts/send-recruitment-drip.js" "$DST/scripts/"
+cp -R "$SRC/templates/social"       "$DST/templates/social"
+for s in import-recruitment-csv.js migrate-content-calendar-2026-05-29.js render-social-posts.js send-recruitment-drip.js smoke-ambassador-flow.js smoke-compound-email.js smoke-recruitment-drip.js sync-compound-marketing.js; do
+  cp "$SRC/scripts/$s" "$DST/scripts/"
+done
 cp -R "$SRC/public/social-images"   "$DST/public/social-images"
-# plus anything Task 4 Step 3 flagged (record actual commands in worklog)
+mkdir -p "$ADV/sql"
+for q in 2026-04-23-invoice-columns 2026-04-23-support-tickets 2026-04-27-invoice-paid-amount 2026-04-27-reorder-reminders 2026-04-29-news-candidate-flag 2026-04-29-news-carousel 2026-05-06-inventory-adjustments 2026-05-28-ambassador-recruitment-blast 2026-05-28-compound-email-campaigns; do
+  cp "$SRC/sql/$q.sql" "$ADV/sql/"
+done
 ```
 
 - [ ] **Step 4: Copy business docs to repo level**
@@ -379,7 +385,7 @@ cp "$SRC/docs/daily-vial-content-strategy.md" "$SRC/docs/SESSION-HANDOFF-recruit
 ```bash
 grep -rn "adonis.pro/admin/orders" "$DST"
 ```
-Edit that file (expected: one email-template/lib hit): replace `https://adonis.pro/admin/orders` with `` `${process.env.BASE_URL}/admin/orders` `` (match the file's existing BASE_URL usage pattern). Re-run the grep → no matches in `$DST`.
+Edit that file (expected: one email-template/lib hit): replace `https://adonis.pro/admin/orders` with `https://admin.advncelabs.com/admin/orders` (no BASE_URL env var exists — see worklog correction). Re-run the grep → no matches in `$DST`.
 
 - [ ] **Step 6: Commit the copy** ⛔ STOP — approval
 
@@ -405,7 +411,7 @@ Expected: build succeeds. If "Cannot resolve module": a lib file was missed — 
 Run: `npm test`
 Expected: businessCard + reorderDuration tests pass.
 
-- [ ] **Step 3: Env for local dev** — create `admin/.env.local` (gitignored) by copying the needed values from adonis-next's `.env.local` (or `vercel env pull`): Supabase pair, `ADMIN_PASSWORD`, `RESEND_API_KEY`, `STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `CRON_SECRET`, and `BASE_URL=http://localhost:3100`.
+- [ ] **Step 3: Env for local dev** — create `admin/.env.local` (gitignored) by copying from adonis-next's `.env.local` every var the worklog table marks YES: the Supabase five (URL/ANON + SERVICE_KEY/SERVICE_ROLE_KEY/SUPABASE_URL), `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `VA_PASSWORD`, `RESEND_API_KEY`, `STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `CRON_SECRET`, `SHIPPING_ADDRESS`, `EMAIL_UNSUB_SECRET`, `ADVNCE_ORIGIN`.
 
 - [ ] **Step 4: Read-mostly smoke (LIVE DB — look, don't touch)**
 
@@ -422,7 +428,7 @@ Expected: every page renders with live data; console free of module errors. Reco
 
 - [ ] **Step 1: Create project** ⛔ STOP — approval. Vercel dashboard → Add New → Project → import `jorrelpatterson/advncelabs` → **Project Name:** `advnce-admin` → **Root Directory:** `admin` → Framework: Next.js → do NOT add domains yet → Deploy.
 
-- [ ] **Step 2: Add env vars** (dashboard → advnce-admin → Settings → Environment Variables, Production+Preview): every var the Task 3 worklog marked "copy", with `BASE_URL=https://admin.advncelabs.com`.
+- [ ] **Step 2: Add env vars** (dashboard → advnce-admin → Settings → Environment Variables, Production+Preview): every var the worklog table marks YES (no BASE_URL var — worklog correction). Cross-check names against the adonis project's dashboard list while there.
 
 - [ ] **Step 3: Redeploy** (so env vars apply): Deployments → ⋯ → Redeploy.
 Expected: green build; note the `advnce-admin-*.vercel.app` URL in the worklog.
@@ -526,12 +532,14 @@ Verify: `curl -s -o /dev/null -w "%{http_code}" https://join.advncelabs.com` →
 ```bash
 cd "/Volumes/(626)806-4475/Ai Projects/adonis-next"
 git rm -r app/admin app/ambassador app/ambassadors
-ROUTES=(admin admin-auth ambassador-apply ambassador-content-digest ambassador-images ambassador-message ambassador-past-customers ambassador-payout ambassador-welcome ambassador-write compound-email-draft-list compound-email-draft-write compound-email-generate compound-email-preview compound-email-resume compound-email-send discount-code-write email-unsub inventory inventory-adjust inventory-adjustments inventory-loss-stats invoice-get invoice-list invoice-stats invoice-transition invoice-write jorrel-os notify notify-customer order-customer-update order-status orders orders-list past-customers payment-reminder place-order presell-cancel presell-po-placed presell-queue product-write purchase-receive purchase-write recruitment-application-write recruitment-click rewards-announce shipping-confirm social-image-proxy social-post-write subscribe-welcome-2 subscribe-welcome-3 subscribers-admin support-tickets vendor-prices-write vendor-write)
+ROUTES=(admin admin-auth ambassador-apply ambassador-content-digest ambassador-images ambassador-message ambassador-past-customers ambassador-payout ambassador-welcome ambassador-write compound-email-draft-list compound-email-draft-write compound-email-generate compound-email-preview compound-email-resume compound-email-send discount-code-write email-unsub inventory inventory-adjust inventory-adjustments inventory-loss-stats invoice-get invoice-list invoice-stats invoice-transition invoice-write jorrel-os me notify notify-customer order-customer-update order-status orders orders-list past-customers payment-reminder place-order presell-cancel presell-po-placed presell-queue product-write purchase-receive purchase-write recruitment-application-write recruitment-click rewards-announce shipping-confirm social-image-proxy social-post-write subscribe-welcome-2 subscribe-welcome-3 subscribers-admin support-tickets vendor-prices-write vendor-write)
 for r in "${ROUTES[@]}"; do git rm -r "app/api/$r"; done
 for c in welcome-emails reorder-reminders news-scrape news-curate recruitment-drip; do git rm -r "app/api/cron/$c"; done
 git rm middleware.js
 git rm -r lib/admin-roles.js lib/admin-users.js lib/buildRecipientList.js lib/businessCard.js lib/businessCard.test.mjs lib/enrichItemSizes.js lib/get-current-admin.js lib/invoiceId.js lib/invoiceImage.js lib/news lib/onStockRise.js lib/po-email-template.js lib/renderCompoundEmail.js lib/renderRecruitmentEmail.js lib/reorderDuration.js lib/reorderDuration.test.mjs lib/requireAdmin.js lib/requireAdminOrCron.js lib/revenue.js lib/rewardsAnnounce.js lib/unsubToken.js
-git rm -r templates/email scripts/send-recruitment-drip.js public/social-images
+git rm -r templates public/social-images lib/constants/peptides.js
+for s in import-recruitment-csv.js migrate-content-calendar-2026-05-29.js render-social-posts.js send-recruitment-drip.js smoke-ambassador-flow.js smoke-compound-email.js smoke-recruitment-drip.js sync-compound-marketing.js; do git rm "scripts/$s"; done
+for q in 2026-04-23-invoice-columns 2026-04-23-support-tickets 2026-04-27-invoice-paid-amount 2026-04-27-reorder-reminders 2026-04-29-news-candidate-flag 2026-04-29-news-carousel 2026-05-06-inventory-adjustments 2026-05-28-ambassador-recruitment-blast 2026-05-28-compound-email-campaigns; do git rm "sql/$q.sql"; done
 for d in ambassadors brand clients marketing pricing vendors; do git rm -r "docs/$d"; done
 git rm docs/daily-vial-content-strategy.md docs/SESSION-HANDOFF-recruitment-drip.md
 # plus any Task 4 Step 3 additions (from worklog)
@@ -559,7 +567,7 @@ const MOVED_API_ROUTES = [
   'compound-email-preview', 'compound-email-resume', 'compound-email-send',
   'discount-code-write', 'email-unsub', 'inventory', 'inventory-adjust',
   'inventory-adjustments', 'inventory-loss-stats', 'invoice-get', 'invoice-list',
-  'invoice-stats', 'invoice-transition', 'invoice-write', 'jorrel-os',
+  'invoice-stats', 'invoice-transition', 'invoice-write', 'jorrel-os', 'me',
   'notify', 'notify-customer', 'order-customer-update', 'order-status',
   'orders', 'orders-list', 'past-customers', 'payment-reminder', 'place-order',
   'presell-cancel', 'presell-po-placed', 'presell-queue', 'product-write',
@@ -611,7 +619,7 @@ Expected: vite + next build green; full vitest suite passes (~1000 tests).
 ```bash
 git add -A && git commit -m "feat(split)!: extract ADVNCE back office to advncelabs repo
 
-Removes admin UI, 55 business API routes, 5 crons, business lib/docs.
+Removes admin UI, 56 business API routes, 5 crons, business lib/scripts/sql/docs.
 Permanent 308 redirects cover every moved path (old bookmarks + all
 links in previously-sent emails keep working). Fitness product only now.
 
@@ -741,8 +749,8 @@ moved /api paths here — never rely on those old URLs in new code.
 - Admin auth: cookie-based (`adonis_admin_*` cookies, `ADMIN_PASSWORD`) via
   `admin/middleware.js`. KNOWN GAPS (fast-follow): cookies unsigned; VA role
   path-allowlist prefix hole in `admin/lib/admin-roles.js`.
-- Emails: Resend via raw fetch. All links derive from `BASE_URL`
-  (= https://admin.advncelabs.com in the advnce-admin project).
+- Emails: Resend via raw fetch. Link hosts: hardcoded advncelabs.com
+  (storefront pages) + `ADVNCE_ORIGIN` for recruitment (join.advncelabs.com).
 
 ## Conventions
 
