@@ -93,8 +93,17 @@ CC_DB, golden-verified engines), income *stub* (fixed targets, spec-sanctioned f
   vars silently produce `model: ''`).
   NOTE: adonis's career spec lists "merging with `money/income/`" as a NON-GOAL — that ruling
   is now superseded: career IS the income protocol. Re-rule in the Wave 2 spec.
-  ⚖️ Still open: does the v1 referral/MLM tracker survive alongside it (ambassador synergy)
-  or retire? Recommend: keep as a small "Referrals" card, career is the main surface.
+  **TIER — RESOLVED 2026-07-14 (Jorrel): ELITE.** The career engine is an Elite feature
+  (justifies the tier alongside Bucket List; the tier gate + access-code unlock from Phase 4
+  already enforce this — Money tab stays free, the career surface within it renders locked for
+  free/pro). Cost math supports it: Haiku scoring is ~$0.05/day/user, Sonnet tailoring ~$1.50
+  per click — Elite pricing must cover the per-user LLM spend. ⚖️ For Wave 2: rate-limit or
+  credit tailoring (unbounded $1.50 clicks) — decide caps at spec time.
+  **REFERRAL TRACKER — RESOLVED 2026-07-14 (Jorrel): SURVIVES alongside.** The v1 referral/MLM
+  income tracker stays as its own surface in Money (a "Referrals" card — ambassador-program
+  synergy). Career is the primary income surface; referrals is secondary. Both live under Money;
+  `money/income/` protocol is NOT deleted — it becomes the referrals home while career becomes
+  the new main income protocol.
 - CC_DB freshness: move to Supabase table (admin-editable like products) so card offers update
   without deploys. ⚖️ Worth it now, or annual manual refresh acceptable?
 
@@ -197,9 +206,10 @@ Sizing: S ≈ one session, M ≈ one phase-like cycle (10-15 tasks), L ≈ full 
 
 1. **Wave 1:** Stripe pricing stands ($14.99/$29.99)? Bucket List archetypes to launch with
    (trip/marathon/house/physique)? Claude decomposition = Elite-only confirmed?
-2. **Money:** ~~income model~~ RESOLVED (career engine — see Money section). Still open:
-   does the referral/MLM tracker survive as a side card? Dispute engine in-app now (Pro) or
-   hold? CC_DB → Supabase or manual refresh? Career tier placement (Pro? Elite? free-with-limits)?
+2. **Money:** ~~income model~~ RESOLVED (career engine). ~~referral tracker survives?~~ RESOLVED
+   (yes, as a Referrals card). ~~career tier?~~ RESOLVED (Elite). Still open: tailoring cost
+   caps/credits (unbounded $1.50 clicks); dispute engine in-app now (Pro) or hold?; CC_DB →
+   Supabase or manual refresh?
 3. **Body:** commit-a-stack creates a goal vs standalone? PhotoJournal → Supabase Storage
    (needs a storage bucket) — green light?
 4. **Image:** grooming canonical item set (main's vs archive's vs union)? Wardrobe stays a
