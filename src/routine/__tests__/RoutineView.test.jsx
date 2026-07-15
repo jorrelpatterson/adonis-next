@@ -6,7 +6,7 @@ import { render, cleanup, fireEvent, act } from '@testing-library/react';
 // haptics.medium() — must be stubbed too or the I4 propagation tests below
 // (which drive a real long press) throw "haptics.medium is not a function".
 vi.mock('../../design/haptics', () => ({
-  haptics: { light: vi.fn(), medium: vi.fn() },
+  haptics: { light: vi.fn(), medium: vi.fn(), selection: vi.fn() },
 }));
 
 import RoutineView from '../RoutineView';

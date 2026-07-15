@@ -24,7 +24,10 @@ export default function TaskContextMenu({ task, isCompleted, onAction, onClose }
   const fire = (action, e) => {
     e?.stopPropagation();
     sound.tap();
-    haptics.light();
+    // A context-menu item is a discrete pick from a list → selection tick,
+    // not a light impact. This also avoids a double-light when the action is
+    // 'check' (App.handleCheckTask fires light on the completing edge).
+    haptics.selection();
     onAction(action);
     onClose();
   };
