@@ -9,7 +9,35 @@
 //   - QUIET (gain ~ 0.04) so it's felt more than heard
 //   - HARMONIC (no dissonance — chord-based when multiple tones)
 //
-// User mute is respected via localStorage. Wire to a settings toggle later.
+// User mute is respected via localStorage, wired to AppSettings.jsx's
+// "Sound effects" toggle (isSoundMuted/setSoundMuted below).
+//
+// --- iOS hardware silent switch policy (single source of truth) ---------
+// Spec default: SFX respect the hardware silent switch — go silent when
+// the phone is flipped to silent, like most premium apps. This file only
+// ever plays tones through the WebAudio API (AudioContext oscillators,
+// see tone() below) — no HTML5 <audio>, no native audio plugin. Neither
+// this app nor the Capacitor iOS shell configures an AVAudioSession
+// category anywhere: verified clean (grep for AVAudioSession/setCategory
+// and for a UIBackgroundModes "audio" entry) across ios/App
+// (AppDelegate.swift, Info.plist, the CapApp-SPM package),
+// capacitor.config.json, AND Capacitor's own vendored native runtime
+// (node_modules/@capacitor/ios) — zero matches anywhere in the stack. With
+// no override, WKWebView uses the OS default session for web-originated
+// audio, which — same as Safari — IS silenced by the hardware ring/silent
+// switch. So the switch is respected for free; nothing may ever call
+// AVAudioSession.setCategory(.playback) (or add a plugin that does), since
+// that would force SFX to ignore the switch. The switch can't be flipped
+// in the iOS Simulator, so "flip it, SFX go silent" stays a P4
+// physical-device verification item — this file only guarantees the
+// no-override precondition that makes that true.
+//
+// App mute (isSoundMuted/setSoundMuted, adonis_sound_muted in localStorage)
+// is a SEPARATE gate layered on top of the switch — both must be "on" for
+// a tone to actually play. It also does NOT key off
+// prefers-reduced-motion / adonis_reduced_motion: reduced motion silences
+// decorative animation only (design/motion.js), never sound — muting sound
+// and reducing motion are independent dials by design.
 
 const STORAGE_KEY = 'adonis_sound_muted';
 
