@@ -1,6 +1,7 @@
 // src/state/store.jsx
 import React, { createContext, useContext, useReducer, useEffect, useRef, useCallback } from 'react';
 import { DEFAULT_STATE } from './defaults';
+import { mirrorSave } from '../platform/storage';
 
 const STORAGE_KEY = 'adonis_v2';
 const DEBOUNCE_MS = 500;
@@ -83,7 +84,11 @@ export function StateProvider({ children }) {
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, _v: STORAGE_VERSION }));
+      const serialized = JSON.stringify({ ...state, _v: STORAGE_VERSION });
+      localStorage.setItem(STORAGE_KEY, serialized);
+      // Mirror to native Preferences on iOS so a WebView-storage eviction
+      // can't lose the user's data (no-op on web). Fire-and-forget.
+      mirrorSave(serialized);
     }, DEBOUNCE_MS);
     return () => clearTimeout(saveTimer.current);
   }, [state]);
