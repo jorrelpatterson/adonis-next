@@ -72,7 +72,10 @@ export default function Select({
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-            fontFamily: FN, padding: '16px 16px env(safe-area-inset-bottom, 16px)',
+            // Bottom sheet — additive so the sheet clears the home
+            // indicator with a visible gap on top of it, not just the raw
+            // inset value; unchanged 16px on web.
+            fontFamily: FN, padding: '16px 16px calc(16px + var(--safe-bottom))',
             animation: 'vt-fade-in 0.3s cubic-bezier(0.16,1,0.3,1) both',
           }}
         >

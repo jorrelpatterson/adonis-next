@@ -1,5 +1,7 @@
 // src/app/__tests__/TabNav.test.jsx
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import React from 'react';
 import { render } from '@testing-library/react';
 import TabNav from '../TabNav';
@@ -52,5 +54,22 @@ describe('TabNav', () => {
     );
     expect(queryByTestId('tab-lock-money')).toBeNull();
     expect(queryByTestId('tab-lock-body')).toBeNull();
+  });
+
+  // iOS P1 (safe-area insets): weak presence assertion — the real gate is
+  // the simulator screenshot (labels clearing the home indicator). Renders
+  // first to prove the calc()+var() padding doesn't crash; the actual
+  // wiring is checked at the source level because happy-dom's CSSOM can't
+  // round-trip `calc(6px + var(--safe-bottom))` back through
+  // getAttribute('style') (it silently drops the whole padding
+  // declaration on serialize) — a test-environment limitation, not a
+  // real-WebKit one.
+  it('bottom padding is additive with --safe-bottom, not a bare env() fallback', () => {
+    const { container } = render(<TabNav activeTab="routine" onTabChange={() => {}} domains={[]} />);
+    expect(container.firstChild).toBeTruthy();
+
+    const src = readFileSync(join(process.cwd(), 'src/app/TabNav.jsx'), 'utf8');
+    expect(src).toContain('var(--safe-bottom)');
+    expect(src).toContain('calc(6px');
   });
 });

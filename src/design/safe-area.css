@@ -1,0 +1,27 @@
+/* src/design/safe-area.css
+ *
+ * Safe-area inset primitives (iOS P1 — Premium Contract item 3). Every
+ * fixed-position edge (shell header, TabNav, full-screen celebration
+ * overlays, bottom sheets) reads these custom properties instead of raw
+ * env() calls scattered per-component, so the property name + fallback
+ * only has to be right in ONE place.
+ *
+ * On web/desktop env(safe-area-inset-*) is unsupported/undefined, so all
+ * four resolve to their 0px fallback — nothing shifts, nothing changes
+ * visually. That's the safety property this whole feature leans on.
+ *
+ * On iOS they only resolve to a nonzero value once BOTH preconditions
+ * hold: (a) `viewport-fit=cover` is present on the viewport meta tag (see
+ * index.html), and (b) the WKWebView is drawn full-bleed under the notch/
+ * Dynamic Island/home indicator (Capacitor's `overlaysWebView: true` —
+ * see platform/status-bar.js). The P0 spike screenshot was missing (a);
+ * that alone was enough to zero out the env() calls a couple of
+ * components already had (TabNav, PullToRefresh, Toast, ActionSheet,
+ * Select) even though they referenced the property correctly.
+ */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}

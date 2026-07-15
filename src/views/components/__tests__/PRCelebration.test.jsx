@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 
@@ -61,5 +63,26 @@ describe('PRCelebration', () => {
     render(<PRCelebration exercise="Deadlift" weight={315} reps={1} onClose={onClose} />);
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  // iOS P1 (safe-area insets): weak presence assertion — the real gate is
+  // the simulator screenshot. Full-screen takeover, so both edges matter:
+  // the eyebrow label up top and the Continue button down near the home
+  // indicator. Renders first to prove the calc()+var() padding doesn't
+  // crash; the actual wiring is checked at the source level because
+  // happy-dom's CSSOM can't round-trip `calc(24px + var(--safe-top))`
+  // back through getAttribute('style') (it silently drops the whole
+  // padding declaration on serialize) — a test-environment limitation,
+  // not a real-WebKit one.
+  it('root overlay padding is additive with --safe-top and --safe-bottom', () => {
+    const { container } = render(
+      <PRCelebration exercise="Front Squats" weight={135} reps={8} onClose={() => {}} />
+    );
+    expect(container.firstChild).toBeTruthy();
+
+    const src = readFileSync(join(process.cwd(), 'src/views/components/PRCelebration.jsx'), 'utf8');
+    expect(src).toContain('var(--safe-top)');
+    expect(src).toContain('var(--safe-bottom)');
+    expect(src).toContain('calc(24px');
   });
 });

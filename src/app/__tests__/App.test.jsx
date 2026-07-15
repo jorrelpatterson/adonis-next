@@ -10,6 +10,8 @@
 // localStorage isn't wired up in this test environment; store.jsx's
 // loadState() only survives because it's try/catch-wrapped internally).
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import React, { useEffect } from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { StateProvider, useAppState } from '../../state/store';
@@ -100,6 +102,30 @@ describe('App shell', () => {
     const contentIdx = kids.findIndex((el) => el.style.zIndex === '2');
     expect(firstBackdropIdx).toBe(0);           // backdrop is the first thing rendered
     expect(contentIdx).toBeGreaterThan(firstBackdropIdx); // content sits above it
+  });
+
+  // iOS P1 (safe-area insets): weak presence assertion — the real gate is
+  // the simulator screenshot (serif header clearing the Dynamic Island).
+  // Renders first to prove the calc()+var() padding doesn't crash; the
+  // actual wiring is checked at the source level because happy-dom's
+  // CSSOM can't round-trip `calc(16px + var(--safe-top))` back through
+  // getAttribute('style') (it silently drops the whole padding
+  // declaration on serialize) — a test-environment limitation, not a
+  // real-WebKit one.
+  it('header wrapper top padding is additive with --safe-top', () => {
+    const { container } = render(
+      <StateProvider>
+        <Seed />
+        <App />
+      </StateProvider>
+    );
+    const kids = [...container.querySelector('.adn-noise').children];
+    const content = kids.find((el) => el.style.zIndex === '2');
+    expect(content).toBeTruthy();
+
+    const src = readFileSync(join(process.cwd(), 'src/app/App.jsx'), 'utf8');
+    expect(src).toContain('var(--safe-top)');
+    expect(src).toContain('calc(16px');
   });
 });
 

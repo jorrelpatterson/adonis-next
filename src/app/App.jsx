@@ -383,10 +383,22 @@ export default function App() {
     <div className="adn-noise" style={{
       fontFamily: FN, background: P.bg, color: P.tx,
       position: 'fixed', inset: 0, overflowY: 'auto',
-      paddingBottom: 80,
+      // TabNav's own bottom padding grows by --safe-bottom (see TabNav.jsx)
+      // so it sits taller on notched devices — this scroll shell's bottom
+      // padding must grow by the same amount or the last routine/domain
+      // row would end up hidden behind the taller fixed bar.
+      paddingBottom: 'calc(80px + var(--safe-bottom))',
     }}>
       <AmbientBackdrop tab={activeTab} />
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '16px 16px 0', position: 'relative', zIndex: 2 }}>
+      <div style={{
+        maxWidth: 640, margin: '0 auto',
+        // Header row lives directly inside this padding box — top padding
+        // must clear the Dynamic Island / notch (P0 spike: header rendered
+        // UNDER it). Additive so the existing 16px breathing room survives
+        // on web, where --safe-top resolves to 0.
+        padding: 'calc(16px + var(--safe-top)) 16px 0',
+        position: 'relative', zIndex: 2,
+      }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -838,7 +850,10 @@ export default function App() {
             onClick={() => setShowProtocolPlan(false)}
             aria-label="Close"
             style={{
-              position: 'fixed', top: 16, left: 16, zIndex: 1001,
+              // Edge-pinned close button on a full-screen overlay (caught
+              // by the position:fixed/inset grep sweep) — same top-clears-
+              // the-notch treatment as the shell header above.
+              position: 'fixed', top: 'calc(16px + var(--safe-top))', left: 16, zIndex: 1001,
               width: 40, height: 40, borderRadius: 20,
               background: 'rgba(14,16,22,0.7)', border: '1px solid ' + P.bd,
               color: P.txS, fontSize: 18, cursor: 'pointer',

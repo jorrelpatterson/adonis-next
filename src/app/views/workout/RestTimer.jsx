@@ -21,7 +21,11 @@ export default function RestTimer({ exerciseName, seconds, onDone, onSkip }) {
 
   return (
     <div style={{
-      position: 'fixed', bottom: 72, left: 0, right: 0,
+      // bottom:72 was tuned to clear TabNav's old fixed height; TabNav's
+      // padding now grows by --safe-bottom (see app/TabNav.jsx), so this
+      // offset grows by the same amount or the pill would sit behind the
+      // taller bar on notched devices. Unchanged 72px on web.
+      position: 'fixed', bottom: 'calc(72px + var(--safe-bottom))', left: 0, right: 0,
       display: 'flex', justifyContent: 'center', zIndex: 200,
       pointerEvents: 'none',
     }}>

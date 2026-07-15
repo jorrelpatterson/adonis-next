@@ -31,7 +31,12 @@ export default function TabNav({ activeTab, onTabChange, domains = [], lockedIds
       position: 'fixed', bottom: 0, left: 0, right: 0,
       background: P.bg, borderTop: '1px solid ' + P.bd,
       display: 'flex', justifyContent: 'center',
-      padding: '6px 0 env(safe-area-inset-bottom, 6px)',
+      // Additive (not the old env()-as-fallback form): the bar keeps its
+      // normal 6px breathing room above the tab labels AND grows taller by
+      // --safe-bottom so labels clear the home indicator instead of the
+      // safe-area value replacing the padding outright. 0 on web — the bar
+      // is byte-for-byte the same height it always was there.
+      padding: '6px 0 calc(6px + var(--safe-bottom))',
       zIndex: 100,
     }}>
       <div style={{ display: 'flex', gap: 2, maxWidth: 640, width: '100%', justifyContent: 'space-around' }}>

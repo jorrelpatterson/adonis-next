@@ -63,7 +63,10 @@ export default function StreakMilestone({ tier, days, onClose }) {
       WebkitBackdropFilter: 'blur(20px)',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      fontFamily: FN, padding: 32, textAlign: 'center',
+      // Full-screen takeover — additive top/bottom safe-area so the tier
+      // label and "Keep Going" button clear the notch/home indicator on
+      // notched devices; unchanged 32px padding on web.
+      fontFamily: FN, padding: 'calc(32px + var(--safe-top)) 32px calc(32px + var(--safe-bottom))', textAlign: 'center',
       animation: 'vt-fade-in 0.5s cubic-bezier(0.16,1,0.3,1) both',
     }}>
       {/* Halo */}

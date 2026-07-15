@@ -65,7 +65,10 @@ export default function PRCelebration({ exercise, weight, reps, onClose }) {
       WebkitBackdropFilter: 'blur(20px)',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      fontFamily: FN, padding: 24,
+      // Full-screen takeover — additive top/bottom safe-area so the
+      // eyebrow label and Continue button clear the notch/home indicator
+      // on notched devices; unchanged 24px padding on web.
+      fontFamily: FN, padding: 'calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom))',
       animation: 'vt-fade-in 0.4s cubic-bezier(0.16,1,0.3,1) both',
     }}>
       {/* Confetti */}

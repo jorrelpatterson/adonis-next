@@ -132,7 +132,10 @@ export default function WeeklyRecap({ stats, onClose }) {
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: FN, padding: 16,
+      // Full-screen overlay — additive top/bottom safe-area so the
+      // centered card never gets pinned flush against the notch/home
+      // indicator on tall content; unchanged 16px padding on web.
+      fontFamily: FN, padding: 'calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom))',
       animation: 'vt-fade-in 0.4s cubic-bezier(0.16,1,0.3,1) both',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{

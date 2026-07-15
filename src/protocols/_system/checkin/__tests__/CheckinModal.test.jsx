@@ -1,6 +1,8 @@
 // Task 13 — CheckinModal: Save must stay disabled until all 8 CHECKIN_FIELDS
 // are rated, and onSave must receive the exact ratings map the user picked.
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import React from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import CheckinModal from '../CheckinModal';
@@ -89,5 +91,25 @@ describe('CheckinModal', () => {
     fireEvent.click(getByText('Cancel'));
     expect(onClose).toHaveBeenCalledTimes(1);
     expect(onSave).not.toHaveBeenCalled();
+  });
+
+  // iOS P1 (safe-area insets): weak presence assertion — the real gate is
+  // the simulator screenshot. Bottom sheet flush to the viewport edge, so
+  // only the bottom side needs clearance for Save/Cancel above the home
+  // indicator. Renders first to prove the calc()+var() padding doesn't
+  // crash; the actual wiring is checked at the source level because
+  // happy-dom's CSSOM can't round-trip `calc(24px + var(--safe-bottom))`
+  // back through getAttribute('style') (it silently drops the whole
+  // padding declaration on serialize) — a test-environment limitation,
+  // not a real-WebKit one.
+  it('sheet bottom padding is additive with --safe-bottom', () => {
+    const { container } = render(<CheckinModal onSave={() => {}} onClose={() => {}} />);
+    // container.firstChild is the full-viewport backdrop; its one child is
+    // the actual bottom sheet (borderRadius '20px 20px 0 0').
+    expect(container.firstChild.firstChild).toBeTruthy();
+
+    const src = readFileSync(join(process.cwd(), 'src/protocols/_system/checkin/CheckinModal.jsx'), 'utf8');
+    expect(src).toContain('var(--safe-bottom)');
+    expect(src).toContain('calc(24px');
   });
 });

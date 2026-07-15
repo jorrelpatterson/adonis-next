@@ -48,7 +48,12 @@ export function ActionSheetProvider({ children }) {
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-            fontFamily: FN, padding: 'env(safe-area-inset-bottom, 16px) 16px 16px',
+            // Bottom sheet — was previously putting the env() value in the
+            // TOP padding slot (a no-op here: alignItems:'flex-end' pins
+            // the sheet to the bottom regardless of top padding), so the
+            // sheet never actually cleared the home indicator. Fixed to
+            // the bottom slot, additive; unchanged 16px on web.
+            fontFamily: FN, padding: '16px 16px calc(16px + var(--safe-bottom))',
             animation: 'vt-fade-in 0.3s cubic-bezier(0.16,1,0.3,1) both',
           }}
         >

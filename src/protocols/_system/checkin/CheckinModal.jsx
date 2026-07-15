@@ -41,7 +41,10 @@ export default function CheckinModal({ onSave, onClose }) {
       <div onClick={e => e.stopPropagation()} style={{
         ...s.card,
         width: '100%', maxWidth: 640,
-        padding: '20px 16px 24px',
+        // Bottom sheet flush to the viewport edge — bottom padding grows by
+        // --safe-bottom so Save/Cancel clear the home indicator; unchanged
+        // 24px on web.
+        padding: '20px 16px calc(24px + var(--safe-bottom))',
         borderRadius: '20px 20px 0 0',
         maxHeight: '92vh', overflowY: 'auto',
         animation: 'springIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
