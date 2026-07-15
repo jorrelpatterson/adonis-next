@@ -210,9 +210,11 @@ export default function FoodLogger({ profile, protocolStates, logs, log }) {
               overflow: 'hidden', marginBottom: 12,
             }}>
               <div style={{
-                height: '100%', width: progPct + '%',
+                height: '100%', width: '100%',
                 background: progColor,
-                transition: 'width 0.3s ease, background 0.3s ease',
+                transform: `scaleX(${progPct / 100})`,
+                transformOrigin: 'left',
+                transition: 'transform 0.3s ease, background 0.3s ease',
               }} />
             </div>
 

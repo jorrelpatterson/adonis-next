@@ -51,10 +51,11 @@ export default function QuestionField({ question, value, onChange }) {
             flexShrink: 0,
           }}>
             <span style={{
-              position: 'absolute', top: 2, left: value ? 18 : 2,
+              position: 'absolute', top: 2, left: 2,
               width: 16, height: 16, borderRadius: 8,
               background: value ? '#0A0B0E' : '#fff',
-              transition: 'all 0.2s',
+              transform: value ? 'translateX(16px)' : 'translateX(0)',
+              transition: 'transform 0.2s, background 0.2s',
             }} />
           </span>
           {value ? 'Yes' : 'No'}

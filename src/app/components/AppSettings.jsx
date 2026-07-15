@@ -39,10 +39,11 @@ function ToggleRow({ label, sub, value, onChange }) {
         }}
       >
         <span style={{
-          position: 'absolute', top: 2, left: value ? 22 : 2,
+          position: 'absolute', top: 2, left: 2,
           width: 20, height: 20, borderRadius: '50%',
           background: value ? '#0A0B0E' : '#5C6070',
-          transition: 'left 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+          transform: value ? 'translateX(20px)' : 'translateX(0)',
+          transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1)',
           boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
         }} />
       </button>

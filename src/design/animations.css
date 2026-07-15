@@ -113,7 +113,7 @@ input, select, textarea {
 @keyframes slideUpIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes ripple { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2.5); opacity: 0; } }
 @keyframes breathe { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes shimmerSweep { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
 @keyframes checkDraw { 0% { stroke-dashoffset: 24; } 100% { stroke-dashoffset: 0; } }
 @keyframes toastSlideIn { 0% { opacity: 0; transform: translateY(-20px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
@@ -293,23 +293,41 @@ html.adn-reduced-motion *::after {
 .adn-check-ripple.checked::after { opacity: 1; }
 
 /* ─── Skeleton shimmer — use in place of every spinner ─────────────────── */
+/* iOS P2 Task 3: was animating `background-position` (paint every frame).
+   Now a static base tint + a ::after band that translateX-sweeps across it
+   (GPU-composited). overflow:hidden clips the sweep to whatever shape the
+   instance is (pill, circle, card) via the caller's own border-radius on
+   .adn-skel itself — visual is unchanged, only the mechanism moved. */
 
 .adn-skel {
-  background: linear-gradient(90deg,
-    rgba(232,213,183,0.02) 0%,
-    rgba(232,213,183,0.06) 40%,
-    rgba(232,213,183,0.10) 50%,
-    rgba(232,213,183,0.06) 60%,
-    rgba(232,213,183,0.02) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  background: rgba(232,213,183,0.04);
   border-radius: 8px;
+}
+.adn-skel::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(232,213,183,0.12) 50%,
+    transparent 100%);
+  transform: translateX(-100%);
+  animation: shimmerSweep 2s ease-in-out infinite;
+  will-change: transform;
 }
 
 .adn-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(232,213,183,0.04), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+.adn-shimmer::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(232,213,183,0.06), transparent);
+  transform: translateX(-100%);
+  animation: shimmerSweep 2s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* ─── Tab navigation ────────────────────────────────────────────────────── */
@@ -455,4 +473,5 @@ textarea:focus {
 .adn-flame {
   transform-origin: bottom center;
   animation: flameFlicker 0.8s ease-in-out infinite;
+  will-change: transform;
 }
