@@ -27,7 +27,10 @@ export default function Select({
 
   const pick = (opt) => {
     sound.toggleOn();
-    haptics.success();
+    // iOS P2 Task 2b: was haptics.success() — a bottom-sheet option pick is
+    // a discrete picker choice, not a celebration burst. success() over-fires
+    // on every routine pick; selection() is the correct discrete tick.
+    haptics.selection();
     onChange(opt.value);
     setOpen(false);
   };

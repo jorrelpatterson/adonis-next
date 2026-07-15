@@ -83,9 +83,22 @@
 //     - app/TabNav.jsx              — tab switch (only when the active tab
 //                                      actually changes, not re-tapping it)
 //     - routine/RoutineView.jsx      — day-chip select (only on day change)
-//     - routine/RoutineView.jsx      — task check-off (only completing;
-//                                      unchecking stays silent)
+//     - app/App.jsx (handleCheckTask) — task check-off, centralized (iOS P2
+//                                      Task 2b; was RoutineView-local) so
+//                                      the SAME tick covers every view that
+//                                      shares this handler: RoutineView's
+//                                      TaskRow AND the 7 domain views'
+//                                      "Today's Tasks" cards (Money/Mind/
+//                                      Image/Environment/Travel/Purpose/
+//                                      Community). Only completing;
+//                                      unchecking stays silent.
 //     - views/components/TaskContextMenu.jsx — any long-press menu action
+//                                      (NOTE: its "Mark complete" item also
+//                                      routes through onCheckTask ->
+//                                      handleCheckTask above, so that one
+//                                      path fires light TWICE in a row —
+//                                      pre-existing overlap, not introduced
+//                                      by Task 2b, left as-is)
 //     - views/components/FoodLogger.jsx      — meal removed
 //     - views/components/PhotoJournal.jsx    — photo deleted; lightbox open
 //     - design/Toast.jsx             — info toast
@@ -104,12 +117,6 @@
 //     - views/components/StreakMilestone.jsx  — streak tier crossed
 //     - onboarding/CalculatingScreen.jsx  — "your protocol is ready" reveal
 //     - views/components/PhotoJournal.jsx — photo uploaded
-//     - design/Select.jsx              — bottom-sheet option picked (pre-
-//                                        existing; a candidate for
-//                                        `selection` in a future pass, since
-//                                        it's a discrete picker choice, not
-//                                        a celebration — left as-is here,
-//                                        out of this task's named scope)
 //     - design/Toast.jsx               — success toast
 //     - design/ActionSheet.jsx         — non-destructive confirm
 //
@@ -117,18 +124,23 @@
 //     - protocols/_system/checkin/CheckinModal.jsx — check-in rating pick
 //       (8 mood/energy/... fields; button-row style, so each button pick
 //       fires once — not a drag gesture, so no continuous tick stream)
+//     - design/Select.jsx — bottom-sheet option picked (iOS P2 Task 2b; was
+//       `success` — a picker choice is a discrete tick, not a celebration
+//       burst, and firing the triple-notification success() on every
+//       routine pick was haptic over-use)
 //
 //   warning / error
 //     - design/Toast.jsx        — warning / error toast
 //     - design/ActionSheet.jsx  — warning on destructive confirm
 //
-// NOT wired (found during the iOS P2 Task 2 audit, same "task complete"
-// semantics as RoutineView's check-off, but out of this task's named
-// scope — flagged for a follow-up, not fixed here): the per-domain browse
-// views each have their own independent task checkbox that never routes
-// through RoutineView — views/PurposeView.jsx, views/CommunityView.jsx,
-// views/ImageView.jsx, views/EnvironmentView.jsx, views/TravelView.jsx,
-// views/MoneyView.jsx, views/MindView.jsx.
+// The per-domain "Today's Tasks" cards (views/MoneyView.jsx,
+// views/MindView.jsx, views/ImageView.jsx, views/EnvironmentView.jsx,
+// views/TravelView.jsx, views/PurposeView.jsx, views/CommunityView.jsx)
+// were flagged in the iOS P2 Task 2 audit as NOT wired to any haptic despite
+// sharing RoutineView's "task complete" semantics — closed in Task 2b by
+// centralizing the check-off haptic in app/App.jsx's handleCheckTask (see
+// the `light` entry above), which every one of those views' onCheckTask
+// prop already pointed at.
 
 const isClient = typeof window !== 'undefined';
 

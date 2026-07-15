@@ -341,14 +341,23 @@ describe('RoutineView — Sunday WeeklyRecap (Task 14)', () => {
   });
 });
 
-// ─── iOS P2 Task 2: task check-off haptics ─────────────────────────────────
-describe('RoutineView — task check-off haptics', () => {
+// ─── iOS P2 Task 2b: task check-off calls onCheckTask ──────────────────────
+// The check-off haptic used to fire LOCALLY here (asserted via haptics.light
+// below); Task 2b centralized it into App.jsx's handleCheckTask so the 7
+// domain views' task cards get the same tick, not just Routine (see
+// App.test.jsx's "handleCheckTask fires the check-off haptic centrally"
+// suite for that coverage now). RoutineView-in-isolation (onCheckTask
+// mocked, as here) no longer fires any haptic itself — these two tests now
+// assert RoutineView's real responsibility instead: it calls onCheckTask on
+// both the completing AND the unchecking edge (the caller — App, in
+// production — decides which edge gets the haptic).
+describe('RoutineView — task check-off calls onCheckTask', () => {
   const routine = {
     scheduled: [{ id: 't1', title: 'Push Day', type: 'guided', category: 'training', time: '06:00' }],
     deferred: [], upsells: [], retention: [],
   };
 
-  it('fires haptics.light when checking off an incomplete task', () => {
+  it('calls onCheckTask when checking off an incomplete task', () => {
     const onCheckTask = vi.fn();
     const { container } = render(
       <RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={onCheckTask} completedTasks={[]} />
@@ -360,11 +369,12 @@ describe('RoutineView — task check-off haptics', () => {
     expect(checkboxBtn).toBeTruthy();
 
     fireEvent.click(checkboxBtn);
-    expect(haptics.light).toHaveBeenCalledTimes(1);
+    expect(onCheckTask).toHaveBeenCalledTimes(1);
     expect(onCheckTask).toHaveBeenCalledWith('t1');
+    expect(haptics.light).not.toHaveBeenCalled();
   });
 
-  it('does not fire haptics.light when unchecking an already-completed task', () => {
+  it('calls onCheckTask when unchecking an already-completed task', () => {
     const onCheckTask = vi.fn();
     const { container } = render(
       <RoutineView routine={routine} day={new Date('2026-04-06')} onCheckTask={onCheckTask} completedTasks={['t1']} />
@@ -373,7 +383,8 @@ describe('RoutineView — task check-off haptics', () => {
     expect(checkboxBtn).toBeTruthy();
 
     fireEvent.click(checkboxBtn);
-    expect(haptics.light).not.toHaveBeenCalled();
+    expect(onCheckTask).toHaveBeenCalledTimes(1);
     expect(onCheckTask).toHaveBeenCalledWith('t1');
+    expect(haptics.light).not.toHaveBeenCalled();
   });
 });

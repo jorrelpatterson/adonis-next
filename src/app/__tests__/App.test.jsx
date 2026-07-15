@@ -9,7 +9,7 @@
 // Profile is seeded via the store's replaceState action (not localStorage —
 // localStorage isn't wired up in this test environment; store.jsx's
 // loadState() only survives because it's try/catch-wrapped internally).
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import React, { useEffect } from 'react';
@@ -21,6 +21,10 @@ import { CHECKIN_FIELDS } from '../../state/checkin.js';
 import '../../protocols/register-all.js';
 import { computeAdaptive } from '../../protocols/body/nutrition/adaptive-calories';
 import App from '../App';
+// iOS P2 Task 2b: spied (not vi.mock'd) so the other ~30 pre-existing tests
+// in this file keep exercising the REAL haptics module (a safe no-op in
+// jsdom) exactly as before — only the new describe below observes calls.
+import { haptics } from '../../design/haptics';
 
 vi.mock('../../services/useAuth.js', () => ({
   useAuth: () => ({ user: { id: 'u1' }, tier: 'free', loading: false, signOut: vi.fn() }),
@@ -313,6 +317,59 @@ describe('I2: browsed viewDay does not leak into the domain views', () => {
     // Completion landed on TODAY's key, and no browsed-day key was written.
     expect(routineLogs[today]).toContain('mind-gratitude');
     expect(Object.keys(routineLogs)).toEqual([today]);
+  });
+});
+
+// ─── iOS P2 Task 2b: centralized check-off haptic (all views) ─────────────
+// handleCheckTask (App.jsx) is now the ONE place the check-off haptic fires,
+// so every view sharing it — RoutineView's TaskRow AND the 7 domain views'
+// "Today's Tasks" cards — gets the same tick. Before this fix, only
+// RoutineView buzzed on check-off; the domain views (wired to the same
+// handleCheckTask via onCheckTask) fired nothing. Reuses the I2 test's
+// Mind-goal recipe above (the mind protocol always emits the 'mind-
+// gratitude' task) to drive a real domain-view check-off end to end.
+describe('iOS P2 Task 2b: handleCheckTask fires the check-off haptic centrally', () => {
+  const MIND_GOAL = {
+    id: 'g_mind', status: 'active', domain: 'mind', title: 'Sharpen Mind',
+    priority: 1, activeProtocols: [{ protocolId: 'mind' }],
+    progress: { percent: 0 },
+  };
+  const PRO = {
+    name: 'Jordan', age: 30, gender: 'male', weight: 180,
+    hFt: 5, hIn: 10, activity: 'moderate', domains: ['body', 'mind'], tier: 'pro',
+  };
+
+  let lightSpy;
+  beforeEach(() => {
+    lightSpy = vi.spyOn(haptics, 'light').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    cleanup();
+    lightSpy.mockRestore();
+  });
+
+  it('fires haptics.light only on the completing edge, driven via a domain view (Mind) check-off', () => {
+    const { container } = render(
+      <StateProvider>
+        <SeedProfileGoals profile={PRO} goals={[MIND_GOAL]} />
+        <App />
+      </StateProvider>
+    );
+
+    fireEvent.click(container.querySelector('[data-testid="tab-mind"]'));
+    lightSpy.mockClear(); // isolate from TabNav's own tab-switch haptics.light call
+    // Same "Sets intention…" lookup the I2 test above uses to target the
+    // routine task row in Mind's "Today's Tasks" card, not its separate
+    // Daily Gratitude journaling widget.
+    const checkbox = [...container.querySelectorAll('button')]
+      .find(b => b.parentElement?.textContent?.includes('Sets intention'));
+    expect(checkbox).toBeTruthy();
+
+    fireEvent.click(checkbox); // complete — domain views fired NO haptic before this fix
+    expect(lightSpy).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(checkbox); // uncheck — stays silent, same as RoutineView always was
+    expect(lightSpy).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -520,10 +520,13 @@ function TaskRow({ task, isLast, completed, onCheckTask, onTaskTap, intensityLab
           onClick={(e) => {
             if (isAuto) return;
             if (isTappable) { e.stopPropagation(); onTaskTap(task); return; }
-            // iOS P2 Task 2: light tap on the completing edge only — checking
-            // a task OFF (isDone -> not done) is a correction, not a
-            // "complete", so it stays haptically silent.
-            if (!isDone) haptics.light();
+            // iOS P2 Task 2b: check-off haptic moved to App.jsx's
+            // handleCheckTask (fires there on the completing edge only) so
+            // this same tick covers the 7 domain views' task cards too, not
+            // just Routine. Do not re-add a local haptics.light() here —
+            // onCheckTask (App's handleCheckTask, in production) already
+            // fires it; adding one back here would double-fire on every
+            // Routine check-off.
             onCheckTask && onCheckTask(task.id);
           }}
           style={{

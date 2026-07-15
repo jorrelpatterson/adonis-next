@@ -2,11 +2,12 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-// Select.jsx (used for the Sex + Rest Day fields) fires haptics.success() on
-// every pick — must be stubbed alongside `medium` or the existing "Male"
-// pick below throws (haptics.success is not a function on a partial mock).
+// Select.jsx (used for the Sex + Rest Day fields) fires haptics.selection()
+// on every pick (iOS P2 Task 2b — was success()) — must be stubbed alongside
+// `medium` or the existing "Male" pick below throws (haptics.selection is
+// not a function on a partial mock).
 vi.mock('../../design/haptics', () => ({
-  haptics: { success: vi.fn(), medium: vi.fn() },
+  haptics: { selection: vi.fn(), medium: vi.fn() },
 }));
 
 import OnboardingFlow from '../OnboardingFlow';

@@ -5,6 +5,7 @@ import { P, FN, FD } from '../design/theme';
 import { s } from '../design/styles';
 import { GradText, H } from '../design/components';
 import { DOMAINS, SUB_TIERS } from '../design/constants';
+import { haptics } from '../design/haptics';
 import { buildDailyRoutine } from '../routine/pipeline';
 import { computeAdaptive } from '../protocols/body/nutrition/adaptive-calories';
 import { getAllProtocols } from '../protocols/registry';
@@ -225,11 +226,22 @@ export default function App() {
     [profile, logs.weight, today, primaryGoal]
   );
 
+  // iOS P2 Task 2b: check-off haptic centralized HERE (was RoutineView-local)
+  // so every view sharing this handler — RoutineView's TaskRow AND the 7
+  // domain views' "Today's Tasks" cards (Money/Mind/Image/Environment/
+  // Travel/Purpose/Community, all wired via DOMAIN_VIEWS' onCheckTask below)
+  // — fires the SAME light tick from the SAME place, instead of only
+  // RoutineView buzzing while the domain views stayed silent. Fires only on
+  // the completing edge (adding a task); unchecking is a correction, not a
+  // "complete", so it stays haptically silent — matching the RoutineView-
+  // local behavior this replaces.
   const handleCheckTask = useCallback((taskId) => {
     const current = (logs.routine && logs.routine[todayKey]) || [];
-    const updated = current.includes(taskId)
-      ? current.filter(id => id !== taskId)
-      : [...current, taskId];
+    const completing = !current.includes(taskId);
+    if (completing) haptics.light();
+    const updated = completing
+      ? [...current, taskId]
+      : current.filter(id => id !== taskId);
     log('routine', { ...logs.routine, [todayKey]: updated });
   }, [logs.routine, todayKey, log]);
 
