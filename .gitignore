@@ -7,6 +7,13 @@ next-env.d.ts
 .vercel
 dist/
 public/app/
+dist-ios/
+
+# Capacitor iOS — the ios/ project IS committed, but Pods/DerivedData are not
+ios/App/Pods/
+ios/App/App/public/
+ios/DerivedData/
+ios/capacitor-cordova-ios-plugins/
 .superpowers/
 .claude/
 
