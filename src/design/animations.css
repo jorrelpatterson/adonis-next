@@ -9,7 +9,11 @@
    - Information (count-up on stat changes signals "this just changed")
    ───────────────────────────────────────────────────────────────────────── */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* Brand fonts are bundled locally — see ./fonts.css (imported before this
+   file in src/main.jsx) — not loaded via @import from fonts.googleapis.com.
+   Removing the remote @import here was iOS P1 Task 1 (offline-proof first
+   paint): a Capacitor WKWebView can render with zero network, and this
+   also drops a render-blocking cross-origin request on web. */
 
 /* Design tokens — single source of truth for motion + materiality */
 :root {

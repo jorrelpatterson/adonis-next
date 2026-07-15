@@ -5,6 +5,7 @@ import { StateProvider } from './state/store';
 import { runMigrationIfNeeded } from './state/migration';
 import { ToastProvider } from './design/Toast';
 import App from './app/App';
+import './design/fonts.css';
 import './design/animations.css';
 import './protocols/register-all';
 

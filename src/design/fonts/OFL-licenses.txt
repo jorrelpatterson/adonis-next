@@ -1,0 +1,42 @@
+Bundled brand fonts — license notes
+====================================
+
+All three families below are licensed under the SIL Open Font License,
+Version 1.1 (OFL-1.1), which permits bundling, embedding, and redistribution
+(including in a compiled/subsetted form) so long as the font names and this
+notice accompany the files. Full license text: https://openfontlicense.org
+
+Files were downloaded from Google Fonts' CSS2 API (fonts.googleapis.com /
+fonts.gstatic.com) as latin-subset WOFF2, then vendored into this repo at
+src/design/fonts/ for offline-proof first paint (no runtime dependency on
+Google Fonts).
+
+1. Cormorant Garamond
+   Files:  CormorantGaramond.woff2 (normal, wght 300/400/500/600)
+           CormorantGaramond-Italic.woff2 (italic, wght 300/400)
+   Designer: Christian Thalmann (Catharsis Fonts)
+   License:  SIL Open Font License 1.1
+   Source:   https://fonts.google.com/specimen/Cormorant+Garamond
+   Repo:     https://github.com/CatharsisFonts/Cormorant
+
+2. Outfit
+   File:    Outfit.woff2 (normal, wght 200/300/400/500/600/700)
+   Designer: Rodrigo Fuenzalida
+   License:  SIL Open Font License 1.1
+   Source:   https://fonts.google.com/specimen/Outfit
+   Repo:     https://github.com/Outfitio/Outfit-Fonts
+
+3. JetBrains Mono
+   File:    JetBrainsMono.woff2 (normal, wght 400/500/700)
+   Designer: JetBrains
+   License:  SIL Open Font License 1.1
+   Source:   https://fonts.google.com/specimen/JetBrains+Mono
+   Repo:     https://github.com/JetBrains/JetBrainsMono
+
+Note on file count vs. weight count: Google Fonts serves each style
+(normal/italic) of these families as a single variable-weight WOFF2; the
+requesting browser resolves the CSS font-weight against the file's `wght`
+fvar axis. That is why one physical .woff2 file legitimately backs multiple
+discrete @font-face weight declarations in ../fonts.css — this mirrors the
+exact @font-face structure Google's own CSS2 API returns for a modern
+Chrome user agent, just pointed at local files instead of gstatic.com.
