@@ -2,60 +2,60 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## What this repo is
+
+**Adonis** — the fitness product only (v2, live at adonis.pro; /app is the front door).
+The ADVNCE Labs peptide company lives in the sibling `advncelabs` repo (storefront +
+back office). If a task is about inventory, invoices, orders, purchases, vendors,
+pre-sell, ambassadors, recruitment, compound/marketing emails, or the admin portal —
+wrong repo: go to `../advncelabs` (admin.advncelabs.com).
+
+The two businesses split repos on 2026-07-15 (spec + plan + worklog in
+`docs/superpowers/`). They still share one Supabase project by design.
+
 ## Build & Dev Commands
 
-- `npm run dev` — Start Next.js dev server (port 3000)
-- `npm run build` — Production build
-- `npm run start` — Production server
-- `npm run lint` — ESLint check
-
-No test framework is configured.
+- `npm run dev` — Next.js dev server (marketing page + API, port 3000)
+- `npm run dev:app` — Vite dev server for the PWA (`src/`)
+- `npm run build` — vite build (PWA → `public/app/`) + next build
+- `npm run build:ios` — iOS bundle (Capacitor, `vite.config.ios.js`)
+- `npm test` — vitest suite (~1189 tests; first run on this volume is slow — cold I/O
+  can look like import errors; re-run before believing failures)
+- `npm run lint` — ESLint
 
 ## Architecture
 
-**Adonis Protocol OS** (v3.0.0) — A fitness tracking + e-commerce platform built with Next.js 14 App Router, Supabase, Stripe, and Resend. Deployed on Vercel.
-
-### Dual-Stack Frontend
-
-- **React admin dashboard** (`app/admin/`) — Server/client components for inventory, orders, pricing, ambassadors, and distributors management. Protected by cookie-based auth via `middleware.js`.
-- **Standalone SPA** (`public/app.html`, ~7600 lines) — The main fitness tracking UI served as a static HTML file. This is a self-contained PWA with its own JS, not a React component.
-
-### API Routes (`app/api/`)
-
-- `admin-auth/` — Cookie-based admin login/logout (password from `ADMIN_PASSWORD` env var)
-- `checkout/` — Creates Stripe checkout sessions
-- `stripe/` — Stripe webhook handler for payment processing
-- `orders/` & `inventory/` — CRUD against Supabase
-- `notify/` — Order notification emails via Resend
-- `ambassador-welcome/`, `ambassador-message/`, `ambassador-payout/` — Ambassador email templates via Resend
-
-### Data Layer
-
-- **Supabase** — PostgreSQL backend. Client initialized in `lib/supabase.js`.
-- **Static data files** — `exercises.js` (112+ exercises with instructions), `programs.js` (16-week training program), `lib/constants/peptides.js`
-- **Design tokens** — `lib/constants/theme.js` (dark theme, gold/teal/orange accents, serif fonts)
-
-### Auth Flow
-
-Admin routes protected by `middleware.js` which checks `adonis_admin` cookie. Login at `/admin/login`, all other `/admin/*` routes redirect to login if unauthenticated.
-
-### E-Commerce Flow
-
-Cart in app.html → `/api/checkout` (Stripe session) → Stripe hosted checkout → `/api/stripe` webhook → order saved to Supabase → `/api/notify` sends email via Resend.
+- `src/` — the Adonis v2 PWA (vite + vitest, happy-dom). Built into `public/app/`,
+  served at adonis.pro/app via vercel.json + next.config rewrites.
+- `ios/` + Capacitor — native wrapper (camera, push, deep links `adonis://`).
+  Signed archive builds; TestFlight upload pending ASC API key (see jorrel-os.json).
+- `app/` — Next.js App Router: marketing page + API routes:
+  `app-signup`, `push`, `env-check`, `cron/routine-reminders`, `cron/career`
+  (career engine — Elite income model, Wave 2).
+- `lib/` — appSignup, push/, career/, supabase client, constants
+  (exercises, programs, theme, workouts-raw), and the shared auth guards
+  `requireAdmin` / `requireAdminOrCron` / `admin-users` (copies also exist in
+  advncelabs/admin — keep auth changes in sync or diverge deliberately).
+- **Supabase is SHARED with ADVNCE Labs** (one project). Migrations are manual
+  (SQL editor; no linked CLI). Never run DDL casually.
+- `next.config.js` holds **permanent 308 redirects** for every path that moved to
+  admin.advncelabs.com in the split. Links in already-sent emails depend on them.
+  **NEVER remove them.**
 
 ## Environment Variables
 
-- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase connection
-- `STRIPE_SECRET_KEY` — Stripe payments
-- `ADMIN_PASSWORD` — Admin panel authentication
-- `RESEND_API_KEY` — Email notifications
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`
+- `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `VA_PASSWORD` — shared auth guard users
+- `CRON_SECRET` — exists but EMPTY in prod (crons effectively manual; known state)
+- `APNS_*` — push send path (dormant until ASC key)
+- `ADZUNA_APP_ID/KEY`, `RAPIDAPI_KEY` — career ingest sources
 
 ## Key Conventions
 
 - JavaScript/JSX only (no TypeScript)
-- Styling via vanilla CSS (`app/globals.css`) and inline styles — no Tailwind or component library
-- React hooks for state management (no external state library)
-- Minimal dependencies by design
+- Vanilla CSS + inline styles — no Tailwind or component library
+- React hooks for state; minimal dependencies by design
+- Canonical host is `www.adonis.pro` (apex 307s to www)
 
 
 ## os.jorrel.io — approved dev requests

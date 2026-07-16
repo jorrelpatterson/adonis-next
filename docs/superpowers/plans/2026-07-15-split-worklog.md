@@ -101,3 +101,13 @@ The spec/plan's "BASE_URL flip" was based on a bad grep (`BASE_URL` substring-ma
 - **Final verification:** admin.advncelabs.com → auth 200, admin pages 200, env-check 200; join.advncelabs.com login + /ambassadors/apply 200 (recruitment funnel live from new home); storefront healthy; exposure chain closed.
 - Old admin at adonis.pro/admin remains fully live until Phase 4 strip. Jorrel + VA: re-bookmark to admin.advncelabs.com.
 - Plan-note: watcher scripts' `[ $N -ge MAX ] && echo` tail returns exit 1 on the success path — cosmetic, output line is the truth.
+
+## Phase 4 execution log (2026-07-15) — STRIP COMPLETE
+
+- Strip commit `929624c`: 377 files, −31,217 lines (admin UI, 56 routes, 5 crons, business lib/templates/scripts/sql/docs, social-images, news mockup). app/api now: app-signup, env-check, push, cron/{career,routine-reminders}.
+- **Build catch:** staying routes (env-check + both crons) import requireAdmin/requireAdminOrCron → admin-users. Restored as **copy-to-both** (same class as supabase.js). lib/ keeps: admin-users, appSignup, career/, constants (exercises/programs/theme/workouts-raw), push/, requireAdmin, requireAdminOrCron, supabase.
+- Deps pruned: @anthropic-ai/sdk, archiver, qrcode, rss-parser, stripe, @stripe/stripe-js. **sharp stays** (scripts/ios-icons.mjs). "stripe" hits in src were payment-link URLs, not SDK.
+- **Test-suite scare resolved:** first post-strip run reported 1 fail/73 errors/472 tests — cold-I/O artifact of the external volume (19-min run, imports timing out). Warm re-run: **131 files / 1189 / 1189 green in 98s**. Count reconciles exactly: 1196 pre-split − 7 relocated businessCard tests = 1189.
+- Redirects verified live: /admin/*, /ambassador(s)/*, /api/<moved>*, /api/cron/<moved> all 308 to admin.advncelabs.com with path+query preserved; full chain ends at login with ?from= carrying the destination. PWA /app 200, marketing 200, app-signup alive (405 on GET).
+- Storefront links commit `29ad4b8`: deep-links + 4 CORS origins (ambassador-message/notify/payout, shipping-confirm) + vercel.json /api/* CORS → admin.advncelabs.com; email footers rebranded; news-mockup preview carried into admin/public.
+- adonis.pro deploys clean post-strip; three projects READY (adonis-next 929624c, advnce-site + advnce-admin 29ad4b8).

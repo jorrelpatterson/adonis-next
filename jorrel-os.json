@@ -22,29 +22,10 @@
   "current": {
     "blockers": [
       "iOS TestFlight upload needs Jorrel: an App Store Connect app record (bundle pro.adonis.app) + an ASC API key (App Manager role, .p8 + Key ID + Issuer ID). The signed archive builds; scripts/ios-archive-upload.sh does archive->export->upload once the key is set.",
-      "2 unpushed local commits on adonis-next main from a PARALLEL session (repo-split spec 6fbb77c + plan 9bb5a9b, Claude Opus 4.8) -- not pushed/reviewed by the iOS session; reconcile before pushing main so the repo-split work isn't lost or force-clobbered.",
       "iOS FULL App Store submission (beyond internal TestFlight) still gated on: an adonis.pro/privacy page (Apple-required, must match docs/appstore/privacy-labels.md), plus the 2 product decisions -- IAP-vs-Stripe for Elite, and the peptide-surface build flag for the iOS binary.",
-      "Adonis v2: main is ~36 commits ahead of origin/main (Phase 0+1 = baseline + design-system port) — LOCAL only, NOT pushed. Awaiting Jorrel's push approval per MASTER-BRIEFING.",
-      "Adonis v2: interactive visual QA still pending — AmbientBackdrop orbs/tint shift on tab switch + italic H headers were verified only by headless build:app; needs eyes via `npm run dev:app` (Routine/Profile tabs) before the design layer is trusted visually.",
-      "Botox/Botulinum (BOTU100, BT100) — needs legal review (Schedule 1 Select Agent + Rx-only) before activating on storefront. BT100 hidden today as orphan but BOTU100 still in catalog.",
-      "ET50 from Rosyy never arrived — recorded in PO-2026-0003 (status='partial'). Decide: refund/credit/reorder",
-      "Pending Eve PO-2026-0001 still open ($1,350) — awaiting shipment",
-      "Welcome 2/3 emails are manual-trigger only (no auto-cron); ok at low volume",
-      "Email templates (PO, ambassador welcome, order confirmation) still use dark navy palette — should migrate to cream brand palette eventually",
-      "Vendor JSONs still have 48 entries with our_sku=null — backfill SQL fixed the database, but if JSONs are ever re-run as a seed source the gap returns. Patching the JSON files is a follow-up task.",
-      "Dihexa, GHK-Cu 200mg, NAD+ 300mg are in catalog but no vendor in our JSONs offers them. Currently hidden. Either chase vendor availability via WhatsApp or delete.",
-      "Default retail prices on ~97 newly-inserted products from 2026-04-21_ensure_all_products_visible.sql are placeholders (~50% margin) — user should update via inventory Edit button when they have time.",
-      "12 anabolic steroid tablets are inserted as hidden — needs legal review before activating on storefront. Same Schedule-III risk as Botox.",
-      "Default retail prices on 81 new tablets are 2× cost (placeholder) — real market research needed before activation.",
-      "12 anabolic-steroid tablets are hidden — Schedule III legal risk in US, needs legal review before activating on storefront",
-      "Default retail prices on the 81 new Eve tablets are 2× cost (placeholder) — need real market research before activation",
-      "Vendor JSONs (eve-pricing.json) don't include the tablets sheet — only peptide vials",
-      "Swag store (advnce-site) built + fully reviewed, still uncommitted — Supabase swag DDL applied 2026-06-10; remaining: Jorrel creates 4 Printful products (print art ready at brand-kit/print/) and pastes sync variant IDs into api/_lib/swag-catalog.js, adds Stripe+Printful webhooks/env vars in Vercel, then commit/deploy + test-mode dry run",
-      "Admin auth cookies are unsigned/plaintext (adonis_admin_role/email) — forgeable by anyone knowing an admin email; fix before adding more powerful admin endpoints (flagged during rewards-announce review)",
-      "advnce-site ref-capture committed (a551277) but NOT pushed/deployed — ambassador card QR codes resolve but won't set the attribution cookie in production until advnce-site deploys.",
-      "Pre-existing VA-role hole: ROLE_ALLOWED_PATHS.va includes '/admin', which prefix-matches every admin path, so the VA path allowlist is effectively wide open (lib/admin-roles.js). Flagged, not fixed."
+      "Adonis v2: interactive visual QA still pending \u2014 AmbientBackdrop orbs/tint shift on tab switch + italic H headers were verified only by headless build:app; needs eyes via `npm run dev:app` (Routine/Profile tabs) before the design layer is trusted visually."
     ],
-    "next_action": "iOS -> TestFlight (Jorrel chose the API-key path): (1) create the App Store Connect app record for bundle pro.adonis.app (ASC -> Apps -> + -> New App; name Adonis, SKU adonis-ios); (2) generate an ASC API key (App Manager role -> .p8 + Key ID + Issuer ID); then run scripts/ios-archive-upload.sh with ASC_KEY_ID + ASC_ISSUER_ID set to archive + upload to TestFlight. Internal TestFlight skips App Review, so NO privacy-policy / IAP / peptide decision is needed just to get it on Jorrel's phone. A signed device archive already builds (bundle pro.adonis.app, Team X577Q747WV). SEPARATELY: 2 local-only commits on main from a parallel session (repo-split spec+plan, 6fbb77c/9bb5a9b, Opus 4.8) are unpushed + unreviewed by the iOS session -- reconcile before pushing main. After TestFlight: domain build-out waves (Wave 1 Bucket List+Stripe, Wave 2 career engine=Elite income model) per docs/superpowers/specs/2026-07-14-domain-buildout-roadmap.md.",
+    "next_action": "iOS -> TestFlight (API-key path): (1) create ASC app record for bundle pro.adonis.app; (2) generate ASC API key (App Manager role); (3) run scripts/ios-archive-upload.sh with ASC_KEY_ID+ASC_ISSUER_ID. Then: interactive visual smoke (npm run dev:app - AmbientBackdrop + italic H headers), and domain build-out waves per docs/superpowers/specs/2026-07-14-domain-buildout-roadmap.md (Wave 1 Bucket List+Stripe, Wave 2 career engine). NOTE: repo is now fitness-only - all ADVNCE work moved to ../advncelabs (its own jorrel-os card).",
     "last_session": "2026-07-15",
     "completed_today": [
       "Adonis v2 Phases 2-5 shipped end-to-end via subagent-driven-development (onboarding/auth/tiers, daily loop, all 8 domain views + Insights, PWA + Vercel ride-along) -- each phase per-task reviewed + a final fable whole-branch review; the modular src/ rebuild is now the LIVE product.",
@@ -52,18 +33,19 @@
       "Domain build-out roadmap written (docs/superpowers/specs/2026-07-14-domain-buildout-roadmap.md); income-model question RESOLVED with Jorrel = port the jobs.jorrel.io CAREER ENGINE into Money (Elite tier; v1 referral tracker survives as a Referrals card). Found career-ingest half is already live in-repo (254 jobs ingesting, 0 scored).",
       "iOS native shell P0-P3 (Capacitor 8, SPM): P1 foundation (safe-areas incl. pre-auth funnel, bundled fonts, eviction-proof storage, native splash/boot-flash-kill, app icons, keyboard + tell-killers); P2 sensory (haptics.js bridged to Taptic Engine + full vocabulary, animation compositing audit, sound respects silent switch); P3 native reach (native camera, deep-link auth adonis://, push notifications app-side + DORMANT server send path). Suite 1196 green; every visual/receive item sim-verified.",
       "iOS App Store submission kit (docs/appstore/): 8 screenshots @1290x2796 + a shooter script, listing copy, App Privacy answers (local-first: email/name/push-token, no tracking), and App Review notes framing the peptide content as educational/no-IAP.",
-      "iOS SIGNED DEVICE ARCHIVE produced: com.adonis.app was taken by another team -> switched to pro.adonis.app; DEVELOPMENT_TEAM X577Q747WV wired; xcodebuild archive SUCCEEDED (App ID + provisioning auto-created). One upload from TestFlight. All iOS work merged to main + pushed."
+      "iOS SIGNED DEVICE ARCHIVE produced: com.adonis.app was taken by another team -> switched to pro.adonis.app; DEVELOPMENT_TEAM X577Q747WV wired; xcodebuild archive SUCCEEDED (App ID + provisioning auto-created). One upload from TestFlight. All iOS work merged to main + pushed.",
+      "REPO SPLIT (2026-07-15): ADVNCE Labs back office extracted to the advncelabs repo - this repo is now the fitness product only (-31k lines, 377 files). Permanent 308 redirects cover every moved path. Suite 1189/1189 green (7 businessCard tests relocated with the code). Stale blockers cleared: unpushed-commits (pushed), ref-capture (was already live), v2 36-ahead (pushed)."
     ],
     "_completed_2026_06_15": [
-      "Ambassador business cards shipped — /admin/cards generator (adonis-next): pick ambassador → print-exact 3.5×2in cream 'Specimen' card (name + AMBASSADOR + personal access code + QR to advncelabs.com/?ref=CODE) → Save-as-PDF at 3.625×2.125in (trim+bleed). Brainstormed via visual companion → spec → plan → subagent-driven build with per-task spec+quality reviews + final integration review. Merged to main (64123ca..2c373a1), pushed/deployed.",
+      "Ambassador business cards shipped \u2014 /admin/cards generator (adonis-next): pick ambassador \u2192 print-exact 3.5\u00d72in cream 'Specimen' card (name + AMBASSADOR + personal access code + QR to advncelabs.com/?ref=CODE) \u2192 Save-as-PDF at 3.625\u00d72.125in (trim+bleed). Brainstormed via visual companion \u2192 spec \u2192 plan \u2192 subagent-driven build with per-task spec+quality reviews + final integration review. Merged to main (64123ca..2c373a1), pushed/deployed.",
       "Supporting pieces: qrcode npm dep; lib/businessCard.js helpers (shortId/refUrl/codeStyle, TDD 7/7); BusinessCard.jsx Specimen v3 front/back components; marketing-hub Business Cards tile + VA path allowlist entry.",
-      "advnce-site ?ref= capture added to index.html + advnce-catalog.html (mirrors advnce-checkout.html 30-day attribution cookie), committed a551277 — surgically split from the parked swag-store nav links, which stay uncommitted. NOT yet pushed/deployed.",
+      "advnce-site ?ref= capture added to index.html + advnce-catalog.html (mirrors advnce-checkout.html 30-day attribution cookie), committed a551277 \u2014 surgically split from the parked swag-store nav links, which stay uncommitted. NOT yet pushed/deployed.",
       "Ambassador card content decisions locked: no discount language, no 'not for human consumption' (FOR RESEARCH USE ONLY only), name + AMBASSADOR + personal access code on back, RESEARCH-GRADE PEPTIDES on front."
     ],
     "_completed_2026_06_10": [
-      "Fixed /admin/visitors dashboard showing 0 while the recovery engine had 81 events — RLS silently blanks anon-key reads (no error). New cookie-gated server route app/api/admin/visitors (service key, requireRole admin); page now fetches it instead of the browser anon client. Verified live: unauthenticated = 401 with zero data; engine confirmed capturing a full real purchase trail (add_to_cart→identify→checkout_start).",
-      "Wrote portable visitor-recovery build prompt at Ai Projects/Docs/visitor-recovery-engine-portable-prompt.md — self-contained prompt to replicate the engine in any portfolio project; encodes the RLS, read-back-verification, and RECOVERY_LIVE dry-run gotchas. Memory pointer added.",
-      "Pushed + deployed the ADVNCE loyalty commits on adonis-next (admin badge live); advnce-site already deployed by parallel session (ADVNCE Rewards rename). Reviewed the parked swag store locally (advnce-swag.html renders standalone) — stays uncommitted pending Printful + Stripe manual setup.",
+      "Fixed /admin/visitors dashboard showing 0 while the recovery engine had 81 events \u2014 RLS silently blanks anon-key reads (no error). New cookie-gated server route app/api/admin/visitors (service key, requireRole admin); page now fetches it instead of the browser anon client. Verified live: unauthenticated = 401 with zero data; engine confirmed capturing a full real purchase trail (add_to_cart\u2192identify\u2192checkout_start).",
+      "Wrote portable visitor-recovery build prompt at Ai Projects/Docs/visitor-recovery-engine-portable-prompt.md \u2014 self-contained prompt to replicate the engine in any portfolio project; encodes the RLS, read-back-verification, and RECOVERY_LIVE dry-run gotchas. Memory pointer added.",
+      "Pushed + deployed the ADVNCE loyalty commits on adonis-next (admin badge live); advnce-site already deployed by parallel session (ADVNCE Rewards rename). Reviewed the parked swag store locally (advnce-swag.html renders standalone) \u2014 stays uncommitted pending Printful + Stripe manual setup.",
       "ADVNCE Rewards loyalty program designed, spec+plan committed, built TDD cross-repo (advnce-site core + adonis-next admin), multi-stage reviewed",
       "Supabase DDL applied (orders.tier_unlocked, orders.loyalty_tier); E2E smoke-tested against live stack (gift unlock, 5% discount, no re-grant); test orders cleaned up",
       "DEPLOYED LIVE: advncelabs.com/advnce-rewards.html + checkout/email loyalty blocks + admin order badges; program renamed ADVNCE Status -> ADVNCE Rewards at Jorrel direction",
@@ -78,57 +60,57 @@
       "Orders page: sent invoices now count + filter as Pending Payment (were drawing the amber badge via fallback but counted as 1 of 4); added green Paid badge so paid invoices stop looking pending; order-status accepts sent/paid. Design spec + plan in docs/superpowers/ (2026-06-09-zelle-applepay-checkout). All shipped to production across adonis-next + advnce-site."
     ],
     "_completed_2026_06_06": [
-      "Fixed compound-spotlight email restock drafts mapping by raw order code instead of compound name (commit 59a5278). Root cause: onStockRise looked up compound_marketing by its sku column, which is unpopulated — e.g. PT-141's product SKU 'PT10' leaked as the draft name with a blank hook. Now resolves product by SKU → matches compound_marketing by name/slug → falls back to product name, never the raw code.",
-      "Backfilled the IP10 restock draft → Ipamorelin (name, slug, hook, GROWTH HORMONE label, RAUN 1998 citation; body left null for ✨ Generate).",
+      "Fixed compound-spotlight email restock drafts mapping by raw order code instead of compound name (commit 59a5278). Root cause: onStockRise looked up compound_marketing by its sku column, which is unpopulated \u2014 e.g. PT-141's product SKU 'PT10' leaked as the draft name with a blank hook. Now resolves product by SKU \u2192 matches compound_marketing by name/slug \u2192 falls back to product name, never the raw code.",
+      "Backfilled the IP10 restock draft \u2192 Ipamorelin (name, slug, hook, GROWTH HORMONE label, RAUN 1998 citation; body left null for \u2728 Generate).",
       "Deleted two redundant restock orphan drafts: NP8 (duplicated an already-authored Snap-8 draft) and HGH (not in the campaign md, no marketing copy).",
-      "CLAUDE.md — formalized the 'save everything' end-of-session ritual (commit + jorrel-os.json merge update + os.jorrel.io card refresh)."
+      "CLAUDE.md \u2014 formalized the 'save everything' end-of-session ritual (commit + jorrel-os.json merge update + os.jorrel.io card refresh)."
     ],
     "_completed_2026_06_02": [
-      "lib/requireAdmin.js — admin-cookie auth helper; applied to 6 /api/* routes in adonis-next (ambassador-welcome, ambassador-message, ambassador-payout, ambassador-write, ambassador-content-digest, discount-code-write)",
-      "Schema migration 2026-04-23_ambassadors_commissions_rpc.sql — CREATE IF NOT EXISTS for ambassadors + referral_commissions + new ambassador_payouts + RPC drop/create-with-defaults + ALTER orders ADD ref_code. Applied to prod.",
-      "ambassador-content-digest filter fix (active → status=eq.active) — was returning 0 ambassadors every call, so digest never sent",
-      "ambassador-write validation — status field (active/paused/banned), email regex, phone normalize to 10-digit, name 1–120 chars",
-      "ambassador-message HTML escape — message/name/code all escaped before template insertion (defense in depth; admin-only after auth gate)",
-      "ambassador-payout hardening — requires ambassador.id UUID, inserts ambassador_payouts audit row, returns 409-as-warning on duplicate period",
-      "discount-code-write soft delete — delete action now PATCHes active=false instead of DELETE (preserves audit trail)",
-      "ADMIN_EMAIL env var — adonis-next/ambassador-welcome, advnce-site/send-order-email, advnce-site/ambassador-notify all read from process.env.ADMIN_EMAIL with jorrelpatterson@gmail.com fallback",
-      "Admin /admin/ambassadors UI — status pill (green/amber/red), Pause/Resume button (hidden for banned), Last-payout column (period + total), confirm dialog if payout period already paid, dead IIFE removed",
-      "scripts/smoke-ambassador-flow.js — e2e integration test: first-ambassador (15% discount + commission), repeat customer (tier rate, no discount), promo code (used_count increment). All 3 green against prod.",
+      "lib/requireAdmin.js \u2014 admin-cookie auth helper; applied to 6 /api/* routes in adonis-next (ambassador-welcome, ambassador-message, ambassador-payout, ambassador-write, ambassador-content-digest, discount-code-write)",
+      "Schema migration 2026-04-23_ambassadors_commissions_rpc.sql \u2014 CREATE IF NOT EXISTS for ambassadors + referral_commissions + new ambassador_payouts + RPC drop/create-with-defaults + ALTER orders ADD ref_code. Applied to prod.",
+      "ambassador-content-digest filter fix (active \u2192 status=eq.active) \u2014 was returning 0 ambassadors every call, so digest never sent",
+      "ambassador-write validation \u2014 status field (active/paused/banned), email regex, phone normalize to 10-digit, name 1\u2013120 chars",
+      "ambassador-message HTML escape \u2014 message/name/code all escaped before template insertion (defense in depth; admin-only after auth gate)",
+      "ambassador-payout hardening \u2014 requires ambassador.id UUID, inserts ambassador_payouts audit row, returns 409-as-warning on duplicate period",
+      "discount-code-write soft delete \u2014 delete action now PATCHes active=false instead of DELETE (preserves audit trail)",
+      "ADMIN_EMAIL env var \u2014 adonis-next/ambassador-welcome, advnce-site/send-order-email, advnce-site/ambassador-notify all read from process.env.ADMIN_EMAIL with jorrelpatterson@gmail.com fallback",
+      "Admin /admin/ambassadors UI \u2014 status pill (green/amber/red), Pause/Resume button (hidden for banned), Last-payout column (period + total), confirm dialog if payout period already paid, dead IIFE removed",
+      "scripts/smoke-ambassador-flow.js \u2014 e2e integration test: first-ambassador (15% discount + commission), repeat customer (tier rate, no discount), promo code (used_count increment). All 3 green against prod.",
       "Both repos pushed to main. adonis-next: 12 new commits (spec + plan + code). advnce-site: 1 commit (ADMIN_EMAIL)."
     ],
     "_completed_2026_04_21": [
-      "Multi-Vendor Order Sheet at /admin/purchases/multi — auto-routes to cheapest vendor, per-row + bulk override, summary panel, splits into multi-PO on submit",
-      "Per-vendor PO catalog: rows where another vendor is cheaper now dim with '↓ Vendor $XX' subtitle",
+      "Multi-Vendor Order Sheet at /admin/purchases/multi \u2014 auto-routes to cheapest vendor, per-row + bulk override, summary panel, splits into multi-PO on submit",
+      "Per-vendor PO catalog: rows where another vendor is cheaper now dim with '\u2193 Vendor $XX' subtitle",
       "Storefront product page: OOS items show 'This ships in 2-3 weeks' (amber) and Add-to-Order stays enabled (was hard-blocking)",
-      "Renamed BBG Blend → 'Glow Plus' and GLOW50 Blend → 'Glow' across products table + Adonis app catalog (app.html, public/app.html, lib/constants/peptides.js)",
-      "SQL migration: 2026-04-21_ensure_all_products_visible.sql — INSERTs 97 products from vendor JSONs (ON CONFLICT DO NOTHING) + UPDATEs active=true. Fixes Adipotide, AICAR, Melatonin 10mg, 5-Amino-1MQ etc.",
-      "SQL migration: 2026-04-21_backfill_vendor_prices_for_orphan_products.sql — 80 vendor_prices rows added across Eve/Weak/Rosyy for the 48 SKUs that had our_sku=null in JSONs",
+      "Renamed BBG Blend \u2192 'Glow Plus' and GLOW50 Blend \u2192 'Glow' across products table + Adonis app catalog (app.html, public/app.html, lib/constants/peptides.js)",
+      "SQL migration: 2026-04-21_ensure_all_products_visible.sql \u2014 INSERTs 97 products from vendor JSONs (ON CONFLICT DO NOTHING) + UPDATEs active=true. Fixes Adipotide, AICAR, Melatonin 10mg, 5-Amino-1MQ etc.",
+      "SQL migration: 2026-04-21_backfill_vendor_prices_for_orphan_products.sql \u2014 80 vendor_prices rows added across Eve/Weak/Rosyy for the 48 SKUs that had our_sku=null in JSONs",
       "One-off SQL: hid 5 truly orphan products (CI10, BT100, DH10, GC200, NA300) via UPDATE active=false",
       "Multi-vendor sheet: removed active=false filter so admin sees all products (Lemon Bottle, Botox, etc.) with HIDDEN badge inline. Storefront still respects active=false.",
-      "InfoIcon component (lib/constants/peptide-explanations.js) — React state-based tooltip on ? icons, 75 compounds with layman 'what you notice' explanations. Used in both order sheet pages.",
+      "InfoIcon component (lib/constants/peptide-explanations.js) \u2014 React state-based tooltip on ? icons, 75 compounds with layman 'what you notice' explanations. Used in both order sheet pages.",
       "Pricing audit: identified Weak strictly cheapest on 18 SKUs (CagriSema -$35, Dermorphin -$19, Kisspeptin-10 -$14 lead the savings list). Top Rosyy savings: VP10 (-$19), G10K (-$17), MC40 (-$15).",
-      "Vendor cell on inventory page now shows cheapest vendor + LOF (last ordered from) subtitle. Cost columns split into Kit $ + Vial $ derived from kit ÷ 10.",
+      "Vendor cell on inventory page now shows cheapest vendor + LOF (last ordered from) subtitle. Cost columns split into Kit $ + Vial $ derived from kit \u00f7 10.",
       "3 specs written under docs/superpowers/specs/: 2026-04-19-oos-shipping-copy-design, 2026-04-21-po-cheaper-elsewhere-dim-design, 2026-04-21-multi-vendor-order-sheet-design",
       "Eve's oral tablet catalog audited + 81 SKUs added (anabolic steroids 12, SARMs 8, PCT 7, thyroid 3, stimulant 2, pharma 11, oral peptides 7, weight loss orals 2, etc.) via 2026-04-21_eve_tablets_finished_products.sql",
-      "Dihexa activated — DHA20 (Dihexa 20mg tablet from Eve $130) replaces the prior hidden orphan DH10 vial",
-      "SLU-PP-322 renamed to SLU-PP-332 to match Eve's sheet — SKU SL322 unchanged, display name + 4 code files updated",
-      "Type filter on order sheets — 6 buckets: Peptide / Steroid / SARM / Pharma / Supply / Cosmetic. Steroid absorbs Anabolic + Stimulant + PCT + Thyroid (cycle-adjacent). Peptide absorbs Weight Loss (GLP-1s).",
+      "Dihexa activated \u2014 DHA20 (Dihexa 20mg tablet from Eve $130) replaces the prior hidden orphan DH10 vial",
+      "SLU-PP-322 renamed to SLU-PP-332 to match Eve's sheet \u2014 SKU SL322 unchanged, display name + 4 code files updated",
+      "Type filter on order sheets \u2014 6 buckets: Peptide / Steroid / SARM / Pharma / Supply / Cosmetic. Steroid absorbs Anabolic + Stimulant + PCT + Thyroid (cycle-adjacent). Peptide absorbs Weight Loss (GLP-1s).",
       "58 layman 'what you notice' explanations for the new tablet/oral compounds added to InfoIcon tooltips",
-      "Bug fix: products fetch was missing cat field on both /admin/purchases/multi and /admin/purchases pages — type filter always returned Peptide. Added cat to SELECT (commit f70d5d5).",
-      "Discount codes + ambassador lifetime attribution shipped (cross-repo) — discount_codes + customer_attribution tables, /api/discount-code-write CRUD, /admin/discount-codes page, attribution lookup + commission with first-sale bonus in send-order-email, discount/attribution badges on /admin/orders, Attributed tab on /admin/ambassadors. Phone now required at checkout.",
-      "Bac Water auto-add (advnce-checkout.html): 1× WA10 per 100mg of injectable peptide ordered, red AUTO badge, removable with × (sessionStorage flag prevents re-add for the session)",
-      "Protocols-page Checkout button fixed — was placeholder alert; now persists cart to localStorage, MERGES with existing catalog/product cart, redirects to /advnce-checkout.html",
+      "Bug fix: products fetch was missing cat field on both /admin/purchases/multi and /admin/purchases pages \u2014 type filter always returned Peptide. Added cat to SELECT (commit f70d5d5).",
+      "Discount codes + ambassador lifetime attribution shipped (cross-repo) \u2014 discount_codes + customer_attribution tables, /api/discount-code-write CRUD, /admin/discount-codes page, attribution lookup + commission with first-sale bonus in send-order-email, discount/attribution badges on /admin/orders, Attributed tab on /admin/ambassadors. Phone now required at checkout.",
+      "Bac Water auto-add (advnce-checkout.html): 1\u00d7 WA10 per 100mg of injectable peptide ordered, red AUTO badge, removable with \u00d7 (sessionStorage flag prevents re-add for the session)",
+      "Protocols-page Checkout button fixed \u2014 was placeholder alert; now persists cart to localStorage, MERGES with existing catalog/product cart, redirects to /advnce-checkout.html",
       "Eve oral tablet catalog (81 SKUs) added via 2026-04-21_eve_tablets_finished_products.sql; Dihexa activated, others hidden",
-      "SLU-PP-322 → SLU-PP-332 rename across stack (matches Eve's sheet naming); SKU SL322 unchanged",
-      "Type filter on order sheets — 6 buckets (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic) with typeFor() helper",
-      "Bug fix: products fetch was missing cat field — type filter always returned Peptide. Fixed in commit f70d5d5.",
-      "Categorization cleanup: 12 SKUs recategorized — Cock Bombs/Flibanserin/Dapoxetine/Melatonin → Pharma; Snap-8/Minoxidil/Finasteride 1mg/Dutasteride → Cosmetic (expanded from just Botox); Methylene Blue/B12/DNP/Tesofensine → Pharma (not actually peptides)",
+      "SLU-PP-322 \u2192 SLU-PP-332 rename across stack (matches Eve's sheet naming); SKU SL322 unchanged",
+      "Type filter on order sheets \u2014 6 buckets (Peptide / Steroid / SARM / Pharma / Supply / Cosmetic) with typeFor() helper",
+      "Bug fix: products fetch was missing cat field \u2014 type filter always returned Peptide. Fixed in commit f70d5d5.",
+      "Categorization cleanup: 12 SKUs recategorized \u2014 Cock Bombs/Flibanserin/Dapoxetine/Melatonin \u2192 Pharma; Snap-8/Minoxidil/Finasteride 1mg/Dutasteride \u2192 Cosmetic (expanded from just Botox); Methylene Blue/B12/DNP/Tesofensine \u2192 Pharma (not actually peptides)",
       "58 layman explanations added for new tablet/oral compounds in InfoIcon tooltips"
     ],
     "_completed_2026_06_07": [
-      "Built first-party visitor recovery engine on advnce-site (advncelabs.com) — Opensend-style anonymous-visitor→email recovery, in-house. Pixel track.js sitewide (15 pages), /api/track ingest to Supabase (hashed IP), /api/cron/recovery 15-min cron (abandoned-checkout 30m + cart 60m triggers), self-contained opt-out (/api/unsubscribe + email_optout + /unsubscribe.html), inert resolveStranger() stub for future paid identity-graph. 14 node:test unit tests. Gated behind RECOVERY_LIVE (default dry-run — sends zero emails). Spec+plan in advnce-site/docs/superpowers/. Merged feat/visitor-recovery-engine→main, deployed live.",
+      "Built first-party visitor recovery engine on advnce-site (advncelabs.com) \u2014 Opensend-style anonymous-visitor\u2192email recovery, in-house. Pixel track.js sitewide (15 pages), /api/track ingest to Supabase (hashed IP), /api/cron/recovery 15-min cron (abandoned-checkout 30m + cart 60m triggers), self-contained opt-out (/api/unsubscribe + email_optout + /unsubscribe.html), inert resolveStranger() stub for future paid identity-graph. 14 node:test unit tests. Gated behind RECOVERY_LIVE (default dry-run \u2014 sends zero emails). Spec+plan in advnce-site/docs/superpowers/. Merged feat/visitor-recovery-engine\u2192main, deployed live.",
       "4 new Supabase tables applied manually (visitors, visitor_events, recovery_sends, email_optout). IP_HASH_SALT set on advnce-site Vercel (Production). Live endpoints verified: /track.js 200, /api/track {ok:true}, cron {live:false}.",
-      "Built /admin/visitors dashboard on adonis-next (adonis.pro/admin) — read-only: summary tiles, dry-run/live banner, recovery candidates, identified visitors, recent activity feed. Added Visitors nav item. Build passed, pushed, deployed (auth-gated 307→login verified)."
+      "Built /admin/visitors dashboard on adonis-next (adonis.pro/admin) \u2014 read-only: summary tiles, dry-run/live banner, recovery candidates, identified visitors, recent activity feed. Added Visitors nav item. Build passed, pushed, deployed (auth-gated 307\u2192login verified)."
     ]
   },
   "roadmap_ideas": [
@@ -137,15 +119,15 @@
       "title": "Patch vendor JSON files to set our_sku for the 48 entries currently mapped null",
       "status": "open follow-up from 2026-04-21",
       "summary": "DB-level fix is done via backfill migration. But the JSONs at docs/vendors/{eve,weak,rosyy}-pricing.json still have our_sku=null on 48 entries. If ever re-seeded the gap returns. Mapping is straightforward: match by name+size to existing products.sku.",
-      "next_step": "Write a Python script that updates the JSON files in place using products name+size → sku lookup. Single PR."
+      "next_step": "Write a Python script that updates the JSON files in place using products name+size \u2192 sku lookup. Single PR."
     },
     {
       "id": "oos-presell-crowdfund",
       "title": "Discount OOS items to crowdfund 10-vial POs",
       "status": "captured, not scoped",
       "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
-      "summary": "OOS items show heavy discount price + 'extended wait time' framing; orders queue until enough cash to fund a 10-vial PO. Storefront already shows 'This ships in 2-3 weeks' for OOS items as of 2026-04-21, so the UX path is lighter — just need discount pricing + queue-to-PO threshold logic.",
-      "next_step": "Brainstorming session — start by deciding which open question matters most (discount depth vs framing vs fulfillment risk)."
+      "summary": "OOS items show heavy discount price + 'extended wait time' framing; orders queue until enough cash to fund a 10-vial PO. Storefront already shows 'This ships in 2-3 weeks' for OOS items as of 2026-04-21, so the UX path is lighter \u2014 just need discount pricing + queue-to-PO threshold logic.",
+      "next_step": "Brainstorming session \u2014 start by deciding which open question matters most (discount depth vs framing vs fulfillment risk)."
     },
     {
       "id": "actual-paid-vs-replacement-cost",
@@ -187,11 +169,11 @@
       "title": "Subscription model: customers commit to monthly volume for discount",
       "status": "captured (in OOS idea memory), not scoped",
       "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
-      "summary": "Smooth out PO cadence by giving subscribers a discount in exchange for committing to monthly volume. Adjacent to the OOS pre-sell idea — both convert future demand into present cash flow."
+      "summary": "Smooth out PO cadence by giving subscribers a discount in exchange for committing to monthly volume. Adjacent to the OOS pre-sell idea \u2014 both convert future demand into present cash flow."
     },
     {
       "id": "wholesale-ambassador-kits",
-      "title": "Wholesale ambassador kits — front cash for inventory at wholesale, sell at retail",
+      "title": "Wholesale ambassador kits \u2014 front cash for inventory at wholesale, sell at retail",
       "status": "captured (in OOS idea memory), not scoped",
       "memory_ref": "memory/idea_pre_sell_oos_to_fund_pos.md",
       "summary": "Ambassadors front cash for a starter kit at wholesale prices, then sell at retail and keep the margin. Bigger lever than commission program but riskier (compliance, customer support burden, reputation if mishandled)."
@@ -200,7 +182,7 @@
       "id": "oral-tablet-product-line-strategy",
       "title": "Decide which of the 80 hidden oral-tablet SKUs to activate (and to whom)",
       "status": "captured 2026-04-21, decision pending",
-      "summary": "81 new oral tablet SKUs from Eve's 2026-04-21 sheet sit hidden in admin: 12 anabolic steroids (Schedule III legal risk), 8 SARMs, 7 PCT/AI, 3 thyroid, 2 stimulants, 11 pharma (Sildenafil, Finasteride, etc.), 7 oral peptide forms, 2 oral GLP-1s, etc. Different audiences and legal profiles per cluster. Default retail = 2× cost (placeholder).",
+      "summary": "81 new oral tablet SKUs from Eve's 2026-04-21 sheet sit hidden in admin: 12 anabolic steroids (Schedule III legal risk), 8 SARMs, 7 PCT/AI, 3 thyroid, 2 stimulants, 11 pharma (Sildenafil, Finasteride, etc.), 7 oral peptide forms, 2 oral GLP-1s, etc. Different audiences and legal profiles per cluster. Default retail = 2\u00d7 cost (placeholder).",
       "next_step": "Brainstorm: same site or new vertical? Start with lowest-risk additions (Methylene Blue, oral peptides, SARMs) and grow from there. Steroid tablets need legal review like Botox."
     },
     {
@@ -214,7 +196,7 @@
       "id": "live-discount-preview",
       "title": "Live discount preview on checkout cart summary",
       "status": "captured 2026-04-21, polish not blocking",
-      "summary": "Currently customer only sees the discount on the success/email screen. Could pre-validate the code on blur and show '−$X (CODE)' in the cart summary live.",
+      "summary": "Currently customer only sees the discount on the success/email screen. Could pre-validate the code on blur and show '\u2212$X (CODE)' in the cart summary live.",
       "next_step": "When time permits, add an /api/validate-code endpoint and wire onChange/onBlur of the code input to it."
     },
     {
@@ -242,15 +224,15 @@
       "id": "info-at-advncelabs-forwarding",
       "title": "Set up info@advncelabs.com forwarding and flip ADMIN_EMAIL",
       "status": "captured 2026-04-23, deferred (non-blocking)",
-      "summary": "Admin notification emails (new ambassador signups, new orders, admin flags) currently go to jorrelpatterson@gmail.com via ADMIN_EMAIL env var default. Code is already threaded — just need the mailbox. No Google Workspace set up.",
-      "next_step": "Cloudflare Email Routing is free and takes ~10 minutes if advncelabs.com DNS is on Cloudflare; otherwise most registrars (Porkbun, Namecheap) offer free forwarding built-in. Once forwarding works, set ADMIN_EMAIL=info@advncelabs.com on both Vercel projects (adonis-next + advnce-site). No redeploy needed — env vars propagate."
+      "summary": "Admin notification emails (new ambassador signups, new orders, admin flags) currently go to jorrelpatterson@gmail.com via ADMIN_EMAIL env var default. Code is already threaded \u2014 just need the mailbox. No Google Workspace set up.",
+      "next_step": "Cloudflare Email Routing is free and takes ~10 minutes if advncelabs.com DNS is on Cloudflare; otherwise most registrars (Porkbun, Namecheap) offer free forwarding built-in. Once forwarding works, set ADMIN_EMAIL=info@advncelabs.com on both Vercel projects (adonis-next + advnce-site). No redeploy needed \u2014 env vars propagate."
     },
     {
       "id": "admin-service-key-to-jwt",
       "title": "Migrate admin writes from SERVICE_KEY proxy to proper Supabase JWT + RLS",
       "status": "captured 2026-04-23, explicitly deferred",
-      "summary": "Today's auth gate (lib/requireAdmin cookie check on API routes) closes the attack surface for admin-only API routes. But the writes themselves still use SUPABASE_SERVICE_KEY server-side. A cleaner architecture would be: admin authenticates via Supabase Auth → gets JWT → client calls Supabase REST directly with that JWT → RLS policies gate writes. Bigger rewrite but eliminates the 'route uses service key behind cookie' pattern entirely.",
-      "next_step": "Week-of-work refactor. Low priority — cookie gate is adequate while admin is solo-operated."
+      "summary": "Today's auth gate (lib/requireAdmin cookie check on API routes) closes the attack surface for admin-only API routes. But the writes themselves still use SUPABASE_SERVICE_KEY server-side. A cleaner architecture would be: admin authenticates via Supabase Auth \u2192 gets JWT \u2192 client calls Supabase REST directly with that JWT \u2192 RLS policies gate writes. Bigger rewrite but eliminates the 'route uses service key behind cookie' pattern entirely.",
+      "next_step": "Week-of-work refactor. Low priority \u2014 cookie gate is adequate while admin is solo-operated."
     },
     {
       "id": "ambassador-api-rate-limit",
@@ -270,7 +252,7 @@
       "id": "order-cancellation-reversal",
       "title": "Refund / commission-reversal workflow",
       "status": "open follow-up (dupe of earlier commission-reversal-flow)",
-      "summary": "Duplicate of commission-reversal-flow above — keeping for visibility. Today's smoke test confirmed the happy path but there's no workflow to reverse attribution/commissions when an order is canceled.",
+      "summary": "Duplicate of commission-reversal-flow above \u2014 keeping for visibility. Today's smoke test confirmed the happy path but there's no workflow to reverse attribution/commissions when an order is canceled.",
       "next_step": "Add /api/order-refund that marks order status=refunded + inserts negative referral_commissions rows + decrements ambassador totals."
     }
   ],
