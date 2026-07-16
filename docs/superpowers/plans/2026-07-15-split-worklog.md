@@ -127,3 +127,15 @@ The spec/plan's "BASE_URL flip" was based on a bad grep (`BASE_URL` substring-ma
 - Verified two-sided, zero customer emails: wrong token → 401; correct token on the PARKED recruitment-drip → 200 `candidates due: 0`. All 5 crons authenticate again; drip still sends nothing (parked).
 - reorder-reminders resumes at the next noon UTC. Today's scheduled run was missed during the gap; low impact (windows self-heal next day) — offered Jorrel a manual catch-up run, not done unprompted.
 - Docs corrected: advncelabs CLAUDE/AGENTS (crons LIVE, sensitive-var note), adonis CLAUDE/AGENTS (CRON_SECRET sensitive not empty). advncelabs jorrel-os card cron blocker resolved.
+
+## Post-split email verification (2026-07-16)
+
+Verified the new advnce-admin deployment actually SENDS + DELIVERS email end-to-end (Jorrel: "everything working?").
+
+- **Scheduled:** reorder-reminders ran live (44 orders scanned, 0 currently in the 12–15d/1–4d window, 0 sent — correct). welcome-emails wired correctly (self-call `origin` derives from request URL → hits admin.advncelabs.com; uses CRON_SECRET). recruitment-drip live-but-parked (0 candidates due). news-scrape/curate = content drafts, not customer email.
+- **Transactional:** all routes deployed + healthy (405/200, none 404/500); RESEND_API_KEY + SHIPPING_ADDRESS + EMAIL_UNSUB_SECRET present on advnce-admin.
+- **Delivery PROVEN end-to-end:** POSTed subscribe-welcome-2 via the deployed route (admin-cookie auth) → Resend → landed in INBOX at jorrel@ascnd.pro in ~1 min (subject "What advnce labs is — and isn't."). Full chain confirmed on the new stack.
+
+**Two findings recorded:**
+1. **jorrelpatterson@gmail.com appears SUPPRESSED at Resend** — sends to it return `success:true` (Resend accepts) but never deliver (prior bounce/complaint → Resend suppression list). Pre-existing + recipient-specific, NOT split-caused. To receive advncelabs mail there again: Resend dashboard → Suppressions → remove it. (This is what sent the delivery test down a rabbit hole until I retried with ascnd.pro.)
+2. **Local `RESEND_API_KEY` in both `.env.local` files is STALE/revoked** (…AgyW → 403 on direct Resend calls). Production advnce-admin has a valid key (proven by the live delivery). Cosmetic — local dev sends would fail, prod is fine. Refresh both `.env.local` from Resend if local email dev is ever needed.
