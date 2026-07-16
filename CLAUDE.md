@@ -46,7 +46,9 @@ The two businesses split repos on 2026-07-15 (spec + plan + worklog in
 
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`
 - `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `VA_PASSWORD` — shared auth guard users
-- `CRON_SECRET` — exists but EMPTY in prod (crons effectively manual; known state)
+- `CRON_SECRET` — a **Sensitive** Vercel var: reads back blank via API/`env pull`
+  but is REAL at runtime, so routine-reminders + career crons authenticate and run
+  on schedule (do not mistake the blank read for "empty/manual")
 - `APNS_*` — push send path (dormant until ASC key)
 - `ADZUNA_APP_ID/KEY`, `RAPIDAPI_KEY` — career ingest sources
 

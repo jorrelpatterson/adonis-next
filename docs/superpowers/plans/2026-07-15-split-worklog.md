@@ -111,3 +111,19 @@ The spec/plan's "BASE_URL flip" was based on a bad grep (`BASE_URL` substring-ma
 - Redirects verified live: /admin/*, /ambassador(s)/*, /api/<moved>*, /api/cron/<moved> all 308 to admin.advncelabs.com with path+query preserved; full chain ends at login with ?from= carrying the destination. PWA /app 200, marketing 200, app-signup alive (405 on GET).
 - Storefront links commit `29ad4b8`: deep-links + 4 CORS origins (ambassador-message/notify/payout, shipping-confirm) + vercel.json /api/* CORS → admin.advncelabs.com; email footers rebranded; news-mockup preview carried into admin/public.
 - adonis.pro deploys clean post-strip; three projects READY (adonis-next 929624c, advnce-site + advnce-admin 29ad4b8).
+
+## Phase 4-fix (2026-07-15) — CRON_SECRET regression caught by Jorrel
+
+**Trigger:** Jorrel: "I've had clients respond to the reorder emails though" — contradicting the Phase 2 "crons dormant/manual" finding.
+
+**Investigation (evidence over inference):**
+- `reorder_reminders_sent` log: 12 sends, EVERY ONE at exactly 12:00 UTC = the cron schedule (`0 12 * * *`). Manual clicks would be at random hours. → the cron HAS been running on schedule.
+- `reorder-reminders/route.js` exports `GET → POST` (Vercel Cron uses GET) and only emails customers in a 12–15d or 1–4d run-out window, deduped via the sent table → no backlog-blast risk, ever.
+- Root cause of the Phase 2 misread: adonis-next `CRON_SECRET` is a **Sensitive** Vercel var — `env ls` shows "Encrypted"/present, but `env pull` returns length 0 because sensitive values are write-only. It's real at runtime; that's how Vercel signed the cron calls.
+- **The regression:** cutover moved the 5 crons to advnce-admin, which had NO CRON_SECRET → from 2026-07-15 those crons would 401 and reorder emails silently stop. My "keep dormant" call (decision b) was built on the false "never ran" premise.
+
+**Fix (Jorrel approved (a) restore all as-was):**
+- Set a fresh `openssl rand -hex 32` CRON_SECRET on advnce-admin production (each project's cron uses its own secret — value needn't match adonis). Redeployed to apply.
+- Verified two-sided, zero customer emails: wrong token → 401; correct token on the PARKED recruitment-drip → 200 `candidates due: 0`. All 5 crons authenticate again; drip still sends nothing (parked).
+- reorder-reminders resumes at the next noon UTC. Today's scheduled run was missed during the gap; low impact (windows self-heal next day) — offered Jorrel a manual catch-up run, not done unprompted.
+- Docs corrected: advncelabs CLAUDE/AGENTS (crons LIVE, sensitive-var note), adonis CLAUDE/AGENTS (CRON_SECRET sensitive not empty). advncelabs jorrel-os card cron blocker resolved.
