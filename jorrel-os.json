@@ -26,7 +26,7 @@
       "Adonis v2: interactive visual QA still pending \u2014 AmbientBackdrop orbs/tint shift on tab switch + italic H headers were verified only by headless build:app; needs eyes via `npm run dev:app` (Routine/Profile tabs) before the design layer is trusted visually."
     ],
     "next_action": "iOS -> TestFlight (API-key path): (1) create ASC app record for bundle pro.adonis.app; (2) generate ASC API key (App Manager role); (3) run scripts/ios-archive-upload.sh with ASC_KEY_ID+ASC_ISSUER_ID. Then: interactive visual smoke (npm run dev:app - AmbientBackdrop + italic H headers), and domain build-out waves per docs/superpowers/specs/2026-07-14-domain-buildout-roadmap.md (Wave 1 Bucket List+Stripe, Wave 2 career engine). NOTE: repo is now fitness-only - all ADVNCE work moved to ../advncelabs (its own jorrel-os card).",
-    "last_session": "2026-07-15",
+    "last_session": "2026-07-16",
     "completed_today": [
       "Adonis v2 Phases 2-5 shipped end-to-end via subagent-driven-development (onboarding/auth/tiers, daily loop, all 8 domain views + Insights, PWA + Vercel ride-along) -- each phase per-task reviewed + a final fable whole-branch review; the modular src/ rebuild is now the LIVE product.",
       "CUTOVER done 2026-07-14: adonis.pro landing CTA -> /app, app.html -> redirect stub, public/lib removed, root manifest start_url -> /app/. v1 7,674-line monolith RETIRED; verified in prod. MVP shipped (~1057 tests green at cutover).",
